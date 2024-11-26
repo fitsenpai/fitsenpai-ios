@@ -1,0 +1,22 @@
+## Other
+*.xccheckout
+*.moved-aside
+*.xcuserstate
+*.xcscmblueprint
+
+## Obj-C/Swift specific
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+## AppCode
+.idea/
+
+Pods
+Gemfile.lock
+
+## orange
+testProjects/orange/Pods
+testProjects/orange/.idea/
+Podfile.lock
