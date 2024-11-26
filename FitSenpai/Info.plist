@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Mona-Sans-Bold.ttf</string>
+		<string>SpaceGrotesk-Regular.ttf</string>
+		<string>Mona-Sans-Light.ttf</string>
+		<string>Mona-Sans-Medium.ttf</string>
+		<string>Mona-Sans-Regular.ttf</string>
+		<string>Mona-Sans-SemiBold.ttf</string>
+		<string>PlusJakartaSans-Bold.ttf</string>
+		<string>PlusJakartaSans-Light.ttf</string>
+		<string>PlusJakartaSans-Medium.ttf</string>
+		<string>PlusJakartaSans-Regular.ttf</string>
+		<string>PlusJakartaSans-SemiBold.ttf</string>
+		<string>SpaceGrotesk-Bold.ttf</string>
+		<string>SpaceGrotesk-Medium.ttf</string>
+		<string>SpaceGrotesk-Light.ttf</string>
+		<string>SpaceGrotesk-SemiBold.ttf</string>
+	</array>
+	<key>AppEnvironment</key>
+	<string>dev</string>
+</dict>
+</plist>
