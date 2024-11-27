@@ -65,14 +65,22 @@ struct LoginView: View {
         .padding(.top, 63)
         .navigationBarBackButtonHidden()
     }
+    
+    // Static factory method to create LoginView with initialized dependencies
+    static func create() -> LoginView {
+        guard let client = FSClient.shared else {
+            fatalError("Failed to initialize FSClient.")
+        }
+        
+        let loginUseCase = LoginUseCase(client: client)
+        let viewModel = LoginViewModel(loginUseCase: loginUseCase)
+        
+        return LoginView(viewModel: viewModel)
+    }
 }
 
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
-        let client = FSClient.shared!
-        let loginUseCase = LoginUseCase(client: client)
-        let viewModel = LoginViewModel(loginUseCase: loginUseCase)
-
-        LoginView(viewModel: viewModel)
+        LoginView.create()
     }
 }

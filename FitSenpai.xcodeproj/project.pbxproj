@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F229D3682CF7713C0094BE2E /* AuthUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F229D3672CF7713C0094BE2E /* AuthUseCase.swift */; };
+		F229D36A2CF7742F0094BE2E /* LogoutUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F229D3692CF7742F0094BE2E /* LogoutUseCase.swift */; };
+		F229D36E2CF774BF0094BE2E /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F229D36D2CF774BF0094BE2E /* AppState.swift */; };
 		F24B335B2CEDB421004AD370 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F24B335A2CEDB421004AD370 /* AppDelegate.swift */; };
 		F24B335D2CEDB421004AD370 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F24B335C2CEDB421004AD370 /* SceneDelegate.swift */; };
 		F24B33642CEDB422004AD370 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F24B33632CEDB422004AD370 /* Assets.xcassets */; };
@@ -46,7 +49,7 @@
 		F24B33C72CEF9384004AD370 /* WorkoutsMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F24B33C62CEF9384004AD370 /* WorkoutsMainView.swift */; };
 		F24B33CF2CEF93BD004AD370 /* MealsMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F24B33CE2CEF93BD004AD370 /* MealsMainView.swift */; };
 		F24B33D42CEF93D8004AD370 /* GroceriesMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F24B33D32CEF93D8004AD370 /* GroceriesMainView.swift */; };
-		F24B33DA2CEF93FE004AD370 /* ProfileMainVie.swift in Sources */ = {isa = PBXBuildFile; fileRef = F24B33D92CEF93FE004AD370 /* ProfileMainVie.swift */; };
+		F24B33DA2CEF93FE004AD370 /* ProfileMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F24B33D92CEF93FE004AD370 /* ProfileMainView.swift */; };
 		F24B33DC2CEF9411004AD370 /* FSTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F24B33DB2CEF9411004AD370 /* FSTabView.swift */; };
 		F24B33DF2CEF9CCF004AD370 /* SwipeableCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F24B33DE2CEF9CCF004AD370 /* SwipeableCalendarView.swift */; };
 		F24B33E12CF07000004AD370 /* WeekView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F24B33E02CF07000004AD370 /* WeekView.swift */; };
@@ -79,6 +82,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		F229D3672CF7713C0094BE2E /* AuthUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthUseCase.swift; sourceTree = "<group>"; };
+		F229D3692CF7742F0094BE2E /* LogoutUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutUseCase.swift; sourceTree = "<group>"; };
+		F229D36D2CF774BF0094BE2E /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		F24B335A2CEDB421004AD370 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F24B335C2CEDB421004AD370 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		F24B33632CEDB422004AD370 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -119,7 +125,7 @@
 		F24B33C62CEF9384004AD370 /* WorkoutsMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutsMainView.swift; sourceTree = "<group>"; };
 		F24B33CE2CEF93BD004AD370 /* MealsMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealsMainView.swift; sourceTree = "<group>"; };
 		F24B33D32CEF93D8004AD370 /* GroceriesMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroceriesMainView.swift; sourceTree = "<group>"; };
-		F24B33D92CEF93FE004AD370 /* ProfileMainVie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileMainVie.swift; sourceTree = "<group>"; };
+		F24B33D92CEF93FE004AD370 /* ProfileMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileMainView.swift; sourceTree = "<group>"; };
 		F24B33DB2CEF9411004AD370 /* FSTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FSTabView.swift; sourceTree = "<group>"; };
 		F24B33DE2CEF9CCF004AD370 /* SwipeableCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeableCalendarView.swift; sourceTree = "<group>"; };
 		F24B33E02CF07000004AD370 /* WeekView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekView.swift; sourceTree = "<group>"; };
@@ -163,6 +169,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F229D36B2CF774AE0094BE2E /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				F229D36C2CF774B30094BE2E /* Common */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		F229D36C2CF774B30094BE2E /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				F229D36D2CF774BF0094BE2E /* AppState.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
 		F24B334E2CEDB421004AD370 = {
 			isa = PBXGroup;
 			children = (
@@ -341,6 +363,7 @@
 		F24B33AF2CEDCF42004AD370 /* Landing */ = {
 			isa = PBXGroup;
 			children = (
+				F229D36B2CF774AE0094BE2E /* Data */,
 				F2802BE72CF725D600617942 /* Domain */,
 				F24B33B02CEDCF61004AD370 /* Presentation */,
 			);
@@ -492,7 +515,7 @@
 		F24B33D82CEF93F3004AD370 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				F24B33D92CEF93FE004AD370 /* ProfileMainVie.swift */,
+				F24B33D92CEF93FE004AD370 /* ProfileMainView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -573,6 +596,8 @@
 			isa = PBXGroup;
 			children = (
 				F2802BE92CF725EA00617942 /* LoginUseCase.swift */,
+				F229D3672CF7713C0094BE2E /* AuthUseCase.swift */,
+				F229D3692CF7742F0094BE2E /* LogoutUseCase.swift */,
 			);
 			path = UseCase;
 			sourceTree = "<group>";
@@ -695,19 +720,22 @@
 			files = (
 				F24B33A22CEDBE88004AD370 /* Testimonial.swift in Sources */,
 				F24B33AA2CEDC371004AD370 /* FSText.swift in Sources */,
+				F229D36A2CF7742F0094BE2E /* LogoutUseCase.swift in Sources */,
 				F24B337D2CEDB5DC004AD370 /* FSColor.swift in Sources */,
 				F24B33EE2CF23977004AD370 /* MealView.swift in Sources */,
-				F24B33DA2CEF93FE004AD370 /* ProfileMainVie.swift in Sources */,
+				F24B33DA2CEF93FE004AD370 /* ProfileMainView.swift in Sources */,
 				F24B340E2CF61E55004AD370 /* FSClient.swift in Sources */,
 				F24B33EC2CF2184E004AD370 /* FSMetric.swift in Sources */,
 				F24B33C72CEF9384004AD370 /* WorkoutsMainView.swift in Sources */,
 				F24B33AC2CEDC4D2004AD370 /* SwiftUIView+If.swift in Sources */,
 				F24B33A72CEDC194004AD370 /* TestimonialView.swift in Sources */,
 				F24B339E2CEDBE40004AD370 /* TestimonialViewModel.swift in Sources */,
+				F229D3682CF7713C0094BE2E /* AuthUseCase.swift in Sources */,
 				F2802BEA2CF725EA00617942 /* LoginUseCase.swift in Sources */,
 				F24B33C02CEF1497004AD370 /* AppLoader.swift in Sources */,
 				F24B340B2CF613D6004AD370 /* FSEnvironment.swift in Sources */,
 				F24B33BD2CEF0B36004AD370 /* RoundedBorderTextField.swift in Sources */,
+				F229D36E2CF774BF0094BE2E /* AppState.swift in Sources */,
 				F2802BE42CF7236100617942 /* UserIdentity.swift in Sources */,
 				F24B34062CF61395004AD370 /* EnvironmentManager.swift in Sources */,
 				F24B335B2CEDB421004AD370 /* AppDelegate.swift in Sources */,
