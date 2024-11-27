@@ -54,7 +54,11 @@ struct AuthLandingView: View {
                 }
             }
             .navigationDestination(isPresented: $navigateToLogin) {
-                LoginView(email: .constant(""), password: .constant(""))
+                let client = FSClient.shared!
+                let loginUseCase = LoginUseCase(client: client)
+                let viewModel = LoginViewModel(loginUseCase: loginUseCase)
+
+                LoginView(viewModel: viewModel)
             }
         }
         

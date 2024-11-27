@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Supabase
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -43,6 +44,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func setupLogger() {
         log.clean = false
         log.currentMode = .verbose
+    }
+    
+    func setupSupabase(){
+        guard let url:String = EnvironmentManager.shared.value(for: .supabaseProjectURL), let key:String = EnvironmentManager.shared.value(for: .supabaseKey) else {
+            return
+        }
+        let client = SupabaseClient(supabaseURL: URL(string: url)!, supabaseKey: key)
     }
 
 

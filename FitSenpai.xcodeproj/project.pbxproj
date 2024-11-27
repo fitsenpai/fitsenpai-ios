@@ -62,6 +62,13 @@
 		F24B34062CF61395004AD370 /* EnvironmentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F24B34052CF61395004AD370 /* EnvironmentManager.swift */; };
 		F24B340B2CF613D6004AD370 /* FSEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = F24B340A2CF613D6004AD370 /* FSEnvironment.swift */; };
 		F24B340E2CF61E55004AD370 /* FSClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F24B340D2CF61E55004AD370 /* FSClient.swift */; };
+		F2802BDD2CF7215100617942 /* FSUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2802BDC2CF7215100617942 /* FSUser.swift */; };
+		F2802BE02CF721CA00617942 /* ObjectMapper in Frameworks */ = {isa = PBXBuildFile; productRef = F2802BDF2CF721CA00617942 /* ObjectMapper */; };
+		F2802BE22CF7233D00617942 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2802BE12CF7233D00617942 /* Session.swift */; };
+		F2802BE42CF7236100617942 /* UserIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2802BE32CF7236100617942 /* UserIdentity.swift */; };
+		F2802BE62CF7238000617942 /* AnyCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2802BE52CF7238000617942 /* AnyCodable.swift */; };
+		F2802BEA2CF725EA00617942 /* LoginUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2802BE92CF725EA00617942 /* LoginUseCase.swift */; };
+		F2802BED2CF726B600617942 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2802BEC2CF726B600617942 /* LoginViewModel.swift */; };
 		F2CF8CE62CF62FDF00461D0D /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = F2CF8CE52CF62FDF00461D0D /* Auth */; };
 		F2CF8CE82CF62FDF00461D0D /* Functions in Frameworks */ = {isa = PBXBuildFile; productRef = F2CF8CE72CF62FDF00461D0D /* Functions */; };
 		F2CF8CEA2CF62FDF00461D0D /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = F2CF8CE92CF62FDF00461D0D /* PostgREST */; };
@@ -128,7 +135,13 @@
 		F24B34052CF61395004AD370 /* EnvironmentManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentManager.swift; sourceTree = "<group>"; };
 		F24B340A2CF613D6004AD370 /* FSEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FSEnvironment.swift; sourceTree = "<group>"; };
 		F24B340D2CF61E55004AD370 /* FSClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FSClient.swift; sourceTree = "<group>"; };
-		F2CF8CD12CF6255900461D0D /* FitSenpai.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = FitSenpai.app; path = "/Users/kevin.maloles/Projects/FitSenpai/build/Debug-iphoneos/FitSenpai.app"; sourceTree = "<absolute>"; };
+		F2802BC62CF6395300617942 /* FitSenpai.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FitSenpai.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F2802BDC2CF7215100617942 /* FSUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FSUser.swift; sourceTree = "<group>"; };
+		F2802BE12CF7233D00617942 /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
+		F2802BE32CF7236100617942 /* UserIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserIdentity.swift; sourceTree = "<group>"; };
+		F2802BE52CF7238000617942 /* AnyCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyCodable.swift; sourceTree = "<group>"; };
+		F2802BE92CF725EA00617942 /* LoginUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginUseCase.swift; sourceTree = "<group>"; };
+		F2802BEC2CF726B600617942 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,6 +149,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F2802BE02CF721CA00617942 /* ObjectMapper in Frameworks */,
 				F2CF8CEA2CF62FDF00461D0D /* PostgREST in Frameworks */,
 				F2CF8CE82CF62FDF00461D0D /* Functions in Frameworks */,
 				F2CF8CF32CF630F700461D0D /* Kingfisher in Frameworks */,
@@ -154,6 +168,7 @@
 			children = (
 				F24B33592CEDB421004AD370 /* FitSenpai */,
 				F2CF8CE42CF62FDF00461D0D /* Frameworks */,
+				F2802BC62CF6395300617942 /* FitSenpai.app */,
 			);
 			sourceTree = "<group>";
 		};
@@ -326,6 +341,7 @@
 		F24B33AF2CEDCF42004AD370 /* Landing */ = {
 			isa = PBXGroup;
 			children = (
+				F2802BE72CF725D600617942 /* Domain */,
 				F24B33B02CEDCF61004AD370 /* Presentation */,
 			);
 			path = Landing;
@@ -334,6 +350,7 @@
 		F24B33B02CEDCF61004AD370 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				F2802BEB2CF726B000617942 /* ViewModel */,
 				F24B33B12CEDCF6C004AD370 /* View */,
 			);
 			path = Presentation;
@@ -494,6 +511,9 @@
 			children = (
 				F24B33EB2CF2184E004AD370 /* FSMetric.swift */,
 				F24B33EF2CF239D1004AD370 /* FSMealPeriod.swift */,
+				F2802BDC2CF7215100617942 /* FSUser.swift */,
+				F2802BE12CF7233D00617942 /* Session.swift */,
+				F2802BE32CF7236100617942 /* UserIdentity.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -536,8 +556,33 @@
 			isa = PBXGroup;
 			children = (
 				F24B340D2CF61E55004AD370 /* FSClient.swift */,
+				F2802BE52CF7238000617942 /* AnyCodable.swift */,
 			);
 			path = Webservice;
+			sourceTree = "<group>";
+		};
+		F2802BE72CF725D600617942 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				F2802BE82CF725DE00617942 /* UseCase */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		F2802BE82CF725DE00617942 /* UseCase */ = {
+			isa = PBXGroup;
+			children = (
+				F2802BE92CF725EA00617942 /* LoginUseCase.swift */,
+			);
+			path = UseCase;
+			sourceTree = "<group>";
+		};
+		F2802BEB2CF726B000617942 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				F2802BEC2CF726B600617942 /* LoginViewModel.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		F2CF8CE42CF62FDF00461D0D /* Frameworks */ = {
@@ -571,9 +616,10 @@
 				F2CF8CED2CF62FDF00461D0D /* Storage */,
 				F2CF8CEF2CF62FDF00461D0D /* Supabase */,
 				F2CF8CF22CF630F700461D0D /* Kingfisher */,
+				F2802BDF2CF721CA00617942 /* ObjectMapper */,
 			);
 			productName = FitSenpai;
-			productReference = F2CF8CD12CF6255900461D0D /* FitSenpai.app */;
+			productReference = F2802BC62CF6395300617942 /* FitSenpai.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -603,6 +649,7 @@
 			packageReferences = (
 				F2CF8CE32CF62FBD00461D0D /* XCRemoteSwiftPackageReference "supabase-swift" */,
 				F2CF8CF12CF630F700461D0D /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				F2802BDE2CF721CA00617942 /* XCRemoteSwiftPackageReference "ObjectMapper" */,
 			);
 			productRefGroup = F24B334E2CEDB421004AD370;
 			projectDirPath = "";
@@ -657,16 +704,21 @@
 				F24B33AC2CEDC4D2004AD370 /* SwiftUIView+If.swift in Sources */,
 				F24B33A72CEDC194004AD370 /* TestimonialView.swift in Sources */,
 				F24B339E2CEDBE40004AD370 /* TestimonialViewModel.swift in Sources */,
+				F2802BEA2CF725EA00617942 /* LoginUseCase.swift in Sources */,
 				F24B33C02CEF1497004AD370 /* AppLoader.swift in Sources */,
 				F24B340B2CF613D6004AD370 /* FSEnvironment.swift in Sources */,
 				F24B33BD2CEF0B36004AD370 /* RoundedBorderTextField.swift in Sources */,
+				F2802BE42CF7236100617942 /* UserIdentity.swift in Sources */,
 				F24B34062CF61395004AD370 /* EnvironmentManager.swift in Sources */,
 				F24B335B2CEDB421004AD370 /* AppDelegate.swift in Sources */,
 				F24B33852CEDBA88004AD370 /* TextStyle.swift in Sources */,
 				F24B335D2CEDB421004AD370 /* SceneDelegate.swift in Sources */,
+				F2802BED2CF726B600617942 /* LoginViewModel.swift in Sources */,
 				F24B33E32CF20E17004AD370 /* GrayPillView.swift in Sources */,
 				F24B33F02CF239D1004AD370 /* FSMealPeriod.swift in Sources */,
+				F2802BE22CF7233D00617942 /* Session.swift in Sources */,
 				F24B33DC2CEF9411004AD370 /* FSTabView.swift in Sources */,
+				F2802BDD2CF7215100617942 /* FSUser.swift in Sources */,
 				F24B33BB2CEDE5C3004AD370 /* LoginView.swift in Sources */,
 				F24B33B32CEDDBDD004AD370 /* AuthLandingView.swift in Sources */,
 				F24B33E12CF07000004AD370 /* WeekView.swift in Sources */,
@@ -677,6 +729,7 @@
 				F24B33F22CF23B08004AD370 /* NutrientsInfoView.swift in Sources */,
 				F24B33B72CEDDF12004AD370 /* RoundedCorner.swift in Sources */,
 				F24B33E72CF212F3004AD370 /* WorkoutView.swift in Sources */,
+				F2802BE62CF7238000617942 /* AnyCodable.swift in Sources */,
 				F24B33DF2CEF9CCF004AD370 /* SwipeableCalendarView.swift in Sources */,
 				F24B33B52CEDDE7F004AD370 /* FSButton.swift in Sources */,
 				F24B33E92CF21662004AD370 /* IconLabelView.swift in Sources */,
@@ -827,7 +880,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = F9622P5FHU;
-				EXCLUDED_ARCHS = arm64;
+				EXCLUDED_ARCHS = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = FitSenpai/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -856,7 +909,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = F9622P5FHU;
-				EXCLUDED_ARCHS = arm64;
+				EXCLUDED_ARCHS = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = FitSenpai/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -900,6 +953,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		F2802BDE2CF721CA00617942 /* XCRemoteSwiftPackageReference "ObjectMapper" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/tristanhimmelman/ObjectMapper.git";
+			requirement = {
+				kind = exactVersion;
+				version = 4.4.3;
+			};
+		};
 		F2CF8CE32CF62FBD00461D0D /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/supabase/supabase-swift.git";
@@ -919,6 +980,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		F2802BDF2CF721CA00617942 /* ObjectMapper */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F2802BDE2CF721CA00617942 /* XCRemoteSwiftPackageReference "ObjectMapper" */;
+			productName = ObjectMapper;
+		};
 		F2CF8CE52CF62FDF00461D0D /* Auth */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = F2CF8CE32CF62FBD00461D0D /* XCRemoteSwiftPackageReference "supabase-swift" */;

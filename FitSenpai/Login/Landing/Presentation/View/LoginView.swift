@@ -8,9 +8,12 @@
 import SwiftUI
 
 struct LoginView: View {
-    @Binding var email: String
-    @Binding var password: String
-    
+    @StateObject private var viewModel: LoginViewModel
+
+    init(viewModel: LoginViewModel) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
             ZStack {
@@ -21,53 +24,55 @@ struct LoginView: View {
                     .resizable()
                     .frame(width: 25, height: 25)
             }
-            
-            
+
             VStack(alignment: .leading, spacing: 8) {
                 FSText(text: "Welcome back", fontStyle: .headers, color: .fsTitle)
                 FSText(text: "Login to access your fitness plans", fontStyle: .body14, color: .fsSubtitleColor)
             }
-            
+
             VStack(spacing: 24) {
-                RoundedBorderTextField(text: $email, placeholder: "Email")
-                VStack (alignment: .leading, spacing: 10) {
-                    RoundedBorderTextField(text: $email, placeholder: "Password", isSecure: true, showAccessory: true)
+                RoundedBorderTextField(text: $viewModel.email, placeholder: "Email")
+                VStack(alignment: .leading, spacing: 10) {
+                    RoundedBorderTextField(text: $viewModel.password, placeholder: "Password", isSecure: true, showAccessory: true)
                     FSText(text: "Forgot password?", fontStyle: .subHeaderRegular, letterSpace: 1.1, color: Color.fsSubtitleColor, isUnderlined: true)
                 }
             }
             .padding(.bottom, 24)
-            
-            FSButton(title: "Login") {
-                login()
+
+            FSButton(title: viewModel.isLoading ? "Logging in..." : "Login") {
+                Task {
+                    await viewModel.login()
+                }
             }
+            .disabled(viewModel.isLoading)
+
+            if let errorMessage = viewModel.errorMessage {
+                Text(errorMessage)
+                    .foregroundColor(.red)
+                    .font(.caption)
+            }
+
             Spacer()
+
             HStack(spacing: 2) {
                 Spacer()
                 FSText(text: "Don't have an account?", fontStyle: .body14, color: .fsTitle)
                 FSText(text: "Sign up here", fontStyle: .fieldsHeader, color: .fsAccentForeground)
                 Spacer()
             }
-            
         }
         .padding(.horizontal, 16)
         .padding(.top, 63)
         .navigationBarBackButtonHidden()
     }
-    
-    private func login() {
-        // Simulate login validation
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            // Call the AppLoader singleton to present the main view
-            if let window = UIApplication.shared.windows.first {
-                AppLoader.shared.configure(window: window)
-                AppLoader.shared.presentMainViewController()
-            } else {
-                print("Error: No window found.")
-            }
-        }
-    }
 }
 
-#Preview {
-    LoginView(email: .constant(""), password: .constant(""))
+struct LoginView_Previews: PreviewProvider {
+    static var previews: some View {
+        let client = FSClient.shared!
+        let loginUseCase = LoginUseCase(client: client)
+        let viewModel = LoginViewModel(loginUseCase: loginUseCase)
+
+        LoginView(viewModel: viewModel)
+    }
 }
