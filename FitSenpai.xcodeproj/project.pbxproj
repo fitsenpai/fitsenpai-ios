@@ -10,6 +10,19 @@
 		F229D3682CF7713C0094BE2E /* AuthUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F229D3672CF7713C0094BE2E /* AuthUseCase.swift */; };
 		F229D36A2CF7742F0094BE2E /* LogoutUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F229D3692CF7742F0094BE2E /* LogoutUseCase.swift */; };
 		F229D36E2CF774BF0094BE2E /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F229D36D2CF774BF0094BE2E /* AppState.swift */; };
+		F229D3722CF80E1F0094BE2E /* WorkoutRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F229D3712CF80E1F0094BE2E /* WorkoutRepo.swift */; };
+		F229D3762CF80E610094BE2E /* Workout.swift in Sources */ = {isa = PBXBuildFile; fileRef = F229D3752CF80E610094BE2E /* Workout.swift */; };
+		F229D3782CF80F330094BE2E /* WorkoutPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = F229D3772CF80F330094BE2E /* WorkoutPlan.swift */; };
+		F229D37A2CF80F510094BE2E /* DifficultyLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F229D3792CF80F510094BE2E /* DifficultyLevel.swift */; };
+		F229D37C2CF80F5D0094BE2E /* FitnessGoal.swift in Sources */ = {isa = PBXBuildFile; fileRef = F229D37B2CF80F5D0094BE2E /* FitnessGoal.swift */; };
+		F229D37E2CF80F670094BE2E /* GymActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = F229D37D2CF80F670094BE2E /* GymActivity.swift */; };
+		F229D3802CF80FC10094BE2E /* FSTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F229D37F2CF80FC10094BE2E /* FSTable.swift */; };
+		F229D3832CF81C490094BE2E /* WorkoutUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F229D3822CF81C490094BE2E /* WorkoutUseCase.swift */; };
+		F229D38E2CF825080094BE2E /* WorkoutsMainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F229D38D2CF825080094BE2E /* WorkoutsMainViewModel.swift */; };
+		F229D3902CF825B50094BE2E /* WorkoutViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F229D38F2CF825B50094BE2E /* WorkoutViewModel.swift */; };
+		F229D3922CF83DA00094BE2E /* GlobalAppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = F229D3912CF83DA00094BE2E /* GlobalAppEnvironment.swift */; };
+		F229D3942CF8491B0094BE2E /* FSImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F229D3932CF8491B0094BE2E /* FSImageView.swift */; };
+		F229D3962CF8493D0094BE2E /* FSCircleImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F229D3952CF8493D0094BE2E /* FSCircleImageView.swift */; };
 		F24B335B2CEDB421004AD370 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F24B335A2CEDB421004AD370 /* AppDelegate.swift */; };
 		F24B335D2CEDB421004AD370 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F24B335C2CEDB421004AD370 /* SceneDelegate.swift */; };
 		F24B33642CEDB422004AD370 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F24B33632CEDB422004AD370 /* Assets.xcassets */; };
@@ -85,6 +98,19 @@
 		F229D3672CF7713C0094BE2E /* AuthUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthUseCase.swift; sourceTree = "<group>"; };
 		F229D3692CF7742F0094BE2E /* LogoutUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutUseCase.swift; sourceTree = "<group>"; };
 		F229D36D2CF774BF0094BE2E /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		F229D3712CF80E1F0094BE2E /* WorkoutRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutRepo.swift; sourceTree = "<group>"; };
+		F229D3752CF80E610094BE2E /* Workout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Workout.swift; sourceTree = "<group>"; };
+		F229D3772CF80F330094BE2E /* WorkoutPlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutPlan.swift; sourceTree = "<group>"; };
+		F229D3792CF80F510094BE2E /* DifficultyLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifficultyLevel.swift; sourceTree = "<group>"; };
+		F229D37B2CF80F5D0094BE2E /* FitnessGoal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FitnessGoal.swift; sourceTree = "<group>"; };
+		F229D37D2CF80F670094BE2E /* GymActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GymActivity.swift; sourceTree = "<group>"; };
+		F229D37F2CF80FC10094BE2E /* FSTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FSTable.swift; sourceTree = "<group>"; };
+		F229D3822CF81C490094BE2E /* WorkoutUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutUseCase.swift; sourceTree = "<group>"; };
+		F229D38D2CF825080094BE2E /* WorkoutsMainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutsMainViewModel.swift; sourceTree = "<group>"; };
+		F229D38F2CF825B50094BE2E /* WorkoutViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutViewModel.swift; sourceTree = "<group>"; };
+		F229D3912CF83DA00094BE2E /* GlobalAppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalAppEnvironment.swift; sourceTree = "<group>"; };
+		F229D3932CF8491B0094BE2E /* FSImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FSImageView.swift; sourceTree = "<group>"; };
+		F229D3952CF8493D0094BE2E /* FSCircleImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FSCircleImageView.swift; sourceTree = "<group>"; };
 		F24B335A2CEDB421004AD370 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F24B335C2CEDB421004AD370 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		F24B33632CEDB422004AD370 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -185,6 +211,60 @@
 			path = Common;
 			sourceTree = "<group>";
 		};
+		F229D36F2CF80E040094BE2E /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				F229D3812CF81B2B0094BE2E /* UseCase */,
+				F229D3702CF80E140094BE2E /* Repo */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		F229D3702CF80E140094BE2E /* Repo */ = {
+			isa = PBXGroup;
+			children = (
+				F229D3712CF80E1F0094BE2E /* WorkoutRepo.swift */,
+			);
+			path = Repo;
+			sourceTree = "<group>";
+		};
+		F229D3732CF80E2E0094BE2E /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				F229D3742CF80E320094BE2E /* Model */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		F229D3742CF80E320094BE2E /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				F229D3752CF80E610094BE2E /* Workout.swift */,
+				F229D3772CF80F330094BE2E /* WorkoutPlan.swift */,
+				F229D3792CF80F510094BE2E /* DifficultyLevel.swift */,
+				F229D37B2CF80F5D0094BE2E /* FitnessGoal.swift */,
+				F229D37D2CF80F670094BE2E /* GymActivity.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		F229D3812CF81B2B0094BE2E /* UseCase */ = {
+			isa = PBXGroup;
+			children = (
+				F229D3822CF81C490094BE2E /* WorkoutUseCase.swift */,
+			);
+			path = UseCase;
+			sourceTree = "<group>";
+		};
+		F229D38C2CF824F50094BE2E /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				F229D38D2CF825080094BE2E /* WorkoutsMainViewModel.swift */,
+				F229D38F2CF825B50094BE2E /* WorkoutViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		F24B334E2CEDB421004AD370 = {
 			isa = PBXGroup;
 			children = (
@@ -255,6 +335,7 @@
 				F24B33832CEDBA0E004AD370 /* TextStyle */,
 				F24B337E2CEDB5E3004AD370 /* Extensions */,
 				F24B337B2CEDB5BA004AD370 /* Util */,
+				F229D3912CF83DA00094BE2E /* GlobalAppEnvironment.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -347,6 +428,8 @@
 				F24B33E22CF20E17004AD370 /* GrayPillView.swift */,
 				F24B33E42CF21116004AD370 /* FSCompletionBarView.swift */,
 				F24B33E82CF21662004AD370 /* IconLabelView.swift */,
+				F229D3932CF8491B0094BE2E /* FSImageView.swift */,
+				F229D3952CF8493D0094BE2E /* FSCircleImageView.swift */,
 			);
 			path = ReuseableViews;
 			sourceTree = "<group>";
@@ -424,6 +507,8 @@
 		F24B33C82CEF938F004AD370 /* Workouts */ = {
 			isa = PBXGroup;
 			children = (
+				F229D3732CF80E2E0094BE2E /* Data */,
+				F229D36F2CF80E040094BE2E /* Domain */,
 				F24B33C92CEF9396004AD370 /* Presentation */,
 			);
 			path = Workouts;
@@ -432,6 +517,7 @@
 		F24B33C92CEF9396004AD370 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				F229D38C2CF824F50094BE2E /* ViewModel */,
 				F24B33CA2CEF939C004AD370 /* View */,
 			);
 			path = Presentation;
@@ -580,6 +666,7 @@
 			children = (
 				F24B340D2CF61E55004AD370 /* FSClient.swift */,
 				F2802BE52CF7238000617942 /* AnyCodable.swift */,
+				F229D37F2CF80FC10094BE2E /* FSTable.swift */,
 			);
 			path = Webservice;
 			sourceTree = "<group>";
@@ -718,7 +805,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F229D3902CF825B50094BE2E /* WorkoutViewModel.swift in Sources */,
 				F24B33A22CEDBE88004AD370 /* Testimonial.swift in Sources */,
+				F229D37A2CF80F510094BE2E /* DifficultyLevel.swift in Sources */,
+				F229D3942CF8491B0094BE2E /* FSImageView.swift in Sources */,
+				F229D37C2CF80F5D0094BE2E /* FitnessGoal.swift in Sources */,
 				F24B33AA2CEDC371004AD370 /* FSText.swift in Sources */,
 				F229D36A2CF7742F0094BE2E /* LogoutUseCase.swift in Sources */,
 				F24B337D2CEDB5DC004AD370 /* FSColor.swift in Sources */,
@@ -732,26 +823,34 @@
 				F24B339E2CEDBE40004AD370 /* TestimonialViewModel.swift in Sources */,
 				F229D3682CF7713C0094BE2E /* AuthUseCase.swift in Sources */,
 				F2802BEA2CF725EA00617942 /* LoginUseCase.swift in Sources */,
+				F229D3922CF83DA00094BE2E /* GlobalAppEnvironment.swift in Sources */,
 				F24B33C02CEF1497004AD370 /* AppLoader.swift in Sources */,
+				F229D3722CF80E1F0094BE2E /* WorkoutRepo.swift in Sources */,
 				F24B340B2CF613D6004AD370 /* FSEnvironment.swift in Sources */,
 				F24B33BD2CEF0B36004AD370 /* RoundedBorderTextField.swift in Sources */,
 				F229D36E2CF774BF0094BE2E /* AppState.swift in Sources */,
 				F2802BE42CF7236100617942 /* UserIdentity.swift in Sources */,
+				F229D37E2CF80F670094BE2E /* GymActivity.swift in Sources */,
+				F229D3802CF80FC10094BE2E /* FSTable.swift in Sources */,
 				F24B34062CF61395004AD370 /* EnvironmentManager.swift in Sources */,
 				F24B335B2CEDB421004AD370 /* AppDelegate.swift in Sources */,
 				F24B33852CEDBA88004AD370 /* TextStyle.swift in Sources */,
 				F24B335D2CEDB421004AD370 /* SceneDelegate.swift in Sources */,
 				F2802BED2CF726B600617942 /* LoginViewModel.swift in Sources */,
+				F229D3832CF81C490094BE2E /* WorkoutUseCase.swift in Sources */,
 				F24B33E32CF20E17004AD370 /* GrayPillView.swift in Sources */,
 				F24B33F02CF239D1004AD370 /* FSMealPeriod.swift in Sources */,
 				F2802BE22CF7233D00617942 /* Session.swift in Sources */,
+				F229D3782CF80F330094BE2E /* WorkoutPlan.swift in Sources */,
 				F24B33DC2CEF9411004AD370 /* FSTabView.swift in Sources */,
 				F2802BDD2CF7215100617942 /* FSUser.swift in Sources */,
 				F24B33BB2CEDE5C3004AD370 /* LoginView.swift in Sources */,
+				F229D38E2CF825080094BE2E /* WorkoutsMainViewModel.swift in Sources */,
 				F24B33B32CEDDBDD004AD370 /* AuthLandingView.swift in Sources */,
 				F24B33E12CF07000004AD370 /* WeekView.swift in Sources */,
 				F24B33CF2CEF93BD004AD370 /* MealsMainView.swift in Sources */,
 				F24B33B92CEDDF87004AD370 /* FSButtonLight.swift in Sources */,
+				F229D3762CF80E610094BE2E /* Workout.swift in Sources */,
 				F24B33C22CEF1986004AD370 /* FitSenpai.swift in Sources */,
 				F24B33822CEDB662004AD370 /* FSLogger.swift in Sources */,
 				F24B33F22CF23B08004AD370 /* NutrientsInfoView.swift in Sources */,
@@ -764,6 +863,7 @@
 				F24B33802CEDB5F1004AD370 /* UIColor.swift in Sources */,
 				F24B33D42CEF93D8004AD370 /* GroceriesMainView.swift in Sources */,
 				F24B33E52CF21116004AD370 /* FSCompletionBarView.swift in Sources */,
+				F229D3962CF8493D0094BE2E /* FSCircleImageView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

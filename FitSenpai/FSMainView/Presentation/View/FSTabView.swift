@@ -10,7 +10,7 @@ import SwiftUI
 struct FSTabView: View {
     var body: some View {
         TabView {
-            WorkoutsMainView()
+            WorkoutsMainView.create()
                 .tabItem {
                     Label("Workouts", image: "ic_barbel")
                 }

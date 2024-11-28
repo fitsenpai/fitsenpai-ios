@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct WorkoutsMainView: View {
+    @StateObject var viewModel: WorkoutsMainViewModel
     
     var listingHeader: some View {
         HStack(spacing: 12) {
@@ -21,49 +22,12 @@ struct WorkoutsMainView: View {
     
     var targetGroupHorizontalList: some View {
         HStack (spacing: 12) {
-            GrayPillView(text: "Upper Body", pillHeight: 32, fontStyle: .body16)
+            GrayPillView(text: viewModel.selectedTargetGroup, pillHeight: 32, fontStyle: .body16)
             Spacer()
         }
     }
     
     var workoutSection: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(Color.gray230, lineWidth: 1)
-            VStack(spacing: 16) {
-                VStack {
-                    listingHeader
-                    targetGroupHorizontalList
-                }   
-                FSCompletionBarView()
-                
-                
-                List {
-                    Section {
-                        // Top padding for the first row
-                        WorkoutView(image: "ic_workout", title: "General warm-up", isSelected: false, showInfo: false)
-                            .frame(height: 88)
-                            .listRowSeparator(.hidden)
-                            .padding(.top, 12) // Add top padding here
-
-                        WorkoutView(image: "ic_workout", title: "Bench press", isSelected: true, showInfo: true)
-                            .frame(height: 88)
-                            .listRowSeparator(.hidden)
-                            .padding(.bottom, 12) // Add bottom padding here
-                    }
-                    // Removes the default left and right padding
-                    .listRowInsets(EdgeInsets(top: 0, leading: 1, bottom: 0, trailing: 1))
-                }
-                .listStyle(PlainListStyle())
-                .listRowSpacing(12) // Maintain spacing between rows
-                
-            }
-            .padding(16)
-                
-        }
-    }
-    
-    var workoutSection2: some View {
         VStack(spacing: 16) {
             VStack {
                 listingHeader
@@ -71,15 +35,21 @@ struct WorkoutsMainView: View {
             }
             FSCompletionBarView()
             
-            ScrollView {
-                VStack(spacing: 12) {
-                    WorkoutView(image: "ic_workout", title: "General warm-up", isSelected: false, showInfo: false)
-                        .frame(height: 88)
-
-                    WorkoutView(image: "ic_workout", title: "Bench press", isSelected: true, showInfo: true)
-                        .frame(height: 88)
+            if viewModel.isWorkoutLoading {
+                ProgressView() // Show loading indicator while fetching
+            } else {
+                ScrollView {
+                    VStack(spacing: 12) {
+                        ForEach(viewModel.workouts, id: \.id) { workout in
+                            WorkoutView(image: "ic_workout", title: workout.exerciseName, isSelected: workout == viewModel.selectedWorkout, showInfo: true)
+                                .onTapGesture {
+                                    viewModel.selectWorkout(workout: workout)
+                                }
+                                .frame(height: 88)
+                        }
+                        .padding(.horizontal, 1)
+                    }
                 }
-                .padding(.horizontal, 1)
             }
         }
         .padding(.vertical, 16)
@@ -91,12 +61,30 @@ struct WorkoutsMainView: View {
             SwipeableCalendarView()
             
             workoutSection
-            
         }
         .padding(.horizontal, 16)
+        .onAppear {
+            // Assuming we want to fetch workouts when the view appears
+            if let uuid = globalAppEnvObject.user?.id {
+                viewModel.fetchWorkoutPlans(forUser: uuid)
+            }
+            
+        }
+    }
+    
+    static func create() -> WorkoutsMainView {
+        let repo = WorkoutRepoImpl(client: FSClient.shared!)
+        let useCase = WorkoutUseCase(workoutRepo: repo)
+        let viewModel = WorkoutsMainViewModel(workoutUseCase: useCase)
+        return WorkoutsMainView(viewModel: viewModel)
     }
 }
 
-#Preview {
-    WorkoutsMainView()
+struct WorkoutsMainView_Previews: PreviewProvider {
+    static var previews: some View {
+        let repo = WorkoutRepoImpl(client: FSClient.shared!)
+        let useCase = WorkoutUseCase(workoutRepo: repo)
+        let viewModel = WorkoutsMainViewModel(workoutUseCase: useCase)
+        WorkoutsMainView(viewModel: viewModel)
+    }
 }

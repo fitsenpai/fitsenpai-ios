@@ -20,6 +20,7 @@ struct AuthUseCase {
         // Check for an active session directly
         do {
             let session = try await supabaseClient.auth.session
+            initGlobalEnv(user: session.user)
             print("Active session found for user: \(session.user.email ?? "unknown email")")
             return true
         } catch {
@@ -42,5 +43,10 @@ struct AuthUseCase {
         } catch {
             print("Failed to clear session: \(error.localizedDescription)")
         }
+    }
+    
+    private static func initGlobalEnv(user: User){
+        let fsUser = FSUser.init(fromSupabaseUser: user)
+        globalAppEnvObject.user = fsUser
     }
 }

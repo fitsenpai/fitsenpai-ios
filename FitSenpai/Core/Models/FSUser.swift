@@ -7,17 +7,18 @@
 
 import Foundation
 import ObjectMapper
+import Supabase
 
 class FSUser: Mappable {
-    var id: String?
+    var id: UUID?
     var appMetadata: [String: Any]?
     var userMetadata: [String: Any]?
     var aud: String?
-    var confirmationSentAt: String?
-    var recoverySentAt: String?
-    var emailChangeSentAt: String?
+    var confirmationSentAt: Date?
+    var recoverySentAt: Date?
+    var emailChangeSentAt: Date?
     var newEmail: String?
-    var invitedAt: String?
+    var invitedAt: Date?
     var actionLink: String?
     var email: String?
     var phone: String?
@@ -28,8 +29,6 @@ class FSUser: Mappable {
     var lastSignInAt: Date?
     var role: String?
     var updatedAt: Date?
-    var identities: [UserIdentity]?
-    var factors: [String]?
 
     required init?(map: Map) {}
 
@@ -53,7 +52,28 @@ class FSUser: Mappable {
         lastSignInAt         <- (map["lastSignInAt"], DateTransform())
         role                 <- map["role"]
         updatedAt            <- (map["updatedAt"], DateTransform())
-        identities           <- map["identities"]
-        factors              <- map["factors"]
+        
+    }
+    
+    init(fromSupabaseUser user: Supabase.User) {
+        self.id = user.id
+        self.email = user.email
+        self.phone = user.phone
+        self.appMetadata = user.appMetadata
+        self.userMetadata = user.userMetadata
+        self.aud = user.aud
+        self.confirmationSentAt = user.confirmationSentAt
+        self.recoverySentAt = user.recoverySentAt
+        self.emailChangeSentAt = user.emailChangeSentAt
+        self.newEmail = user.newEmail
+        self.invitedAt = user.invitedAt
+        self.actionLink = user.actionLink
+        self.createdAt = user.createdAt
+        self.confirmedAt = user.confirmedAt
+        self.emailConfirmedAt = user.emailConfirmedAt
+        self.phoneConfirmedAt = user.phoneConfirmedAt
+        self.lastSignInAt = user.lastSignInAt
+        self.role = user.role
+        self.updatedAt = user.updatedAt
     }
 }
