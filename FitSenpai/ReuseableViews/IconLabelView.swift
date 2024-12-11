@@ -13,18 +13,32 @@ struct IconLabelView: View {
     var fontStyle: Font
     var fontColor: Color
     var iconSize: CGFloat
+    var spacing: CGFloat = 4
+    var showBorder: Bool = false
+    var width: CGFloat = 100
     
     var body: some View {
-        HStack(spacing: 4) {
+        HStack(spacing: spacing) {
             Image(fsMetric.getInfoForIcon(value).iconName)
                 .resizable()
                 .frame(width: iconSize, height: iconSize)
                 .scaledToFit()
             FSText(text: fsMetric.getInfoForIcon(value).description, fontStyle: fontStyle, color: fontColor)
         }
+        .if(showBorder) { view in
+            view
+            .padding(.horizontal, 10)
+            .padding(.vertical, 2)
+            .background {
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(Color.gray230, lineWidth: 1)
+                    .frame(width: width, height: 40)
+            }
+        }
+        
     }
 }
 
 #Preview {
-    IconLabelView(fsMetric: .WorkoutRep, value: 12, fontStyle: .body12, fontColor: .fsSubtitleColor, iconSize: 12)
+    IconLabelView(fsMetric: .WorkoutRep, value: 12, fontStyle: .body12, fontColor: .fsSubtitleColor, iconSize: 12, spacing: 8, showBorder: true)
 }

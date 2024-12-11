@@ -77,6 +77,22 @@ class Routine: Mappable, Decodable {
     var load: String?
     var gifUrl: String?
     
+    static func initTest() -> Routine {
+        let routine = Routine()
+        routine.load = "10"
+        routine.repetition = "10"
+        routine.sets = "3"
+        routine.muscleGroup = "chest"
+        routine.instructions = ["Stand with feet shoulder-width apart.",
+                                "Bend forward slightly while keeping your back straight.",
+                                "Hold the stretch for the duration."]
+        routine.gifUrl = "https://txvhbjocxiodvtqreskj.supabase.co/storage/v1/object/public/workouts/abdominals/decline_bench_oblique_crunches_bodyweight.mp4?"
+        routine.name = "Bench Press"
+        return routine
+    }
+    
+    init() {}
+    
     required init?(map: Map) {}
     
     func mapping(map: Map) {

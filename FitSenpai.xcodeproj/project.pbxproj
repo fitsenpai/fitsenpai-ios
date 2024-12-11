@@ -92,6 +92,11 @@
 		F2CF8CEE2CF62FDF00461D0D /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = F2CF8CED2CF62FDF00461D0D /* Storage */; };
 		F2CF8CF02CF62FDF00461D0D /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = F2CF8CEF2CF62FDF00461D0D /* Supabase */; };
 		F2CF8CF32CF630F700461D0D /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = F2CF8CF22CF630F700461D0D /* Kingfisher */; };
+		F2F8CA322D06F5B100E3DCF3 /* BottomSheet in Frameworks */ = {isa = PBXBuildFile; productRef = F2F8CA312D06F5B100E3DCF3 /* BottomSheet */; };
+		F2F8CA342D09471800E3DCF3 /* WorkoutDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2F8CA332D09471800E3DCF3 /* WorkoutDetailView.swift */; };
+		F2F8CA362D09488D00E3DCF3 /* WorkoutDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2F8CA352D09488D00E3DCF3 /* WorkoutDetailViewModel.swift */; };
+		F2F8CA382D0973D100E3DCF3 /* InstructionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2F8CA372D0973D100E3DCF3 /* InstructionView.swift */; };
+		F2F8CA3A2D0995EE00E3DCF3 /* PlayerUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2F8CA392D0995EE00E3DCF3 /* PlayerUIView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -174,6 +179,10 @@
 		F2802BE52CF7238000617942 /* AnyCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyCodable.swift; sourceTree = "<group>"; };
 		F2802BE92CF725EA00617942 /* LoginUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginUseCase.swift; sourceTree = "<group>"; };
 		F2802BEC2CF726B600617942 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		F2F8CA332D09471800E3DCF3 /* WorkoutDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutDetailView.swift; sourceTree = "<group>"; };
+		F2F8CA352D09488D00E3DCF3 /* WorkoutDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutDetailViewModel.swift; sourceTree = "<group>"; };
+		F2F8CA372D0973D100E3DCF3 /* InstructionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionView.swift; sourceTree = "<group>"; };
+		F2F8CA392D0995EE00E3DCF3 /* PlayerUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerUIView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -182,6 +191,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F2802BE02CF721CA00617942 /* ObjectMapper in Frameworks */,
+				F2F8CA322D06F5B100E3DCF3 /* BottomSheet in Frameworks */,
 				F2CF8CEA2CF62FDF00461D0D /* PostgREST in Frameworks */,
 				F2CF8CE82CF62FDF00461D0D /* Functions in Frameworks */,
 				F2CF8CF32CF630F700461D0D /* Kingfisher in Frameworks */,
@@ -261,6 +271,7 @@
 			children = (
 				F229D38D2CF825080094BE2E /* WorkoutsMainViewModel.swift */,
 				F229D38F2CF825B50094BE2E /* WorkoutViewModel.swift */,
+				F2F8CA352D09488D00E3DCF3 /* WorkoutDetailViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -430,6 +441,8 @@
 				F24B33E82CF21662004AD370 /* IconLabelView.swift */,
 				F229D3932CF8491B0094BE2E /* FSImageView.swift */,
 				F229D3952CF8493D0094BE2E /* FSCircleImageView.swift */,
+				F2F8CA372D0973D100E3DCF3 /* InstructionView.swift */,
+				F2F8CA392D0995EE00E3DCF3 /* PlayerUIView.swift */,
 			);
 			path = ReuseableViews;
 			sourceTree = "<group>";
@@ -528,6 +541,7 @@
 			children = (
 				F24B33C62CEF9384004AD370 /* WorkoutsMainView.swift */,
 				F24B33E62CF212F3004AD370 /* WorkoutView.swift */,
+				F2F8CA332D09471800E3DCF3 /* WorkoutDetailView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -729,6 +743,7 @@
 				F2CF8CEF2CF62FDF00461D0D /* Supabase */,
 				F2CF8CF22CF630F700461D0D /* Kingfisher */,
 				F2802BDF2CF721CA00617942 /* ObjectMapper */,
+				F2F8CA312D06F5B100E3DCF3 /* BottomSheet */,
 			);
 			productName = FitSenpai;
 			productReference = F2802BC62CF6395300617942 /* FitSenpai.app */;
@@ -762,6 +777,7 @@
 				F2CF8CE32CF62FBD00461D0D /* XCRemoteSwiftPackageReference "supabase-swift" */,
 				F2CF8CF12CF630F700461D0D /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				F2802BDE2CF721CA00617942 /* XCRemoteSwiftPackageReference "ObjectMapper" */,
+				F2F8CA302D06F5B100E3DCF3 /* XCRemoteSwiftPackageReference "BottomSheet" */,
 			);
 			productRefGroup = F24B334E2CEDB421004AD370;
 			projectDirPath = "";
@@ -817,6 +833,7 @@
 				F24B33DA2CEF93FE004AD370 /* ProfileMainView.swift in Sources */,
 				F24B340E2CF61E55004AD370 /* FSClient.swift in Sources */,
 				F24B33EC2CF2184E004AD370 /* FSMetric.swift in Sources */,
+				F2F8CA362D09488D00E3DCF3 /* WorkoutDetailViewModel.swift in Sources */,
 				F24B33C72CEF9384004AD370 /* WorkoutsMainView.swift in Sources */,
 				F24B33AC2CEDC4D2004AD370 /* SwiftUIView+If.swift in Sources */,
 				F24B33A72CEDC194004AD370 /* TestimonialView.swift in Sources */,
@@ -836,8 +853,11 @@
 				F24B335B2CEDB421004AD370 /* AppDelegate.swift in Sources */,
 				F24B33852CEDBA88004AD370 /* TextStyle.swift in Sources */,
 				F24B335D2CEDB421004AD370 /* SceneDelegate.swift in Sources */,
+				F2F8CA342D09471800E3DCF3 /* WorkoutDetailView.swift in Sources */,
 				F2802BED2CF726B600617942 /* LoginViewModel.swift in Sources */,
 				F229D3832CF81C490094BE2E /* WorkoutUseCase.swift in Sources */,
+				F2F8CA3A2D0995EE00E3DCF3 /* PlayerUIView.swift in Sources */,
+				F2F8CA382D0973D100E3DCF3 /* InstructionView.swift in Sources */,
 				F24B33E32CF20E17004AD370 /* GrayPillView.swift in Sources */,
 				F24B33F02CF239D1004AD370 /* FSMealPeriod.swift in Sources */,
 				F2802BE22CF7233D00617942 /* Session.swift in Sources */,
@@ -1105,6 +1125,14 @@
 				version = 8.1.1;
 			};
 		};
+		F2F8CA302D06F5B100E3DCF3 /* XCRemoteSwiftPackageReference "BottomSheet" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/lucaszischka/BottomSheet";
+			requirement = {
+				kind = exactVersion;
+				version = 3.1.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1147,6 +1175,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = F2CF8CF12CF630F700461D0D /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
+		};
+		F2F8CA312D06F5B100E3DCF3 /* BottomSheet */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F2F8CA302D06F5B100E3DCF3 /* XCRemoteSwiftPackageReference "BottomSheet" */;
+			productName = BottomSheet;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
