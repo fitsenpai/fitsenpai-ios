@@ -32,7 +32,7 @@ struct FSImageView: View {
                             .placeholder {
                                 Image(placeHolder ?? "")
                                     .resizable()
-                                    .scaledToFill()
+                                    .scaledToFit()
                             }
                             .onSuccess { result in
                                 let size = result.image.size
@@ -40,19 +40,19 @@ struct FSImageView: View {
                             }
                             .resizable()
                             .scaledToFill()
-                            .frame(width: containerWidth, height: computedHeight) // Explicitly set dimensions
+                            /*.frame(width: containerWidth, height: computedHeight)*/ // Explicitly set dimensions
                     }
                 } else {
                     Image(placeHolder ?? "")
                         .resizable()
                         .scaledToFill()
-                        .frame(width: containerWidth, height: computedHeight) // Explicitly set dimensions
+                        /*.frame(width: containerWidth, height: computedHeight)*/ // Explicitly set dimensions
                 }
             }
             .cornerRadius(radius)
             .clipped()
         }
-        .aspectRatio(1.0, contentMode: .fit) // Ensures proportional sizing
+        //.aspectRatio(1.0, contentMode: .fit) // Ensures proportional sizing
     }
 }
 
@@ -94,7 +94,8 @@ struct VideoPlayerView: View {
 
 struct FSImageView_Previews: PreviewProvider {
     static var previews: some View {
-        FSImageView(url: URL(string: "https://txvhbjocxiodvtqreskj.supabase.co/storage/v1/object/public/workouts/abdominals/decline_bench_oblique_crunches_bodyweight.mp4?"))
+//        FSImageView(url: URL(string: "https://txvhbjocxiodvtqreskj.supabase.co/storage/v1/object/public/workouts/abdominals/decline_bench_oblique_crunches_bodyweight.mp4?"))
+        FSImageView(url: nil, placeHolder: "img_meal")
     }
 }
 

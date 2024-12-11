@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F21F676F2D09A39C00C240DD /* MealDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21F676E2D09A39C00C240DD /* MealDetailViewModel.swift */; };
+		F21F67712D09A42900C240DD /* MealDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21F67702D09A42900C240DD /* MealDetailView.swift */; };
 		F229D3682CF7713C0094BE2E /* AuthUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F229D3672CF7713C0094BE2E /* AuthUseCase.swift */; };
 		F229D36A2CF7742F0094BE2E /* LogoutUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F229D3692CF7742F0094BE2E /* LogoutUseCase.swift */; };
 		F229D36E2CF774BF0094BE2E /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F229D36D2CF774BF0094BE2E /* AppState.swift */; };
@@ -95,11 +97,13 @@
 		F2F8CA322D06F5B100E3DCF3 /* BottomSheet in Frameworks */ = {isa = PBXBuildFile; productRef = F2F8CA312D06F5B100E3DCF3 /* BottomSheet */; };
 		F2F8CA342D09471800E3DCF3 /* WorkoutDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2F8CA332D09471800E3DCF3 /* WorkoutDetailView.swift */; };
 		F2F8CA362D09488D00E3DCF3 /* WorkoutDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2F8CA352D09488D00E3DCF3 /* WorkoutDetailViewModel.swift */; };
-		F2F8CA382D0973D100E3DCF3 /* InstructionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2F8CA372D0973D100E3DCF3 /* InstructionView.swift */; };
+		F2F8CA382D0973D100E3DCF3 /* GenericTextListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2F8CA372D0973D100E3DCF3 /* GenericTextListView.swift */; };
 		F2F8CA3A2D0995EE00E3DCF3 /* PlayerUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2F8CA392D0995EE00E3DCF3 /* PlayerUIView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		F21F676E2D09A39C00C240DD /* MealDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealDetailViewModel.swift; sourceTree = "<group>"; };
+		F21F67702D09A42900C240DD /* MealDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealDetailView.swift; sourceTree = "<group>"; };
 		F229D3672CF7713C0094BE2E /* AuthUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthUseCase.swift; sourceTree = "<group>"; };
 		F229D3692CF7742F0094BE2E /* LogoutUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutUseCase.swift; sourceTree = "<group>"; };
 		F229D36D2CF774BF0094BE2E /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
@@ -181,7 +185,7 @@
 		F2802BEC2CF726B600617942 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		F2F8CA332D09471800E3DCF3 /* WorkoutDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutDetailView.swift; sourceTree = "<group>"; };
 		F2F8CA352D09488D00E3DCF3 /* WorkoutDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutDetailViewModel.swift; sourceTree = "<group>"; };
-		F2F8CA372D0973D100E3DCF3 /* InstructionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionView.swift; sourceTree = "<group>"; };
+		F2F8CA372D0973D100E3DCF3 /* GenericTextListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericTextListView.swift; sourceTree = "<group>"; };
 		F2F8CA392D0995EE00E3DCF3 /* PlayerUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerUIView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -205,6 +209,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F21F676D2D09A38A00C240DD /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				F21F676E2D09A39C00C240DD /* MealDetailViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		F229D36B2CF774AE0094BE2E /* Data */ = {
 			isa = PBXGroup;
 			children = (
@@ -441,7 +453,7 @@
 				F24B33E82CF21662004AD370 /* IconLabelView.swift */,
 				F229D3932CF8491B0094BE2E /* FSImageView.swift */,
 				F229D3952CF8493D0094BE2E /* FSCircleImageView.swift */,
-				F2F8CA372D0973D100E3DCF3 /* InstructionView.swift */,
+				F2F8CA372D0973D100E3DCF3 /* GenericTextListView.swift */,
 				F2F8CA392D0995EE00E3DCF3 /* PlayerUIView.swift */,
 			);
 			path = ReuseableViews;
@@ -557,6 +569,7 @@
 		F24B33CC2CEF93AC004AD370 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				F21F676D2D09A38A00C240DD /* ViewModel */,
 				F24B33CD2CEF93B1004AD370 /* View */,
 			);
 			path = Presentation;
@@ -568,6 +581,7 @@
 				F24B33CE2CEF93BD004AD370 /* MealsMainView.swift */,
 				F24B33ED2CF23977004AD370 /* MealView.swift */,
 				F24B33F12CF23B08004AD370 /* NutrientsInfoView.swift */,
+				F21F67702D09A42900C240DD /* MealDetailView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -839,10 +853,12 @@
 				F24B33A72CEDC194004AD370 /* TestimonialView.swift in Sources */,
 				F24B339E2CEDBE40004AD370 /* TestimonialViewModel.swift in Sources */,
 				F229D3682CF7713C0094BE2E /* AuthUseCase.swift in Sources */,
+				F21F676F2D09A39C00C240DD /* MealDetailViewModel.swift in Sources */,
 				F2802BEA2CF725EA00617942 /* LoginUseCase.swift in Sources */,
 				F229D3922CF83DA00094BE2E /* GlobalAppEnvironment.swift in Sources */,
 				F24B33C02CEF1497004AD370 /* AppLoader.swift in Sources */,
 				F229D3722CF80E1F0094BE2E /* WorkoutRepo.swift in Sources */,
+				F21F67712D09A42900C240DD /* MealDetailView.swift in Sources */,
 				F24B340B2CF613D6004AD370 /* FSEnvironment.swift in Sources */,
 				F24B33BD2CEF0B36004AD370 /* RoundedBorderTextField.swift in Sources */,
 				F229D36E2CF774BF0094BE2E /* AppState.swift in Sources */,
@@ -857,7 +873,7 @@
 				F2802BED2CF726B600617942 /* LoginViewModel.swift in Sources */,
 				F229D3832CF81C490094BE2E /* WorkoutUseCase.swift in Sources */,
 				F2F8CA3A2D0995EE00E3DCF3 /* PlayerUIView.swift in Sources */,
-				F2F8CA382D0973D100E3DCF3 /* InstructionView.swift in Sources */,
+				F2F8CA382D0973D100E3DCF3 /* GenericTextListView.swift in Sources */,
 				F24B33E32CF20E17004AD370 /* GrayPillView.swift in Sources */,
 				F24B33F02CF239D1004AD370 /* FSMealPeriod.swift in Sources */,
 				F2802BE22CF7233D00617942 /* Session.swift in Sources */,

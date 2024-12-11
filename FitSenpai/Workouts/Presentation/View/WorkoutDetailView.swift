@@ -93,7 +93,7 @@ struct WorkoutDetailView: View {
                             .onAppear() {
                                 player.play()
                             }.ignoresSafeArea()
-            InstructionView(instructions: viewModel.workoutSteps)
+            GenericTextListView(title: "How to perform this exercise:", instructions: viewModel.workoutSteps, isNumbered: true)
                 .padding(.bottom, 16)
             FSButton(title: "Complete", tapAction: {})
         }

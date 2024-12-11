@@ -9,6 +9,8 @@ import SwiftUI
 
 struct MealsMainView: View {
     
+    @State var showingDetail = false
+    
     let items = [
         ("Calories", 1558, Color.calorieGreenBG, Color.calorieGreen, FSMetric.Calories),
         ("Protein", 118, Color.proteinOrangeBG, Color.proteinOrange, FSMetric.Protein),
@@ -74,6 +76,12 @@ struct MealsMainView: View {
                     MealView(title: "Salmon and Asparagus", mealPeriod: .Dinner)
                         .frame(height: 88)
                 }
+                .onTapGesture {
+                    showingDetail.toggle()
+                }
+                .sheet(isPresented: $showingDetail, content: {
+                    MealDetailView(viewModel: MealDetailViewModel())
+                })
                 .padding(.horizontal, 1)
             }
         }

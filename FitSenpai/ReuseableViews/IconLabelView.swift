@@ -15,7 +15,7 @@ struct IconLabelView: View {
     var iconSize: CGFloat
     var spacing: CGFloat = 4
     var showBorder: Bool = false
-    var width: CGFloat = 100
+    var width: CGFloat?
     
     var body: some View {
         HStack(spacing: spacing) {
@@ -32,7 +32,12 @@ struct IconLabelView: View {
             .background {
                 RoundedRectangle(cornerRadius: 8)
                     .stroke(Color.gray230, lineWidth: 1)
-                    .frame(width: width, height: 40)
+                    .frame(height: 40)
+                    .if(width != nil) { v in
+                            v.frame(width: width!)
+                    }
+                    
+                    
             }
         }
         
