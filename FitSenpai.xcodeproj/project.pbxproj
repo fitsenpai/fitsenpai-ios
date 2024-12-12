@@ -9,6 +9,11 @@
 /* Begin PBXBuildFile section */
 		F21F676F2D09A39C00C240DD /* MealDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21F676E2D09A39C00C240DD /* MealDetailViewModel.swift */; };
 		F21F67712D09A42900C240DD /* MealDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21F67702D09A42900C240DD /* MealDetailView.swift */; };
+		F21F67732D0ABA0A00C240DD /* CheckboxLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21F67722D0ABA0A00C240DD /* CheckboxLabelView.swift */; };
+		F21F67752D0ABB2300C240DD /* GroceriesSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21F67742D0ABB2300C240DD /* GroceriesSectionView.swift */; };
+		F21F67792D0ABF2C00C240DD /* FoodCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21F67782D0ABF2C00C240DD /* FoodCategory.swift */; };
+		F21F677B2D0AC36300C240DD /* FoodItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21F677A2D0AC36300C240DD /* FoodItem.swift */; };
+		F21F677E2D0AC53100C240DD /* TypeAliases.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21F677D2D0AC53100C240DD /* TypeAliases.swift */; };
 		F229D3682CF7713C0094BE2E /* AuthUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F229D3672CF7713C0094BE2E /* AuthUseCase.swift */; };
 		F229D36A2CF7742F0094BE2E /* LogoutUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F229D3692CF7742F0094BE2E /* LogoutUseCase.swift */; };
 		F229D36E2CF774BF0094BE2E /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F229D36D2CF774BF0094BE2E /* AppState.swift */; };
@@ -104,6 +109,11 @@
 /* Begin PBXFileReference section */
 		F21F676E2D09A39C00C240DD /* MealDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealDetailViewModel.swift; sourceTree = "<group>"; };
 		F21F67702D09A42900C240DD /* MealDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealDetailView.swift; sourceTree = "<group>"; };
+		F21F67722D0ABA0A00C240DD /* CheckboxLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxLabelView.swift; sourceTree = "<group>"; };
+		F21F67742D0ABB2300C240DD /* GroceriesSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroceriesSectionView.swift; sourceTree = "<group>"; };
+		F21F67782D0ABF2C00C240DD /* FoodCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodCategory.swift; sourceTree = "<group>"; };
+		F21F677A2D0AC36300C240DD /* FoodItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodItem.swift; sourceTree = "<group>"; };
+		F21F677D2D0AC53100C240DD /* TypeAliases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeAliases.swift; sourceTree = "<group>"; };
 		F229D3672CF7713C0094BE2E /* AuthUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthUseCase.swift; sourceTree = "<group>"; };
 		F229D3692CF7742F0094BE2E /* LogoutUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutUseCase.swift; sourceTree = "<group>"; };
 		F229D36D2CF774BF0094BE2E /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
@@ -215,6 +225,31 @@
 				F21F676E2D09A39C00C240DD /* MealDetailViewModel.swift */,
 			);
 			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		F21F67762D0ABF1E00C240DD /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				F21F67772D0ABF2400C240DD /* Model */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		F21F67772D0ABF2400C240DD /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				F21F67782D0ABF2C00C240DD /* FoodCategory.swift */,
+				F21F677A2D0AC36300C240DD /* FoodItem.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		F21F677C2D0AC52500C240DD /* TypeAliases */ = {
+			isa = PBXGroup;
+			children = (
+				F21F677D2D0AC53100C240DD /* TypeAliases.swift */,
+			);
+			path = TypeAliases;
 			sourceTree = "<group>";
 		};
 		F229D36B2CF774AE0094BE2E /* Data */ = {
@@ -353,6 +388,7 @@
 		F24B337A2CEDB5B5004AD370 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				F21F677C2D0AC52500C240DD /* TypeAliases */,
 				F24B340C2CF61E4C004AD370 /* Webservice */,
 				F24B33EA2CF21782004AD370 /* Models */,
 				F24B33832CEDBA0E004AD370 /* TextStyle */,
@@ -455,6 +491,7 @@
 				F229D3952CF8493D0094BE2E /* FSCircleImageView.swift */,
 				F2F8CA372D0973D100E3DCF3 /* GenericTextListView.swift */,
 				F2F8CA392D0995EE00E3DCF3 /* PlayerUIView.swift */,
+				F21F67722D0ABA0A00C240DD /* CheckboxLabelView.swift */,
 			);
 			path = ReuseableViews;
 			sourceTree = "<group>";
@@ -589,6 +626,7 @@
 		F24B33D02CEF93C4004AD370 /* Groceries */ = {
 			isa = PBXGroup;
 			children = (
+				F21F67762D0ABF1E00C240DD /* Data */,
 				F24B33D12CEF93CB004AD370 /* Presentation */,
 			);
 			path = Groceries;
@@ -606,6 +644,7 @@
 			isa = PBXGroup;
 			children = (
 				F24B33D32CEF93D8004AD370 /* GroceriesMainView.swift */,
+				F21F67742D0ABB2300C240DD /* GroceriesSectionView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -857,6 +896,7 @@
 				F2802BEA2CF725EA00617942 /* LoginUseCase.swift in Sources */,
 				F229D3922CF83DA00094BE2E /* GlobalAppEnvironment.swift in Sources */,
 				F24B33C02CEF1497004AD370 /* AppLoader.swift in Sources */,
+				F21F67752D0ABB2300C240DD /* GroceriesSectionView.swift in Sources */,
 				F229D3722CF80E1F0094BE2E /* WorkoutRepo.swift in Sources */,
 				F21F67712D09A42900C240DD /* MealDetailView.swift in Sources */,
 				F24B340B2CF613D6004AD370 /* FSEnvironment.swift in Sources */,
@@ -865,6 +905,7 @@
 				F2802BE42CF7236100617942 /* UserIdentity.swift in Sources */,
 				F229D37E2CF80F670094BE2E /* GymActivity.swift in Sources */,
 				F229D3802CF80FC10094BE2E /* FSTable.swift in Sources */,
+				F21F67792D0ABF2C00C240DD /* FoodCategory.swift in Sources */,
 				F24B34062CF61395004AD370 /* EnvironmentManager.swift in Sources */,
 				F24B335B2CEDB421004AD370 /* AppDelegate.swift in Sources */,
 				F24B33852CEDBA88004AD370 /* TextStyle.swift in Sources */,
@@ -873,6 +914,7 @@
 				F2802BED2CF726B600617942 /* LoginViewModel.swift in Sources */,
 				F229D3832CF81C490094BE2E /* WorkoutUseCase.swift in Sources */,
 				F2F8CA3A2D0995EE00E3DCF3 /* PlayerUIView.swift in Sources */,
+				F21F677B2D0AC36300C240DD /* FoodItem.swift in Sources */,
 				F2F8CA382D0973D100E3DCF3 /* GenericTextListView.swift in Sources */,
 				F24B33E32CF20E17004AD370 /* GrayPillView.swift in Sources */,
 				F24B33F02CF239D1004AD370 /* FSMealPeriod.swift in Sources */,
@@ -889,6 +931,7 @@
 				F229D3762CF80E610094BE2E /* Workout.swift in Sources */,
 				F24B33C22CEF1986004AD370 /* FitSenpai.swift in Sources */,
 				F24B33822CEDB662004AD370 /* FSLogger.swift in Sources */,
+				F21F67732D0ABA0A00C240DD /* CheckboxLabelView.swift in Sources */,
 				F24B33F22CF23B08004AD370 /* NutrientsInfoView.swift in Sources */,
 				F24B33B72CEDDF12004AD370 /* RoundedCorner.swift in Sources */,
 				F24B33E72CF212F3004AD370 /* WorkoutView.swift in Sources */,
@@ -899,6 +942,7 @@
 				F24B33802CEDB5F1004AD370 /* UIColor.swift in Sources */,
 				F24B33D42CEF93D8004AD370 /* GroceriesMainView.swift in Sources */,
 				F24B33E52CF21116004AD370 /* FSCompletionBarView.swift in Sources */,
+				F21F677E2D0AC53100C240DD /* TypeAliases.swift in Sources */,
 				F229D3962CF8493D0094BE2E /* FSCircleImageView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

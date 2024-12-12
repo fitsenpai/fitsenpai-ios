@@ -28,14 +28,15 @@ struct GenericTextListView: View {
                 }
             }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 
 struct InstructionView_Previews: PreviewProvider {
     static var previews: some View {
         GenericTextListView(title: "How to perform this exercise:", instructions: [
-            "Stand with feet shoulder-width apart.",
-            "Bend forward slightly while keeping your back straight.",
+            "Stand with feet shoulder-width.",
+            "Bend forward slightly while keeping",
             "Hold the stretch for the duration."
         ], isNumbered: false)
     }

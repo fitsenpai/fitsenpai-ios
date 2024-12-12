@@ -7,9 +7,11 @@
 
 import SwiftUI
 
+
 struct SwipeableCalendarView: View {
     @State private var selectedDate = Date() // Tracks the selected date
     @State private var currentWeekOffset = 0 // Tracks the offset for the displayed week
+    @State var shouldShowWeekView = true
 
     var body: some View {
         VStack {
@@ -19,7 +21,7 @@ struct SwipeableCalendarView: View {
                     Image("ic_calendar")
                         .resizable()
                         .frame(width: 16, height: 16)
-                    FSText(text: monthYearText, fontStyle: .body14, color: .fsSubtitleColor)
+                    FSText(text: weekRangeText, fontStyle: .body14, color: .fsSubtitleColor)
                 }
                 Spacer()
                 HStack(spacing: 8) {
@@ -43,17 +45,18 @@ struct SwipeableCalendarView: View {
                     }
                 }
             }
-
-            // Swipeable Weeks
-            TabView(selection: $currentWeekOffset) {
-                ForEach(-52...52, id: \.self) { offset in
-                    WeekView(weekOffset: offset, selectedDate: $selectedDate)
-                        .tag(offset) // Use offset as the tag for swipeable identification
+            if shouldShowWeekView {
+                // Swipeable Weeks
+                TabView(selection: $currentWeekOffset) {
+                    ForEach(-52...52, id: \.self) { offset in
+                        WeekView(weekOffset: offset, selectedDate: $selectedDate)
+                            .tag(offset) // Use offset as the tag for swipeable identification
+                    }
                 }
+                .tabViewStyle(.page(indexDisplayMode: .never))
             }
-            .tabViewStyle(.page(indexDisplayMode: .never))
         }
-        .frame(height: 120)
+        .frame(height: shouldShowWeekView ? 120 : 30)
     }
 
     // MARK: - Helper Functions
@@ -62,20 +65,16 @@ struct SwipeableCalendarView: View {
         Calendar.current
     }
     
-    private var monthYearText: String {
-        let weekDates = daysInWeek(for: currentWeekOffset)
-        guard let start = weekDates.first else { return "" }
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMMM YYYY"
-        return dateFormatter.string(from: start)
-    }
-    
     private var weekRangeText: String {
-        let weekDates = daysInWeek()
+        let weekDates = daysInWeek(for: currentWeekOffset) // Use currentWeekOffset here
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMM d"
+        
+        let dateFormatter2 = DateFormatter()
+        dateFormatter2.dateFormat = " d"
+        
         guard let start = weekDates.first, let end = weekDates.last else { return "" }
-        return "\(dateFormatter.string(from: start)) - \(dateFormatter.string(from: end)), \(calendar.component(.year, from: start))"
+        return "\(dateFormatter.string(from: start)) - \(dateFormatter2.string(from: end)), \(calendar.component(.year, from: start))"
     }
     
     private func daysInWeek(for offset: Int = 0) -> [Date] {

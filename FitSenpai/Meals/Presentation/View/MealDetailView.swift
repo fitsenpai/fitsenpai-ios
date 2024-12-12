@@ -90,15 +90,18 @@ struct MealDetailView: View {
     
     var body: some View {
         ScrollView {
-            VStack {
+            VStack(spacing: 16) {
                 workoutSection
-                FSImageView(url: nil, placeHolder: "img_meal")
-                    .frame(height: 200)
-                    .padding(.bottom, 16)
+//                FSImageView(url: nil, placeHolder: "img_meal")
+//                    .frame(height: 200)
                 
+                Image("img_meal")
+                    .resizable()
+                    .frame(height: 200)
                 
                 VStack (spacing: 20) {
                     GenericTextListView(title: "Ingredients", instructions: viewModel.ingredients, isNumbered: false)
+                    
                     GenericTextListView(title: "Recipe", instructions: viewModel.recipe, isNumbered: true)
                 }
             }
