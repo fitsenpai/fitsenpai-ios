@@ -45,7 +45,6 @@ struct BottomSheetView<Content: View>: View {
 
                     // Main Content
                     content
-                        .padding(.bottom, 20)
                         .padding(.top, buttonConfig == nil ? 16 : 5)
                         
 
@@ -120,8 +119,9 @@ struct BottomSheetView_Previews: PreviewProvider {
     static var previews: some View {
         
         Group {
-            BottomSheetView(isPresented: .constant(true)) {
-                MealDetailView(viewModel: MealDetailViewModel())
+            
+            BottomSheetView(isPresented: .constant(true), buttonConfig: FSActionButtonConfig(title: "Submit feedback", action: {})) {
+                FeedbackView(comment: "Let us know your thoughts on today’s meals. Mention what you enjoyed or what you’d like changed.")
             }
         }
         .previewLayout(.sizeThatFits)
