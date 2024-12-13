@@ -46,6 +46,7 @@ extension Color {
     static let gray156 = Color(red:156/255, green:156/255, blue:156/255)
     static let gray246 = Color(red:246/255, green:246/255, blue:246/255)
     static let gray230 = Color(red:230/255, green:230/255, blue:230/255)
+    static let grey227 = Color(red:227/255, green:227/255, blue:227/255)
     static let calorieGreen = Color(red:113/255, green:159/255, blue:17/255)
     static let calorieGreenBG = Color(red:246/255, green:252/255, blue:233/255)
     static let carbBlue = Color(red:56/255, green:189/255, blue:248/255)

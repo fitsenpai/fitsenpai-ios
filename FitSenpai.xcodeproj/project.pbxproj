@@ -99,6 +99,11 @@
 		F2CF8CEE2CF62FDF00461D0D /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = F2CF8CED2CF62FDF00461D0D /* Storage */; };
 		F2CF8CF02CF62FDF00461D0D /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = F2CF8CEF2CF62FDF00461D0D /* Supabase */; };
 		F2CF8CF32CF630F700461D0D /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = F2CF8CF22CF630F700461D0D /* Kingfisher */; };
+		F2E61AF42D0C2CFE006F2FF6 /* BottomSheetPresentor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E61AF32D0C2CFE006F2FF6 /* BottomSheetPresentor.swift */; };
+		F2E61AF62D0C2D1E006F2FF6 /* BottomSheetHostingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E61AF52D0C2D1E006F2FF6 /* BottomSheetHostingController.swift */; };
+		F2E61AF82D0C2D3E006F2FF6 /* BottomSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E61AF72D0C2D3E006F2FF6 /* BottomSheetView.swift */; };
+		F2E61AFA2D0C2D64006F2FF6 /* FSActionButtonConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E61AF92D0C2D64006F2FF6 /* FSActionButtonConfig.swift */; };
+		F2E61AFC2D0C2DB8006F2FF6 /* DisplayUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E61AFB2D0C2DB8006F2FF6 /* DisplayUtil.swift */; };
 		F2F8CA322D06F5B100E3DCF3 /* BottomSheet in Frameworks */ = {isa = PBXBuildFile; productRef = F2F8CA312D06F5B100E3DCF3 /* BottomSheet */; };
 		F2F8CA342D09471800E3DCF3 /* WorkoutDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2F8CA332D09471800E3DCF3 /* WorkoutDetailView.swift */; };
 		F2F8CA362D09488D00E3DCF3 /* WorkoutDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2F8CA352D09488D00E3DCF3 /* WorkoutDetailViewModel.swift */; };
@@ -193,6 +198,11 @@
 		F2802BE52CF7238000617942 /* AnyCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyCodable.swift; sourceTree = "<group>"; };
 		F2802BE92CF725EA00617942 /* LoginUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginUseCase.swift; sourceTree = "<group>"; };
 		F2802BEC2CF726B600617942 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		F2E61AF32D0C2CFE006F2FF6 /* BottomSheetPresentor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetPresentor.swift; sourceTree = "<group>"; };
+		F2E61AF52D0C2D1E006F2FF6 /* BottomSheetHostingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetHostingController.swift; sourceTree = "<group>"; };
+		F2E61AF72D0C2D3E006F2FF6 /* BottomSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetView.swift; sourceTree = "<group>"; };
+		F2E61AF92D0C2D64006F2FF6 /* FSActionButtonConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FSActionButtonConfig.swift; sourceTree = "<group>"; };
+		F2E61AFB2D0C2DB8006F2FF6 /* DisplayUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayUtil.swift; sourceTree = "<group>"; };
 		F2F8CA332D09471800E3DCF3 /* WorkoutDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutDetailView.swift; sourceTree = "<group>"; };
 		F2F8CA352D09488D00E3DCF3 /* WorkoutDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutDetailViewModel.swift; sourceTree = "<group>"; };
 		F2F8CA372D0973D100E3DCF3 /* GenericTextListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericTextListView.swift; sourceTree = "<group>"; };
@@ -339,6 +349,7 @@
 				F24B33D62CEF93E9004AD370 /* Profile */,
 				F24B33D02CEF93C4004AD370 /* Groceries */,
 				F24B33CB2CEF93A6004AD370 /* Meals */,
+				F2E61AFD2D0C2FE1006F2FF6 /* Feedback */,
 				F24B33C82CEF938F004AD370 /* Workouts */,
 				F24B33C32CEF2165004AD370 /* FSMainView */,
 				F24B33BE2CEF148C004AD370 /* AppLoad */,
@@ -404,6 +415,7 @@
 			children = (
 				F24B337C2CEDB5DC004AD370 /* FSColor.swift */,
 				F24B33812CEDB662004AD370 /* FSLogger.swift */,
+				F2E61AFB2D0C2DB8006F2FF6 /* DisplayUtil.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -478,6 +490,7 @@
 		F24B33A82CEDC328004AD370 /* ReuseableViews */ = {
 			isa = PBXGroup;
 			children = (
+				F2E61AF22D0C2CEE006F2FF6 /* BottomSheetPresentor */,
 				F24B33DD2CEF9CC6004AD370 /* Calendar */,
 				F24B33A92CEDC371004AD370 /* FSText.swift */,
 				F24B33B42CEDDE7F004AD370 /* FSButton.swift */,
@@ -771,6 +784,24 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		F2E61AF22D0C2CEE006F2FF6 /* BottomSheetPresentor */ = {
+			isa = PBXGroup;
+			children = (
+				F2E61AF32D0C2CFE006F2FF6 /* BottomSheetPresentor.swift */,
+				F2E61AF72D0C2D3E006F2FF6 /* BottomSheetView.swift */,
+				F2E61AF52D0C2D1E006F2FF6 /* BottomSheetHostingController.swift */,
+				F2E61AF92D0C2D64006F2FF6 /* FSActionButtonConfig.swift */,
+			);
+			path = BottomSheetPresentor;
+			sourceTree = "<group>";
+		};
+		F2E61AFD2D0C2FE1006F2FF6 /* Feedback */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Feedback;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -877,6 +908,7 @@
 				F229D3902CF825B50094BE2E /* WorkoutViewModel.swift in Sources */,
 				F24B33A22CEDBE88004AD370 /* Testimonial.swift in Sources */,
 				F229D37A2CF80F510094BE2E /* DifficultyLevel.swift in Sources */,
+				F2E61AF82D0C2D3E006F2FF6 /* BottomSheetView.swift in Sources */,
 				F229D3942CF8491B0094BE2E /* FSImageView.swift in Sources */,
 				F229D37C2CF80F5D0094BE2E /* FitnessGoal.swift in Sources */,
 				F24B33AA2CEDC371004AD370 /* FSText.swift in Sources */,
@@ -893,6 +925,7 @@
 				F24B339E2CEDBE40004AD370 /* TestimonialViewModel.swift in Sources */,
 				F229D3682CF7713C0094BE2E /* AuthUseCase.swift in Sources */,
 				F21F676F2D09A39C00C240DD /* MealDetailViewModel.swift in Sources */,
+				F2E61AFC2D0C2DB8006F2FF6 /* DisplayUtil.swift in Sources */,
 				F2802BEA2CF725EA00617942 /* LoginUseCase.swift in Sources */,
 				F229D3922CF83DA00094BE2E /* GlobalAppEnvironment.swift in Sources */,
 				F24B33C02CEF1497004AD370 /* AppLoader.swift in Sources */,
@@ -908,6 +941,7 @@
 				F21F67792D0ABF2C00C240DD /* FoodCategory.swift in Sources */,
 				F24B34062CF61395004AD370 /* EnvironmentManager.swift in Sources */,
 				F24B335B2CEDB421004AD370 /* AppDelegate.swift in Sources */,
+				F2E61AF42D0C2CFE006F2FF6 /* BottomSheetPresentor.swift in Sources */,
 				F24B33852CEDBA88004AD370 /* TextStyle.swift in Sources */,
 				F24B335D2CEDB421004AD370 /* SceneDelegate.swift in Sources */,
 				F2F8CA342D09471800E3DCF3 /* WorkoutDetailView.swift in Sources */,
@@ -920,9 +954,11 @@
 				F24B33F02CF239D1004AD370 /* FSMealPeriod.swift in Sources */,
 				F2802BE22CF7233D00617942 /* Session.swift in Sources */,
 				F229D3782CF80F330094BE2E /* WorkoutPlan.swift in Sources */,
+				F2E61AF62D0C2D1E006F2FF6 /* BottomSheetHostingController.swift in Sources */,
 				F24B33DC2CEF9411004AD370 /* FSTabView.swift in Sources */,
 				F2802BDD2CF7215100617942 /* FSUser.swift in Sources */,
 				F24B33BB2CEDE5C3004AD370 /* LoginView.swift in Sources */,
+				F2E61AFA2D0C2D64006F2FF6 /* FSActionButtonConfig.swift in Sources */,
 				F229D38E2CF825080094BE2E /* WorkoutsMainViewModel.swift in Sources */,
 				F24B33B32CEDDBDD004AD370 /* AuthLandingView.swift in Sources */,
 				F24B33E12CF07000004AD370 /* WeekView.swift in Sources */,
