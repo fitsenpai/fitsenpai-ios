@@ -105,6 +105,9 @@
 		F2E61AFA2D0C2D64006F2FF6 /* FSActionButtonConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E61AF92D0C2D64006F2FF6 /* FSActionButtonConfig.swift */; };
 		F2E61AFC2D0C2DB8006F2FF6 /* DisplayUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E61AFB2D0C2DB8006F2FF6 /* DisplayUtil.swift */; };
 		F2E61AFF2D0C30AC006F2FF6 /* FeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E61AFE2D0C30AC006F2FF6 /* FeedbackView.swift */; };
+		F2E61B022D116082006F2FF6 /* BackgroundInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E61B012D116082006F2FF6 /* BackgroundInfoView.swift */; };
+		F2E61B042D1168BF006F2FF6 /* RoundedBorderModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E61B032D1168BF006F2FF6 /* RoundedBorderModifier.swift */; };
+		F2E61B062D1169B2006F2FF6 /* BackgroundInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E61B052D1169B2006F2FF6 /* BackgroundInfoViewModel.swift */; };
 		F2F8CA322D06F5B100E3DCF3 /* BottomSheet in Frameworks */ = {isa = PBXBuildFile; productRef = F2F8CA312D06F5B100E3DCF3 /* BottomSheet */; };
 		F2F8CA342D09471800E3DCF3 /* WorkoutDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2F8CA332D09471800E3DCF3 /* WorkoutDetailView.swift */; };
 		F2F8CA362D09488D00E3DCF3 /* WorkoutDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2F8CA352D09488D00E3DCF3 /* WorkoutDetailViewModel.swift */; };
@@ -205,6 +208,9 @@
 		F2E61AF92D0C2D64006F2FF6 /* FSActionButtonConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FSActionButtonConfig.swift; sourceTree = "<group>"; };
 		F2E61AFB2D0C2DB8006F2FF6 /* DisplayUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayUtil.swift; sourceTree = "<group>"; };
 		F2E61AFE2D0C30AC006F2FF6 /* FeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackView.swift; sourceTree = "<group>"; };
+		F2E61B012D116082006F2FF6 /* BackgroundInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundInfoView.swift; sourceTree = "<group>"; };
+		F2E61B032D1168BF006F2FF6 /* RoundedBorderModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedBorderModifier.swift; sourceTree = "<group>"; };
+		F2E61B052D1169B2006F2FF6 /* BackgroundInfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundInfoViewModel.swift; sourceTree = "<group>"; };
 		F2F8CA332D09471800E3DCF3 /* WorkoutDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutDetailView.swift; sourceTree = "<group>"; };
 		F2F8CA352D09488D00E3DCF3 /* WorkoutDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutDetailViewModel.swift; sourceTree = "<group>"; };
 		F2F8CA372D0973D100E3DCF3 /* GenericTextListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericTextListView.swift; sourceTree = "<group>"; };
@@ -492,6 +498,7 @@
 		F24B33A82CEDC328004AD370 /* ReuseableViews */ = {
 			isa = PBXGroup;
 			children = (
+				F2E61B002D116075006F2FF6 /* BackgroundInfoView */,
 				F2E61AF22D0C2CEE006F2FF6 /* BottomSheetPresentor */,
 				F24B33DD2CEF9CC6004AD370 /* Calendar */,
 				F24B33A92CEDC371004AD370 /* FSText.swift */,
@@ -507,6 +514,7 @@
 				F2F8CA372D0973D100E3DCF3 /* GenericTextListView.swift */,
 				F2F8CA392D0995EE00E3DCF3 /* PlayerUIView.swift */,
 				F21F67722D0ABA0A00C240DD /* CheckboxLabelView.swift */,
+				F2E61B032D1168BF006F2FF6 /* RoundedBorderModifier.swift */,
 			);
 			path = ReuseableViews;
 			sourceTree = "<group>";
@@ -805,6 +813,15 @@
 			path = Feedback;
 			sourceTree = "<group>";
 		};
+		F2E61B002D116075006F2FF6 /* BackgroundInfoView */ = {
+			isa = PBXGroup;
+			children = (
+				F2E61B012D116082006F2FF6 /* BackgroundInfoView.swift */,
+				F2E61B052D1169B2006F2FF6 /* BackgroundInfoViewModel.swift */,
+			);
+			path = BackgroundInfoView;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -928,7 +945,9 @@
 				F24B339E2CEDBE40004AD370 /* TestimonialViewModel.swift in Sources */,
 				F229D3682CF7713C0094BE2E /* AuthUseCase.swift in Sources */,
 				F21F676F2D09A39C00C240DD /* MealDetailViewModel.swift in Sources */,
+				F2E61B022D116082006F2FF6 /* BackgroundInfoView.swift in Sources */,
 				F2E61AFC2D0C2DB8006F2FF6 /* DisplayUtil.swift in Sources */,
+				F2E61B042D1168BF006F2FF6 /* RoundedBorderModifier.swift in Sources */,
 				F2802BEA2CF725EA00617942 /* LoginUseCase.swift in Sources */,
 				F229D3922CF83DA00094BE2E /* GlobalAppEnvironment.swift in Sources */,
 				F24B33C02CEF1497004AD370 /* AppLoader.swift in Sources */,
@@ -942,6 +961,7 @@
 				F229D37E2CF80F670094BE2E /* GymActivity.swift in Sources */,
 				F229D3802CF80FC10094BE2E /* FSTable.swift in Sources */,
 				F2E61AFF2D0C30AC006F2FF6 /* FeedbackView.swift in Sources */,
+				F2E61B062D1169B2006F2FF6 /* BackgroundInfoViewModel.swift in Sources */,
 				F21F67792D0ABF2C00C240DD /* FoodCategory.swift in Sources */,
 				F24B34062CF61395004AD370 /* EnvironmentManager.swift in Sources */,
 				F24B335B2CEDB421004AD370 /* AppDelegate.swift in Sources */,
