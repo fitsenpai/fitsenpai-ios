@@ -108,6 +108,12 @@
 		F2E61B022D116082006F2FF6 /* BackgroundInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E61B012D116082006F2FF6 /* BackgroundInfoView.swift */; };
 		F2E61B042D1168BF006F2FF6 /* RoundedBorderModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E61B032D1168BF006F2FF6 /* RoundedBorderModifier.swift */; };
 		F2E61B062D1169B2006F2FF6 /* BackgroundInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E61B052D1169B2006F2FF6 /* BackgroundInfoViewModel.swift */; };
+		F2E61B082D1279C5006F2FF6 /* DailyWorkoutPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E61B072D1279C5006F2FF6 /* DailyWorkoutPlan.swift */; };
+		F2E61B0A2D127B64006F2FF6 /* UUIDTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E61B092D127B64006F2FF6 /* UUIDTransform.swift */; };
+		F2E61B0D2D128E78006F2FF6 /* VideoThumbnailGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E61B0C2D128E78006F2FF6 /* VideoThumbnailGenerator.swift */; };
+		F2E61B102D129225006F2FF6 /* ShimmerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E61B0F2D129225006F2FF6 /* ShimmerView.swift */; };
+		F2E61B122D12995C006F2FF6 /* WeeklyPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E61B112D12995C006F2FF6 /* WeeklyPlan.swift */; };
+		F2E61B142D13CFF1006F2FF6 /* WrappedHStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E61B132D13CFF1006F2FF6 /* WrappedHStack.swift */; };
 		F2F8CA322D06F5B100E3DCF3 /* BottomSheet in Frameworks */ = {isa = PBXBuildFile; productRef = F2F8CA312D06F5B100E3DCF3 /* BottomSheet */; };
 		F2F8CA342D09471800E3DCF3 /* WorkoutDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2F8CA332D09471800E3DCF3 /* WorkoutDetailView.swift */; };
 		F2F8CA362D09488D00E3DCF3 /* WorkoutDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2F8CA352D09488D00E3DCF3 /* WorkoutDetailViewModel.swift */; };
@@ -211,6 +217,12 @@
 		F2E61B012D116082006F2FF6 /* BackgroundInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundInfoView.swift; sourceTree = "<group>"; };
 		F2E61B032D1168BF006F2FF6 /* RoundedBorderModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedBorderModifier.swift; sourceTree = "<group>"; };
 		F2E61B052D1169B2006F2FF6 /* BackgroundInfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundInfoViewModel.swift; sourceTree = "<group>"; };
+		F2E61B072D1279C5006F2FF6 /* DailyWorkoutPlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyWorkoutPlan.swift; sourceTree = "<group>"; };
+		F2E61B092D127B64006F2FF6 /* UUIDTransform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UUIDTransform.swift; sourceTree = "<group>"; };
+		F2E61B0C2D128E78006F2FF6 /* VideoThumbnailGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoThumbnailGenerator.swift; sourceTree = "<group>"; };
+		F2E61B0F2D129225006F2FF6 /* ShimmerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShimmerView.swift; sourceTree = "<group>"; };
+		F2E61B112D12995C006F2FF6 /* WeeklyPlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyPlan.swift; sourceTree = "<group>"; };
+		F2E61B132D13CFF1006F2FF6 /* WrappedHStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedHStack.swift; sourceTree = "<group>"; };
 		F2F8CA332D09471800E3DCF3 /* WorkoutDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutDetailView.swift; sourceTree = "<group>"; };
 		F2F8CA352D09488D00E3DCF3 /* WorkoutDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutDetailViewModel.swift; sourceTree = "<group>"; };
 		F2F8CA372D0973D100E3DCF3 /* GenericTextListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericTextListView.swift; sourceTree = "<group>"; };
@@ -319,6 +331,8 @@
 				F229D3792CF80F510094BE2E /* DifficultyLevel.swift */,
 				F229D37B2CF80F5D0094BE2E /* FitnessGoal.swift */,
 				F229D37D2CF80F670094BE2E /* GymActivity.swift */,
+				F2E61B072D1279C5006F2FF6 /* DailyWorkoutPlan.swift */,
+				F2E61B112D12995C006F2FF6 /* WeeklyPlan.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -414,6 +428,7 @@
 				F24B337E2CEDB5E3004AD370 /* Extensions */,
 				F24B337B2CEDB5BA004AD370 /* Util */,
 				F229D3912CF83DA00094BE2E /* GlobalAppEnvironment.swift */,
+				F2E61B092D127B64006F2FF6 /* UUIDTransform.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -498,6 +513,8 @@
 		F24B33A82CEDC328004AD370 /* ReuseableViews */ = {
 			isa = PBXGroup;
 			children = (
+				F2E61B0E2D12921D006F2FF6 /* ShimmerView */,
+				F2E61B0B2D128E65006F2FF6 /* VideoThumbnailGenerator */,
 				F2E61B002D116075006F2FF6 /* BackgroundInfoView */,
 				F2E61AF22D0C2CEE006F2FF6 /* BottomSheetPresentor */,
 				F24B33DD2CEF9CC6004AD370 /* Calendar */,
@@ -515,6 +532,7 @@
 				F2F8CA392D0995EE00E3DCF3 /* PlayerUIView.swift */,
 				F21F67722D0ABA0A00C240DD /* CheckboxLabelView.swift */,
 				F2E61B032D1168BF006F2FF6 /* RoundedBorderModifier.swift */,
+				F2E61B132D13CFF1006F2FF6 /* WrappedHStack.swift */,
 			);
 			path = ReuseableViews;
 			sourceTree = "<group>";
@@ -822,6 +840,22 @@
 			path = BackgroundInfoView;
 			sourceTree = "<group>";
 		};
+		F2E61B0B2D128E65006F2FF6 /* VideoThumbnailGenerator */ = {
+			isa = PBXGroup;
+			children = (
+				F2E61B0C2D128E78006F2FF6 /* VideoThumbnailGenerator.swift */,
+			);
+			path = VideoThumbnailGenerator;
+			sourceTree = "<group>";
+		};
+		F2E61B0E2D12921D006F2FF6 /* ShimmerView */ = {
+			isa = PBXGroup;
+			children = (
+				F2E61B0F2D129225006F2FF6 /* ShimmerView.swift */,
+			);
+			path = ShimmerView;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -937,7 +971,9 @@
 				F24B33EE2CF23977004AD370 /* MealView.swift in Sources */,
 				F24B33DA2CEF93FE004AD370 /* ProfileMainView.swift in Sources */,
 				F24B340E2CF61E55004AD370 /* FSClient.swift in Sources */,
+				F2E61B0D2D128E78006F2FF6 /* VideoThumbnailGenerator.swift in Sources */,
 				F24B33EC2CF2184E004AD370 /* FSMetric.swift in Sources */,
+				F2E61B102D129225006F2FF6 /* ShimmerView.swift in Sources */,
 				F2F8CA362D09488D00E3DCF3 /* WorkoutDetailViewModel.swift in Sources */,
 				F24B33C72CEF9384004AD370 /* WorkoutsMainView.swift in Sources */,
 				F24B33AC2CEDC4D2004AD370 /* SwiftUIView+If.swift in Sources */,
@@ -957,6 +993,7 @@
 				F24B340B2CF613D6004AD370 /* FSEnvironment.swift in Sources */,
 				F24B33BD2CEF0B36004AD370 /* RoundedBorderTextField.swift in Sources */,
 				F229D36E2CF774BF0094BE2E /* AppState.swift in Sources */,
+				F2E61B0A2D127B64006F2FF6 /* UUIDTransform.swift in Sources */,
 				F2802BE42CF7236100617942 /* UserIdentity.swift in Sources */,
 				F229D37E2CF80F670094BE2E /* GymActivity.swift in Sources */,
 				F229D3802CF80FC10094BE2E /* FSTable.swift in Sources */,
@@ -970,6 +1007,7 @@
 				F24B335D2CEDB421004AD370 /* SceneDelegate.swift in Sources */,
 				F2F8CA342D09471800E3DCF3 /* WorkoutDetailView.swift in Sources */,
 				F2802BED2CF726B600617942 /* LoginViewModel.swift in Sources */,
+				F2E61B142D13CFF1006F2FF6 /* WrappedHStack.swift in Sources */,
 				F229D3832CF81C490094BE2E /* WorkoutUseCase.swift in Sources */,
 				F2F8CA3A2D0995EE00E3DCF3 /* PlayerUIView.swift in Sources */,
 				F21F677B2D0AC36300C240DD /* FoodItem.swift in Sources */,
@@ -997,8 +1035,10 @@
 				F24B33E72CF212F3004AD370 /* WorkoutView.swift in Sources */,
 				F2802BE62CF7238000617942 /* AnyCodable.swift in Sources */,
 				F24B33DF2CEF9CCF004AD370 /* SwipeableCalendarView.swift in Sources */,
+				F2E61B122D12995C006F2FF6 /* WeeklyPlan.swift in Sources */,
 				F24B33B52CEDDE7F004AD370 /* FSButton.swift in Sources */,
 				F24B33E92CF21662004AD370 /* IconLabelView.swift in Sources */,
+				F2E61B082D1279C5006F2FF6 /* DailyWorkoutPlan.swift in Sources */,
 				F24B33802CEDB5F1004AD370 /* UIColor.swift in Sources */,
 				F24B33D42CEF93D8004AD370 /* GroceriesMainView.swift in Sources */,
 				F24B33E52CF21116004AD370 /* FSCompletionBarView.swift in Sources */,

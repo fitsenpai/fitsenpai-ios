@@ -46,7 +46,7 @@ struct GroceriesMainView: View {
 //        ScrollView {
             VStack(alignment: .leading) {
                 FSText(text: "Grocery planner", fontStyle: .headers24, color: .fsTitle)
-                SwipeableCalendarView(shouldShowWeekView: false)
+                SwipeableCalendarView(shouldShowWeekView: false, selectedDate: .constant(Date()), currentWeekStartDate: .constant(Date()))
                 
                 workoutSection
                 

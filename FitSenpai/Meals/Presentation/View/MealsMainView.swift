@@ -91,7 +91,7 @@ struct MealsMainView: View {
     var body: some View {
         VStack(alignment: .leading) {
             FSText(text: "Meal planner", fontStyle: .headers24, color: .fsTitle)
-            SwipeableCalendarView()
+            SwipeableCalendarView(selectedDate: .constant(Date()), currentWeekStartDate: .constant(Date()))
             
             workoutSection2
             

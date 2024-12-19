@@ -19,11 +19,11 @@ struct BackgroundInfoViewModel {
     
     // Default initializer for testing or previews
     static let defaultConfig = BackgroundInfoViewModel(
-        iconName: "ic_lock_simple",
+        iconName: "ic_calendar_check",
         iconTint: .fsAccentForeground,
-        title: "More weeks to unlock\nwith your next billing cycle",
-        mainLabel: "Great progress so far! Your new plans will be available on Month Day, Year. Keep up the momentum!",
-        buttonLabel: "Back to active week",
+        title: "Week 5 is now unlocked!",
+        mainLabel: "Tap below to generate your new workout and\nmeal plans. This may take a few minutes.",
+        buttonLabel: "Generate plans",
         buttonAction: { print("Button tapped") }
     )
 }

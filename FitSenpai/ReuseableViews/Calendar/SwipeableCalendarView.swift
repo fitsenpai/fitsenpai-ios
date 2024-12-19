@@ -9,9 +9,10 @@ import SwiftUI
 
 
 struct SwipeableCalendarView: View {
-    @State private var selectedDate = Date() // Tracks the selected date
     @State private var currentWeekOffset = 0 // Tracks the offset for the displayed week
     @State var shouldShowWeekView = true
+    @Binding var selectedDate: Date
+    @Binding var currentWeekStartDate: Date
 
     var body: some View {
         VStack {
@@ -57,6 +58,9 @@ struct SwipeableCalendarView: View {
             }
         }
         .frame(height: shouldShowWeekView ? 120 : 30)
+        .onChange(of: currentWeekOffset) { _ in
+            updateCurrentWeekStartDate()
+        }
     }
 
     // MARK: - Helper Functions
@@ -86,10 +90,31 @@ struct SwipeableCalendarView: View {
         let components = calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: Date())
         return calendar.date(from: components) ?? Date()
     }
+    
+    private func updateCurrentWeekStartDate() {
+            // Calculate the start date of the week for the given offset
+        currentWeekStartDate = daysInWeek(for: currentWeekOffset).first ?? Date()
+    }
+    
+    /// Ensures the selected date is within the visible week on initial load
+    private func initializeSelectedDate() {
+        let today = Date()
+        let weekDates = daysInWeek(for: currentWeekOffset)
+        
+        // Adjust currentWeekOffset so today's date appears in the current week
+        if !weekDates.contains(where: { calendar.isDate($0, inSameDayAs: today) }) {
+            let currentWeekStart = startOfCurrentWeek()
+            let todayStart = calendar.startOfDay(for: today)
+            let dayDifference = calendar.dateComponents([.day], from: currentWeekStart, to: todayStart).day ?? 0
+            currentWeekOffset = dayDifference / 7
+        }
+        
+        selectedDate = today
+    }
 }
 
 struct SwipeableCalendarView_Previews: PreviewProvider {
     static var previews: some View {
-        SwipeableCalendarView()
+        SwipeableCalendarView(selectedDate: .constant(Date()), currentWeekStartDate: .constant(Date()))
     }
 }

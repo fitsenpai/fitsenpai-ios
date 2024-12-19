@@ -6,9 +6,20 @@
 //
 
 import SwiftUI
+import BottomSheet
 
 struct WorkoutsMainView: View {
     @StateObject var viewModel: WorkoutsMainViewModel
+    @State private var showingDetail = false
+    @State private var selectedDate: Date = Date() {
+        didSet {
+            if let uuid = globalAppEnvObject.user?.id {
+                viewModel.fetchWorkoutPlans(forUser: uuid, date: selectedDate)
+            }
+        }
+    }
+    @State private var currentWeekStartDate: Date = Date()
+    @State var upcomingWeekNumber: Int?
     
     var listingHeader: some View {
         HStack(spacing: 12) {
@@ -40,35 +51,85 @@ struct WorkoutsMainView: View {
             } else {
                 ScrollView {
                     VStack(spacing: 12) {
-                        ForEach(viewModel.workouts, id: \.id) { workout in
-                            WorkoutView(image: "ic_workout", title: workout.exerciseName, isSelected: workout == viewModel.selectedWorkout, showInfo: true)
+                        ForEach(viewModel.workoutPlans, id: \.id) { workout in
+                            WorkoutView(image: "ic_workout", title: workout.name ?? "", videoURL: workout.url , showInfo: true, isSelected: workout == viewModel.selectedWorkout)
                                 .onTapGesture {
                                     viewModel.selectWorkout(workout: workout)
                                 }
                                 .frame(height: 88)
+                                .sheet(isPresented: $showingDetail) {
+                                    WorkoutDetailView(viewModel: WorkoutDetailViewModel(routine: Routine.initTest()))
+                                }
+                                
+                                
                         }
-                        .padding(.horizontal, 1)
+                        
+//                        WorkoutView(image: "ic_workout", title: "General warm-up", isSelected: false, showInfo: false)
+//                            .frame(height: 88)
+//                            .onTapGesture {
+//                                showingDetail = true
+//                            }
+//                            .sheet(isPresented: $showingDetail) {
+//                                WorkoutDetailView(viewModel: WorkoutDetailViewModel(routine: Routine.initTest()))
+//                            }
+//
+//                        WorkoutView(image: "ic_workout", title: "Bench press", isSelected: true, showInfo: true)
+//                            .frame(height: 88)
+//                            .onTapGesture {
+//                                showingDetail = true
+//                            }
+//                            .sheet(isPresented: $showingDetail) {
+//                                WorkoutDetailView(viewModel: WorkoutDetailViewModel(routine: Routine.initTest()))
+//                            }
+//
+//                        .padding(.horizontal, 1)
                     }
                 }
+                .scrollIndicators(.hidden)
             }
+            
         }
         .padding(.vertical, 16)
+        
     }
     
     var body: some View {
         VStack(alignment: .leading) {
             FSText(text: "Workout planner", fontStyle: .headers24, color: .fsTitle)
-            SwipeableCalendarView()
+            SwipeableCalendarView(selectedDate: $selectedDate, currentWeekStartDate: $currentWeekStartDate)
+            if let upcomingWeekNumber = viewModel.upNextWeekNumber {
+                VStack {
+                    BackgroundInfoView(viewModel: BackgroundInfoViewModel(iconName: "ic_calendar_check", iconTint: .fsPrimary, title: "Week \(upcomingWeekNumber ?? 5) is now unlocked", mainLabel: "Tap below to generate your new workout and\nmeal plans. This may take a few minutes.", buttonLabel: "Generate plans", buttonAction: {
+                        //
+                    }))
+                    .padding(.top, 20)
+                    Spacer()
+                }
+            }else{
+                workoutSection
+            }
             
-            workoutSection
         }
         .padding(.horizontal, 16)
         .onAppear {
             // Assuming we want to fetch workouts when the view appears
             if let uuid = globalAppEnvObject.user?.id {
-                viewModel.fetchWorkoutPlans(forUser: uuid)
+                viewModel.fetchWorkoutPlans(forUser: uuid, date: selectedDate)
             }
             
+        }
+        .onChange(of: selectedDate) { newValue in
+            if let uuid = globalAppEnvObject.user?.id {
+                viewModel.fetchWorkoutPlans(forUser: uuid, date: newValue)
+            }
+        }
+        .onChange(of: currentWeekStartDate) { newStartDate in
+            // React to changes in currentWeekStartDate
+            if let uuid = globalAppEnvObject.user?.id {
+//                // Fetch workout plans based on the new start date of the week
+//                viewModel.fetchWorkoutPlans(forUser: uuid, date: newStartDate)
+                viewModel.fetchWeeklyPlan(forUser: uuid, date: newStartDate)
+            }
         }
     }
     

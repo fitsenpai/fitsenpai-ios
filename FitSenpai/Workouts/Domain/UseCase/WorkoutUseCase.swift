@@ -20,8 +20,8 @@ struct WorkoutUseCase {
     }
 
     // Fetch workout plans for a user
-    func fetchWorkoutPlans(forUser userId: UUID) async throws -> [WorkoutPlan] {
-        return try await workoutRepo.fetchWorkoutPlans(forUser: userId)
+    func fetchWorkoutPlans(forUser userId: UUID, date: Date) async throws -> [DailyWorkoutPlan] {
+        return try await workoutRepo.fetchWorkoutPlans(forUser: userId, date: date)
     }
 
     // Fetch all difficulty levels
@@ -37,5 +37,14 @@ struct WorkoutUseCase {
     // Fetch gym activities for a user
     func fetchGymActivities(forUser userId: UUID) async throws -> [GymActivity] {
         return try await workoutRepo.fetchGymActivities(forUser: userId)
+    }
+    
+    // Fetch weekly plan for a user
+    func fetchWeeklyPlan(forUser userId: UUID, date: Date) async throws -> [WeeklyPlan] {
+        return try await workoutRepo.fetchWeeklyPlan(forUser: userId, date: date)
+    }
+    
+    func fetchWeekToGenerate(forUser userId: UUID) async throws -> Int? {
+        return try await workoutRepo.fetchWeekToGenerate(forUser: userId)
     }
 }

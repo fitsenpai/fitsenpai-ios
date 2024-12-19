@@ -11,7 +11,7 @@ import ObjectMapper
 class UserIdentity: Mappable {
     var id: String?
     var identityId: String?
-    var userId: String?
+//    var userId: String?
     var identityData: [String: Any]?
     var provider: String?
     var createdAt: Date?
@@ -23,7 +23,7 @@ class UserIdentity: Mappable {
     func mapping(map: Map) {
         id            <- map["id"]
         identityId    <- map["identityId"]
-        userId        <- map["userId"]
+//        userId        <- map["userId"]
         identityData  <- map["identityData"]
         provider      <- map["provider"]
         createdAt     <- (map["createdAt"], DateTransform())
