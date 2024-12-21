@@ -15,16 +15,21 @@ func mainScreen() -> CGRect {
 
 class DisplayUtil {
     class func getUIApplicationRootViewController() -> UIViewController? {
-        let keyWindow = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
+        // Access the active scene
+        guard let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene,
+              let keyWindow = scene.windows.first(where: { $0.isKeyWindow }) else {
+            return nil
+        }
 
-        if var topController = keyWindow?.rootViewController {
+        // Traverse the view controller hierarchy
+        if var topController = keyWindow.rootViewController {
             while let presentedViewController = topController.presentedViewController {
                 topController = presentedViewController
             }
 
             return topController
         }
-        
+
         return nil
     }
     

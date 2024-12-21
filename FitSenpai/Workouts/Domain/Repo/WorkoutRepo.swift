@@ -30,7 +30,6 @@ struct WorkoutRepoImpl: WorkoutRepo {
 
         do {
             let response = try await supabaseClient
-                .database
                 .from(FSTable.workout.rawValue)
                 .select()
                 .execute()
@@ -54,7 +53,6 @@ struct WorkoutRepoImpl: WorkoutRepo {
 
         do {
             let response = try await supabaseClient
-                .database
                 .from(FSTable.workoutPlan.rawValue)
                 .select()
                 .eq("user_id", value: userId.uuidString)
@@ -79,7 +77,6 @@ struct WorkoutRepoImpl: WorkoutRepo {
 
         do {
             let response = try await supabaseClient
-                .database
                 .from(FSTable.difficultyLevel.rawValue)
                 .select()
                 .execute()
@@ -97,7 +94,6 @@ struct WorkoutRepoImpl: WorkoutRepo {
 
         do {
             let response = try await supabaseClient
-                .database
                 .from(FSTable.fitnessGoals.rawValue)
                 .select()
                 .execute()
@@ -115,7 +111,6 @@ struct WorkoutRepoImpl: WorkoutRepo {
 
         do {
             let response = try await supabaseClient
-                .database
                 .from(FSTable.gymActivity.rawValue)
                 .select()
                 .eq("user_id", value: userId.uuidString)
@@ -138,7 +133,6 @@ struct WorkoutRepoImpl: WorkoutRepo {
         FSLogger.verbose(formattedDate)
         do {
             let response = try await supabaseClient
-                .database
                 .from(FSTable.weeklyPlansTest.rawValue) // Reference to your weekly_plans_test table
                 .select()
                 .eq("user_id", value: userId.uuidString)  // Assuming there's a user_id column
@@ -166,7 +160,6 @@ struct WorkoutRepoImpl: WorkoutRepo {
         
         do {
             let response = try await supabaseClient
-                .database
                 .from(FSTable.weeklyPlansTest.rawValue) // Reference to your weekly_plans_test table
                 .select("week_number")
                 .eq("user_id", value: userId.uuidString)

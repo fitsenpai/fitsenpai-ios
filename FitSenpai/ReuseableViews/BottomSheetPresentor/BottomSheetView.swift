@@ -57,7 +57,7 @@ struct BottomSheetView<Content: View>: View {
                     }
                 }
                 .padding([.leading, .trailing], 16)
-                .padding(.bottom, UIApplication.shared.windows.first?.safeAreaInsets.bottom ?? 0)  // Consider safe area bottom
+                .padding(.bottom, UIApplication.shared.bottomSafeAreaInset)
                 .frame(maxWidth: .infinity)
                 .background(
                     RoundedCornerShape(corners: [.topLeft, .topRight], radius: 12)
@@ -92,13 +92,13 @@ struct BottomSheetView<Content: View>: View {
                 .background(GeometryReader { geometry in
                     Color.clear.onAppear {
                         // Capture the computed height when the view appears
-                        let safeAreaBottom = UIApplication.shared.windows.first?.safeAreaInsets.bottom ?? 0
+                        let safeAreaBottom = UIApplication.shared.bottomSafeAreaInset
                         computedHeight = geometry.size.height + safeAreaBottom
                         print("Computed height: \(computedHeight)") // Debug print to ensure correct height
                     }
-                    .onChange(of: computedHeight) { newValue in
+                    .onChange(of: computedHeight, { _, _ in
                         offsetY = 0
-                    }
+                    })
                 })
             }
             .edgesIgnoringSafeArea(.bottom)

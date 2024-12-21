@@ -58,7 +58,7 @@ struct SwipeableCalendarView: View {
             }
         }
         .frame(height: shouldShowWeekView ? 120 : 30)
-        .onChange(of: currentWeekOffset) { _ in
+        .onChange(of: currentWeekOffset) { _, _ in
             updateCurrentWeekStartDate()
         }
     }

@@ -53,7 +53,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         guard let url:String = EnvironmentManager.shared.value(for: .supabaseProjectURL), let key:String = EnvironmentManager.shared.value(for: .supabaseKey) else {
             return
         }
-        let client = SupabaseClient(supabaseURL: URL(string: url)!, supabaseKey: key)
+        let _ = SupabaseClient(supabaseURL: URL(string: url)!, supabaseKey: key)
     }
 
 

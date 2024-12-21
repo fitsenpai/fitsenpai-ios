@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		12084EE12D169B1B003E3769 /* Application+SafeAreaBottomInsets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12084EE02D169B1B003E3769 /* Application+SafeAreaBottomInsets.swift */; };
 		F21F676F2D09A39C00C240DD /* MealDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21F676E2D09A39C00C240DD /* MealDetailViewModel.swift */; };
 		F21F67712D09A42900C240DD /* MealDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21F67702D09A42900C240DD /* MealDetailView.swift */; };
 		F21F67732D0ABA0A00C240DD /* CheckboxLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21F67722D0ABA0A00C240DD /* CheckboxLabelView.swift */; };
@@ -122,6 +123,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		12084EE02D169B1B003E3769 /* Application+SafeAreaBottomInsets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Application+SafeAreaBottomInsets.swift"; sourceTree = "<group>"; };
 		F21F676E2D09A39C00C240DD /* MealDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealDetailViewModel.swift; sourceTree = "<group>"; };
 		F21F67702D09A42900C240DD /* MealDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealDetailView.swift; sourceTree = "<group>"; };
 		F21F67722D0ABA0A00C240DD /* CheckboxLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxLabelView.swift; sourceTree = "<group>"; };
@@ -448,6 +450,7 @@
 			children = (
 				F24B337F2CEDB5F1004AD370 /* UIColor.swift */,
 				F24B33AB2CEDC4D2004AD370 /* SwiftUIView+If.swift */,
+				12084EE02D169B1B003E3769 /* Application+SafeAreaBottomInsets.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -916,6 +919,7 @@
 				F2CF8CF12CF630F700461D0D /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				F2802BDE2CF721CA00617942 /* XCRemoteSwiftPackageReference "ObjectMapper" */,
 				F2F8CA302D06F5B100E3DCF3 /* XCRemoteSwiftPackageReference "BottomSheet" */,
+				12084EDF2D1696E2003E3769 /* XCRemoteSwiftPackageReference "swift-nio" */,
 			);
 			productRefGroup = F24B334E2CEDB421004AD370;
 			projectDirPath = "";
@@ -1010,6 +1014,7 @@
 				F2E61B142D13CFF1006F2FF6 /* WrappedHStack.swift in Sources */,
 				F229D3832CF81C490094BE2E /* WorkoutUseCase.swift in Sources */,
 				F2F8CA3A2D0995EE00E3DCF3 /* PlayerUIView.swift in Sources */,
+				12084EE12D169B1B003E3769 /* Application+SafeAreaBottomInsets.swift in Sources */,
 				F21F677B2D0AC36300C240DD /* FoodItem.swift in Sources */,
 				F2F8CA382D0973D100E3DCF3 /* GenericTextListView.swift in Sources */,
 				F24B33E32CF20E17004AD370 /* GrayPillView.swift in Sources */,
@@ -1261,6 +1266,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		12084EDF2D1696E2003E3769 /* XCRemoteSwiftPackageReference "swift-nio" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-nio.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.77.0;
+			};
+		};
 		F2802BDE2CF721CA00617942 /* XCRemoteSwiftPackageReference "ObjectMapper" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/tristanhimmelman/ObjectMapper.git";

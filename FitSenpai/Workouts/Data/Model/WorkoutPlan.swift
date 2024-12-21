@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import _Helpers
 import ObjectMapper
 
 // MARK: - WorkoutPlan Object

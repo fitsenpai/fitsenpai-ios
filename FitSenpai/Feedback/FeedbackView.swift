@@ -48,8 +48,8 @@ struct FeedbackView: View {
             TextEditor(text: $comment)
                 .font(.body14)
                 .foregroundColor(Color.fsSubtitleColor)
-                .onChange(of: comment, perform: { newValue in
-                    
+                .onChange(of: comment, { oldValue, newValue in
+                    //
                 })
                 .padding(.leading, -5)
                 .clipped()

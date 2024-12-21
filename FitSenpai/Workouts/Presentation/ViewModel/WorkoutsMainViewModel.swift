@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 
+@MainActor
 class WorkoutsMainViewModel: ObservableObject {
     private let workoutUseCase: WorkoutUseCase
     private var cancellables: Set<AnyCancellable> = []
@@ -37,9 +38,9 @@ class WorkoutsMainViewModel: ObservableObject {
                 let fetchedWorkouts = try await workoutUseCase.fetchAllWorkouts()
                 
                 // Ensure the update happens on the main thread
-                DispatchQueue.main.async {
-                    self.workouts = fetchedWorkouts
-                    self.isWorkoutLoading = false
+                DispatchQueue.main.async { [weak self] in
+                    self?.workouts = fetchedWorkouts
+                    self?.isWorkoutLoading = false
                 }
             } catch {
                 print("Error fetching workouts: \(error)")

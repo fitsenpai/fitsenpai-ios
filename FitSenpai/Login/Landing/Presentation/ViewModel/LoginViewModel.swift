@@ -35,7 +35,9 @@ class LoginViewModel: ObservableObject {
             print("Login successful: \(session)")
             // Navigate to the main view after successful login
             DispatchQueue.main.async {
-                if let window = UIApplication.shared.windows.first {
+                if let windowScene = UIApplication.shared.connectedScenes
+                    .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene,
+                   let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
                     AppLoader.shared.configure(window: window)
                     AppLoader.shared.presentMainViewController()
                 }

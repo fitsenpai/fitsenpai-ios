@@ -99,7 +99,7 @@ struct WorkoutsMainView: View {
             SwipeableCalendarView(selectedDate: $selectedDate, currentWeekStartDate: $currentWeekStartDate)
             if let upcomingWeekNumber = viewModel.upNextWeekNumber {
                 VStack {
-                    BackgroundInfoView(viewModel: BackgroundInfoViewModel(iconName: "ic_calendar_check", iconTint: .fsPrimary, title: "Week \(upcomingWeekNumber ?? 5) is now unlocked", mainLabel: "Tap below to generate your new workout and\nmeal plans. This may take a few minutes.", buttonLabel: "Generate plans", buttonAction: {
+                    BackgroundInfoView(viewModel: BackgroundInfoViewModel(iconName: "ic_calendar_check", iconTint: .fsPrimary, title: "Week \(upcomingWeekNumber) is now unlocked", mainLabel: "Tap below to generate your new workout and\nmeal plans. This may take a few minutes.", buttonLabel: "Generate plans", buttonAction: {
                         //
                     }))
                     .padding(.top, 20)
@@ -118,19 +118,19 @@ struct WorkoutsMainView: View {
             }
             
         }
-        .onChange(of: selectedDate) { newValue in
+        .onChange(of: selectedDate, { oldValue, newValue in
             if let uuid = globalAppEnvObject.user?.id {
                 viewModel.fetchWorkoutPlans(forUser: uuid, date: newValue)
             }
-        }
-        .onChange(of: currentWeekStartDate) { newStartDate in
+        })
+        .onChange(of: currentWeekStartDate, { oldValue, newValue in
             // React to changes in currentWeekStartDate
             if let uuid = globalAppEnvObject.user?.id {
 //                // Fetch workout plans based on the new start date of the week
 //                viewModel.fetchWorkoutPlans(forUser: uuid, date: newStartDate)
-                viewModel.fetchWeeklyPlan(forUser: uuid, date: newStartDate)
+                viewModel.fetchWeeklyPlan(forUser: uuid, date: newValue)
             }
-        }
+        })
     }
     
     static func create() -> WorkoutsMainView {
