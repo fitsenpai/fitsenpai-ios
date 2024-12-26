@@ -24,22 +24,42 @@ class WorkoutsMainViewModel: ObservableObject {
     
     // Cache for workout plans by date
     private var workoutPlanCache: [String: [DailyWorkoutPlan]] = [:]
+    private var weeklyPlanCache: [String: WeeklyPlan] = [:]
+    private var fetchAttempted: Set<String> = [] // Tracks keys for which a fetch was attempted
+    
+    private var workoutCache: [String: [Workout]?] = [:] // Cache for workouts
+    private var fetchWorkoutsAttempted = false // Tracks if fetchWorkouts was attempted
     
     init(workoutUseCase: WorkoutUseCase) {
         self.workoutUseCase = workoutUseCase
     }
     
-    // Fetch workouts for the main view
     func fetchWorkouts() {
+        let cacheKey = "allWorkouts"
+        
+        // Check cache
+        if let cachedWorkouts = workoutCache[cacheKey] {
+            // Use cached data (even if it's nil)
+            workouts = cachedWorkouts ?? []
+            return
+        }
+        
+        // Check if fetching was already attempted
+        if fetchWorkoutsAttempted {
+            print("Fetch already attempted for key: \(cacheKey)")
+            return
+        }
+        
         isWorkoutLoading = true
+        fetchWorkoutsAttempted = true // Mark fetch as attempted
+        
         Task {
             do {
-                // Make sure updates to the @Published property are dispatched on the main thread
                 let fetchedWorkouts = try await workoutUseCase.fetchAllWorkouts()
                 
-                // Ensure the update happens on the main thread
                 DispatchQueue.main.async { [weak self] in
                     self?.workouts = fetchedWorkouts
+                    self?.workoutCache[cacheKey] = fetchedWorkouts // Cache the fetched data
                     self?.isWorkoutLoading = false
                 }
             } catch {
@@ -83,17 +103,41 @@ class WorkoutsMainViewModel: ObservableObject {
     
     // Fetch the weekly plan for the user
     func fetchWeeklyPlan(forUser userId: UUID, date: Date) {
+        let cacheKey = generateCacheKey(forUser: userId, date: date)
+        
+        if let cachedPlan = weeklyPlanCache[cacheKey] {
+            // Use cached data for immediate UI update
+            weeklyPlan = cachedPlan
+            if cachedPlan == nil {
+                upNextWeekNumber = nil // Optionally handle "no data" states
+            }
+            return
+        }
+        
+        // Check if fetching was already attempted
+        if fetchAttempted.contains(cacheKey) {
+            print("Fetch already attempted for key: \(cacheKey)")
+            return
+        }
+        
         isWeeklyPlanLoading = true
         upNextWeekNumber = nil
+        fetchAttempted.insert(cacheKey) // Mark fetch as attempted
+        
         Task {
             do {
                 let fetchedWeeklyPlan = try await workoutUseCase.fetchWeeklyPlan(forUser: userId, date: date)
+                
                 guard !fetchedWeeklyPlan.isEmpty else {
                     self.fetchWeekToGenerate(forUser: userId)
                     return
                 }
+                
                 DispatchQueue.main.async {
-                    self.weeklyPlan = fetchedWeeklyPlan.first
+                    if let firstPlan = fetchedWeeklyPlan.first {
+                        self.weeklyPlan = firstPlan
+                        self.weeklyPlanCache[cacheKey] = firstPlan // Cache the fetched data
+                    }
                     self.isWeeklyPlanLoading = false
                 }
             } catch {
@@ -105,23 +149,27 @@ class WorkoutsMainViewModel: ObservableObject {
         }
     }
     
+    private func generateCacheKey(forUser userId: UUID, date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let formattedDate = dateFormatter.string(from: date)
+        return "\(userId.uuidString)_\(formattedDate)"
+    }
+    
+    func clearCache() {
+        weeklyPlanCache.removeAll()
+        fetchAttempted.removeAll()
+    }
+    
     func fetchWeekToGenerate(forUser userId: UUID) {
-        Task {
-            do {
-                if let weekNumber = try await workoutUseCase.fetchWeekToGenerate(forUser: userId) {
-                    DispatchQueue.main.async {
-                        self.upNextWeekNumber = weekNumber + 1
-                        self.isWeeklyPlanLoading = false
-                    }
-                }else{
-                    print("Error fetching next week to generate")
-                    self.isWeeklyPlanLoading = false
-                }
-            } catch {
-                print("Error fetching next week to generate: \(error)")
-                DispatchQueue.main.async {
-                    self.isWeeklyPlanLoading = false
-                }
+        if let weekToGenerate = globalAppEnvObject.weekToGenerate {
+            DispatchQueue.main.async {
+                self.upNextWeekNumber = weekToGenerate + 1
+                self.isWeeklyPlanLoading = false
+            }
+        }else{
+            DispatchQueue.main.async {
+                self.isWeeklyPlanLoading = false
             }
         }
     }

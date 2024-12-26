@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import Foundation
+import Supabase
 
 @main
 struct FitSenpai: App {
@@ -28,7 +30,14 @@ struct FitSenpai: App {
             }
             .task {
                 isLoading = true
-                appState.isLoggedIn = await AuthUseCase.checkActiveSession()
+                
+                // Run the AppStartBlock
+                do {
+                    try await AppStartBlock.execute(appState: appState)
+                } catch {
+                    print("Error during app start: \(error.localizedDescription)")
+                }
+                
                 isLoading = false
             }
         }

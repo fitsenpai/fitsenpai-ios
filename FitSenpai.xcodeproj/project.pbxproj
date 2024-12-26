@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		12084EE12D169B1B003E3769 /* Application+SafeAreaBottomInsets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12084EE02D169B1B003E3769 /* Application+SafeAreaBottomInsets.swift */; };
+		12084EE42D1D2614003E3769 /* AppStart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12084EE32D1D2614003E3769 /* AppStart.swift */; };
+		12084EE62D1D262F003E3769 /* WeekGeneratorUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12084EE52D1D262F003E3769 /* WeekGeneratorUseCase.swift */; };
 		F21F676F2D09A39C00C240DD /* MealDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21F676E2D09A39C00C240DD /* MealDetailViewModel.swift */; };
 		F21F67712D09A42900C240DD /* MealDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21F67702D09A42900C240DD /* MealDetailView.swift */; };
 		F21F67732D0ABA0A00C240DD /* CheckboxLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21F67722D0ABA0A00C240DD /* CheckboxLabelView.swift */; };
@@ -124,6 +126,8 @@
 
 /* Begin PBXFileReference section */
 		12084EE02D169B1B003E3769 /* Application+SafeAreaBottomInsets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Application+SafeAreaBottomInsets.swift"; sourceTree = "<group>"; };
+		12084EE32D1D2614003E3769 /* AppStart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStart.swift; sourceTree = "<group>"; };
+		12084EE52D1D262F003E3769 /* WeekGeneratorUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekGeneratorUseCase.swift; sourceTree = "<group>"; };
 		F21F676E2D09A39C00C240DD /* MealDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealDetailViewModel.swift; sourceTree = "<group>"; };
 		F21F67702D09A42900C240DD /* MealDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealDetailView.swift; sourceTree = "<group>"; };
 		F21F67722D0ABA0A00C240DD /* CheckboxLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxLabelView.swift; sourceTree = "<group>"; };
@@ -251,6 +255,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		12084EE22D1D260B003E3769 /* AppStart */ = {
+			isa = PBXGroup;
+			children = (
+				12084EE32D1D2614003E3769 /* AppStart.swift */,
+				12084EE52D1D262F003E3769 /* WeekGeneratorUseCase.swift */,
+			);
+			path = AppStart;
+			sourceTree = "<group>";
+		};
 		F21F676D2D09A38A00C240DD /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
@@ -423,6 +436,7 @@
 		F24B337A2CEDB5B5004AD370 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				12084EE22D1D260B003E3769 /* AppStart */,
 				F21F677C2D0AC52500C240DD /* TypeAliases */,
 				F24B340C2CF61E4C004AD370 /* Webservice */,
 				F24B33EA2CF21782004AD370 /* Models */,
@@ -1007,10 +1021,12 @@
 				F24B34062CF61395004AD370 /* EnvironmentManager.swift in Sources */,
 				F24B335B2CEDB421004AD370 /* AppDelegate.swift in Sources */,
 				F2E61AF42D0C2CFE006F2FF6 /* BottomSheetPresentor.swift in Sources */,
+				12084EE42D1D2614003E3769 /* AppStart.swift in Sources */,
 				F24B33852CEDBA88004AD370 /* TextStyle.swift in Sources */,
 				F24B335D2CEDB421004AD370 /* SceneDelegate.swift in Sources */,
 				F2F8CA342D09471800E3DCF3 /* WorkoutDetailView.swift in Sources */,
 				F2802BED2CF726B600617942 /* LoginViewModel.swift in Sources */,
+				12084EE62D1D262F003E3769 /* WeekGeneratorUseCase.swift in Sources */,
 				F2E61B142D13CFF1006F2FF6 /* WrappedHStack.swift in Sources */,
 				F229D3832CF81C490094BE2E /* WorkoutUseCase.swift in Sources */,
 				F2F8CA3A2D0995EE00E3DCF3 /* PlayerUIView.swift in Sources */,

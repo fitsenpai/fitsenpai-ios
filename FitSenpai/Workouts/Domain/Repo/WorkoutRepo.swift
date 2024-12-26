@@ -16,14 +16,29 @@ protocol WorkoutRepo {
     func fetchGymActivities(forUser userId: UUID) async throws -> [GymActivity]
     func fetchWeeklyPlan(forUser userId: UUID, date queryDate: Date) async throws -> [WeeklyPlan]
     func fetchWeekToGenerate (forUser userId: UUID) async throws -> Int?
+    func fetchWeekToGenerate2 (forUser userId: UUID) async throws -> Int?
 }
 
-struct WorkoutRepoImpl: WorkoutRepo {
+class WorkoutRepoImpl: WorkoutRepo {
     private let client: FSClient
-
+    private var cache: [String: Any] = [:]
+    private var weekToGenerate: Int?
+    
     init(client: FSClient = .shared!) {
         self.client = client
     }
+    
+    // Generalized fetch method with caching
+    private func fetchWithCache<T>(key: String, fetchBlock: () async throws -> T) async throws -> T {
+        if let cachedData = cache[key] as? T {
+            return cachedData
+        }
+        
+        let fetchedData = try await fetchBlock()
+        cache[key] = fetchedData
+        return fetchedData
+    }
+    
 
     func fetchAllWorkouts() async throws -> [Workout] {
         let supabaseClient = client.getClient()
@@ -175,6 +190,25 @@ struct WorkoutRepoImpl: WorkoutRepo {
             }
         } catch {
             throw error
+        }
+    }
+    
+    func fetchWeekToGenerate2(forUser userId: UUID) async throws -> Int? {
+        let key = "fetchWeekToGenerate_\(userId.uuidString)"
+        return try await fetchWithCache(key: key) {
+            let supabaseClient = client.getClient()
+            let response = try await supabaseClient
+                .from(FSTable.weeklyPlansTest.rawValue)
+                .select("week_number")
+                .eq("user_id", value: userId.uuidString)
+                .order("week_number", ascending: false)
+                .limit(1)
+                .execute()
+            if let jsonArray = try JSONSerialization.jsonObject(with: response.data, options: []) as? [[String: Any]],
+               let maxWeekNumber = jsonArray.first?["week_number"] as? Int {
+                return maxWeekNumber
+            }
+            return nil
         }
     }
 }

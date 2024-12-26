@@ -45,6 +45,6 @@ struct WorkoutUseCase {
     }
     
     func fetchWeekToGenerate(forUser userId: UUID) async throws -> Int? {
-        return try await workoutRepo.fetchWeekToGenerate(forUser: userId)
+        return try await workoutRepo.fetchWeekToGenerate2(forUser: userId)
     }
 }

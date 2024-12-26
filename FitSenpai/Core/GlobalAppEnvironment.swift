@@ -10,4 +10,5 @@ import Auth
 
 class GlobalAppEnvironment: ObservableObject {
     @Published var user:FSUser?
+    @Published var weekToGenerate: Int?
 }
