@@ -49,11 +49,22 @@ struct MealsMainView: View {
     
     var listingHeader: some View {
         HStack(spacing: 12) {
-            Image("ic_utensils")
-                .resizable()
-                .frame(width: 32, height: 32)
             FSText(text: "Today's meals", fontStyle: .headers20, color: .fsTitle)
             Spacer()
+            HStack(spacing: 15) {
+                Image("ic_thumbs_up")
+                    .resizable()
+                    .frame(width: 16, height: 16)
+                
+                Image("ic_thumbs_down")
+                    .resizable()
+                    .frame(width: 16, height: 16)
+                
+                Image("ic_regenerate")
+                    .resizable()
+                    .frame(width: 16, height: 16)
+            }
+            .frame(height: 16)
         }
     }
     
@@ -90,7 +101,7 @@ struct MealsMainView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            FSText(text: "Meal planner", fontStyle: .headers24, color: .fsTitle)
+            FSNavBarView()
             SwipeableCalendarView(selectedDate: .constant(Date()), currentWeekStartDate: .constant(Date()))
             
             workoutSection2

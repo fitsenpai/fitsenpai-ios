@@ -14,11 +14,18 @@ struct GroceriesMainView: View {
     
     var listingHeader: some View {
         HStack(spacing: 12) {
-            Image("ic_shopping_cart")
-                .resizable()
-                .frame(width: 32, height: 32)
             FSText(text: "Shopping list", fontStyle: .headers20, color: .fsTitle)
             Spacer()
+            HStack(spacing: 15) {
+                Image("ic_thumbs_up")
+                    .resizable()
+                    .frame(width: 16, height: 16)
+                
+                Image("ic_thumbs_down")
+                    .resizable()
+                    .frame(width: 16, height: 16)
+            }
+            .frame(height: 16)
         }
     }
     
@@ -45,8 +52,8 @@ struct GroceriesMainView: View {
         
 //        ScrollView {
             VStack(alignment: .leading) {
-                FSText(text: "Grocery planner", fontStyle: .headers24, color: .fsTitle)
-                SwipeableCalendarView(shouldShowWeekView: false, selectedDate: .constant(Date()), currentWeekStartDate: .constant(Date()))
+                FSNavBarView()
+                SwipeableCalendarView(shouldShowWeekView: true, selectedDate: .constant(Date()), currentWeekStartDate: .constant(Date()))
                 
                 workoutSection
                 

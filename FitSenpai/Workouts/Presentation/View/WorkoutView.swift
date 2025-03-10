@@ -28,8 +28,14 @@ struct WorkoutView: View {
     var body: some View {
             ZStack {
                 RoundedRectangle(cornerRadius: 12)
-                    .stroke(Color.gray230, lineWidth: 1)
+//                    .stroke(Color.gray230, lineWidth: 1)
+                
+                    .fill(Color.white) // Fill with white instead of a border
+                            .shadow(color: Color.black.opacity(0.1), radius: 2, x: 0, y: 1)
+                
                 HStack(alignment: .center) {
+                    
+                    
                     HStack(spacing: 12) {
                         ZStack {
                             if let videoURL = videoURL {
@@ -78,6 +84,7 @@ struct WorkoutView: View {
                 }
                 .padding(12)
             }
+            .padding(.horizontal, 3)
         }
     
 }

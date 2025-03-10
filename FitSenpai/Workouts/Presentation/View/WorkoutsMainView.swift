@@ -23,14 +23,27 @@ struct WorkoutsMainView: View {
     
     var listingHeader: some View {
         HStack(spacing: 12) {
-            Image("ic_barbel_green")
-                .resizable()
-                .frame(width: 32, height: 32)
-            FSText(text: "Today's workout", fontStyle: .headers20, color: .fsTitle)
+            FSText(text: "Exercises", fontStyle: .headers20, color: .fsTitle)
             Spacer()
+            
+            HStack(spacing: 15) {
+                Image("ic_thumbs_up")
+                    .resizable()
+                    .frame(width: 16, height: 16)
+                
+                Image("ic_thumbs_down")
+                    .resizable()
+                    .frame(width: 16, height: 16)
+                
+                Image("ic_regenerate")
+                    .resizable()
+                    .frame(width: 16, height: 16)
+            }
+            .frame(height: 16)
         }
     }
     
+    //removed per updated figma
     var targetGroupHorizontalList: some View {
         HStack (spacing: 12) {
             GrayPillView(text: viewModel.selectedTargetGroup, pillHeight: 32, fontStyle: .body16)
@@ -42,7 +55,6 @@ struct WorkoutsMainView: View {
         VStack(spacing: 16) {
             VStack {
                 listingHeader
-                targetGroupHorizontalList
             }
             FSCompletionBarView()
             
@@ -51,10 +63,12 @@ struct WorkoutsMainView: View {
             } else {
                 ScrollView {
                     VStack(spacing: 12) {
+                        Color.clear.frame(height: 2)
                         ForEach(viewModel.workoutPlans, id: \.id) { workout in
                             WorkoutView(image: "ic_workout", title: workout.name ?? "", videoURL: workout.url , showInfo: true, isSelected: workout == viewModel.selectedWorkout)
                                 .onTapGesture {
-                                    viewModel.selectWorkout(workout: workout)
+//                                    viewModel.selectWorkout(workout: workout)
+                                    showingDetail.toggle()
                                 }
                                 .frame(height: 88)
                                 .sheet(isPresented: $showingDetail) {
@@ -86,6 +100,7 @@ struct WorkoutsMainView: View {
                     }
                 }
                 .scrollIndicators(.hidden)
+                
             }
             
         }
@@ -95,7 +110,7 @@ struct WorkoutsMainView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            FSText(text: "Workout planner", fontStyle: .headers24, color: .fsTitle)
+            FSNavBarView()
             SwipeableCalendarView(selectedDate: $selectedDate, currentWeekStartDate: $currentWeekStartDate)
             if let upcomingWeekNumber = viewModel.upNextWeekNumber {
                 VStack {

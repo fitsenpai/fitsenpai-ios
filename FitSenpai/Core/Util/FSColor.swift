@@ -18,6 +18,7 @@ class FSColor {
     static let blackBackground = UIColor(hexString: AppColor.Black.rawValue)
     static let deepBlackBackground = UIColor(hexString: AppColor.DeepBlack.rawValue)
     static let gray26 = UIColor(hexString: AppColor.LightGray.rawValue)
+    static let white2 = UIColor(hexString: "#fcfbfd")
     
 }
 

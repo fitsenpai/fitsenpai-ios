@@ -10,6 +10,8 @@
 		12084EE12D169B1B003E3769 /* Application+SafeAreaBottomInsets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12084EE02D169B1B003E3769 /* Application+SafeAreaBottomInsets.swift */; };
 		12084EE42D1D2614003E3769 /* AppStart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12084EE32D1D2614003E3769 /* AppStart.swift */; };
 		12084EE62D1D262F003E3769 /* WeekGeneratorUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12084EE52D1D262F003E3769 /* WeekGeneratorUseCase.swift */; };
+		127482E52D59A9D600B49EAA /* FSNavBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127482E42D59A9D600B49EAA /* FSNavBarView.swift */; };
+		127482E72D7E8E2E00B49EAA /* SelectableIconLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127482E62D7E8E2E00B49EAA /* SelectableIconLabelView.swift */; };
 		F21F676F2D09A39C00C240DD /* MealDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21F676E2D09A39C00C240DD /* MealDetailViewModel.swift */; };
 		F21F67712D09A42900C240DD /* MealDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21F67702D09A42900C240DD /* MealDetailView.swift */; };
 		F21F67732D0ABA0A00C240DD /* CheckboxLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21F67722D0ABA0A00C240DD /* CheckboxLabelView.swift */; };
@@ -128,6 +130,8 @@
 		12084EE02D169B1B003E3769 /* Application+SafeAreaBottomInsets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Application+SafeAreaBottomInsets.swift"; sourceTree = "<group>"; };
 		12084EE32D1D2614003E3769 /* AppStart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStart.swift; sourceTree = "<group>"; };
 		12084EE52D1D262F003E3769 /* WeekGeneratorUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekGeneratorUseCase.swift; sourceTree = "<group>"; };
+		127482E42D59A9D600B49EAA /* FSNavBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FSNavBarView.swift; sourceTree = "<group>"; };
+		127482E62D7E8E2E00B49EAA /* SelectableIconLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectableIconLabelView.swift; sourceTree = "<group>"; };
 		F21F676E2D09A39C00C240DD /* MealDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealDetailViewModel.swift; sourceTree = "<group>"; };
 		F21F67702D09A42900C240DD /* MealDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealDetailView.swift; sourceTree = "<group>"; };
 		F21F67722D0ABA0A00C240DD /* CheckboxLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxLabelView.swift; sourceTree = "<group>"; };
@@ -542,6 +546,7 @@
 				F24B33BC2CEF0B36004AD370 /* RoundedBorderTextField.swift */,
 				F24B33E22CF20E17004AD370 /* GrayPillView.swift */,
 				F24B33E42CF21116004AD370 /* FSCompletionBarView.swift */,
+				127482E62D7E8E2E00B49EAA /* SelectableIconLabelView.swift */,
 				F24B33E82CF21662004AD370 /* IconLabelView.swift */,
 				F229D3932CF8491B0094BE2E /* FSImageView.swift */,
 				F229D3952CF8493D0094BE2E /* FSCircleImageView.swift */,
@@ -550,6 +555,7 @@
 				F21F67722D0ABA0A00C240DD /* CheckboxLabelView.swift */,
 				F2E61B032D1168BF006F2FF6 /* RoundedBorderModifier.swift */,
 				F2E61B132D13CFF1006F2FF6 /* WrappedHStack.swift */,
+				127482E42D59A9D600B49EAA /* FSNavBarView.swift */,
 			);
 			path = ReuseableViews;
 			sourceTree = "<group>";
@@ -1025,6 +1031,7 @@
 				F24B33852CEDBA88004AD370 /* TextStyle.swift in Sources */,
 				F24B335D2CEDB421004AD370 /* SceneDelegate.swift in Sources */,
 				F2F8CA342D09471800E3DCF3 /* WorkoutDetailView.swift in Sources */,
+				127482E72D7E8E2E00B49EAA /* SelectableIconLabelView.swift in Sources */,
 				F2802BED2CF726B600617942 /* LoginViewModel.swift in Sources */,
 				12084EE62D1D262F003E3769 /* WeekGeneratorUseCase.swift in Sources */,
 				F2E61B142D13CFF1006F2FF6 /* WrappedHStack.swift in Sources */,
@@ -1040,6 +1047,7 @@
 				F2E61AF62D0C2D1E006F2FF6 /* BottomSheetHostingController.swift in Sources */,
 				F24B33DC2CEF9411004AD370 /* FSTabView.swift in Sources */,
 				F2802BDD2CF7215100617942 /* FSUser.swift in Sources */,
+				127482E52D59A9D600B49EAA /* FSNavBarView.swift in Sources */,
 				F24B33BB2CEDE5C3004AD370 /* LoginView.swift in Sources */,
 				F2E61AFA2D0C2D64006F2FF6 /* FSActionButtonConfig.swift in Sources */,
 				F229D38E2CF825080094BE2E /* WorkoutsMainViewModel.swift in Sources */,
@@ -1206,12 +1214,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = F9622P5FHU;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = SJLNKJK54M;
 				EXCLUDED_ARCHS = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = FitSenpai/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Fit Senpai";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -1224,6 +1235,8 @@
 				"OTHER_SWIFT_FLAGS[arch=*]" = "-DDEV";
 				PRODUCT_BUNDLE_IDENTIFIER = com.fitsenpai.FitSenpai;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "app development_provisioning";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1235,12 +1248,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = F9622P5FHU;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = SJLNKJK54M;
 				EXCLUDED_ARCHS = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = FitSenpai/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Fit Senpai";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -1252,6 +1268,8 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.fitsenpai.FitSenpai;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "app development_provisioning";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

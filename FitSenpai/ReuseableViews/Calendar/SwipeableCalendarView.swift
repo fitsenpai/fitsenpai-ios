@@ -18,34 +18,12 @@ struct SwipeableCalendarView: View {
         VStack {
             // Week Range
             HStack(alignment: .center) {
-                HStack {
-                    Image("ic_calendar")
-                        .resizable()
-                        .frame(width: 16, height: 16)
-                    FSText(text: weekRangeText, fontStyle: .body14, color: .fsSubtitleColor)
-                }
+                FSText(text: weekRangeText, fontStyle: .medium14, color: .fsSubtitleColor)
+                    .padding(.leading, 3)
+                
                 Spacer()
-                HStack(spacing: 8) {
-                    Button(action: {
-                        withAnimation {
-                            currentWeekOffset -= 1
-                        }
-                    }) {
-                        Image("ic_left")
-                            .resizable()
-                            .frame(width: 24, height: 24)
-                    }
-                    Button(action: {
-                        withAnimation {
-                            currentWeekOffset += 1
-                        }
-                    }) {
-                        Image("ic_right")
-                            .resizable()
-                            .frame(width: 24, height: 24)
-                    }
-                }
             }
+            
             if shouldShowWeekView {
                 // Swipeable Weeks
                 TabView(selection: $currentWeekOffset) {
@@ -57,7 +35,7 @@ struct SwipeableCalendarView: View {
                 .tabViewStyle(.page(indexDisplayMode: .never))
             }
         }
-        .frame(height: shouldShowWeekView ? 120 : 30)
+        .frame(height: shouldShowWeekView ? 90 : 30)
         .onChange(of: currentWeekOffset) { _, _ in
             updateCurrentWeekStartDate()
         }
@@ -72,13 +50,15 @@ struct SwipeableCalendarView: View {
     private var weekRangeText: String {
         let weekDates = daysInWeek(for: currentWeekOffset) // Use currentWeekOffset here
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMM d"
+//        dateFormatter.dateFormat = "MMM d"
+        dateFormatter.dateFormat = "MMMM"
         
         let dateFormatter2 = DateFormatter()
         dateFormatter2.dateFormat = " d"
         
         guard let start = weekDates.first, let end = weekDates.last else { return "" }
-        return "\(dateFormatter.string(from: start)) - \(dateFormatter2.string(from: end)), \(calendar.component(.year, from: start))"
+//        return "\(dateFormatter.string(from: start)) - \(dateFormatter2.string(from: end)), \(calendar.component(.year, from: start))"
+        return "\(dateFormatter.string(from: start))"
     }
     
     private func daysInWeek(for offset: Int = 0) -> [Date] {

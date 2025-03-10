@@ -10,7 +10,6 @@ import SwiftUI
 struct WeekView: View {
     let weekOffset: Int
     @Binding var selectedDate: Date
-
     private var calendar: Calendar {
         Calendar.current
     }
@@ -28,12 +27,12 @@ struct WeekView: View {
     var body: some View {
         HStack(alignment: .center) {
             ForEach(daysInWeek(), id: \.self) { date in
-                VStack {
-                    FSText(
-                        text: dayAbbreviation(for: date),
-                        fontStyle: .mona12,
-                        color: .fsSubtitleColor
-                    )
+                VStack(spacing: 7) {
+//                    FSText(
+//                        text: dayAbbreviation(for: date),
+//                        fontStyle: .mona12,
+//                        color: .fsSubtitleColor
+//                    )
 
                     ZStack {
                         Circle()
@@ -43,24 +42,28 @@ struct WeekView: View {
                             )
                             .background(
                                 Circle().fill(
-                                    selectedDate == date
-                                    ? Color.deepBlackBackground
-                                    : Color.clear
+                                    Color.fsSecondary
                                 )
                             )
                             .frame(width: 40, height: 40)
 
                         FSText(
-                            text: "\(dayNumber(for: date))",
-                            fontStyle: .mona12,
-                            color: selectedDate == date ? .white : .fsTitle
+                            text: dayAbbreviation(for: date),
+                            fontStyle: .mona12Medium,
+                            color: .fsTitle
                         )
+//                        FSText(
+//                            text: "\(dayNumber(for: date))",
+//                            fontStyle: .mona12,
+//                            color: selectedDate == date ? .white : .fsTitle
+//                        )
                     }
                     
-                    Circle()
-                        .fill(Color.fsPrimary)
-                        .frame(width: 4, height: 4)
-                        .padding(.top, 2)
+                    FSText(
+                        text: "\(dayNumber(for: date))",
+                        fontStyle: selectedDate == date ? .mona12SemiBold : .mona12Light,
+                        color: .fsTitle
+                    )
                 }
                 .padding(.horizontal, 3)
                 .onTapGesture {
@@ -71,7 +74,7 @@ struct WeekView: View {
             }
         }
         .frame(width: UIScreen.main.bounds.width)
-        .padding(.top, 8)
+        
     }
 
     private func daysInWeek() -> [Date] {
@@ -97,9 +100,13 @@ struct WeekView: View {
     }
 
     private func dayAbbreviation(for date: Date) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "EEE"
-        return dateFormatter.string(from: date)
+        let calendar = Calendar.current
+            let weekday = calendar.component(.weekday, from: date)
+            
+            // Custom mapping to match your format
+            let shortWeekdaySymbols = ["Su", "M", "T", "W", "Th", "F", "S"]
+            
+            return shortWeekdaySymbols[weekday - 1] // `weekday` is 1-based (Sunday = 1)
     }
 
     private func dayNumber(for date: Date) -> Int {

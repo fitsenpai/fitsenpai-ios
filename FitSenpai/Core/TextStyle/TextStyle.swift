@@ -16,8 +16,13 @@ extension Font {
     static let fieldsHeader = custom("Mona-Sans-Medium", size: 14)
     static let body14 = custom("PlusJakartaSans-Regular", size: 14)
     static let body12 = custom("PlusJakartaSans-Regular", size: 12)
+    static let body10 = custom("PlusJakartaSans-Regular", size: 10)
     static let body16 = custom("PlusJakartaSans-Regular", size: 16)
+    static let bodyBold16 = custom("PlusJakartaSans-Bold", size: 16)
     static let medium16 = custom("PlusJakartaSans-Medium", size: 16)
     static let medium14 = custom("PlusJakartaSans-Medium", size: 14)
     static let mona12 = custom("Mona-Sans-Regular", size: 12)
+    static let mona12Light = custom("Mona-Sans-Light", size: 12)
+    static let mona12Medium = custom("Mona-Sans-Medium", size: 12)
+    static let mona12SemiBold = custom("Mona-Sans-SemiBold", size: 12)
 }

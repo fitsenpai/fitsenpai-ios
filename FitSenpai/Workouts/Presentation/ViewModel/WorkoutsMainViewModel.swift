@@ -92,12 +92,16 @@ class WorkoutsMainViewModel: ObservableObject {
                 
                 // Ensure the update happens on the main thread
                 DispatchQueue.main.async {
-                    self.workoutPlans = fetchedWorkoutPlans
+                    let plan1 = DailyWorkoutPlan.mock()
+                    let plan2 = DailyWorkoutPlan.mock()
+//                    self.workoutPlans = fetchedWorkoutPlans
+                    self.workoutPlans = [plan1, plan2]
                     self.workoutPlanCache[formattedDate] = fetchedWorkoutPlans
                 }
             } catch {
                 print("Error fetching workout plans: \(error)")
             }
+            
         }
     }
     
