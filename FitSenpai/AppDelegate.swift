@@ -54,6 +54,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return
         }
         let _ = SupabaseClient(supabaseURL: URL(string: url)!, supabaseKey: key)
+                
     }
 
 
