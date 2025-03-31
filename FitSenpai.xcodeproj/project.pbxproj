@@ -13,7 +13,9 @@
 		127482E52D59A9D600B49EAA /* FSNavBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127482E42D59A9D600B49EAA /* FSNavBarView.swift */; };
 		127482E72D7E8E2E00B49EAA /* SelectableIconLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127482E62D7E8E2E00B49EAA /* SelectableIconLabelView.swift */; };
 		127482E92D7FC75500B49EAA /* FSSignUpItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127482E82D7FC75500B49EAA /* FSSignUpItem.swift */; };
-		127482F42D7FC88C00B49EAA /* OnboardingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127482F32D7FC88C00B49EAA /* OnboardingViewModel.swift */; };
+		127482F42D7FC88C00B49EAA /* OnboardingMainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127482F32D7FC88C00B49EAA /* OnboardingMainViewModel.swift */; };
+		127482F72D87DE7800B49EAA /* OnboardingMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127482F62D87DE7800B49EAA /* OnboardingMainView.swift */; };
+		127482F92D87DF0B00B49EAA /* OnboardingGenericSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127482F82D87DF0B00B49EAA /* OnboardingGenericSelectionView.swift */; };
 		F21F676F2D09A39C00C240DD /* MealDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21F676E2D09A39C00C240DD /* MealDetailViewModel.swift */; };
 		F21F67712D09A42900C240DD /* MealDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21F67702D09A42900C240DD /* MealDetailView.swift */; };
 		F21F67732D0ABA0A00C240DD /* CheckboxLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21F67722D0ABA0A00C240DD /* CheckboxLabelView.swift */; };
@@ -135,7 +137,9 @@
 		127482E42D59A9D600B49EAA /* FSNavBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FSNavBarView.swift; sourceTree = "<group>"; };
 		127482E62D7E8E2E00B49EAA /* SelectableIconLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectableIconLabelView.swift; sourceTree = "<group>"; };
 		127482E82D7FC75500B49EAA /* FSSignUpItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FSSignUpItem.swift; sourceTree = "<group>"; };
-		127482F32D7FC88C00B49EAA /* OnboardingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewModel.swift; sourceTree = "<group>"; };
+		127482F32D7FC88C00B49EAA /* OnboardingMainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingMainViewModel.swift; sourceTree = "<group>"; };
+		127482F62D87DE7800B49EAA /* OnboardingMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingMainView.swift; sourceTree = "<group>"; };
+		127482F82D87DF0B00B49EAA /* OnboardingGenericSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingGenericSelectionView.swift; sourceTree = "<group>"; };
 		F21F676E2D09A39C00C240DD /* MealDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealDetailViewModel.swift; sourceTree = "<group>"; };
 		F21F67702D09A42900C240DD /* MealDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealDetailView.swift; sourceTree = "<group>"; };
 		F21F67722D0ABA0A00C240DD /* CheckboxLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxLabelView.swift; sourceTree = "<group>"; };
@@ -283,6 +287,7 @@
 		127482F12D7FC87800B49EAA /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				127482F52D87DE6A00B49EAA /* View */,
 				127482F22D7FC87E00B49EAA /* ViewModel */,
 			);
 			path = Presentation;
@@ -291,9 +296,18 @@
 		127482F22D7FC87E00B49EAA /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				127482F32D7FC88C00B49EAA /* OnboardingViewModel.swift */,
+				127482F32D7FC88C00B49EAA /* OnboardingMainViewModel.swift */,
 			);
 			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		127482F52D87DE6A00B49EAA /* View */ = {
+			isa = PBXGroup;
+			children = (
+				127482F62D87DE7800B49EAA /* OnboardingMainView.swift */,
+				127482F82D87DF0B00B49EAA /* OnboardingGenericSelectionView.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		F21F676D2D09A38A00C240DD /* ViewModel */ = {
@@ -1035,6 +1049,7 @@
 				F24B339E2CEDBE40004AD370 /* TestimonialViewModel.swift in Sources */,
 				F229D3682CF7713C0094BE2E /* AuthUseCase.swift in Sources */,
 				F21F676F2D09A39C00C240DD /* MealDetailViewModel.swift in Sources */,
+				127482F92D87DF0B00B49EAA /* OnboardingGenericSelectionView.swift in Sources */,
 				F2E61B022D116082006F2FF6 /* BackgroundInfoView.swift in Sources */,
 				F2E61AFC2D0C2DB8006F2FF6 /* DisplayUtil.swift in Sources */,
 				F2E61B042D1168BF006F2FF6 /* RoundedBorderModifier.swift in Sources */,
@@ -1064,6 +1079,7 @@
 				F2F8CA342D09471800E3DCF3 /* WorkoutDetailView.swift in Sources */,
 				127482E72D7E8E2E00B49EAA /* SelectableIconLabelView.swift in Sources */,
 				F2802BED2CF726B600617942 /* LoginViewModel.swift in Sources */,
+				127482F72D87DE7800B49EAA /* OnboardingMainView.swift in Sources */,
 				12084EE62D1D262F003E3769 /* WeekGeneratorUseCase.swift in Sources */,
 				F2E61B142D13CFF1006F2FF6 /* WrappedHStack.swift in Sources */,
 				F229D3832CF81C490094BE2E /* WorkoutUseCase.swift in Sources */,
@@ -1096,7 +1112,7 @@
 				F2802BE62CF7238000617942 /* AnyCodable.swift in Sources */,
 				F24B33DF2CEF9CCF004AD370 /* SwipeableCalendarView.swift in Sources */,
 				F2E61B122D12995C006F2FF6 /* WeeklyPlan.swift in Sources */,
-				127482F42D7FC88C00B49EAA /* OnboardingViewModel.swift in Sources */,
+				127482F42D7FC88C00B49EAA /* OnboardingMainViewModel.swift in Sources */,
 				F24B33B52CEDDE7F004AD370 /* FSButton.swift in Sources */,
 				F24B33E92CF21662004AD370 /* IconLabelView.swift in Sources */,
 				F2E61B082D1279C5006F2FF6 /* DailyWorkoutPlan.swift in Sources */,

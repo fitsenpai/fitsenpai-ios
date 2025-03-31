@@ -11,7 +11,7 @@ struct SelectableIconLabelView: View {
     @State var isSelected: Bool = false
     @State var title: String
     @State var subtitle: String?
-    @State var iconName: String
+    @State var iconName: String?
     
     let iconSize:CGFloat = 20
     var spacing: CGFloat = 17
@@ -19,17 +19,18 @@ struct SelectableIconLabelView: View {
     
     var body: some View {
         HStack(spacing: spacing) {
-            Image(iconName)
-                .resizable()
-                .frame(width: iconSize, height: iconSize)
-                .scaledToFit()
-                .background {
-                    Circle()
-                        .fill(isSelected ? Color.gray246 : Color.white)
-                        .frame(width: 40, height: 40)
-                }
-                .frame(width: 40, height: 40)
-            
+            if let iconName = iconName {
+                Image(iconName)
+                    .resizable()
+                    .frame(width: iconSize, height: iconSize)
+                    .scaledToFit()
+                    .background {
+                        Circle()
+                            .fill(isSelected ? Color.gray246 : Color.white)
+                            .frame(width: 40, height: 40)
+                    }
+                    .frame(width: 40, height: 40)
+            }
             VStack(alignment: .leading, spacing: 10) {
                 FSText(text: title, fontStyle: isSelected ? .bodyBold16 : .body16, color: .blackBackground)
                 if let subtitle = subtitle {
@@ -37,6 +38,9 @@ struct SelectableIconLabelView: View {
                 }
             }
         }
+        .frame(minWidth: 0,
+               maxWidth: .infinity,
+               alignment: .leading)
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
         .background {

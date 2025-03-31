@@ -8,7 +8,7 @@
 import Foundation
 
 
-struct FSSignUpItem {
+struct FSSignUpItem: Hashable {
     var title: String
     var subtitle: String?
     var iconName: String?

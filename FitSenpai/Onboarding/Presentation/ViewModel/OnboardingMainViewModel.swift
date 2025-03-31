@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-class OnboardingViewModel: ObservableObject {
+class OnboardingMainViewModel: ObservableObject {
     
     @Published var selectedGender: FSSignUpItem?
     @Published var selectedDailyActivityLevel: FSSignUpItem?
