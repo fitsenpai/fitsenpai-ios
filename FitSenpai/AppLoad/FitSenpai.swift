@@ -24,14 +24,13 @@ struct FitSenpai: App {
                     FSTabView()
                         .environmentObject(appState)
                 } else {
-                    AuthLandingView()
+                    OnboardingView()
                         .environmentObject(appState)
                 }
             }
             .task {
                 isLoading = true
                 
-                // Run the AppStartBlock
                 do {
                     try await AppStartBlock.execute(appState: appState)
                 } catch {

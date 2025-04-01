@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 74;
+	objectVersion = 76;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -26,7 +26,7 @@
 		937D6F2D2D9AECEB00EE2E3F /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				/Localized/LaunchScreen.storyboard,
+				/Localized/Resources/LaunchScreen.storyboard,
 				Info.plist,
 			);
 			target = F24B33562CEDB421004AD370 /* FitSenpai */;
@@ -38,7 +38,7 @@
 			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
 			buildPhase = F24B33552CEDB421004AD370 /* Resources */;
 			membershipExceptions = (
-				Base.lproj/LaunchScreen.storyboard,
+				Resources/Base.lproj/LaunchScreen.storyboard,
 			);
 		};
 /* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */

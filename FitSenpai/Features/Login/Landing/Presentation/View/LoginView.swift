@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct LoginView: View {
+    @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel: LoginViewModel
 
     init(viewModel: LoginViewModel) {
@@ -15,31 +16,20 @@ struct LoginView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 24) {
-            ZStack {
-                Color.fsAccent
-                    .clipShape(RoundedCorner(radius: 7.5, corners: .allCorners))
-                    .frame(width: 40, height: 40)
-                Image("ic_user_circle")
-                    .resizable()
-                    .frame(width: 25, height: 25)
-            }
+        VStack(alignment: .leading, spacing: 36) {
+            Spacer()
+            
+            FSText(text: "Sign in", fontStyle: .title30, color: .fsTitle)
 
-            VStack(alignment: .leading, spacing: 8) {
-                FSText(text: "Welcome back", fontStyle: .headers, color: .fsTitle)
-                FSText(text: "Login to access your fitness plans", fontStyle: .body14, color: .fsSubtitleColor)
-            }
-
-            VStack(spacing: 24) {
-                RoundedBorderTextField(text: $viewModel.email, placeholder: "Email")
+            VStack(spacing: 32) {
+                RoundedBorderTextField(text: $viewModel.email, placeholder: "Email", cornerRadius: 12)
                 VStack(alignment: .leading, spacing: 10) {
-                    RoundedBorderTextField(text: $viewModel.password, placeholder: "Password", isSecure: true, showAccessory: true)
-                    FSText(text: "Forgot password?", fontStyle: .subHeaderRegular, letterSpace: 1.1, color: Color.fsSubtitleColor, isUnderlined: true)
+                    RoundedBorderTextField(text: $viewModel.password, placeholder: "Password", isSecure: true, showAccessory: true, cornerRadius: 12)
+                    FSText(text: "Forgot password?", fontStyle: .body14, letterSpace: 0, color: Color.fsSubtitleColor, isUnderlined: true)
                 }
             }
-            .padding(.bottom, 24)
 
-            FSButton(title: viewModel.isLoading ? "Logging in..." : "Login") {
+            FSButton(title: viewModel.isLoading ? "Logging in..." : "Login", fontStyle: .bodyBold16, cornerRadius: 20) {
                 Task {
                     await viewModel.login()
                 }
@@ -51,17 +41,38 @@ struct LoginView: View {
                     .foregroundColor(.red)
                     .font(.caption)
             }
+            
+            ZStack {
+                Divider()
+                FSText(text: "or login with", fontStyle: .body14, letterSpace: 0, color: Color.fsSubtitleColor, isUnderlined: false)
+                    .padding(.horizontal, 24)
+                    .background(Color.white)
+            }
+            
+            HStack {
+                FSButton(icon: "apple-logo", title: "Apple", fontStyle: .bodyBold16, foregroundColor: .white, cornerRadius: 20, background: .black) {
+                   
+                }
+                
+                FSButton(icon: "google-logo", title: "Google", fontStyle: .bodyBold16, cornerRadius: 20, background: .white, borderColor: .fsPurple) {
+                    
+                }
+            }
 
             Spacer()
 
             HStack(spacing: 2) {
                 Spacer()
                 FSText(text: "Don't have an account?", fontStyle: .body14, color: .fsTitle)
-                FSText(text: "Sign up here", fontStyle: .fieldsHeader, color: .fsAccentForeground)
+                FSText(text: "Sign up here.", fontStyle: .title14, color: .fsAccentForeground)
+                    .onTapGesture {
+                        dismiss()
+                    }
                 Spacer()
             }
+            .padding(.bottom)
         }
-        .padding(.horizontal, 16)
+        .padding(.horizontal, 24)
         .padding(.top, 63)
         .navigationBarBackButtonHidden()
     }
