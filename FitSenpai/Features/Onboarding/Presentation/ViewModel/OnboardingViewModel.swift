@@ -9,9 +9,10 @@ import SwiftUI
 import Combine
 
 final class OnboardingViewModel: ObservableObject {
+    
     @Published private(set) var currentPage = 0
     @Published private(set) var slideDirection: Edge = .trailing
-    @Published var navigateToLogin = false
+    @Published var navDestination: OnboardingNavDestination? = nil
     private var timer: AnyCancellable?
     private let timerInterval: TimeInterval = 5.0
     
@@ -62,10 +63,10 @@ final class OnboardingViewModel: ObservableObject {
     }
     
     func handleCreatePlan() {
-        // Navigate to sign up flow
+        navDestination = .createPlan
     }
     
     func handleExistingAccount() {
-        navigateToLogin.toggle()
+        navDestination = .signin
     }
 }

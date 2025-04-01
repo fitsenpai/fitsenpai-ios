@@ -48,13 +48,19 @@ struct OnboardingView: View {
                         handleSwipe(translation: value.translation.width)
                     }
             )
-            .navigationDestination(isPresented: $viewModel.navigateToLogin) {
-                let client = FSClient.shared!
-                let loginUseCase = LoginUseCase(client: client)
-                let viewModel = LoginViewModel(loginUseCase: loginUseCase)
+            .navigationDestination(item: $viewModel.navDestination, destination: { view in
+                switch view {
+                case .signin:
+                    let client = FSClient.shared!
+                    let loginUseCase = LoginUseCase(client: client)
+                    let viewModel = LoginViewModel(loginUseCase: loginUseCase)
 
-                LoginView(viewModel: viewModel)
-            }
+                    LoginView(viewModel: viewModel)
+                case .createPlan:
+                    OnboardingMainView()
+                }
+        
+            })
         }
     }
     
