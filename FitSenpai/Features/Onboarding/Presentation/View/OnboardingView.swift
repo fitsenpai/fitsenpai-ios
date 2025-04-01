@@ -100,7 +100,7 @@ struct OnboardingView: View {
         VStack(spacing: 16) {
             FSText(
                 text: slide.title,
-                fontStyle: .title28,
+                fontStyle: .heading28,
                 letterSpace: 0,
                 lineSpacing: 4,
                 alignment: .center
@@ -141,7 +141,7 @@ struct OnboardingView: View {
                 title: "Create my plan",
                 fontStyle: .bodyBold16,
                 letterSpace: 0,
-                cornerRadius: 20
+                cornerRadius: 32
             ) {
                 viewModel.handleCreatePlan()
             }
@@ -149,7 +149,7 @@ struct OnboardingView: View {
             FSButton(
                 title: "I already have an account",
                 letterSpace: 0,
-                cornerRadius: 20,
+                cornerRadius: 32,
                 background: .gray246
             ) {
                 viewModel.handleExistingAccount()

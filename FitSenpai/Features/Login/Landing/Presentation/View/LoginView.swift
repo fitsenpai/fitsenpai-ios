@@ -19,7 +19,7 @@ struct LoginView: View {
         VStack(alignment: .leading, spacing: 36) {
             Spacer()
             
-            FSText(text: "Sign in", fontStyle: .title30, color: .fsTitle)
+            FSText(text: "Sign in", fontStyle: .heading30, color: .fsTitle)
 
             VStack(spacing: 32) {
                 RoundedBorderTextField(text: $viewModel.email, placeholder: "Email", cornerRadius: 12)
@@ -29,7 +29,7 @@ struct LoginView: View {
                 }
             }
 
-            FSButton(title: viewModel.isLoading ? "Logging in..." : "Login", fontStyle: .bodyBold16, cornerRadius: 20) {
+            FSButton(title: viewModel.isLoading ? "Logging in..." : "Login", fontStyle: .bodyBold16, cornerRadius: 32) {
                 Task {
                     await viewModel.login()
                 }
@@ -64,7 +64,8 @@ struct LoginView: View {
             HStack(spacing: 2) {
                 Spacer()
                 FSText(text: "Don't have an account?", fontStyle: .body14, color: .fsTitle)
-                FSText(text: "Sign up here.", fontStyle: .title14, color: .fsAccentForeground)
+                
+                FSText(text: "Sign up here.", fontStyle: .heading14, color: .fsAccentForeground)
                     .onTapGesture {
                         dismiss()
                     }

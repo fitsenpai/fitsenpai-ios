@@ -1,12 +1,14 @@
 import Foundation
 
 enum StepType {
-    case selection(showsButton: Bool)
+    case selection(isMultiple: Bool)
     case heightWeight
     case age
     case macro
     case testimonial
     case notification
+    case saveMoney
+    case thankYou
     case input(previousStep: String)
 }
 
@@ -18,10 +20,14 @@ struct OnboardingStep {
     let type: StepType
     
     var showsButton: Bool {
-        if case .selection(let showsButton) = type {
-            return showsButton
+        switch type {
+        case .notification, .thankYou:
+            return false
+        case .selection(let isMultiple):
+            return isMultiple
+        default:
+            return true
         }
-        return true
     }
     
     var isHeightWeightStep: Bool {
@@ -49,6 +55,27 @@ struct OnboardingStep {
         return false
     }
     
+    var isSaveMoneyStep: Bool {
+        if case .saveMoney = type { return true }
+        return false
+    }
+    
+    var isInputStep: Bool {
+        if case .input(_) = type { return true }
+        return false
+    }
+    
+    var buttonTitle: String? {
+        switch id {
+            case "past_training", "measurements", "age", "workout_days",
+                 "health_restrictions", "allergies", "health_restrictions_input",
+                 "diet_input", "allergies_input", "diet":
+                return "Next"
+            default:
+                return "Continue"
+        }
+    }
+    
     static let steps: [OnboardingStep] = [
         // Gender Selection
         .init(
@@ -56,11 +83,11 @@ struct OnboardingStep {
             title: "Choose your gender",
             subtitle: "This will be used to personalize your plan.",
             options: [
-                .init(id: "male", title: "Male", icon: "male"),
-                .init(id: "female", title: "Female", icon: "female"),
-                .init(id: "other", title: "Other", icon: "other")
+                .init(id: "male", title: "Male", icon: "ic_male"),
+                .init(id: "female", title: "Female", icon: "ic_female"),
+                .init(id: "other", title: "Other", icon: "ic_dots")
             ],
-            type: .selection(showsButton: false)
+            type: .selection(isMultiple: false)
         ),
         
         // Daily Activity Level
@@ -69,13 +96,13 @@ struct OnboardingStep {
             title: "How active are you daily?",
             subtitle: nil,
             options: [
-                .init(id: "sedentary", title: "Sedentary", subtitle: "Mostly sitting, little exercise", icon: "sedentary"),
-                .init(id: "light", title: "Light activity", subtitle: "1-2 exercises/week", icon: "light"),
-                .init(id: "moderate", title: "Moderate", subtitle: "3-5 exercises/week", icon: "moderate"),
-                .init(id: "heavy", title: "Heavy training", subtitle: "6-7 exercises/week", icon: "heavy"),
-                .init(id: "athlete", title: "Athlete", subtitle: "Training 2x per day", icon: "athlete")
+                .init(id: "sedentary", title: "Sedentary", subtitle: "Mostly sitting, little exercise", icon: "ic_chair"),
+                .init(id: "light", title: "Light activity", subtitle: "1-2 exercises/week", icon: "ic_jog"),
+                .init(id: "moderate", title: "Moderate", subtitle: "3-5 exercises/week", icon: "ic_bike"),
+                .init(id: "heavy", title: "Heavy training", subtitle: "6-7 exercises/week", icon: "ic_dumble"),
+                .init(id: "athlete", title: "Athlete", subtitle: "Training 2x per day", icon: "ic_swim")
             ],
-            type: .selection(showsButton: false)
+            type: .selection(isMultiple: false)
         ),
         
         // Past Training Experience
@@ -84,20 +111,20 @@ struct OnboardingStep {
             title: "Which of these have you tried in the past?",
             subtitle: nil,
             options: [
-                .init(id: "trainers", title: "Personal trainers", icon: "trainers"),
-                .init(id: "apps", title: "Fitness apps", icon: "apps"),
-                .init(id: "videos", title: "Workout videos", icon: "videos"),
-                .init(id: "meal_plans", title: "Meal plans or diet programs", icon: "meal"),
-                .init(id: "none", title: "None", icon: "xmark")
+                .init(id: "trainers", title: "Personal trainers", icon: "ic_handshake"),
+                .init(id: "apps", title: "Fitness apps", icon: "ic_phone"),
+                .init(id: "videos", title: "Workout videos", icon: "ic_play_workout"),
+                .init(id: "meal_plans", title: "Meal plans or diet programs", icon: "ic_spoon_fork"),
+                .init(id: "none", title: "None", icon: "ic_x")
             ],
-            type: .selection(showsButton: true)
+            type: .selection(isMultiple: true)
         ),
         
         // Testimonial
         .init(
             id: "testimonial",
             title: "Fit Senpai helped me lose 15% body fat!",
-            subtitle: "I started in 2023 and have already lost 15% body fat! I didn't need to hire a trainer or spend all day figuring out what to eat.\n\n- Corina V.",
+            subtitle: nil,
             options: [],
             type: .testimonial
         ),
@@ -126,20 +153,20 @@ struct OnboardingStep {
             title: "What is your main goal?",
             subtitle: "This will be used to personalize your plan.",
             options: [
-                .init(id: "fat_loss", title: "Fat loss", icon: "fat_loss"),
-                .init(id: "muscle_gain", title: "Muscle gain", icon: "muscle"),
-                .init(id: "general_fitness", title: "General fitness", icon: "fitness"),
-                .init(id: "endurance", title: "Increased endurance", icon: "endurance"),
-                .init(id: "aesthetic", title: "Aesthetic", icon: "aesthetic")
+                .init(id: "fat_loss", title: "Fat loss"),
+                .init(id: "muscle_gain", title: "Muscle gain"),
+                .init(id: "general_fitness", title: "General fitness"),
+                .init(id: "endurance", title: "Increased endurance"),
+                .init(id: "aesthetic", title: "Aesthetic")
             ],
-            type: .selection(showsButton: false)
+            type: .selection(isMultiple: false)
         ),
         
         // Macro Breakdown
         .init(
             id: "macro_breakdown",
-            title: "Your personalized macro breakdown",
-            subtitle: "Based on your profile, here's what your body needs to reach your goal",
+            title: "",
+            subtitle: nil,
             options: [],
             type: .macro
         ),
@@ -150,13 +177,13 @@ struct OnboardingStep {
             title: "What's stopping you from living healthier?",
             subtitle: nil,
             options: [
-                .init(id: "consistency", title: "Lack of consistency", icon: "consistency"),
-                .init(id: "eating", title: "Unhealthy eating habits", icon: "eating"),
-                .init(id: "expensive", title: "Fitness is too expensive", icon: "money"),
-                .init(id: "schedule", title: "Busy schedule", icon: "schedule"),
-                .init(id: "unsure", title: "Not sure where to start", icon: "question")
+                .init(id: "consistency", title: "Lack of consistency", icon: "ic_line_chart_down"),
+                .init(id: "eating", title: "Unhealthy eating habits", icon: "ic_burger"),
+                .init(id: "expensive", title: "Fitness is too expensive", icon: "ic_currency"),
+                .init(id: "schedule", title: "Busy schedule", icon: "ic_calendar_x"),
+                .init(id: "unsure", title: "Not sure where to start", icon: "ic_smiley_melting")
             ],
-            type: .selection(showsButton: false)
+            type: .selection(isMultiple: false)
         ),
         
         // Goals
@@ -165,22 +192,22 @@ struct OnboardingStep {
             title: "What would you like to accomplish?",
             subtitle: nil,
             options: [
-                .init(id: "motivated", title: "Stay motivated and consistent", icon: "motivation"),
-                .init(id: "healthy", title: "Eat and live healthier", icon: "healthy"),
-                .init(id: "save", title: "Save money while getting fit", icon: "savings"),
-                .init(id: "energy", title: "Boost my energy and mood", icon: "energy"),
-                .init(id: "confidence", title: "Feel better about my body", icon: "confidence")
+                .init(id: "motivated", title: "Stay motivated and consistent", icon: "ic_line_chart"),
+                .init(id: "healthy", title: "Eat and live healthier", icon: "ic_carrot"),
+                .init(id: "save", title: "Save money while getting fit", icon: "ic_piggy"),
+                .init(id: "energy", title: "Boost my energy and mood", icon: "ic_sun"),
+                .init(id: "confidence", title: "Feel better about my body", icon: "ic_sparkle")
             ],
-            type: .selection(showsButton: false)
+            type: .selection(isMultiple: false)
         ),
         
         // Save Money
         .init(
             id: "save_money",
             title: "Achieve goals without spending too much",
-            subtitle: "Why pay more for the same results?\nFit Senpai users save up to 90% compared to traditional fitness programs",
+            subtitle: nil,
             options: [],
-            type: .selection(showsButton: true)
+            type: .saveMoney
         ),
         
         // Workout Experience
@@ -189,11 +216,11 @@ struct OnboardingStep {
             title: "How experienced are you with working out?",
             subtitle: nil,
             options: [
-                .init(id: "beginner", title: "Beginner", subtitle: "I'm new to fitness", icon: "beginner"),
-                .init(id: "intermediate", title: "Intermediate", subtitle: "I workout from time to time", icon: "intermediate"),
-                .init(id: "advanced", title: "Advanced", subtitle: "I exercise regularly", icon: "advanced")
+                .init(id: "beginner", title: "Beginner", subtitle: "I'm new to fitness", icon: "ic_jog"),
+                .init(id: "intermediate", title: "Intermediate", subtitle: "I workout from time to time", icon: "ic_dumble"),
+                .init(id: "advanced", title: "Advanced", subtitle: "I exercise regularly", icon: "ic_lightning")
             ],
-            type: .selection(showsButton: false)
+            type: .selection(isMultiple: false)
         ),
         
         // Workout Location
@@ -202,11 +229,11 @@ struct OnboardingStep {
             title: "Choose your workout location",
             subtitle: nil,
             options: [
-                .init(id: "home", title: "Home", subtitle: "No equipment needed", icon: "home"),
-                .init(id: "gym", title: "Gym", subtitle: "Have access to the weight room & exercises", icon: "gym"),
-                .init(id: "mixed", title: "Mixed", subtitle: "Combination of home and gym workouts", icon: "mixed")
+                .init(id: "home", title: "Home", subtitle: "No equipment needed", icon: "ic_house"),
+                .init(id: "gym", title: "Gym", subtitle: "Machine and free-weight exercises", icon: "ic_building"),
+                .init(id: "mixed", title: "Mixed", subtitle: "Combination of home and gym workouts", icon: "ic_arrows")
             ],
-            type: .selection(showsButton: false)
+            type: .selection(isMultiple: false)
         ),
         
         // Workout Days
@@ -215,15 +242,15 @@ struct OnboardingStep {
             title: "Which days work best for your workouts?",
             subtitle: nil,
             options: [
-                .init(id: "sunday", title: "Sunday", icon: "calendar"),
-                .init(id: "monday", title: "Monday", icon: "calendar"),
-                .init(id: "tuesday", title: "Tuesday", icon: "calendar"),
-                .init(id: "wednesday", title: "Wednesday", icon: "calendar"),
-                .init(id: "thursday", title: "Thursday", icon: "calendar"),
-                .init(id: "friday", title: "Friday", icon: "calendar"),
-                .init(id: "saturday", title: "Saturday", icon: "calendar")
+                .init(id: "sunday", title: "Sunday"),
+                .init(id: "monday", title: "Monday"),
+                .init(id: "tuesday", title: "Tuesday"),
+                .init(id: "wednesday", title: "Wednesday"),
+                .init(id: "thursday", title: "Thursday"),
+                .init(id: "friday", title: "Friday"),
+                .init(id: "saturday", title: "Saturday")
             ],
-            type: .selection(showsButton: true)
+            type: .selection(isMultiple: true)
         ),
         
         // Workout Duration
@@ -232,12 +259,13 @@ struct OnboardingStep {
             title: "Choose duration for your workouts",
             subtitle: nil,
             options: [
-                .init(id: "15", title: "15 mins", icon: "clock"),
-                .init(id: "30", title: "30 mins", icon: "clock"),
-                .init(id: "45", title: "45 mins", icon: "clock"),
-                .init(id: "60", title: "60 mins", icon: "clock")
+                .init(id: "15", title: "15 mins"),
+                .init(id: "30", title: "30 mins"),
+                .init(id: "45", title: "45 mins"),
+                .init(id: "60", title: "60 mins"),
+                .init(id: "60+", title: "60+ mins")
             ],
-            type: .selection(showsButton: false)
+            type: .selection(isMultiple: false)
         ),
         
         // Health Restrictions
@@ -246,43 +274,64 @@ struct OnboardingStep {
             title: "Do you have any health concerns?",
             subtitle: nil,
             options: [
-                .init(id: "none", title: "None", icon: "xmark"),
-                .init(id: "joint_pain", title: "Joint pain", icon: "joint"),
-                .init(id: "back_issues", title: "Back issues", icon: "back"),
-                .init(id: "heart_condition", title: "Heart condition", icon: "heart"),
-                .init(id: "other", title: "Other", icon: "dots")
+                .init(id: "none", title: "None", icon: "ic_x"),
+                .init(id: "joint_pain", title: "Joint pain", icon: "ic_bone"),
+                .init(id: "back_issues", title: "Back issues", icon: "ic_hike"),
+                .init(id: "heart_condition", title: "Heart condition", icon: "ic_heart_2"),
+                .init(id: "other", title: "Other", icon: "ic_dots")
             ],
-            type: .selection(showsButton: true)
+            type: .selection(isMultiple: true)
+        ),
+        .init(
+            id: "health_restrictions_input",
+            title: "Enter health concerns",
+            subtitle: nil,
+            options: [],
+            type: .input(previousStep: "health_restrictions")
         ),
         
-        // Diet Preferences
+        // Diet and its input
         .init(
             id: "diet",
             title: "Do you follow a specific diet?",
             subtitle: nil,
             options: [
-                .init(id: "none", title: "None", icon: "xmark"),
-                .init(id: "high_protein", title: "High protein, low carb", icon: "protein"),
-                .init(id: "vegetarian", title: "Vegetarian", icon: "vegetable"),
-                .init(id: "vegan", title: "Vegan", icon: "vegan"),
-                .init(id: "other", title: "Other", icon: "dots")
+                .init(id: "none", title: "None", icon: "ic_x"),
+                .init(id: "high_protein", title: "High protein, low carb", icon: "ic_fish"),
+                .init(id: "vegetarian", title: "Vegetarian", icon: "ic_orange"),
+                .init(id: "vegan", title: "Vegan", icon: "ic_leaves"),
+                .init(id: "other", title: "Other", icon: "ic_dots")
             ],
-            type: .selection(showsButton: true)
+            type: .selection(isMultiple: true)
+        ),
+        .init(
+            id: "diet_input",
+            title: "Enter specific diet",
+            subtitle: nil,
+            options: [],
+            type: .input(previousStep: "diet")
         ),
         
-        // Food Allergies
+        // Allergies and its input
         .init(
             id: "allergies",
             title: "Do you have any food allergies?",
             subtitle: nil,
             options: [
-                .init(id: "none", title: "None", icon: "xmark"),
-                .init(id: "nuts", title: "Nuts", icon: "nuts"),
-                .init(id: "dairy", title: "Milk and dairy", icon: "dairy"),
-                .init(id: "shellfish", title: "Shellfish", icon: "shellfish"),
-                .init(id: "other", title: "Other", icon: "dots")
+                .init(id: "none", title: "None", icon: "ic_x"),
+                .init(id: "nuts", title: "Nuts", icon: "ic_nuts"),
+                .init(id: "dairy", title: "Milk and dairy", icon: "ic_cheese"),
+                .init(id: "shellfish", title: "Shellfish", icon: "ic_shrimp"),
+                .init(id: "other", title: "Other", icon: "ic_dots")
             ],
-            type: .selection(showsButton: true)
+            type: .selection(isMultiple: true)
+        ),
+        .init(
+            id: "allergies_input",
+            title: "Enter food allergies",
+            subtitle: nil,
+            options: [],
+            type: .input(previousStep: "allergies")
         ),
         
         // Eating Habits
@@ -291,12 +340,12 @@ struct OnboardingStep {
             title: "What best describes your eating habits?",
             subtitle: nil,
             options: [
-                .init(id: "cook", title: "I cook most of my meals", icon: "cook"),
-                .init(id: "meal_plan", title: "I order meal plans", icon: "meal"),
-                .init(id: "eat_out", title: "I eat out often", icon: "restaurant"),
-                .init(id: "mix", title: "I mix between cooking and ordering", icon: "mix")
+                .init(id: "cook", title: "I cook most of my meals"),
+                .init(id: "meal_plan", title: "I order meal plans"),
+                .init(id: "eat_out", title: "I eat out often"),
+                .init(id: "mix", title: "I mix between cooking and ordering")
             ],
-            type: .selection(showsButton: false)
+            type: .selection(isMultiple: false)
         ),
         
         // Notifications
@@ -306,6 +355,15 @@ struct OnboardingStep {
             subtitle: "We'll always keep your information private and secure",
             options: [],
             type: .notification
+        ),
+        
+        // Add final thank you step
+        .init(
+            id: "thank_you",
+            title: "Thanks for trusting us!",
+            subtitle: "We'll always keep your\ninformation private and secure.",
+            options: [],
+            type: .thankYou
         )
     ]
 }

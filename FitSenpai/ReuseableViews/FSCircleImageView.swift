@@ -17,7 +17,7 @@ struct CircleImage: View {
     var body: some View {
         KFImage.url(url)
             .placeholder({
-                Image("avatarPlaceholder")
+                Image("avatar-placeholder")
                     .resizable()
             })
             .fade(duration: 0.25)
