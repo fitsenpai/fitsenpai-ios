@@ -29,6 +29,8 @@ struct RoundedBorderTextField: View {
                     TextField("", text: $text)
                         .padding(.horizontal)
                         .frame(height: 44)
+                        .autocorrectionDisabled()
+                        .autocapitalization(.none)
                 }
                 
                 if showAccessory {

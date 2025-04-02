@@ -40,6 +40,7 @@ struct FSText: View {
             .lineSpacing(lineSpacing)
             .disableAutocorrection(true)
             .keyboardType(.asciiCapable)
+            .autocapitalization(.none)
             .lineLimit(lineLimit)
             .multilineTextAlignment(alignment)
             .fixedSize(horizontal: false, vertical: true)

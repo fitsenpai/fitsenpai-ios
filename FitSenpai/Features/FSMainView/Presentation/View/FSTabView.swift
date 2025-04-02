@@ -12,24 +12,24 @@ struct FSTabView: View {
         TabView {
             WorkoutsMainView.create()
                 .tabItem {
-                    Label("Workouts", image: "ic_barbel")
+                    Label("Workouts", image: "tab_workout")
                 }
             
             MealsMainView()
                 .tabItem {
-                    Label("Meals", image: "ic_meals")
+                    Label("Meals", image: "tab_meals")
                 }
             
             GroceriesMainView()
                 .tabItem {
-                    Label("Groceries", image: "ic_groceries")
+                    Label("Groceries", image: "tab_groceries")
                 }
             ProfileMainView()
                 .tabItem {
-                    Label("Profile", systemImage: "person")
+                    Label("Progress", image: "tab_progress")
                 }
         }
-        .tint(.fsPrimary)
+        .accentColor(.black)
     }
 }
 
