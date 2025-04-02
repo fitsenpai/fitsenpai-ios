@@ -18,7 +18,12 @@ class FSColor {
     static let blackBackground = UIColor(hexString: AppColor.Black.rawValue)
     static let deepBlackBackground = UIColor(hexString: AppColor.DeepBlack.rawValue)
     static let gray26 = UIColor(hexString: AppColor.LightGray.rawValue)
+    static let purple = UIColor(hexString: AppColor.Purple.rawValue)
     static let white2 = UIColor(hexString: "#fcfbfd")
+    static let accentGreen =  UIColor(hexString: AppColor.AccentGreen.rawValue)
+    static let orange400 =  UIColor(hexString: AppColor.Orange400.rawValue)
+    static let violet400 =  UIColor(hexString: AppColor.Violet400.rawValue)
+    static let sky400 =  UIColor(hexString: AppColor.Sky400.rawValue)
     
 }
 
@@ -29,7 +34,12 @@ enum AppColor: String {
     case DeepBlack            = "#070901"
     case Green                = "#A8DE24"
     case MutedGreen           = "#F2FADE"
+    case AccentGreen          = "#719F11"
     case LightGray            = "#262626"
+    case Purple               = "#C1D5F6"
+    case Orange400            = "#FB923C"
+    case Violet400            = "#A78BFA"
+    case Sky400               = "#38BDF8"
 }
 
 extension Color {
@@ -54,6 +64,10 @@ extension Color {
     static let carbBlueBG = Color(red:240/255, green:249/255, blue:255/255)
     static let proteinOrange = Color(red:251/255, green:146/255, blue:60/255)
     static let proteinOrangeBG = Color(red:255/255, green:247/255, blue:237/255)
+    static let fsPurple =  Color(uiColor: FSColor.purple)
+    static let fsOrange400 =  Color(uiColor: FSColor.orange400)
+    static let fsViolet400 =  Color(uiColor: FSColor.violet400)
+    static let fsSky400 =  Color(uiColor: FSColor.sky400)
     static let fatPurple = Color(red:167/255, green:139/255, blue:250/255)
     static let fatPurpleBG = Color(red:245/255, green:243/255, blue:255/255)
     static let workoutBackgroundColor = Color(red:252/255, green:252/255, blue:252/255, opacity: 255)

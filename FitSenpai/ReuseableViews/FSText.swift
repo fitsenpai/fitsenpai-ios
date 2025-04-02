@@ -19,7 +19,7 @@ struct FSText: View {
     var selectionAllowed = false
     var truncationMode: Text.TruncationMode?
     var lineLimit: Int?
-    var alignment: TextAlignment?
+    var alignment: TextAlignment = .leading
     var shouldHighlightURLs: Bool = false
     
     private var displayText: Text {
@@ -40,6 +40,9 @@ struct FSText: View {
             .lineSpacing(lineSpacing)
             .disableAutocorrection(true)
             .keyboardType(.asciiCapable)
+            .lineLimit(lineLimit)
+            .multilineTextAlignment(alignment)
+            .fixedSize(horizontal: false, vertical: true)
             .if(selectionAllowed) { v in
                     v.contextMenu(ContextMenu(menuItems: {
                       Button("Copy", action: {
@@ -50,14 +53,8 @@ struct FSText: View {
             .if(truncationMode != nil, transform: { v in
                     v.truncationMode(truncationMode!)
             })
-            .if(lineLimit != nil, transform: { v in
-                v.lineLimit(lineLimit!)
-            })
             .if(frameHeight != nil, transform: { v in
                 v.frame(height: frameHeight)
-            })
-            .if(alignment != nil, transform: { v in
-                v.multilineTextAlignment(alignment!)
             })
             .dynamicTypeSize(.large)
     }

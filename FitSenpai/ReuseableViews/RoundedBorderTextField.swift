@@ -12,12 +12,13 @@ struct RoundedBorderTextField: View {
     var placeholder: String = ""
     var isSecure: Bool = false
     var showAccessory: Bool = false
+    var cornerRadius: CGFloat = 6.0
     
     @State private var isInputHidden: Bool = true
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            FSText(text: placeholder, fontStyle: .fieldsHeader, color: .fsTitle)
+            FSText(text: placeholder, fontStyle: .body16, color: .fsTitle)
             
             HStack {
                 if isSecure && isInputHidden {
@@ -41,7 +42,7 @@ struct RoundedBorderTextField: View {
                 }
             }
             .background(
-                RoundedRectangle(cornerRadius: 6)
+                RoundedRectangle(cornerRadius: cornerRadius)
                     .stroke(Color.fsInputBorderColor, lineWidth: 1)
             )
         }
