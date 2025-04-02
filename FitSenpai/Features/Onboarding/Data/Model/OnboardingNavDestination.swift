@@ -11,3 +11,9 @@ enum OnboardingNavDestination: CaseIterable {
     case signin
     case createPlan
 }
+
+enum OnboardingSheets: CaseIterable, Identifiable {
+    case success
+    
+    var id: Int { hashValue }
+}

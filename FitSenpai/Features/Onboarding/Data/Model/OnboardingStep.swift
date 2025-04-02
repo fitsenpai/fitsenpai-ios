@@ -7,8 +7,8 @@ enum StepType {
     case macro
     case testimonial
     case notification
+    case enableNnotification
     case saveMoney
-    case thankYou
     case input(previousStep: String)
 }
 
@@ -21,7 +21,7 @@ struct OnboardingStep {
     
     var showsButton: Bool {
         switch type {
-        case .notification, .thankYou:
+        case .notification, .enableNnotification:
             return false
         case .selection(let isMultiple):
             return isMultiple
@@ -351,19 +351,19 @@ struct OnboardingStep {
         // Notifications
         .init(
             id: "notifications",
-            title: "Reach your goals with notifications",
-            subtitle: "We'll always keep your information private and secure",
+            title: "",
+            subtitle: "",
             options: [],
             type: .notification
         ),
         
-        // Add final thank you step
+        // Enable Notifications
         .init(
-            id: "thank_you",
-            title: "Thanks for trusting us!",
-            subtitle: "We'll always keep your\ninformation private and secure.",
+            id: "enable_notifications",
+            title: "",
+            subtitle: "",
             options: [],
-            type: .thankYou
+            type: .enableNnotification
         )
     ]
 }

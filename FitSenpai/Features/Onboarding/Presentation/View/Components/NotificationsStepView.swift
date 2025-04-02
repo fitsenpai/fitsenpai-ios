@@ -29,7 +29,9 @@ struct NotificationsStepView: View {
                 VStack(spacing: 8) {
                     HStack(spacing: 0) {
                         Button(action: {
-                            viewModel.moveToNextStep()
+                            withAnimation {
+                                viewModel.moveToNextStep()
+                            }
                         }) {
                             FSText(text: "Don't Allow",
                                   fontStyle: .body14,
@@ -38,7 +40,7 @@ struct NotificationsStepView: View {
                         }
                         .buttonStyle(PlainButtonStyle())
                         Button(action: {
-                            requestNotifications()
+                            viewModel.requestNotificationPermission()
                         }) {
                             FSText(text: "Allow",
                                   fontStyle: .body14,
@@ -76,20 +78,6 @@ struct NotificationsStepView: View {
             Spacer()
         }
         .padding(.horizontal, 24)
-    }
-    
-    private func requestNotifications() {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
-            if success {
-                print("Notifications enabled")
-            } else if let error = error {
-                print(error.localizedDescription)
-            }
-            
-            DispatchQueue.main.async {
-                viewModel.moveToNextStep()
-            }
-        }
     }
 }
 

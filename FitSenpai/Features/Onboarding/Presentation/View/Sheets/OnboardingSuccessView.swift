@@ -1,7 +1,8 @@
 import SwiftUI
 
-struct ThankYouView: View {
+struct OnboardingSuccessView: View {
     @ObservedObject var viewModel: OnboardingMainViewModel
+    @Environment(\.dismiss) private var dismiss
     var onDismiss: (() -> Void)
     
     @State private var confettiScale: CGFloat = 0.5
@@ -12,11 +13,17 @@ struct ThankYouView: View {
         VStack(spacing: 16) {
             Spacer()
             
-            FSText(text: viewModel.currentStep.title, fontStyle: .heading28, alignment: .center)
+            FSText(
+                text: "Thanks for trusting us!",
+                fontStyle: .heading28,
+                alignment: .center
+            )
             
-            if let subtitle = viewModel.currentStep.subtitle {
-                FSText(text: subtitle, fontStyle: .body16, alignment: .center)
-            }
+            FSText(
+                text: "We'll always keep your\ninformation private and secure.",
+                fontStyle: .body16,
+                alignment: .center
+            )
             
             FSButton(
                 title: "Continue",
@@ -26,6 +33,7 @@ struct ThankYouView: View {
             ) {
                 withAnimation(.easeInOut(duration: 0.3)) {
                     viewModel.logSelections()
+                    dismiss()
                     onDismiss()
                 }
             }
@@ -55,29 +63,3 @@ struct ThankYouView: View {
     }
 }
 
-struct ConfettiBackground: View {
-    var body: some View {
-        ZStack {
-            ForEach(0..<20) { _ in
-                Group {
-                    Image(systemName: "star.fill")
-                        .foregroundColor(.yellow)
-                    FSText(text: "✧", fontStyle: .body16, color: .green)
-                    FSText(text: "❋", fontStyle: .body16, color: .green)
-                }
-                .modifier(RandomlyPositioned())
-            }
-        }
-    }
-}
-
-struct RandomlyPositioned: ViewModifier {
-    func body(content: Content) -> some View {
-        content
-            .position(
-                x: CGFloat.random(in: 0...UIScreen.main.bounds.width),
-                y: CGFloat.random(in: 0...UIScreen.main.bounds.height)
-            )
-            .rotationEffect(.degrees(Double.random(in: 0...360)))
-    }
-}

@@ -14,21 +14,26 @@ struct OnboardingMainView: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 24) {
-                if viewModel.currentStep.id != "thank_you" {
-                    headerView
-                }
+                headerView
                 
                 stepContent
             }
         }
         .navigationViewStyle(StackNavigationViewStyle())
         .navigationBarHidden(true)
+        .fullScreenCover(item: $viewModel.onboardingSheet) { sheet in
+            switch sheet {
+            case .success:
+                OnboardingSuccessView(viewModel: viewModel) {
+                    viewModel.logSelections()
+                    dismiss()
+                }
+            }
+        }
     }
     
     private var headerView: some View {
         HStack(spacing: 12) {
-           
-           
             Button(action: {
                 withAnimation(.easeInOut(duration: 0.3)) {
                     if viewModel.currentStepIndex > 0 {
@@ -45,7 +50,6 @@ struct OnboardingMainView: View {
                     .background(Circle().fill(Color.gray246))
             }
             
-            // Progress Bar
             GeometryReader { geometry in
                 ZStack(alignment: .leading) {
                     Rectangle()
@@ -66,12 +70,23 @@ struct OnboardingMainView: View {
         .padding(.horizontal, 24)
     }
     
+    @ViewBuilder
     private var stepContent: some View {
         VStack {
-            if viewModel.currentStep.id != "notifications" && viewModel.currentStep.id != "thank_you" {
-                // Title section
-                VStack(alignment: .leading, spacing: 12) {
-                    FSText(text: viewModel.currentStep.title, fontStyle: .heading28)
+            VStack(alignment: .leading, spacing: 12) {
+                FSText(text: viewModel.currentStep.title, fontStyle: .heading28)
+                    .multilineTextAlignment(.leading)
+                    .transition(
+                        .asymmetric(
+                            insertion: .move(edge: viewModel.isMovingForward ? .trailing : .leading)
+                                .combined(with: .opacity),
+                            removal: .move(edge: viewModel.isMovingForward ? .leading : .trailing)
+                                .combined(with: .opacity)
+                        )
+                    )
+                
+                if let subtitle = viewModel.currentStep.subtitle {
+                    FSText(text: subtitle, fontStyle: .body16)
                         .multilineTextAlignment(.leading)
                         .transition(
                             .asymmetric(
@@ -81,25 +96,11 @@ struct OnboardingMainView: View {
                                     .combined(with: .opacity)
                             )
                         )
-                    
-                    if let subtitle = viewModel.currentStep.subtitle {
-                        FSText(text: subtitle, fontStyle: .body16)
-                            .multilineTextAlignment(.leading)
-                            .transition(
-                                .asymmetric(
-                                    insertion: .move(edge: viewModel.isMovingForward ? .trailing : .leading)
-                                        .combined(with: .opacity),
-                                    removal: .move(edge: viewModel.isMovingForward ? .leading : .trailing)
-                                        .combined(with: .opacity)
-                                )
-                            )
-                    }
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal, 24)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 24)
             
-            // Dynamic Content
             Group {
                 contentForStep
                     .transition(
@@ -123,7 +124,6 @@ struct OnboardingMainView: View {
     
     @ViewBuilder
     private var contentForStep: some View {
-        
         switch viewModel.currentStep.type {
         case .selection(let showsButton):
             if showsButton {
@@ -164,10 +164,8 @@ struct OnboardingMainView: View {
         case .saveMoney:
             SaveMoneyView()
                 .padding(.top, 24)
-        case .thankYou:
-            ThankYouView(viewModel: viewModel) {
-                dismiss()
-            }
+        case .enableNnotification:
+            EnableNotifStepView(viewModel: viewModel)
         case .input:
             InputStepView(viewModel: viewModel)
                 .padding(.top, 32)
@@ -182,12 +180,7 @@ struct OnboardingMainView: View {
             background: viewModel.canProceed ? .fsPrimary : .gray.opacity(0.3)
         ) {
             withAnimation(.easeInOut(duration: 0.3)) {
-                if viewModel.currentStep.id == "thank_you" {
-                    viewModel.logSelections()
-                    dismiss()
-                } else if viewModel.canProceed {
-                    viewModel.moveToNextStep()
-                }
+                viewModel.moveToNextStep()
             }
         }
         .disabled(!viewModel.canProceed)

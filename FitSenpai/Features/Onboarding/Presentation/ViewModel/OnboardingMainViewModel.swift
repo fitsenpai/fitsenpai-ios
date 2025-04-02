@@ -1,5 +1,6 @@
 import SwiftUI
 import Combine
+import UserNotifications
 
 class OnboardingMainViewModel: ObservableObject {
     @Published var currentStepIndex = 0
@@ -7,6 +8,7 @@ class OnboardingMainViewModel: ObservableObject {
     @Published var isSelectionInProgress = false
     @Published var otherInputText: String = ""
     @Published var showOtherInput = false
+    @Published var onboardingSheet: OnboardingSheets? = nil
     
     // Store selections for each step
     private var stepSelections: [String: Set<String>] = [:]
@@ -147,7 +149,6 @@ class OnboardingMainViewModel: ObservableObject {
     }
 
     func moveToNextStep() {
-        // ADD: Set direction to forward
         isMovingForward = true
         
         // Save current state
@@ -232,6 +233,25 @@ class OnboardingMainViewModel: ObservableObject {
             selectedOptions = stepSelections[currentStep.id] ?? []
             inputText = stepInputs[currentStep.id] ?? ""
         }
+    }
+    
+    // ADD: Function to request notification permissions
+    func requestNotificationPermission() {
+        let center = UNUserNotificationCenter.current()
+        center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+            DispatchQueue.main.async {
+                if granted {
+                    self.onboardingSheet = .success
+                } else {
+                    self.moveToNextStep()
+                }
+            }
+        }
+    }
+    
+    // Modify showOnboardingSheet function
+    func showOnboardingSheet(_ sheet: OnboardingSheets) {
+        self.onboardingSheet = sheet
     }
     
     func logSelections() {
