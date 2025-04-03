@@ -1,3 +1,10 @@
+//
+//  OnboardingMainViewModel.swift
+//  FitSenpai
+//
+//  Created by Mark Daquis on 4/1/25.
+//
+
 import SwiftUI
 import Combine
 import UserNotifications

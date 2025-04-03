@@ -10,7 +10,7 @@ import Combine
 
 struct OnboardingView: View {
     @StateObject private var viewModel = OnboardingViewModel()
-    @EnvironmentObject var appState: AppState
+    @EnvironmentObject var appState: AppViewModel
     
     var body: some View {
         NavigationStack {

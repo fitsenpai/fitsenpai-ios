@@ -7,7 +7,7 @@
 
 import SwiftUI
 struct ProfileMainView: View {
-    @EnvironmentObject var appState: AppState
+    @EnvironmentObject var appState: AppViewModel
     let logoutUseCase = LogoutUseCase()
     
     var body: some View {

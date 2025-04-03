@@ -112,10 +112,9 @@ class WorkoutsMainViewModel: ObservableObject {
         if let cachedPlan = weeklyPlanCache[cacheKey] {
             // Use cached data for immediate UI update
             weeklyPlan = cachedPlan
-            if cachedPlan == nil {
-                upNextWeekNumber = nil // Optionally handle "no data" states
-            }
             return
+        } else {
+            upNextWeekNumber = nil // Optionally handle "no data" states
         }
         
         // Check if fetching was already attempted
