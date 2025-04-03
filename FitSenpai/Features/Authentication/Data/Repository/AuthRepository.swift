@@ -36,37 +36,33 @@ final class AuthRepository: AuthRepositoryProtocol {
     
     func signIn(email: String, password: String) async throws -> (FSUser, FSSession) {
         let response = try await remoteDataSource.signIn(email: email, password: password)
-        let user = FSUser(fromResponse: response.schema.user)
-        let session = response.schema.session.toDomain()
         
-        guard let accessToken = session.accessToken else {
-            throw AuthRepositoryError.missingAccessToken
+        guard let user = response.user?.toDomain() else {
+            throw AuthRepositoryError.missingUser
         }
         
-        guard let refreshToken = session.refreshToken else {
-            throw AuthRepositoryError.missingRefreshToken
+        guard let session = response.session?.toDomain() else {
+            throw AuthRepositoryError.invalidSession
         }
         
-        AuthManager.shared.setTokens(accessToken: accessToken,
-                                   refreshToken: refreshToken)
+        AuthManager.shared.setTokens(accessToken: session.accessToken,
+                                     refreshToken: session.refreshToken)
         return (user, session)
     }
     
     func signUp(name: String, email: String, password: String) async throws -> (FSUser, FSSession) {
         let response = try await remoteDataSource.signUp(name: name, email: email, password: password)
-        let user = FSUser(fromResponse: response.schema.user)
-        let session = response.schema.session.toDomain()
-        
-        guard let accessToken = session.accessToken else {
-            throw AuthRepositoryError.missingAccessToken
+       
+        guard let user = response.user?.toDomain() else {
+            throw AuthRepositoryError.missingUser
         }
         
-        guard let refreshToken = session.refreshToken else {
-            throw AuthRepositoryError.missingRefreshToken
+        guard let session = response.session?.toDomain() else {
+            throw AuthRepositoryError.invalidSession
         }
         
-        AuthManager.shared.setTokens(accessToken: accessToken,
-                                   refreshToken: refreshToken)
+        AuthManager.shared.setTokens(accessToken: session.accessToken,
+                                     refreshToken: session.refreshToken)
         return (user, session)
     }
     

@@ -35,7 +35,7 @@ struct FSButton: View {
             }
             .frame(maxWidth: .infinity, minHeight: 56, maxHeight: 56)
             .background(background)
-            .clipShape(RoundedCorner(radius: cornerRadius))
+            .clipShape(.rect(cornerRadius: cornerRadius))
             .overlay(
                 RoundedCorner(radius: cornerRadius)
                     .stroke(borderColor, lineWidth: 1)

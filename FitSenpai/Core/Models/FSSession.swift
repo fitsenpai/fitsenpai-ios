@@ -8,19 +8,17 @@
 import Foundation
 
 class FSSession {
-    var accessToken: String?
-    var tokenType: String?
-    var expiresIn: Int?
-    var expiresAt: Int?
-    var refreshToken: String?
-    var user: FSUser?
+    var accessToken: String
+    var tokenType: String
+    var expiresIn: Int
+    var expiresAt: Int
+    var refreshToken: String
 
-    init(fromResponse dto: SessionDTO) {
-        self.accessToken = dto.accessToken
-        self.tokenType = dto.tokenType
-        self.expiresIn = dto.expiresIn
-        self.expiresAt = dto.expiresAt
-        self.refreshToken = dto.refreshToken
-        self.user = FSUser(fromResponse: dto.user)
+    init(fromResponse data: SessionDTO) {
+        self.accessToken = data.accessToken
+        self.tokenType = data.tokenType
+        self.expiresIn = data.expiresIn
+        self.expiresAt = data.expiresAt
+        self.refreshToken = data.refreshToken
     }
 }

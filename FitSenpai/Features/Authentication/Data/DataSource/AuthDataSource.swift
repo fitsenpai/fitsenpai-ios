@@ -8,8 +8,8 @@
 import Foundation
 
 protocol AuthDataSourceProtocol {
-    func signIn(email: String, password: String) async throws -> AuthResponseDTO
-    func signUp(name: String, email: String, password: String) async throws -> AuthResponseDTO
+    func signIn(email: String, password: String) async throws -> LoginResponse
+    func signUp(name: String, email: String, password: String) async throws -> LoginResponse
     func signOut() async throws
     func sendPasswordResetEmail(to email: String) async throws
     func changePassword(currentPassword: String, newPassword: String) async throws
@@ -24,11 +24,11 @@ final class AuthRemoteDataSource: AuthDataSourceProtocol {
     
     // MARK: - Auth API Calls
     
-    func signIn(email: String, password: String) async throws -> AuthResponseDTO {
+    func signIn(email: String, password: String) async throws -> LoginResponse {
         return try await networkService.request(.signIn(email: email, password: password))
     }
     
-    func signUp(name: String, email: String, password: String) async throws -> AuthResponseDTO {
+    func signUp(name: String, email: String, password: String) async throws -> LoginResponse {
         return try await networkService.request(.signUp(name: name, email: email, password: password))
     }
     
