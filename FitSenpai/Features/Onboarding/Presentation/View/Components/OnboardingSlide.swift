@@ -16,17 +16,17 @@ struct OnboardingSlide: Identifiable {
     
     static let slides: [OnboardingSlide] = [
         OnboardingSlide(
-            image: "onboarding1",
+            image: "carousel_1",
             title: "Workouts made\njust for you",
             subtitle: "Tailored routines based on your\npreferences and fitness level."
         ),
         OnboardingSlide(
-            image: "onboarding2",
+            image: "carousel_2",
             title: "Easy-to-follow meals\nwith macros",
             subtitle: "Nutrition guides and macro targets\ndesigned to fuel your progress."
         ),
         OnboardingSlide(
-            image: "onboarding3",
+            image: "carousel_3",
             title: "Grocery shopping\nmade easy",
             subtitle: "Auto-generated shopping lists to match\nyour meal plan effortlessly."
         )

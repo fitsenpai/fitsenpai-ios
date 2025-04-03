@@ -20,13 +20,17 @@ class AppViewModel: ObservableObject {
         }
     }
     
+    func updateUser(_ user: FSUser) {
+        globalAppEnvObject.user = user
+        isLoggedIn = true
+    }
+    
     func initSession() async throws {
         defer { viewState = .idle }
         guard let fsClient = FSClient.shared else {
             throw NSError(domain: "AppStartBlock", code: -1, userInfo: [NSLocalizedDescriptionKey: "FSClient could not be initialized."])
         }
         
-
         let supabaseClient = fsClient.getClient()
         
         // Check for an active session
@@ -47,7 +51,6 @@ class AppViewModel: ObservableObject {
             }
         } catch {
             print("No active session found or error occurred: \(error.localizedDescription)")
-            
             isLoggedIn = false
         }
     }
@@ -58,10 +61,9 @@ class AppViewModel: ObservableObject {
     }
     
     private func setupDependencies() {
-        // Register core services
-        DependencyInjector.register(NetworkService() as NetworkServiceProtocol)
-        DependencyInjector.register(AuthRepository() as AuthRepositoryProtocol)
+        // Register all core services
+        CoreServices.registerAll()
+        // Register self as singleton
+        DependencyInjector.register(self)
     }
-    
 }
-

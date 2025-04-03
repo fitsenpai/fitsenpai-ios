@@ -110,6 +110,3 @@ extension AuthManager: CustomDebugStringConvertible {
 }
 #endif
 
-// MARK: - Helper Types
-
-private struct EmptyResponse: Decodable {}

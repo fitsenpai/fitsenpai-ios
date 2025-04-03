@@ -14,12 +14,8 @@ class LoginViewModel: ObservableObject {
     @Published var password: String = ""
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
-
-    private let loginUseCase: LoginUseCaseProtocol
-
-    init(loginUseCase: LoginUseCaseProtocol) {
-        self.loginUseCase = loginUseCase
-    }
+    
+    @Inject private var signinUseCase: SigninUseCaseProtocol
 
     func login() async -> Bool {
         guard !email.isEmpty, !password.isEmpty else {
@@ -33,15 +29,43 @@ class LoginViewModel: ObservableObject {
         defer { isLoading = false }
         
         do {
-            let session = try await loginUseCase.execute(email: email, password: password)
-            print("Login successful: \(session)")
-            
-            AuthManager.shared.setTokens(accessToken: session.accessToken, refreshToken: session.refreshToken)
+            let (_, _) = try await signinUseCase.execute(email: email, password: password)
             return true
-            
         } catch {
             errorMessage = error.localizedDescription
             print("Error during login: \(error.localizedDescription)")
+            return false
+        }
+    }
+    
+    func loginWithApple() async -> Bool {
+        isLoading = true
+        errorMessage = nil
+        
+        defer { isLoading = false }
+        
+        do {
+            let (_, _) = try await signinUseCase.executeWithApple()
+            return true
+        } catch {
+            errorMessage = error.localizedDescription
+            print("Error during Apple login: \(error.localizedDescription)")
+            return false
+        }
+    }
+    
+    func loginWithGoogle() async -> Bool {
+        isLoading = true
+        errorMessage = nil
+        
+        defer { isLoading = false }
+        
+        do {
+            let (_, _) = try await signinUseCase.executeWithGoogle()
+            return true
+        } catch {
+            errorMessage = error.localizedDescription
+            print("Error during Google login: \(error.localizedDescription)")
             return false
         }
     }

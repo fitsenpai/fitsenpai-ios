@@ -2,7 +2,7 @@
 //  NetworkEndpoint.swift
 //  FitSenpai
 //
-//  Created by Mark Daquis on 4/3/25.
+//  Created by Mark Daquis on 4/2/25.
 //
 
 import Foundation
@@ -10,7 +10,7 @@ import Foundation
 /// Protocol defining the requirements for an API endpoint
 protocol NetworkEndpoint {
     /// The base URL of the endpoint
-    var baseURL: String { get }
+    var baseURL: URL? { get }
     
     /// The path component of the endpoint
     var path: String { get }
@@ -21,42 +21,37 @@ protocol NetworkEndpoint {
     /// Optional HTTP headers
     var headers: [String: String]? { get }
     
-    /// Optional request body
-    var body: [String: Any]? { get }
-    
     /// Optional query parameters
     var queryItems: [URLQueryItem]? { get }
     
-    /// Cache policy for this specific endpoint
-    var cachePolicy: URLRequest.CachePolicy? { get }
+    /// Optional request body
+    var body: [String: Any]? { get }
     
-    /// URL of the endpoint
-    var url: URL? { get }
+    /// Optional timeout interval
+    var timeoutInterval: TimeInterval { get }
+    
+    /// Cache policy for this specific endpoint
+    var cachePolicy: URLRequest.CachePolicy { get }
+    
+    /// Retry limit for this specific endpoint
+    var retryLimit: Int { get }
 }
 
 extension NetworkEndpoint {
     
-    var baseURL: String {
-        EnvironmentManager.shared.value(for: .apiBaseURL) ?? ""
+    var baseURL: URL? {
+        URL(string: EnvironmentManager.shared.value(for: .baseURL) ?? "")
     }
     
-    var url: URL? {
-        URL(string: baseURL + path)
-    }
+    var headers: [String: String]? { nil }
     
-    var headers: [String: String]? {
-        ["Content-Type": "application/json"]
-    }
+    var queryItems: [URLQueryItem]? { nil }
     
-    var body: [String: Any]? {
-        nil
-    }
+    var body: [String: Any]? { nil }
     
-    var queryItems: [URLQueryItem]? {
-        nil
-    }
+    var timeoutInterval: TimeInterval { 60.0 }
     
-    var cachePolicy: URLRequest.CachePolicy? {
-        nil
-    }
+    var cachePolicy: URLRequest.CachePolicy { .reloadIgnoringLocalAndRemoteCacheData }
+    
+    var retryLimit: Int { 3 }
 }

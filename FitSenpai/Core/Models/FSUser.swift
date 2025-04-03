@@ -52,7 +52,6 @@ class FSUser: Mappable {
         lastSignInAt         <- (map["lastSignInAt"], DateTransform())
         role                 <- map["role"]
         updatedAt            <- (map["updatedAt"], DateTransform())
-        
     }
     
     init(fromSupabaseUser user: Supabase.User) {
@@ -76,4 +75,35 @@ class FSUser: Mappable {
         self.role = user.role
         self.updatedAt = user.updatedAt
     }
+    
+    init(fromResponse dto: UserDTO) {
+        self.id = UUID(uuidString: dto.id)
+        self.email = dto.email
+        self.phone = dto.phone
+        self.role = dto.role
+        self.appMetadata = ["provider": dto.appMetadata.provider,
+                           "providers": dto.appMetadata.providers]
+        self.userMetadata = ["email": dto.userMetadata.email,
+                            "email_verified": dto.userMetadata.emailVerified,
+                            "phone_verified": dto.userMetadata.phoneVerified,
+                            "sub": dto.userMetadata.sub]
+        self.aud = dto.aud
+        self.emailConfirmedAt = DateFormatter.iso8601.date(from: dto.emailConfirmedAt ?? "")
+        self.confirmedAt = DateFormatter.iso8601.date(from: dto.confirmedAt ?? "")
+        self.lastSignInAt = DateFormatter.iso8601.date(from: dto.lastSignInAt ?? "")
+        self.createdAt = DateFormatter.iso8601.date(from: dto.createdAt)
+        self.updatedAt = DateFormatter.iso8601.date(from: dto.updatedAt)
+    }
+}
+
+// MARK: - DateFormatter Extension
+extension DateFormatter {
+    static let iso8601: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSX"
+        formatter.calendar = Calendar(identifier: .iso8601)
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        return formatter
+    }()
 }

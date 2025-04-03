@@ -5,15 +5,17 @@
 //  Created by Mark Daquis on 4/2/25.
 //
 
-
 import Foundation
 import os.log
 
 protocol NetworkServiceProtocol {
-    func request<T: Decodable>(endpoint: NetworkEndpoint) async throws -> T
+    associatedtype Endpoint: NetworkEndpoint
+    func request<T: Decodable>(_ endpoint: Endpoint) async throws -> T
+    func request(_ endpoint: Endpoint) async throws
 }
 
-final class NetworkService: NetworkServiceProtocol {
+final class NetworkService<Endpoint: NetworkEndpoint>: NetworkServiceProtocol {
+   
     private let session: URLSession
     private let configuration: NetworkConfiguration
     private let interceptor: RequestInterceptor
@@ -37,7 +39,11 @@ final class NetworkService: NetworkServiceProtocol {
                              category: String(describing: NetworkService.self))
     }
     
-    func request<T: Decodable>(endpoint: NetworkEndpoint) async throws -> T {
+    func request(_ endpoint: Endpoint) async throws {
+        let _: EmptyResponse = try await request(endpoint)
+    }
+    
+    func request<T: Decodable>(_ endpoint: Endpoint) async throws -> T {
         do {
             let request = try buildURLRequest(for: endpoint)
             logRequest(request)
@@ -45,36 +51,68 @@ final class NetworkService: NetworkServiceProtocol {
             let adaptedRequest = try await adaptRequest(request)
             let (data, response) = try await performRequest(adaptedRequest)
             
+            // Log response data for debugging
+            if let responseString = String(data: data, encoding: .utf8) {
+                logger.debug("""
+                    📥 Response Data:
+                    ================
+                    \(self.formatJSON(responseString))
+                    ================
+                    """)
+            }
+            
             try validator.validate(data, response: response)
             logResponse(response, for: adaptedRequest)
             
             return try decodeResponse(data)
             
         } catch {
-            logger.error("❌ Network error: \(error.localizedDescription)")
+            logError("Network Request Failed", error)
             throw mapError(error)
         }
     }
     
     // MARK: - Private Request Building Methods
     
-    private func buildURLRequest(for endpoint: NetworkEndpoint) throws -> URLRequest {
-        var urlComponents = URLComponents(url: configuration.baseURL.appendingPathComponent(endpoint.path),
+    private func buildURLRequest(for endpoint: Endpoint) throws -> URLRequest {
+        guard let baseURL = endpoint.baseURL else {
+            logger.error("⛔️ No base URL provided in endpoint")
+            throw NetworkError.invalidURL
+        }
+        
+        var urlComponents = URLComponents(url: baseURL.appendingPathComponent(endpoint.path),
                                        resolvingAgainstBaseURL: true)
         urlComponents?.queryItems = endpoint.queryItems
         
         guard let url = urlComponents?.url else {
+            logger.error("⛔️ Failed to build URL for endpoint: \(endpoint.path)")
             throw NetworkError.invalidURL
         }
         
-        var request = URLRequest(url: url,
-                                 cachePolicy: endpoint.cachePolicy ?? configuration.cachePolicy,
-                               timeoutInterval: configuration.timeoutInterval)
+        var request = URLRequest(
+            url: url,
+            cachePolicy: endpoint.cachePolicy,
+            timeoutInterval: endpoint.timeoutInterval
+        )
+        
         request.httpMethod = endpoint.method.rawValue
         request.allHTTPHeaderFields = endpoint.headers
         
         if let body = endpoint.body {
-            request.httpBody = try JSONSerialization.data(withJSONObject: body)
+            do {
+                request.httpBody = try JSONSerialization.data(withJSONObject: body)
+                if let bodyString = String(data: request.httpBody!, encoding: .utf8) {
+                    logger.debug("""
+                        📤 Request Body:
+                        ================
+                        \(self.formatJSON(bodyString))
+                        ================
+                        """)
+                }
+            } catch {
+                logger.error("⛔️ Failed to serialize request body: \(error.localizedDescription)")
+                throw NetworkError.encodingError(error)
+            }
         }
         
         return request
@@ -100,6 +138,7 @@ final class NetworkService: NetworkServiceProtocol {
                 
             } catch {
                 lastError = error
+                logger.error("❌ Attempt \(attempt + 1) failed: \(error.localizedDescription)")
                 if try await shouldRetry(currentRequest, error: error) {
                     currentRequest = try await interceptor.adapt(request)
                     continue
@@ -112,7 +151,7 @@ final class NetworkService: NetworkServiceProtocol {
     }
     
     private func handleRetryAttempt(_ attempt: Int) async throws {
-        logger.debug("Retrying request (attempt \(attempt)/\(self.configuration.retryLimit))")
+        logger.debug("🔄 Retrying request (Attempt \(attempt)/\(self.configuration.retryLimit))")
         try await Task.sleep(nanoseconds: UInt64(configuration.retryDelay * 1_000_000_000))
     }
     
@@ -130,7 +169,7 @@ final class NetworkService: NetworkServiceProtocol {
         do {
             return try decoder.decode(T.self, from: data)
         } catch {
-            logger.error("❌ Decoding error: \(error.localizedDescription)")
+            logError("Decoding Failed for type: \(T.self)", error)
             throw NetworkError.decodingError(error)
         }
     }
@@ -138,46 +177,91 @@ final class NetworkService: NetworkServiceProtocol {
     // MARK: - Private Logging Methods
     
     private func logRequest(_ request: URLRequest) {
-        logger.debug("📤 \(request.httpMethod ?? "GET") \(request.url?.absoluteString ?? "")")
-        if let headers = request.allHTTPHeaderFields {
-            logger.debug("Headers: \(headers)")
-        }
+        logger.debug("""
+            📡 REQUEST
+            =========
+            \(request.httpMethod ?? "GET") \(request.url?.absoluteString ?? "")
+            
+            Headers:
+            \(self.formatHeaders(request.allHTTPHeaderFields ?? [:]))
+            =========
+            """)
     }
     
     private func logResponse(_ response: URLResponse, for request: URLRequest) {
-        if let httpResponse = response as? HTTPURLResponse {
-            logger.debug("📥 [\(httpResponse.statusCode)] \(request.url?.absoluteString ?? "")")
+        guard let httpResponse = response as? HTTPURLResponse else { return }
+        
+        let statusEmoji = httpResponse.statusCode >= 200 && httpResponse.statusCode < 300 ? "✅" : "⚠️"
+        
+        logger.debug("""
+            📡 RESPONSE \(statusEmoji)
+            =========
+            [\(httpResponse.statusCode)] \(request.url?.absoluteString ?? "")
+            
+            Headers:
+            \(self.formatHeaders(httpResponse.allHeaderFields as? [String: Any] ?? [:]))
+            =========
+            """)
+    }
+    
+    private func logError(_ context: String, _ error: Error) {
+        logger.error("""
+            ❌ \(context)
+            =========
+            Error: \(error.localizedDescription)
+            
+            Details:
+            \(String(describing: error))
+            =========
+            """)
+    }
+    
+    // MARK: - Private Formatting Helpers
+    
+    private func formatHeaders(_ headers: [String: Any]) -> String {
+        headers.map { "  \($0.key): \($0.value)" }.joined(separator: "\n")
+    }
+    
+    private func formatJSON(_ jsonString: String) -> String {
+        guard let data = jsonString.data(using: .utf8),
+              let json = try? JSONSerialization.jsonObject(with: data),
+              let prettyData = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted),
+              let prettyString = String(data: prettyData, encoding: .utf8) else {
+            return jsonString
         }
+        return prettyString
     }
     
     // MARK: - Private Error Handling
     
     private func mapError(_ error: Error) -> NetworkError {
+        let mappedError: NetworkError
         switch error {
         case is DecodingError:
-            return .decodingError(error)
+            mappedError = .decodingError(error)
         case is EncodingError:
-            return .encodingError(error)
+            mappedError = .encodingError(error)
         case let networkError as NetworkError:
-            return networkError
+            mappedError = networkError
         case URLError.cancelled:
-            return .cancelled
+            mappedError = .cancelled
         default:
-            return .networkFailure(error)
+            mappedError = .networkFailure(error)
         }
+        return mappedError
     }
 }
 
 #if DEBUG
-final class MockNetworkService: NetworkServiceProtocol {
+final class MockNetworkService<Endpoint: NetworkEndpoint>: NetworkServiceProtocol {
     var mockResult: Any?
     var mockError: Error?
     
-    func request<T: Decodable>(endpoint: NetworkEndpoint) async throws -> T {
-        try await request(endpoint: endpoint, cachePolicy: nil)
+    func request(_ endpoint: Endpoint) async throws {
+        let _: EmptyResponse = try await request(endpoint)
     }
-    
-    func request<T: Decodable>(endpoint: NetworkEndpoint, cachePolicy: URLRequest.CachePolicy?) async throws -> T {
+
+    func request<T: Decodable>(_ endpoint: Endpoint) async throws -> T {
         if let error = mockError {
             throw error
         }

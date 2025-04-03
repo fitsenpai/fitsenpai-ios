@@ -22,17 +22,17 @@ extension AuthEndpoint: NetworkEndpoint {
     var path: String {
         switch self {
         case .signIn:
-            return "/auth/login"
+            return "/user/login"
         case .signUp:
-            return "/auth/register"
+            return "/user/register"
         case .signOut:
-            return "/auth/logout"
+            return "/user/logout"
         case .resetPassword:
-            return "/auth/reset-password"
+            return "/user/reset-password"
         case .changePassword:
-            return "/auth/change-password"
+            return "/user/change-password"
         case .deleteAccount:
-            return "/auth/delete-account"
+            return "/user/delete-account"
         }
     }
     
@@ -92,9 +92,5 @@ extension AuthEndpoint: NetworkEndpoint {
     
     var queryItems: [URLQueryItem]? {
         nil // No query parameters needed for auth endpoints
-    }
-    
-    var cachePolicy: URLRequest.CachePolicy? {
-        .reloadIgnoringLocalAndRemoteCacheData // Don't cache auth requests
     }
 }

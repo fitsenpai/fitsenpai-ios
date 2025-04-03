@@ -43,7 +43,6 @@ struct AuthLandingView: View {
                         VStack(spacing: 16) {
                             FSButtonLight(title: "Sign up", tapAction: {})
                             FSButton(title: "Login", tapAction: {
-                                print("navigate")
                                 navigateToLogin = true
                             })
                         }
@@ -54,11 +53,7 @@ struct AuthLandingView: View {
                 }
             }
             .navigationDestination(isPresented: $navigateToLogin) {
-                let client = FSClient.shared!
-                let loginUseCase = LoginUseCase(client: client)
-                let viewModel = LoginViewModel(loginUseCase: loginUseCase)
-
-                LoginView(viewModel: viewModel)
+                LoginView()
             }
         }
         

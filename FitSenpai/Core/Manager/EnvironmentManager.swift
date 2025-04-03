@@ -9,23 +9,10 @@ import Foundation
 
 enum AppKey: String {
     case name
-    case apiBaseURL
+    case baseURL
     case isProduction
     case supabaseKey
     case supabaseProjectURL
-}
-
-class FSEnvironment {
-    
-    var name: String
-    var apiPath: String
-    var isProduction: Bool
-    
-    init(envDict: [String: Any]) {
-        self.name = envDict["name"] as! String
-        self.apiPath = envDict["apiPath"] as! String
-        self.isProduction = envDict["isProduction"] as! Bool
-    }
 }
 
 final class EnvironmentManager {

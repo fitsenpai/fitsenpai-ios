@@ -51,15 +51,10 @@ struct OnboardingView: View {
             .navigationDestination(item: $viewModel.navDestination, destination: { view in
                 switch view {
                 case .signin:
-                    let client = FSClient.shared!
-                    let loginUseCase = LoginUseCase(client: client)
-                    let viewModel = LoginViewModel(loginUseCase: loginUseCase)
-
-                    LoginView(viewModel: viewModel)
+                    LoginView()
                 case .createPlan:
                     OnboardingMainView()
                 }
-        
             })
         }
     }

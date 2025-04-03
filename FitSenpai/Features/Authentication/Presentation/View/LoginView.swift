@@ -10,13 +10,9 @@ import SwiftUI
 struct LoginView: View {
     
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject var appState: AppViewModel
-    @StateObject private var viewModel: LoginViewModel
-
-    init(viewModel: LoginViewModel) {
-        _viewModel = StateObject(wrappedValue: viewModel)
-    }
-
+    @EnvironmentObject var appViewModel: AppViewModel
+    @StateObject private var viewModel = LoginViewModel()
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 36) {
             Spacer()
@@ -32,9 +28,9 @@ struct LoginView: View {
             }
 
             FSButton(title: viewModel.isLoading ? "Logging in..." : "Login", fontStyle: .bodyBold16, cornerRadius: 32) {
-                Task { 
+                Task {
                     if await viewModel.login() {
-                        appState.isLoggedIn = true
+                        appViewModel.isLoggedIn = true
                     }
                 }
             }
@@ -55,11 +51,19 @@ struct LoginView: View {
             
             HStack {
                 FSButton(icon: "apple-logo", title: "Apple", fontStyle: .bodyBold16, foregroundColor: .white, cornerRadius: 20, background: .black) {
-                   
+                    Task {
+                        if await viewModel.loginWithApple() {
+                            appViewModel.isLoggedIn = true
+                        }
+                    }
                 }
                 
                 FSButton(icon: "google-logo", title: "Google", fontStyle: .bodyBold16, cornerRadius: 20, background: .white, borderColor: .fsPurple) {
-                    
+                    Task {
+                        if await viewModel.loginWithGoogle() {
+                            appViewModel.isLoggedIn = true
+                        }
+                    }
                 }
             }
 
@@ -81,22 +85,11 @@ struct LoginView: View {
         .padding(.top, 63)
         .navigationBarBackButtonHidden()
     }
-        
-    // Static factory method to create LoginView with initialized dependencies
-    static func preview() -> LoginView {
-        guard let client = FSClient.shared else {
-            fatalError("Failed to initialize FSClient.")
-        }
-        
-        let loginUseCase = LoginUseCase(client: client)
-        let viewModel = LoginViewModel(loginUseCase: loginUseCase)
-        
-        return LoginView(viewModel: viewModel)
-    }
 }
 
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
-        LoginView.preview()
+        LoginView()
+            .environmentObject(AppViewModel())
     }
 }
