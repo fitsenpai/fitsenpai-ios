@@ -23,7 +23,7 @@ struct WorkoutsMainView: View {
     
     var listingHeader: some View {
         HStack(spacing: 12) {
-            FSText(text: "Exercises", fontStyle: .headers20, color: .fsTitle)
+            FSText(text: "Workouts", fontStyle: .headers20, color: .fsTitle)
             Spacer()
             
             HStack(spacing: 15) {

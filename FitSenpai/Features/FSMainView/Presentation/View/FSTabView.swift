@@ -9,27 +9,30 @@ import SwiftUI
 
 struct FSTabView: View {
     var body: some View {
-        TabView {
-            WorkoutsMainView.create()
-                .tabItem {
-                    Label("Workouts", image: "tab_workout")
-                }
-            
-            MealsMainView()
-                .tabItem {
-                    Label("Meals", image: "tab_meals")
-                }
-            
-            GroceriesMainView()
-                .tabItem {
-                    Label("Groceries", image: "tab_groceries")
-                }
-            ProfileMainView()
-                .tabItem {
-                    Label("Progress", image: "tab_progress")
-                }
+        NavigationStack {
+            TabView {
+                WorkoutsMainView.create()
+                    .tabItem {
+                        Label("Workouts", image: "tab_workout")
+                    }
+                
+                MealsMainView()
+                    .tabItem {
+                        Label("Meals", image: "tab_meals")
+                    }
+                
+                GroceriesMainView()
+                    .tabItem {
+                        Label("Groceries", image: "tab_groceries")
+                    }
+                
+                ProgressMainView()
+                    .tabItem {
+                        Label("Progress", image: "tab_progress")
+                    }
+            }
+            .accentColor(.black)
         }
-        .accentColor(.black)
     }
 }
 

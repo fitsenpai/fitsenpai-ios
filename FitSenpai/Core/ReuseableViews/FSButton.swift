@@ -18,6 +18,7 @@ struct FSButton: View {
     var cornerRadius: CGFloat = 6
     var background: Color = .fsPrimary
     var borderColor: Color = .clear
+    var size: FSButtonSize = .md
     var tapAction: FSAction
     
     var body: some View {
@@ -33,13 +34,30 @@ struct FSButton: View {
                 }
                 FSText(text: title, fontStyle: fontStyle, letterSpace: letterSpace, color: foregroundColor)
             }
-            .frame(maxWidth: .infinity, minHeight: 56, maxHeight: 56)
+            .frame(maxWidth: .infinity, minHeight: size.height, maxHeight: size.height)
             .background(background)
             .clipShape(.rect(cornerRadius: cornerRadius))
             .overlay(
                 RoundedCorner(radius: cornerRadius)
                     .stroke(borderColor, lineWidth: 1)
             )
+        }
+    }
+    
+    enum FSButtonSize {
+        case sm
+        case md
+        case lg
+        
+        var height: CGFloat {
+            switch self {
+            case .sm:
+                return 32
+            case .md:
+                return 56
+            case .lg:
+                return 60
+            }
         }
     }
 }
