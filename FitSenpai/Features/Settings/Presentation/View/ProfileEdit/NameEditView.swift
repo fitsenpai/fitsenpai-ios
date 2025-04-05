@@ -26,14 +26,14 @@ struct NameEditView: View {
                     Text("First name")
                         .foregroundColor(.gray)
                         .padding(.top, 15)
-                    RoundedBorderTextField(text: $firstName, placeholder: "", cornerRadius: 12)
+                    RoundedBorderTextField(text: $firstName, label: "", cornerRadius: 12)
                 }
                 
                 HStack(alignment: .center, spacing: 8) {
                     Text("Last Name")
                         .foregroundColor(.gray) 
                         .padding(.top, 15)
-                    RoundedBorderTextField(text: $lastName, placeholder: "", cornerRadius: 12)
+                    RoundedBorderTextField(text: $lastName, label: "", cornerRadius: 12)
                 }
             }
             .padding(.horizontal)

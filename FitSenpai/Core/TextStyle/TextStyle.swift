@@ -19,6 +19,7 @@ extension Font {
     static let heading14 = custom("PlusJakartaSans-Bold", size: 14)
     static let heading20 = custom("PlusJakartaSans-Bold", size: 20)
     static let heading24 = custom("PlusJakartaSans-Bold", size: 24)
+    static let heading25 = custom("PlusJakartaSans-Bold", size: 25)
     static let heading28 = custom("PlusJakartaSans-Bold", size: 28)
     static let heading30 = custom("PlusJakartaSans-Bold", size: 30)
     static let italic10 = custom("PlusJakartaSans-Italic", size: 10)

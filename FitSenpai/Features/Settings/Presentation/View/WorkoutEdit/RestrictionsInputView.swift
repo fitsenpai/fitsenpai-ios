@@ -41,7 +41,7 @@ struct RestrictionsInputView: View {
             VStack(alignment: .leading, spacing: 24) {
                 RoundedBorderTextField(
                     text: $inputText,
-                    placeholder: placeholder,
+                    label: placeholder,
                     cornerRadius: 12
                 )
             }

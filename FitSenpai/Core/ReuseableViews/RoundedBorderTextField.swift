@@ -9,6 +9,7 @@ import SwiftUI
 
 struct RoundedBorderTextField: View {
     @Binding var text: String
+    var label: String = ""
     var placeholder: String = ""
     var isSecure: Bool = false
     var showAccessory: Bool = false
@@ -18,15 +19,15 @@ struct RoundedBorderTextField: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            FSText(text: placeholder, fontStyle: .body16, color: .fsTitle)
+            FSText(text: label, fontStyle: .body16, color: .fsTitle)
             
             HStack {
                 if isSecure && isInputHidden {
-                    SecureField("", text: $text)
+                    SecureField(placeholder, text: $text)
                         .padding(.horizontal)
                         .frame(height: 44)
                 } else {
-                    TextField("", text: $text)
+                    TextField(placeholder, text: $text)
                         .padding(.horizontal)
                         .frame(height: 44)
                         .autocorrectionDisabled()
@@ -52,5 +53,5 @@ struct RoundedBorderTextField: View {
 }
 
 #Preview {
-    RoundedBorderTextField(text: .constant(""), placeholder: "Email", isSecure: true, showAccessory: true)
+    RoundedBorderTextField(text: .constant(""), label: "Email", isSecure: true, showAccessory: true)
 }

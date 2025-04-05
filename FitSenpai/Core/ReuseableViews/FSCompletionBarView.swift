@@ -9,13 +9,13 @@ import SwiftUI
 
 struct FSCompletionBarView: View {
     var body: some View {
-        VStack(spacing: 7) {
-            ProgressView(value: 0.75)
+        VStack(spacing: 8) {
+            ProgressView(value: 0.2)
                 .accentColor(.fsPrimary)
             HStack {
-                FSText(text: "Upper Body", fontStyle: .mona12, color: .fsSubtitleColor)
+                FSText(text: "Upper Body", fontStyle: .body14, color: .fsSubtitleColor)
                 Spacer()
-                FSText(text: "75%", fontStyle: .mona12, color: .fsSubtitleColor)
+                FSText(text: "75%", fontStyle: .body14, color: .fsSubtitleColor)
             }
         }
     }

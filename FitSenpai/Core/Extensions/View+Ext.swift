@@ -14,4 +14,8 @@ extension View {
     func loadingOverlay(state: Binding<ViewState>) -> some View {
         modifier(LoadingListenerModifier(viewState: state))
     }
+    
+    func flexibleSheet() -> some View {
+        modifier(FlexibleSheetModifier())
+    }
 }

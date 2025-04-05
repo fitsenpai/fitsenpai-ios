@@ -13,13 +13,32 @@ struct SwipeableCalendarView: View {
     @State var shouldShowWeekView = true
     @Binding var selectedDate: Date
     @Binding var currentWeekStartDate: Date
+    
+    let progressData: [Date: Double] = [
+        // Today with 50% progress
+        Date(): 0.5,
+        
+        // Tomorrow with 30% progress
+        Calendar.current.date(byAdding: .day, value: 2, to: Date())!: 0.3,
+        
+        // Day after tomorrow with 80% progress
+        Calendar.current.date(byAdding: .day, value: 4, to: Date())!: 0.8,
+        Calendar.current.date(byAdding: .day, value: 5, to: Date())!: 0.1,
+        
+        // Tomorrow with 30% progress
+        Calendar.current.date(byAdding: .day, value: 6, to: Date())!: 0.3,
+        Calendar.current.date(byAdding: .day, value: 7, to: Date())!: 0.7,
+        
+        // Day after tomorrow with 80% progress
+        Calendar.current.date(byAdding: .day, value: 8, to: Date())!: 0.9
+    ]
 
     var body: some View {
         VStack {
             // Week Range
             HStack(alignment: .center) {
                 FSText(text: weekRangeText, fontStyle: .medium14, color: .fsSubtitleColor)
-                    .padding(.leading, 3)
+                    .padding(.leading, 12)
                 
                 Spacer()
             }
@@ -28,7 +47,7 @@ struct SwipeableCalendarView: View {
                 // Swipeable Weeks
                 TabView(selection: $currentWeekOffset) {
                     ForEach(-52...52, id: \.self) { offset in
-                        WeekView(weekOffset: offset, selectedDate: $selectedDate)
+                        WeekView(weekOffset: offset, selectedDate: $selectedDate, progressByDate: progressData, highlightedWeekdays: [2,4,7])
                             .tag(offset) // Use offset as the tag for swipeable identification
                     }
                 }
