@@ -27,14 +27,14 @@ struct LoginView: View {
                 }
             }
 
-            FSButton(title: viewModel.isLoading ? "Logging in..." : "Login", fontStyle: .bodyBold16, cornerRadius: 32) {
+            FSButton(title: viewModel.viewState == .loading ? "Logging in..." : "Login", fontStyle: .bodyBold16, cornerRadius: 32) {
                 Task {
                     if await viewModel.login() {
                         appViewModel.isLoggedIn = true
                     }
                 }
             }
-            .disabled(viewModel.isLoading)
+            .disabled(viewModel.viewState == .loading)
 
             if let errorMessage = viewModel.errorMessage {
                 Text(errorMessage)
@@ -84,6 +84,7 @@ struct LoginView: View {
         .padding(.horizontal, 24)
         .padding(.top, 63)
         .navigationBarBackButtonHidden()
+        .loadingOverlay(state: $viewModel.viewState)
     }
 }
 

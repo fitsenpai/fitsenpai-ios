@@ -15,6 +15,7 @@ enum AuthEndpoint {
     case resetPassword(email: String)
     case changePassword(currentPassword: String, newPassword: String)
     case deleteAccount(reason: String)
+    case getCurrentUser
 }
 
 extension AuthEndpoint: NetworkEndpoint {
@@ -33,6 +34,8 @@ extension AuthEndpoint: NetworkEndpoint {
             return "/user/change-password"
         case .deleteAccount:
             return "/user/delete-account"
+        case .getCurrentUser:
+            return "/user"
         }
     }
     
@@ -48,6 +51,8 @@ extension AuthEndpoint: NetworkEndpoint {
             return .put
         case .deleteAccount:
             return .delete
+        case .getCurrentUser:
+            return .get
         }
     }
     
@@ -85,7 +90,7 @@ extension AuthEndpoint: NetworkEndpoint {
             ]
         case let .deleteAccount(reason):
             return ["reason": reason]
-        case .signOut:
+        case .signOut, .getCurrentUser:
             return nil
         }
     }

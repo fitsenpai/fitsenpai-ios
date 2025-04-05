@@ -3,6 +3,7 @@ import Combine
 
 @MainActor
 class SettingsViewModel: ObservableObject {
+    
     // MARK: - Published Properties
     @Published var firstName: String = "Bella"
     @Published var lastName: String = "Oakley"
@@ -24,9 +25,13 @@ class SettingsViewModel: ObservableObject {
     @Published var height: Double = 183.0  // Default 6ft in cm
     @Published var weight: Double = 72.0   // Default 159lb in kg
     @Published var isMetric: Bool = false
-
+    @Published var viewState: ViewState = .idle
+    
     // MARK: - Private Properties
     private var cancellables = Set<AnyCancellable>()
+    
+    // MARK: - Use Cases
+    @Inject private var singoutUseCase: SignOutUseCaseProtocol
     
     // MARK: - Init
     init() {
@@ -37,7 +42,72 @@ class SettingsViewModel: ObservableObject {
         setupBindings()
     }
     
-    private func setupBindings() {
+}
+
+// MARK: Computed properties
+extension SettingsViewModel {
+    
+    var fullname: String {
+        "\(firstName) \(lastName)"
+    }
+    
+    var displayDietaryPreference: String {
+        if selectedDietaryPreference == .none {
+            return "None"
+        }
+        if selectedDietaryPreference == .other && !customDietaryPreference.isEmpty {
+            return customDietaryPreference
+        }
+        return selectedDietaryPreference.rawValue
+    }
+    
+    var displayAllergies: String {
+        if selectedAllergies.isEmpty || selectedAllergies == [.none] {
+            return "None"
+        }
+        
+        var display = selectedAllergies
+            .filter { $0 != .other }
+            .map { $0.rawValue }
+        
+        if selectedAllergies.contains(.other) && !customAllergy.isEmpty {
+            display.append(customAllergy)
+        }
+        
+        return display.joined(separator: ", ")
+    }
+    
+    var displayHealthConcerns: String {
+        if selectedHealthConcerns.isEmpty || selectedHealthConcerns == [.none] {
+            return "None"
+        }
+        
+        var display = selectedHealthConcerns
+            .filter { $0 != .other }
+            .map { $0.rawValue }
+        
+        if selectedHealthConcerns.contains(.other) && !customHealthConcern.isEmpty {
+            display.append(customHealthConcern)
+        }
+        
+        return display.joined(separator: ", ")
+    }
+    
+    var formattedHeightWeight: String {
+        if isMetric {
+            return String(format: "%.0f cm, %.0f kg", height, weight)
+        } else {
+            let feet = Int(floor(height / 30.48))
+            let inches = Int((height.truncatingRemainder(dividingBy: 30.48) / 2.54).rounded())
+            let pounds = Int(weight * 2.20462)
+            return String(format: "%d'%d\", %d lb", feet, inches, pounds)
+        }
+    }
+}
+
+// MARK: Private functions
+private extension SettingsViewModel {
+    func setupBindings() {
         $selectedGender
             .dropFirst()
             .sink { [weak self] gender in
@@ -65,8 +135,10 @@ class SettingsViewModel: ObservableObject {
             }
             .store(in: &cancellables)
     }
-    
-    // MARK: - API Methods
+}
+
+// MARK: API UseCase functions
+extension SettingsViewModel {
     func updateName(firstName: String, lastName: String) async {
         self.firstName = firstName
         self.lastName = lastName
@@ -149,60 +221,21 @@ class SettingsViewModel: ObservableObject {
         // Add any API calls or data persistence here
     }
     
-    var fullname: String {
-        "\(firstName) \(lastName)"
+    func signOut() async -> Bool {
+        viewState = .loading
+        defer { viewState = .idle }
+        do {
+            try await singoutUseCase.execute()
+            
+            // Clear session in AuthUseCase as part of logout
+            AuthManager.shared.clearTokens()
+            
+            return true
+        } catch {
+            print("Error during logout: \(error.localizedDescription)")
+            return false
+        }
     }
     
-    var displayDietaryPreference: String {
-        if selectedDietaryPreference == .none {
-            return "None"
-        }
-        if selectedDietaryPreference == .other && !customDietaryPreference.isEmpty {
-            return customDietaryPreference
-        }
-        return selectedDietaryPreference.rawValue
-    }
-    
-    var displayAllergies: String {
-        if selectedAllergies.isEmpty || selectedAllergies == [.none] {
-            return "None"
-        }
-        
-        var display = selectedAllergies
-            .filter { $0 != .other }
-            .map { $0.rawValue }
-        
-        if selectedAllergies.contains(.other) && !customAllergy.isEmpty {
-            display.append(customAllergy)
-        }
-        
-        return display.joined(separator: ", ")
-    }
-    
-    var displayHealthConcerns: String {
-        if selectedHealthConcerns.isEmpty || selectedHealthConcerns == [.none] {
-            return "None"
-        }
-        
-        var display = selectedHealthConcerns
-            .filter { $0 != .other }
-            .map { $0.rawValue }
-        
-        if selectedHealthConcerns.contains(.other) && !customHealthConcern.isEmpty {
-            display.append(customHealthConcern)
-        }
-        
-        return display.joined(separator: ", ")
-    }
-    
-    var formattedHeightWeight: String {
-        if isMetric {
-            return String(format: "%.0f cm, %.0f kg", height, weight)
-        } else {
-            let feet = Int(floor(height / 30.48))
-            let inches = Int((height.truncatingRemainder(dividingBy: 30.48) / 2.54).rounded())
-            let pounds = Int(weight * 2.20462)
-            return String(format: "%d'%d\", %d lb", feet, inches, pounds)
-        }
-    }
 }
+

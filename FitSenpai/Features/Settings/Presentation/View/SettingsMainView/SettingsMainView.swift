@@ -73,6 +73,7 @@ struct SettingsMainView: View {
                 }
             }
         }
+        .loadingOverlay(state: $viewModel.viewState)
         .sheet(isPresented: $showSafariView) {
             if let url = safariURL {
                 SafariView(url: url)
@@ -248,17 +249,9 @@ struct SettingsMainView: View {
             Divider()
             Button {
                 Task {
-                    do {
-                        try await logoutUseCase.logout()
-                        // Clear session in AuthUseCase as part of logout
-                        await AuthUseCase.clearSession()
-                        
-                        // Set isLoggedIn to false to navigate back to LoginView
-                        DispatchQueue.main.async {
-                            appState.isLoggedIn = false
-                        }
-                    } catch {
-                        print("Error during logout: \(error.localizedDescription)")
+                    let success = await viewModel.signOut()
+                    if success {
+                        appState.isLoggedIn = false
                     }
                 }
             } label: {

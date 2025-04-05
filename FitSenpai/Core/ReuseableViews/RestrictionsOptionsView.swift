@@ -50,10 +50,20 @@ struct RestrictionsOptionsView<T>: View where T: Identifiable & Hashable {
             handleSelection(option)
         } label: {
             HStack(spacing: 16) {
-                Image(iconProvider(option))
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 16, height: 16)
+                
+                ZStack {
+                    Image(iconProvider(option))
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 16, height: 16)
+                    
+                }
+                .padding(8)
+                .frame(width: 36, height: 36)
+                .background(
+                    Circle()
+                        .fill(isSelected(option) ? Color.gray246 : Color.white)
+                )
                 
                 FSText(
                     text: titleProvider(option),

@@ -8,9 +8,6 @@
 import UIKit
 import Supabase
 
-
-let globalAppEnvObject = GlobalAppEnvironment()
-
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?

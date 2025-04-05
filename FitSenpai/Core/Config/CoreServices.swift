@@ -27,6 +27,8 @@ enum CoreServices {
     
     static func registerUseCases() {
         DependencyInjector.register(SigninUseCase() as any SigninUseCaseProtocol)
+        DependencyInjector.register(SignOutUseCase() as any SignOutUseCaseProtocol)
+        DependencyInjector.register(GetUserUseCase() as any GetUserUseCaseProtocol)
     }
     
     static func registerAll() {

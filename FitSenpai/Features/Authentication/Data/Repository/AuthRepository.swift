@@ -45,8 +45,6 @@ final class AuthRepository: AuthRepositoryProtocol {
             throw AuthRepositoryError.invalidSession
         }
         
-        AuthManager.shared.setTokens(accessToken: session.accessToken,
-                                     refreshToken: session.refreshToken)
         return (user, session)
     }
     
@@ -61,8 +59,6 @@ final class AuthRepository: AuthRepositoryProtocol {
             throw AuthRepositoryError.invalidSession
         }
         
-        AuthManager.shared.setTokens(accessToken: session.accessToken,
-                                     refreshToken: session.refreshToken)
         return (user, session)
     }
     
@@ -92,5 +88,15 @@ final class AuthRepository: AuthRepositoryProtocol {
     func deleteAccount(reason: String) async throws {
         try await remoteDataSource.deleteAccount(reason: reason)
         AuthManager.shared.clearTokens()
+    }
+    
+    func getCurrentSession() async throws -> FSUser {
+        let response = try await remoteDataSource.getCurrentUser()
+        
+        guard let user = response.toDomain() else {
+            throw AuthRepositoryError.missingUser
+        }
+        
+        return user
     }
 }

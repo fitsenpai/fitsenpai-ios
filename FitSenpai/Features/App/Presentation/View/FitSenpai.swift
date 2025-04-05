@@ -9,6 +9,8 @@ import SwiftUI
 import Foundation
 import Supabase
 
+let globalAppEnvObject = GlobalAppEnvironment()
+
 @main
 struct FitSenpai: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate

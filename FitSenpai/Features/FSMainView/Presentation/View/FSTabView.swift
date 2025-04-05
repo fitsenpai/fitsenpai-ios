@@ -11,26 +11,31 @@ struct FSTabView: View {
     var body: some View {
         NavigationStack {
             TabView {
-                WorkoutsMainView.create()
-                    .tabItem {
-                        Label("Workouts", image: "tab_workout")
-                    }
-                
-                MealsMainView()
-                    .tabItem {
-                        Label("Meals", image: "tab_meals")
-                    }
-                
-                GroceriesMainView()
-                    .tabItem {
-                        Label("Groceries", image: "tab_groceries")
-                    }
-                
-                ProgressMainView()
-                    .tabItem {
-                        Label("Progress", image: "tab_progress")
-                    }
+                Group {
+                    WorkoutsMainView.create()
+                        .tabItem {
+                            Label("Workouts", image: "tab_workout")
+                        }
+                    
+                    MealsMainView()
+                        .tabItem {
+                            Label("Meals", image: "tab_meals")
+                        }
+                    
+                    GroceriesMainView()
+                        .tabItem {
+                            Label("Groceries", image: "tab_groceries")
+                        }
+                    
+                    ProgressMainView()
+                        .tabItem {
+                            Label("Progress", image: "tab_progress")
+                        }
+                }
+                .toolbarBackground(.white, for: .tabBar)
+                .toolbarBackground(.visible, for: .tabBar)
             }
+            .background(Color.white)
             .accentColor(.black)
         }
     }

@@ -12,7 +12,7 @@ import SwiftUI
 class LoginViewModel: ObservableObject {
     @Published var email: String = ""
     @Published var password: String = ""
-    @Published var isLoading: Bool = false
+    @Published var viewState: ViewState = .idle
     @Published var errorMessage: String?
     
     @Inject private var signinUseCase: SigninUseCaseProtocol
@@ -23,13 +23,16 @@ class LoginViewModel: ObservableObject {
             return false
         }
 
-        isLoading = true
+        viewState = .loading
         errorMessage = nil
         
-        defer { isLoading = false }
+        defer { viewState = .idle }
         
         do {
-            let (_, _) = try await signinUseCase.execute(email: email, password: password)
+            let (user, session) = try await signinUseCase.execute(email: email, password: password)
+            globalAppEnvObject.user = user
+            AuthManager.shared.setTokens(accessToken: session.accessToken,
+                                         refreshToken: session.refreshToken)
             return true
         } catch {
             errorMessage = error.localizedDescription
@@ -39,10 +42,10 @@ class LoginViewModel: ObservableObject {
     }
     
     func loginWithApple() async -> Bool {
-        isLoading = true
+        viewState = .loading
         errorMessage = nil
         
-        defer { isLoading = false }
+        defer { viewState = .idle }
         
         do {
             let (_, _) = try await signinUseCase.executeWithApple()
@@ -55,10 +58,10 @@ class LoginViewModel: ObservableObject {
     }
     
     func loginWithGoogle() async -> Bool {
-        isLoading = true
-        errorMessage = nil
+        viewState = .loading
+            errorMessage = nil
         
-        defer { isLoading = false }
+        defer { viewState = .idle }
         
         do {
             let (_, _) = try await signinUseCase.executeWithGoogle()
