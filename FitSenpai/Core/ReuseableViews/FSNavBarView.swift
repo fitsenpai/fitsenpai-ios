@@ -26,12 +26,14 @@ struct FSNavBarView: View {
             }
         }
         .padding(.vertical, 16)
+        .padding(.horizontal, 24)
         .navigationDestination(item: $navDestination) { destination in
             switch destination {
             case .settings:
                 SettingsMainView()
             }
         }
+        
     }
 }
 

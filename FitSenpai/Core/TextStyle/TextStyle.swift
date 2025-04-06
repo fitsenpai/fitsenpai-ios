@@ -17,6 +17,7 @@ extension Font {
     static let fieldsHeader = custom("Mona-Sans-Medium", size: 14)
     static let heading12 = custom("PlusJakartaSans-Bold", size: 12)
     static let heading14 = custom("PlusJakartaSans-Bold", size: 14)
+    static let heading16 = custom("PlusJakartaSans-Bold", size: 16)
     static let heading20 = custom("PlusJakartaSans-Bold", size: 20)
     static let heading24 = custom("PlusJakartaSans-Bold", size: 24)
     static let heading25 = custom("PlusJakartaSans-Bold", size: 25)

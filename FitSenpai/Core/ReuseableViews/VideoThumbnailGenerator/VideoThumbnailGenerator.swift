@@ -39,8 +39,8 @@ struct VideoPreviewView: View {
     var body: some View {
         VStack {
             if isLoading {
-                ShimmerView()
-                    .frame(width: 64, height: 64)
+                ShimmerView(cornerRadius: 8)
+                    .frame(width: 80, height: 80)
             } else {
                 if let thumbnailURL = thumbnailURL {
                     KFImage(thumbnailURL)

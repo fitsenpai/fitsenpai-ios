@@ -16,6 +16,7 @@ struct IconLabelView: View {
     var spacing: CGFloat = 4
     var showBorder: Bool = false
     var width: CGFloat?
+    var isFullWidth: Bool = false
     
     var body: some View {
         HStack(spacing: spacing) {
@@ -24,6 +25,9 @@ struct IconLabelView: View {
                 .frame(width: iconSize, height: iconSize)
                 .scaledToFit()
             FSText(text: fsMetric.getInfoForIcon(value).description, fontStyle: fontStyle, color: fontColor)
+        }
+        .if(isFullWidth) { view in
+            view.frame(maxWidth: .infinity)
         }
         .if(showBorder) { view in
             view
@@ -47,3 +51,4 @@ struct IconLabelView: View {
 #Preview {
     IconLabelView(fsMetric: .WorkoutRep, value: 12, fontStyle: .body12, fontColor: .fsSubtitleColor, iconSize: 12, spacing: 8, showBorder: true)
 }
+

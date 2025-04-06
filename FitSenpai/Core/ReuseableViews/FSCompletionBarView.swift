@@ -8,19 +8,17 @@
 import SwiftUI
 
 struct FSCompletionBarView: View {
+    var titleText: String
+    var progress: Double
     var body: some View {
         VStack(spacing: 8) {
-            ProgressView(value: 0.2)
+            ProgressView(value: progress)
                 .accentColor(.fsPrimary)
             HStack {
-                FSText(text: "Upper Body", fontStyle: .body14, color: .fsSubtitleColor)
+                FSText(text: titleText, fontStyle: .body14, color: .fsSubtitleColor)
                 Spacer()
-                FSText(text: "75%", fontStyle: .body14, color: .fsSubtitleColor)
+                FSText(text: "\(Int(progress * 100))%", fontStyle: .body14, color: .fsSubtitleColor)
             }
         }
     }
-}
-
-#Preview {
-    FSCompletionBarView()
 }

@@ -14,19 +14,19 @@ struct GenericTextListView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            FSText(text: title, fontStyle: .headers20)
+            FSText(text: title, fontStyle: .medium16)
                 .padding(.bottom, 8)
 
-            VStack(alignment: .leading, spacing: 16) {
+            VStack(alignment: .leading, spacing: 12) {
                 ForEach(Array(instructions.enumerated()), id: \.offset) { index, instruction in
                     HStack(alignment: .top, spacing: 8) {
-                        FSText(text: isNumbered ? "\(index + 1)." : "•", fontStyle: .body16, color: .fsSubtitleColor)
-
-                        FSText(text: instruction, fontStyle: .body16, color: .fsSubtitleColor)
+                        FSText(text: isNumbered ? "\(index + 1)." : "•", fontStyle: .body14, color: .black)
+                        FSText(text: instruction, fontStyle: .body14, color: .black, lineSpacing: 6)
                             .fixedSize(horizontal: false, vertical: true)
                     }
                 }
             }
+            .padding(.horizontal, 8)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }

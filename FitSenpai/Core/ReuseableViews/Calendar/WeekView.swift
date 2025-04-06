@@ -74,11 +74,11 @@ struct WeekView: View {
         ZStack {
             Circle()
                 .fill(shouldHighlight(date) ? Color.fsAccent : Color.clear)
-                .frame(width: 32, height: 32)
+                .frame(width: 34, height: 34)
             
             Circle()
                 .stroke(shouldHighlight(date) ? Color.fsAccent : Color.gray246, lineWidth: 2)
-                .frame(width: 32, height: 32)
+                .frame(width: 34, height: 34)
         }
     }
     
@@ -93,7 +93,7 @@ struct WeekView: View {
                 )
             )
             .rotationEffect(.degrees(-90))
-            .frame(width: 32, height: 32)
+            .frame(width: 34, height: 34)
     }
     
     private func dayLabel(for date: Date) -> some View {

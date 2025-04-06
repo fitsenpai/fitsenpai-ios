@@ -11,9 +11,10 @@ import SwiftUI
 
 struct ShimmerView: View {
     @State private var move = false
+    var cornerRadius: CGFloat = 12
     
     var body: some View {
-        RoundedRectangle(cornerRadius: 12)
+        RoundedRectangle(cornerRadius: cornerRadius)
             .fill(Color.gray.opacity(0.3))
             .overlay(
                 LinearGradient(gradient: Gradient(colors: [Color.white.opacity(0.2), Color.white.opacity(0.4), Color.white.opacity(0.2)]), startPoint: .leading, endPoint: .trailing)
