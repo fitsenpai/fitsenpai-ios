@@ -11,6 +11,7 @@ import BottomSheet
 struct WorkoutsMainView: View {
     @StateObject var viewModel: WorkoutsMainViewModel
     @State private var showingDetail = false
+    @State private var showingSubscription = false
     @State private var selectedDate: Date = Date() {
         didSet {
             if let uuid = globalAppEnvObject.user?.id {
@@ -28,7 +29,7 @@ struct WorkoutsMainView: View {
                 .blur(radius: 4)
 
             UpgrageCardView {
-                
+                showingSubscription = true
             }
             .padding(24)
             
@@ -40,6 +41,9 @@ struct WorkoutsMainView: View {
                     showingDetail: $showingDetail
                 )
             }
+        }
+        .fullScreenCover(isPresented: $showingSubscription) {
+            SubscriptionView()
         }
         .onAppear(perform: fetchInitialData)
         .onChange(of: selectedDate) { _, newValue in
