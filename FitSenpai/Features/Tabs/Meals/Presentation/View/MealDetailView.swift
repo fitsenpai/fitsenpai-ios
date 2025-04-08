@@ -46,10 +46,10 @@ struct MealDetailView: View {
             }
         }
         .scrollIndicators(.hidden)
+        .padding(24)
         .background {
             Color.workoutBackgroundColor
         }
-        .padding(24)
         
     }
     

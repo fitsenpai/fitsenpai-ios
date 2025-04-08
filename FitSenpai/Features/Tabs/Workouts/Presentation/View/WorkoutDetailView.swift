@@ -69,10 +69,10 @@ struct WorkoutDetailView: View {
                 })
             }
         }
+        .padding(16)
         .background {
             Color.workoutBackgroundColor
         }
-        .padding(16)
         
     }
 }

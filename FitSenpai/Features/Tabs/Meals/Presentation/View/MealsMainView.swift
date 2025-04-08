@@ -11,8 +11,6 @@ struct MealsMainView: View {
     
     @State var showingDetail = false
     
-    @State private var selectedDate: Date = Date()
-    
     let items = [
         ("Calories", 1558, Color.calorieGreenBG, Color.calorieGreen, FSMetric.Calories),
         ("Protein", 118, Color.proteinOrangeBG, Color.proteinOrange, FSMetric.Protein),
@@ -26,19 +24,19 @@ struct MealsMainView: View {
     ]
     
     var body: some View {
-        VStack(alignment: .leading) {
-            FSNavBarView()
-            SwipeableCalendarView(selectedDate: $selectedDate, currentWeekStartDate: .constant(Date()))
+        MainContainerView {
             VStack(spacing: 20) {
                 VStack(spacing: 16) {
-                    FSSectionHeaderView(text: "Meals")
+                    FSSectionHeaderView(text: "Meals") {
+                        
+                    }
                     gridView
                 }
                 
                 ScrollView {
                     VStack(spacing: 12) {
                         MealView(image: "sample1", title: "Protein Pancakes", mealPeriod: .Breakfast)
-
+                        
                         MealView(image: "sample2", title: "Chicken Salad", mealPeriod: .Lunch)
                         
                         MealView(image: "sample3", title: "Salmon and Asparagus", mealPeriod: .Dinner)
@@ -54,8 +52,6 @@ struct MealsMainView: View {
                     .padding(.horizontal, 1)
                 }
             }
-            .padding(.vertical, 16)
-            .padding(.horizontal, 24)
         }
     }
     

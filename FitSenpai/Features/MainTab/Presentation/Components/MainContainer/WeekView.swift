@@ -2,7 +2,7 @@
 //  WeekView.swift
 //  FitSenpai
 //
-//  Created by Kevin Andrew Maloles on 11/22/24.
+//  Created by Mark Daquis on 4/8/25.
 //
 
 import SwiftUI
@@ -13,7 +13,7 @@ struct WeekView: View {
     let weekOffset: Int
     @Binding var selectedDate: Date
     var progressByDate: [Date: Double]
-    var highlightedWeekdays: Set<Int> = []
+    var highlightedDays: Set<Int> = []
     
     private var calendar: Calendar {
         Calendar.current
@@ -23,10 +23,10 @@ struct WeekView: View {
     init(weekOffset: Int,
          selectedDate: Binding<Date>,
          progressByDate: [Date: Double],
-         highlightedWeekdays: Set<Int>) {
+         highlightedDays: Set<Int>) {
         self.weekOffset = weekOffset
         self._selectedDate = selectedDate
-        self.highlightedWeekdays = highlightedWeekdays
+        self.highlightedDays = highlightedDays
         self.progressByDate = progressByDate
         let today = Calendar.current.startOfDay(for: Date())
         if selectedDate.wrappedValue == Date.distantPast {
@@ -123,7 +123,7 @@ struct WeekView: View {
     // MARK: - Helper Methods
     private func shouldHighlight(_ date: Date) -> Bool {
         let weekday = calendar.component(.weekday, from: date)
-        return highlightedWeekdays.contains(weekday)
+        return highlightedDays.contains(weekday)
     }
     
     private func isToday(_ date: Date) -> Bool {
@@ -190,7 +190,7 @@ struct WeekView_Previews: PreviewProvider {
             weekOffset: 0,  // Current week
             selectedDate: .constant(today),
             progressByDate: progressData,
-            highlightedWeekdays: [2, 3, 7]  // Highlight Monday(2), Tuesday(3), Saturday(7)
+            highlightedDays: [2, 3, 7]  // Highlight Monday(2), Tuesday(3), Saturday(7)
         )
     }
 }

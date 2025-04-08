@@ -31,7 +31,7 @@ class LoginViewModel: ObservableObject {
         do {
             let (user, session) = try await signinUseCase.execute(email: email, password: password)
             globalAppEnvObject.user = user
-            AuthManager.shared.setTokens(accessToken: session.accessToken,
+            AppSession.shared.setTokens(accessToken: session.accessToken,
                                          refreshToken: session.refreshToken)
             return true
         } catch {

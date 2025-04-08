@@ -74,7 +74,7 @@ final class AuthRepository: AuthRepositoryProtocol {
     
     func signOut() async throws {
         try await remoteDataSource.signOut()
-        AuthManager.shared.clearTokens()
+        AppSession.shared.clearTokens()
     }
     
     func sendPasswordResetEmail(to email: String) async throws {
@@ -87,7 +87,7 @@ final class AuthRepository: AuthRepositoryProtocol {
     
     func deleteAccount(reason: String) async throws {
         try await remoteDataSource.deleteAccount(reason: reason)
-        AuthManager.shared.clearTokens()
+        AppSession.shared.clearTokens()
     }
     
     func getCurrentSession() async throws -> FSUser {

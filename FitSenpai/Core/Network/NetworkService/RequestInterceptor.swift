@@ -28,17 +28,17 @@ protocol RequestInterceptor {
 final class DefaultRequestInterceptor: RequestInterceptor {
     private let retryLimit: Int
     private let retryDelay: TimeInterval
-    private let authManager: AuthManager
+    private let appSession: AppSession
     private var currentRetry = 0
     
     init(
         retryLimit: Int = 3,
         retryDelay: TimeInterval = 1.0,
-        authManager: AuthManager = .shared
+        appSession: AppSession = .shared
     ) {
         self.retryLimit = retryLimit
         self.retryDelay = retryDelay
-        self.authManager = authManager
+        self.appSession = appSession
     }
     
     func adapt(_ request: URLRequest) async throws -> URLRequest {
@@ -48,7 +48,7 @@ final class DefaultRequestInterceptor: RequestInterceptor {
         adaptedRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         // Add authorization if authenticated
-        if let accessToken = authManager.accessToken {
+        if let accessToken = appSession.accessToken {
             adaptedRequest.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         }
         
@@ -62,18 +62,18 @@ final class DefaultRequestInterceptor: RequestInterceptor {
             switch httpResponse.statusCode {
             case 401: // Unauthorized
                 do {
-                    guard let refreshToken = authManager.refreshToken else {
-                        authManager.clearTokens()
+                    guard let refreshToken = appSession.refreshToken else {
+                        appSession.clearTokens()
                         return false
                     }
                     
                     // Try to refresh the token
-                    let newToken = try await authManager.refreshAccessToken()
-                    authManager.setTokens(accessToken: newToken, refreshToken: refreshToken)
+                    let newToken = try await appSession.refreshAccessToken()
+                    appSession.setTokens(accessToken: newToken, refreshToken: refreshToken)
                     return true
                     
                 } catch {
-                    authManager.clearTokens()
+                    appSession.clearTokens()
                     return false
                 }
                 

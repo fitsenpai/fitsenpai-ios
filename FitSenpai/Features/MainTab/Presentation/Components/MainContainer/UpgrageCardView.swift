@@ -33,5 +33,6 @@ struct UpgrageCardView: View {
             }
             .padding(4)
         }
+        .padding(.horizontal, 24)
     }
 }

@@ -14,7 +14,7 @@ struct FSButton: View {
     var title: String
     var fontStyle: Font = .body16
     var foregroundColor: Color = .fsTitle
-    var letterSpace: CGFloat = 1
+    var letterSpace: CGFloat = 0
     var cornerRadius: CGFloat = 6
     var background: Color = .fsPrimary
     var borderColor: Color = .clear

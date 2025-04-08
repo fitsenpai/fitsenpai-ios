@@ -2,7 +2,7 @@
 //  SwipeableCalendarView.swift
 //  FitSenpai
 //
-//  Created by Kevin Andrew Maloles on 11/22/24.
+//  Created by Mark Daquis on 4/8/25.
 //
 
 import SwiftUI
@@ -13,25 +13,8 @@ struct SwipeableCalendarView: View {
     @State var shouldShowWeekView = true
     @Binding var selectedDate: Date
     @Binding var currentWeekStartDate: Date
-    
-    let progressData: [Date: Double] = [
-        // Today with 50% progress
-        Date(): 0.5,
-        
-        // Tomorrow with 30% progress
-        Calendar.current.date(byAdding: .day, value: 2, to: Date())!: 0.3,
-        
-        // Day after tomorrow with 80% progress
-        Calendar.current.date(byAdding: .day, value: 4, to: Date())!: 0.8,
-        Calendar.current.date(byAdding: .day, value: 5, to: Date())!: 0.1,
-        
-        // Tomorrow with 30% progress
-        Calendar.current.date(byAdding: .day, value: 6, to: Date())!: 0.3,
-        Calendar.current.date(byAdding: .day, value: 7, to: Date())!: 0.7,
-        
-        // Day after tomorrow with 80% progress
-        Calendar.current.date(byAdding: .day, value: 8, to: Date())!: 0.9
-    ]
+    @Binding var progressData: [Date: Double]
+    @Binding var highlightedDays: Set<Int>
 
     var body: some View {
         VStack {
@@ -47,7 +30,7 @@ struct SwipeableCalendarView: View {
                 // Swipeable Weeks
                 TabView(selection: $currentWeekOffset) {
                     ForEach(-52...52, id: \.self) { offset in
-                        WeekView(weekOffset: offset, selectedDate: $selectedDate, progressByDate: progressData, highlightedWeekdays: [2,4,7])
+                        WeekView(weekOffset: offset, selectedDate: $selectedDate, progressByDate: progressData, highlightedDays: highlightedDays)
                             .tag(offset) // Use offset as the tag for swipeable identification
                     }
                 }
@@ -116,6 +99,23 @@ struct SwipeableCalendarView: View {
 
 struct SwipeableCalendarView_Previews: PreviewProvider {
     static var previews: some View {
-        SwipeableCalendarView(selectedDate: .constant(Date()), currentWeekStartDate: .constant(Date()))
+        SwipeableCalendarView(selectedDate: .constant(Date()), currentWeekStartDate: .constant(Date()), progressData: .constant([
+            // Today with 50% progress
+            Date(): 0.5,
+            
+            // Tomorrow with 30% progress
+            Calendar.current.date(byAdding: .day, value: 2, to: Date())!: 0.3,
+            
+            // Day after tomorrow with 80% progress
+            Calendar.current.date(byAdding: .day, value: 4, to: Date())!: 0.8,
+            Calendar.current.date(byAdding: .day, value: 5, to: Date())!: 0.1,
+            
+            // Tomorrow with 30% progress
+            Calendar.current.date(byAdding: .day, value: 6, to: Date())!: 0.3,
+            Calendar.current.date(byAdding: .day, value: 7, to: Date())!: 0.7,
+            
+            // Day after tomorrow with 80% progress
+            Calendar.current.date(byAdding: .day, value: 8, to: Date())!: 0.9
+        ]), highlightedDays: .constant([1,3,5]))
     }
 }

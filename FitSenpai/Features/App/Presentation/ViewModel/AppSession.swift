@@ -9,9 +9,9 @@
 import Foundation
 
 /// Manages authentication state and tokens
-final class AuthManager {
+final class AppSession {
     /// Shared instance for authentication management
-    static let shared = AuthManager()
+    static let shared = AppSession()
     
     /// Current access token for API requests
     private(set) var accessToken: String?
@@ -88,7 +88,7 @@ final class AuthManager {
 
 // MARK: - Custom String Convertible
 
-extension AuthManager: CustomStringConvertible {
+extension AppSession: CustomStringConvertible {
     var description: String {
         "AuthManager(isAuthenticated: \(isAuthenticated))"
     }
@@ -97,7 +97,7 @@ extension AuthManager: CustomStringConvertible {
 // MARK: - Debug Description
 
 #if DEBUG
-extension AuthManager: CustomDebugStringConvertible {
+extension AppSession: CustomDebugStringConvertible {
     var debugDescription: String {
         """
         AuthManager(

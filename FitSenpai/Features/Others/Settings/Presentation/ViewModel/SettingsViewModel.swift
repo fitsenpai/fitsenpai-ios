@@ -228,7 +228,7 @@ extension SettingsViewModel {
             try await singoutUseCase.execute()
             
             // Clear session in AuthUseCase as part of logout
-            AuthManager.shared.clearTokens()
+            AppSession.shared.clearTokens()
             
             return true
         } catch {

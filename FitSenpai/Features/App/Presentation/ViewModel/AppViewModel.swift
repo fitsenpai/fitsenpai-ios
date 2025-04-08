@@ -20,6 +20,9 @@ class AppViewModel: ObservableObject {
     /// Represents the current view state of the app, used for loading indicators.
     @Published var viewState: ViewState = .loading
     
+    /// Indicates whether the users access is limited.
+    @AppState(\.isLimited) var isLimitedAccess: Bool
+    
     /// Use case for retrieving the current user data.
     @Inject private var getUserUseCase: GetUserUseCaseProtocol
     
@@ -34,14 +37,7 @@ class AppViewModel: ObservableObject {
     }
     
     // MARK: - Public Methods
-    
-    /// Updates the global environment with the given user and sets the login state.
-    /// - Parameter user: The user to set in the global environment.
-    func updateUser(_ user: FSUser) {
-        globalAppEnvObject.user = user
-        self.isLoggedIn = true
-    }
-    
+
     /// (Deprecated) Initializes the user session by checking for an active session in Supabase.
     /// This function will be removed in the future.
     /// - Throws: An error if the FSClient could not be initialized.
@@ -84,11 +80,19 @@ class AppViewModel: ObservableObject {
         do {
             let user = try await self.getUserUseCase.execute()
             updateUser(user)
+            isLimitedAccess = false
         } catch {
             // TODO: Replace with proper error logging mechanism
             NSLog("Login error: \(error.localizedDescription)")
             self.isLoggedIn = false
         }
+    }
+    
+    /// Updates the global environment with the given user and sets the login state.
+    /// - Parameter user: The user to set in the global environment.
+    func updateUser(_ user: FSUser) {
+        globalAppEnvObject.user = user
+        self.isLoggedIn = true
     }
     
     /// Initializes the global environment object with the given Supabase user.

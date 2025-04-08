@@ -20,7 +20,7 @@ struct FitSenpai: App {
         WindowGroup {
             Group {
                 if appState.viewState == .loading {
-                    ProgressView("Checking session...")
+                    GeneralInfoView(viewModel: .loadingConfig)
                 } else if appState.isLoggedIn {
                     FSTabView()
                         .environmentObject(appState)

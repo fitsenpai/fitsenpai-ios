@@ -12,6 +12,7 @@ struct SubscriptionView: View {
                 ScrollViewReader { proxy in
                     pagesScrollView(proxy: proxy)
                 }
+                Spacer()
             }
             .padding(24)
             

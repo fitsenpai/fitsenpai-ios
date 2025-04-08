@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct NegativeFeedbackSheet: View {
-    @Binding var feedbackType: WorkoutSheetType?
+    @Binding var feedbackType: FeedbackType?
     @Environment(\.dismiss) private var dismiss
     @State private var selectedOption: String?
     @State var feedbackText: String = ""

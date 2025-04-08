@@ -285,7 +285,7 @@ struct OnboardingStep {
         .init(
             id: "health_restrictions_input",
             title: "Enter health concerns",
-            subtitle: nil,
+            subtitle: "Separate multiple items with a comma",
             options: [],
             type: .input(previousStep: "health_restrictions")
         ),
@@ -329,21 +329,21 @@ struct OnboardingStep {
         .init(
             id: "allergies_input",
             title: "Enter food allergies",
-            subtitle: nil,
+            subtitle: "Separate multiple items with a comma",
             options: [],
             type: .input(previousStep: "allergies")
         ),
-        
-        // Eating Habits
+     
+        // Cooking Style
         .init(
-            id: "eating_habits",
-            title: "What best describes your eating habits?",
+            id: "cooking_style",
+            title: "What’s your cooking style?",
             subtitle: nil,
             options: [
-                .init(id: "cook", title: "I cook most of my meals"),
-                .init(id: "meal_plan", title: "I order meal plans"),
-                .init(id: "eat_out", title: "I eat out often"),
-                .init(id: "mix", title: "I mix between cooking and ordering")
+                .init(id: "quick", title: "Quick & easy", subtitle: "Under 15 mins, low effort",  icon: "icon_timer"),
+                .init(id: "cooking", title: "I enjoy cooking", subtitle: "Okay with longer prep", icon: "icon_cooking"),
+                .init(id: "outside", title: "Simple meals only", subtitle: "Few steps, basic ingredients", icon: "icon_list_number"),
+                .init(id: "mixed", title: "Mostly order food", subtitle: "Rarely cook at home", icon: "icon_cart")
             ],
             type: .selection(isMultiple: false)
         ),

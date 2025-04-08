@@ -8,11 +8,12 @@
 import SwiftUI
 
 struct FSTabView: View {
+    @StateObject private var viewModel: MainViewModel = .init()
     var body: some View {
         NavigationStack {
             TabView {
                 Group {
-                    WorkoutsMainView.create()
+                    WorkoutsMainView()
                         .tabItem {
                             Label("Workouts", image: "tab_workout")
                         }
@@ -34,6 +35,7 @@ struct FSTabView: View {
                 }
                 .toolbarBackground(.white, for: .tabBar)
                 .toolbarBackground(.visible, for: .tabBar)
+                .environmentObject(viewModel)
             }
             .background(Color.white)
             .accentColor(.black)

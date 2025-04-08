@@ -9,11 +9,12 @@ import SwiftUI
 
 struct WorkoutListSection: View {
     @ObservedObject var viewModel: WorkoutsMainViewModel
-    @Binding var showingDetail: Bool
     
     var body: some View {
         VStack(spacing: 16) {
-            FSSectionHeaderView(text: "Workouts")
+            FSSectionHeaderView(text: "Workouts") {
+                viewModel.activeSheet = .changeWorkout
+            }
             FSCompletionBarView(titleText: "Upper Body", progress: 0.2)
             if viewModel.isWorkoutLoading {
                 ProgressView()
@@ -21,8 +22,6 @@ struct WorkoutListSection: View {
                 workoutList
             }
         }
-        .padding(.vertical, 16)
-        .padding(.horizontal, 24)
     }
     
     private var workoutList: some View {
@@ -38,10 +37,10 @@ struct WorkoutListSection: View {
                         isSelected: workout == viewModel.selectedWorkout
                     )
                     .onTapGesture {
-                        showingDetail.toggle()
+                        viewModel.showingDetail.toggle()
                     }
                     .frame(height: 88)
-                    .sheet(isPresented: $showingDetail) {
+                    .sheet(isPresented: $viewModel.showingDetail) {
                         WorkoutDetailView(viewModel: WorkoutDetailViewModel(routine: Routine.initTest()))
                     }
                 }

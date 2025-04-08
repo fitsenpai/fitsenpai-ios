@@ -10,7 +10,9 @@ import SwiftUI
 struct FSSectionHeaderView: View {
     let text: String
     var showGenerateButton: Bool = true
-    @State private var feedbackType: WorkoutSheetType?
+    @State private var feedbackType: FeedbackType?
+    
+    var regenerateAction: () -> Void
     
     var body: some View {
         HStack(spacing: 12) {
@@ -32,10 +34,6 @@ struct FSSectionHeaderView: View {
                     .background(.thickMaterial)
             case .positive, .negativeInput:
                 NegativeFeedbackInoutSheet()
-                    .flexibleSheet()
-                    .background(.thickMaterial)
-            case .changeWorkout:
-                ChangeWorkoutSheetSheet()
                     .flexibleSheet()
                     .background(.thickMaterial)
             }
@@ -65,7 +63,7 @@ struct FSSectionHeaderView: View {
     
     private var regenerateButton: some View {
         Button {
-            feedbackType = .changeWorkout
+            regenerateAction()
         } label: {
             Image("ic_regenerate")
                 .resizable()

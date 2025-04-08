@@ -64,7 +64,7 @@ extension AuthEndpoint: NetworkEndpoint {
             break
         default:
             // Add authorization header for protected endpoints
-            if let token = AuthManager.shared.accessToken {
+            if let token = AppSession.shared.accessToken {
                 headers["Authorization"] = "Bearer \(token)"
             }
         }

@@ -9,71 +9,81 @@ import SwiftUI
 import BottomSheet
 
 struct WorkoutsMainView: View {
-    @StateObject var viewModel: WorkoutsMainViewModel
-    @State private var showingDetail = false
-    @State private var showingSubscription = false
-    @State private var selectedDate: Date = Date() {
-        didSet {
-            if let uuid = globalAppEnvObject.user?.id {
-                viewModel.fetchWorkoutPlans(forUser: uuid, date: selectedDate)
-            }
-        }
+    @EnvironmentObject var mainViewModel: MainViewModel
+    @StateObject private var viewModel: WorkoutsMainViewModel
+    
+    init() {
+        let repo = WorkoutRepoImpl(client: FSClient.shared!)
+        let useCase = WorkoutUseCase(workoutRepo: repo)
+        let viewModel = WorkoutsMainViewModel(workoutUseCase: useCase)
+        self._viewModel = StateObject(wrappedValue: viewModel)
     }
-    @State private var currentWeekStartDate: Date = Date()
+    
+    var generatingViewModel: GeneralInfoViewModel {
+        .init(
+            iconName: "",
+            iconTint: .fsAccentForeground,
+            iconBackground: .fsAccent,
+            title: "Generating workouts...",
+            mainLabel: "This won’t take long. Please don’t exit.",
+            buttonLabel: "",
+            containerHeight: .infinity,
+            showButton: false,
+            isLoading: true,
+            buttonAction: { }
+        )
+    }
+    
+    var readyViewModel: GeneralInfoViewModel {
+        .init(
+            iconName: "icon_sparkle",
+            iconTint: .fsAccentForeground,
+            iconBackground: .fsAccent,
+            title: "Your workout plan is ready!",
+            mainLabel: "Tap below to generate your new workouts\nfor the week",
+            buttonLabel: "Generate workouts",
+            buttonAction: {
+                Task {
+                    let (progressData, days) = await viewModel.generateWorkputPlan()
+                    mainViewModel.progressData = progressData
+                    mainViewModel.highlightedDays = days
+                }
+            }
+        )
+    }
     
     var body: some View {
-        VStack(alignment: .leading) {
-            FSNavBarView()
-            
-            SwipeableCalendarView(selectedDate: $selectedDate, currentWeekStartDate: $currentWeekStartDate)
-                .blur(radius: 4)
-
-            UpgrageCardView {
-                showingSubscription = true
+        MainContainerView {
+            VStack(alignment: .leading) {
+                if viewModel.showGeneratePlan {
+                    GeneralInfoView(viewModel: viewModel.isWorkoutLoading ? generatingViewModel : readyViewModel)
+                    .padding(.vertical, 12)
+                    Spacer()
+                } else {
+                    WorkoutListSection(viewModel: viewModel)
+                }
             }
-            .padding(24)
-            
-            if let upcomingWeekNumber = viewModel.upNextWeekNumber {
-                newWeekView(weekNumber: upcomingWeekNumber)
-            } else {
-                WorkoutListSection(
-                    viewModel: viewModel,
-                    showingDetail: $showingDetail
-                )
+            .onAppear(perform: fetchInitialData)
+            .onChange(of: mainViewModel.selectedDate) { _, newValue in
+                fetchWorkoutPlans(for: newValue)
             }
-        }
-        .fullScreenCover(isPresented: $showingSubscription) {
-            SubscriptionView()
-        }
-        .onAppear(perform: fetchInitialData)
-        .onChange(of: selectedDate) { _, newValue in
-            fetchWorkoutPlans(for: newValue)
-        }
-        .onChange(of: currentWeekStartDate) { _, newValue in
-            fetchWeeklyPlan(for: newValue)
-        }
-    }
-    
-    private func newWeekView(weekNumber: Int) -> some View {
-        VStack {
-            BackgroundInfoView(
-                viewModel: BackgroundInfoViewModel(
-                    iconName: "ic_calendar_check",
-                    iconTint: .fsPrimary,
-                    title: "Week \(weekNumber) is now unlocked",
-                    mainLabel: "Tap below to generate your new workout and\nmeal plans. This may take a few minutes.",
-                    buttonLabel: "Generate plans",
-                    buttonAction: {}
-                )
-            )
-            .padding(.top, 20)
-            Spacer()
+            .onChange(of: mainViewModel.currentWeekStartDate) { _, newValue in
+                fetchWeeklyPlan(for: newValue)
+            }
+            .sheet(item: $viewModel.activeSheet, content: { type in
+                switch type {
+                case .changeWorkout:
+                    ChangeWorkoutSheetSheet()
+                        .flexibleSheet()
+                        .background(.thickMaterial)
+                }
+            })
         }
     }
     
     private func fetchInitialData() {
         if let uuid = globalAppEnvObject.user?.id {
-            viewModel.fetchWorkoutPlans(forUser: uuid, date: selectedDate)
+            viewModel.fetchWorkoutPlans(forUser: uuid, date: mainViewModel.selectedDate)
         }
     }
     
@@ -88,15 +98,4 @@ struct WorkoutsMainView: View {
             viewModel.fetchWeeklyPlan(forUser: uuid, date: date)
         }
     }
-    
-    static func create() -> WorkoutsMainView {
-        let repo = WorkoutRepoImpl(client: FSClient.shared!)
-        let useCase = WorkoutUseCase(workoutRepo: repo)
-        let viewModel = WorkoutsMainViewModel(workoutUseCase: useCase)
-        return WorkoutsMainView(viewModel: viewModel)
-    }
-}
-
-#Preview {
-    WorkoutsMainView.create()
 }

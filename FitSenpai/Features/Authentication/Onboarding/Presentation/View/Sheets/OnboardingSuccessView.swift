@@ -10,6 +10,7 @@ import SwiftUI
 struct OnboardingSuccessView: View {
     @ObservedObject var viewModel: OnboardingMainViewModel
     @Environment(\.dismiss) private var dismiss
+    
     var onDismiss: (() -> Void)
     
     @State private var confettiScale: CGFloat = 0.5
@@ -18,6 +19,8 @@ struct OnboardingSuccessView: View {
     
     var body: some View {
         VStack(spacing: 16) {
+            OnboardingHeaderView(progress: 1, hideBackButton: true) { }
+            
             Spacer()
             
             FSText(

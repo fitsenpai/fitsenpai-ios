@@ -41,6 +41,7 @@ class OnboardingMainViewModel: ObservableObject {
     }
     @Published var height: Double = 70 // Default: 5'10" (70 inches) / 177.8cm
     @Published var weight: Double = 150 // Default: 150lbs / 68kg
+//    @Published var progress: Double = 0
     
     // Age
     @Published var age: Int = 18
@@ -154,9 +155,19 @@ class OnboardingMainViewModel: ObservableObject {
         }
         return false
     }
+    
+//    private func calculateProgress() {
+//        let totalSteps = Double(OnboardingStep.steps.count)
+//        let current = Double(currentStepIndex + 1)
+//        self.progress = current / totalSteps
+//    }
 
     func moveToNextStep() {
         isMovingForward = true
+        
+//        defer {
+//            calculateProgress()
+//        }
         
         // Save current state
         if currentStep.isInputStep {

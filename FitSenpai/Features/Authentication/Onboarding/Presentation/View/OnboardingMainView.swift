@@ -8,14 +8,27 @@
 import SwiftUI
 
 struct OnboardingMainView: View {
+    @EnvironmentObject var appViewModel: AppViewModel
     @StateObject private var viewModel = OnboardingMainViewModel()
     @Environment(\.dismiss) private var dismiss
+    
+    @AppState(\.accessToken) private var accessToken: String?
+    @AppState(\.isLimited) private var isLimited: Bool
+    
+    func onDismiss() {
+        withAnimation(.easeInOut(duration: 0.3)) {
+            if viewModel.currentStepIndex > 0 {
+                viewModel.moveToPreviousStep()
+            } else {
+                dismiss()
+            }
+        }
+    }
     
     var body: some View {
         NavigationView {
             VStack(spacing: 24) {
-                headerView
-                
+                OnboardingHeaderView(progress: viewModel.progress) { onDismiss() }
                 stepContent
             }
         }
@@ -26,56 +39,20 @@ struct OnboardingMainView: View {
             case .success:
                 OnboardingSuccessView(viewModel: viewModel) {
                     viewModel.logSelections()
+                    isLimited = true
+                    accessToken = "test-token"
                     dismiss()
+                    appViewModel.isLoggedIn = true
                 }
             }
         }
-    }
-    
-    private var headerView: some View {
-        HStack(spacing: 12) {
-            Button(action: {
-                withAnimation(.easeInOut(duration: 0.3)) {
-                    if viewModel.currentStepIndex > 0 {
-                        viewModel.moveToPreviousStep()
-                    } else {
-                        dismiss()
-                    }
-                }
-            }) {
-                Image(systemName: "arrow.left")
-                    .foregroundColor(.black)
-                    .frame(width: 24, height: 24)
-                    .padding(10)
-                    .background(Circle().fill(Color.gray246))
-            }
-            
-            GeometryReader { geometry in
-                ZStack(alignment: .leading) {
-                    Rectangle()
-                        .foregroundColor(Color.gray.opacity(0.2))
-                        .cornerRadius(12)
-                        .frame(height: 6)
-                    
-                    Rectangle()
-                        .foregroundColor(.fsPrimary)
-                        .frame(width: geometry.size.width * viewModel.progress, height: 6)
-                        .cornerRadius(12)
-                        .animation(.easeInOut(duration: 0.3), value: viewModel.progress)
-                }
-            }
-            .frame(height: 4)
-        }
-        .padding(.vertical, 8)
-        .padding(.horizontal, 24)
     }
     
     @ViewBuilder
     private var stepContent: some View {
         VStack {
             VStack(alignment: .leading, spacing: 12) {
-                FSText(text: viewModel.currentStep.title, fontStyle: .heading28)
-                    .multilineTextAlignment(.leading)
+                FSText(text: viewModel.currentStep.title, fontStyle: .heading28, lineSpacing: -1, alignment: .leading)
                     .transition(
                         .asymmetric(
                             insertion: .move(edge: viewModel.isMovingForward ? .trailing : .leading)
@@ -86,8 +63,7 @@ struct OnboardingMainView: View {
                     )
                 
                 if let subtitle = viewModel.currentStep.subtitle {
-                    FSText(text: subtitle, fontStyle: .body16)
-                        .multilineTextAlignment(.leading)
+                    FSText(text: subtitle, fontStyle: .body16, alignment: .leading)
                         .transition(
                             .asymmetric(
                                 insertion: .move(edge: viewModel.isMovingForward ? .trailing : .leading)
