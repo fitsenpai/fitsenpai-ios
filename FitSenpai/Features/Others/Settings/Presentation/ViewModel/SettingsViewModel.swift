@@ -26,7 +26,8 @@ class SettingsViewModel: ObservableObject {
     @Published var weight: Double = 72.0   // Default 159lb in kg
     @Published var isMetric: Bool = false
     @Published var viewState: ViewState = .idle
-    @Published var activeSheet: FeedbackType? 
+    @Published var activeSheet: FeedbackType?
+    @Published var isPresentedManageSubscription: Bool = false
     
     // MARK: - Private Properties
     private var cancellables = Set<AnyCancellable>()

@@ -1,5 +1,13 @@
+//
+//  SettingsMainView.swift
+//  FitSenpai
+//
+//  Created by Mark Daquis on 4/9/25.
+//
+
 import SwiftUI
 import Combine
+import StoreKit
 
 struct SettingsMainView: View {
     @EnvironmentObject private var appViewModel: AppViewModel
@@ -60,7 +68,9 @@ struct SettingsMainView: View {
                 }
             }
             .padding(.horizontal, 24)
+            .manageSubscriptionsSheet(isPresented: $viewModel.isPresentedManageSubscription)
         }
+        
         .environmentObject(viewModel)
         .navigationBarBackButtonHidden()
         .toolbar {
@@ -254,7 +264,7 @@ struct SettingsMainView: View {
             if !appViewModel.isLimitedAccess {
                 Divider()
                 Button {
-                    URLHelper.openAppStore()
+                    viewModel.isPresentedManageSubscription = true
                 } label: {
                     settingsLinkLabel("Manage subscription")
                 }
