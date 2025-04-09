@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct RateAppPopupView: View {
-    @Binding var isPresented: Bool
+    @Environment(\.dismiss) private var dismiss
     @State var showRatingStars = false
     @State private var rating: Int = 0
     
@@ -29,7 +29,9 @@ struct RateAppPopupView: View {
             
             HStack(spacing: 16) {
                 Button("No") {
-                    isPresented = false
+                    withoutAnimation {
+                        dismiss()
+                    }
                     onNegativeFeedback()
                 }
                 .font(.bodyBold14)
@@ -85,7 +87,9 @@ struct RateAppPopupView: View {
                     .frame(maxWidth: .infinity)
                 
                 Button("Not now") {
-                    isPresented = false
+                    withoutAnimation {
+                        dismiss()
+                    }
                 }
                 .foregroundColor(.blue)
                 .padding(.bottom, 12)
@@ -96,7 +100,9 @@ struct RateAppPopupView: View {
     private func handleRating(_ rating: Int) async {
         self.rating = rating
         try? await Task.sleep(for: .seconds(1))
-        isPresented = false
+        withoutAnimation {
+            dismiss()
+        }
         if rating >= 4 {
             // Open App Store
             if let appStoreURL = URL(string: "https://apps.apple.com/app/idYOUR_APP_ID") {

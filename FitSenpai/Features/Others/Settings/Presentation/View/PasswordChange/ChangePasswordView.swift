@@ -11,94 +11,30 @@ struct ChangePasswordView: View {
     @State private var navigateToForgotPassword = false
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 24) {
+        VStack(alignment: .leading, spacing: 32) {
             Text("Change password")
-                .font(.system(size: 28, weight: .semibold))
+                .font(.bodyBold28)
             
-            VStack(alignment: .leading, spacing: 24) {
-                // Current password
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Current password")
-                        .font(.system(size: 16))
-                    
-                    HStack {
-                        if showCurrentPassword {
-                            TextField("", text: $currentPassword)
-                        } else {
-                            SecureField("", text: $currentPassword)
-                        }
-                        
-                        Button {
-                            showCurrentPassword.toggle()
-                        } label: {
-                            Image(systemName: showCurrentPassword ? "eye.slash" : "eye")
-                                .foregroundColor(.gray)
-                        }
-                    }
-                    .padding()
-                    .background(Color.gray.opacity(0.1))
-                    .cornerRadius(12)
-                }
+            VStack(alignment: .leading, spacing: 8) {
+                RoundedBorderTextField(text: $currentPassword, label: "Current Password", isSecure: true, showAccessory: true, cornerRadius: 12)
                 
-                Button("Forgot password?") {
+                Button {
                     navigateToForgotPassword = true
-                }
-                .foregroundColor(.blue)
-                .font(.system(size: 14))
-                
-                // New password
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("New password")
-                        .font(.system(size: 16))
-                    
-                    HStack {
-                        if showNewPassword {
-                            TextField("", text: $newPassword)
-                        } else {
-                            SecureField("", text: $newPassword)
-                        }
-                        
-                        Button {
-                            showNewPassword.toggle()
-                        } label: {
-                            Image(systemName: showNewPassword ? "eye.slash" : "eye")
-                                .foregroundColor(.gray)
-                        }
-                    }
-                    .padding()
-                    .background(Color.gray.opacity(0.1))
-                    .cornerRadius(12)
-                }
-                
-                // Confirm password
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Confirm password")
-                        .font(.system(size: 16))
-                    
-                    HStack {
-                        if showConfirmPassword {
-                            TextField("", text: $confirmPassword)
-                        } else {
-                            SecureField("", text: $confirmPassword)
-                        }
-                        
-                        Button {
-                            showConfirmPassword.toggle()
-                        } label: {
-                            Image(systemName: showConfirmPassword ? "eye.slash" : "eye")
-                                .foregroundColor(.gray)
-                        }
-                    }
-                    .padding()
-                    .background(Color.gray.opacity(0.1))
-                    .cornerRadius(12)
+                } label: {
+                    FSText(text: "Forgot password?", fontStyle: .body14, letterSpace: 0, color: .fsSubtitleColor, isUnderlined: true)
                 }
             }
             
+            // New password
+            RoundedBorderTextField(text: $newPassword, label: "New Password", isSecure: true, showAccessory: true, cornerRadius: 12)
+            
+            // Confirm password
+            RoundedBorderTextField(text: $confirmPassword, label: "Confirm Password", isSecure: true, showAccessory: true, cornerRadius: 12)
+            
             Spacer()
             
-            FSButton(title: "Save", cornerRadius: 30) {
-                // Handle password change
+            FSButton(title: "Save changes", fontStyle: .bodyBold16, cornerRadius: 32) {
+                dismiss()
             }
         }
         .padding(24)

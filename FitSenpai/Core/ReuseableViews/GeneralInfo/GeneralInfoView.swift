@@ -30,6 +30,7 @@ struct GeneralInfoView: View {
             if !viewModel.isLoading {
                 icon
             }
+            
             FSText(
                 text: viewModel.title,
                 fontStyle: .heading20,
@@ -37,11 +38,12 @@ struct GeneralInfoView: View {
                 lineSpacing: 1,
                 alignment: .center
             )
+            
             FSText(
                 text: viewModel.mainLabel,
                 fontStyle: .body14,
                 color: .fsSubtitleColor,
-                lineSpacing: 1,
+                lineSpacing: 8,
                 alignment: .center
             )
             .padding(.bottom, 12)

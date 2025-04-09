@@ -15,21 +15,23 @@ struct DeleteAccountView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
-            Text("Confirm account deletion")
-                .font(.system(size: 28, weight: .semibold))
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Confirm account deletion")
+                    .font(.bodyBold28)
+                
+                Text("Hate to see you go! Let us know why you're \ndeleting your account—we value your feedback.")
+                    .font(.body14)
+                    .lineSpacing(8)
+            }
             
-            Text("Hate to see you go! Let us know why you're deleting your account—we value your feedback.")
-                .font(.system(size: 16))
-                .foregroundColor(.gray)
-            
-            VStack(spacing: 12) {
+            VStack(spacing: 14) {
                 ForEach(DeletionReason.allCases, id: \.self) { reason in
                     Button {
                         selectedReason = reason
                     } label: {
                         HStack {
-                            Text(reason.rawValue)
-                                .foregroundColor(.black)
+                            FSText(text: reason.rawValue, fontStyle: selectedReason == reason ? .bodyBold16 : .body16)
+                            
                             Spacer()
                         }
                         .padding()
@@ -49,30 +51,13 @@ struct DeleteAccountView: View {
             Spacer()
             
             VStack(spacing: 12) {
-                Button {
+                
+                FSButton(title: "Delete account", fontStyle: .bodyBold16, foregroundColor: .white, cornerRadius: 32, background: .red) {
                     navigateToSuccess = true
-                } label: {
-                    Text("Delete account")
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.red)
-                        .foregroundColor(.white)
-                        .cornerRadius(30)
                 }
                 
-                Button {
+                FSButton(title: "Cancel", fontStyle: .bodyBold16, foregroundColor: .gray156, cornerRadius: 32, background: .white, borderColor: .gray156) {
                     dismiss()
-                } label: {
-                    Text("Cancel")
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.white)
-                        .foregroundColor(.black)
-                        .cornerRadius(30)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 30)
-                                .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-                        )
                 }
             }
         }

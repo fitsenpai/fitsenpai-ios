@@ -6,29 +6,21 @@ struct ForgotPasswordView: View {
     @State private var navigateToNewPassword = false
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 24) {
-            Text("Forgot password?")
-                .font(.system(size: 28, weight: .semibold))
-            
-            Text("Please enter your email address below to verify your account.")
-                .font(.system(size: 16))
-                .foregroundColor(.gray)
-            
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Email")
-                    .font(.system(size: 16))
+        VStack(alignment: .leading, spacing: 32) {
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Forgot password?")
+                    .font(.bodyBold28)
                 
-                TextField("", text: $email)
-                    .keyboardType(.emailAddress)
-                    .autocapitalization(.none)
-                    .padding()
-                    .background(Color.gray.opacity(0.1))
-                    .cornerRadius(12)
+                Text("Enter your email address below to reset your password.")
+                    .font(.body16)
+                    .lineSpacing(8)
             }
+            
+            RoundedBorderTextField(text: $email, label: "Email", isSecure: false, showAccessory: false, cornerRadius: 12)
             
             Spacer()
             
-            FSButton(title: "Continue", cornerRadius: 30) {
+            FSButton(title: "Get password reset link", fontStyle: .bodyBold16, cornerRadius: 32) {
                 navigateToNewPassword = true
             }
         }

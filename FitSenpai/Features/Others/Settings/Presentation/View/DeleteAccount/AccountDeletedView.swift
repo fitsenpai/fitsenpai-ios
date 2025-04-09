@@ -1,34 +1,34 @@
 import SwiftUI
 
 struct AccountDeletedView: View {
+    @EnvironmentObject private var appViewModel: AppViewModel
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
-        VStack(spacing: 24) {
-            Image(systemName: "face.smiling.inverse")
-                .font(.system(size: 48))
-                .foregroundColor(.red)
-            
-            Text("Account deleted")
-                .font(.system(size: 28, weight: .semibold))
-            
-            Text("Your account has been deleted. You can create a new account anytime if you decide to return.")
-                .font(.system(size: 16))
-                .foregroundColor(.gray)
-                .multilineTextAlignment(.center)
-            
+        VStack(spacing: 32) {
             Spacer()
             
-            Button {
-                // Handle create account action
-                dismiss()
-            } label: {
-                Text("Create account")
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color(red: 164/255, green: 213/255, blue: 72/255))
-                    .foregroundColor(.white)
-                    .cornerRadius(30)
+            VStack(alignment: .center, spacing: 32) {
+                Image(.iconSadSquare)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 40, height: 40)
+                
+                Text("Account deleted")
+                    .font(.bodyBold28)
+                
+                Text("Your account has been deleted. You can create a new account anytime if you decide to return.")
+                    .font(.body14)
+                    .lineSpacing(8)
+            }
+            .multilineTextAlignment(.center)
+            .frame(maxWidth: .infinity)
+           
+            Spacer()
+            
+            FSButton(title: "Sign up", fontStyle: .bodyBold16, cornerRadius: 32) {
+                appViewModel.isLoggedIn = false
+                appViewModel.shouldLogin = true
             }
         }
         .padding(24)

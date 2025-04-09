@@ -35,7 +35,7 @@ struct FSSectionHeaderView: View {
                     .onTapGesture {
                         showRateApp.toggle()
                     }
-                RateAppPopupView(isPresented: $showRateApp, showRatingStars: true) {
+                RateAppPopupView(showRatingStars: true) {
                     feedbackType = .negative
                 }
             }
@@ -67,7 +67,9 @@ struct FSSectionHeaderView: View {
             }
             
             Button {
-                showRateApp.toggle()
+                withoutAnimation {
+                    showRateApp.toggle()
+                }
             } label: {
                 Image("ic_thumbs_up")
                     .resizable()

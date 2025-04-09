@@ -27,6 +27,7 @@ class SettingsViewModel: ObservableObject {
     @Published var isMetric: Bool = false
     @Published var viewState: ViewState = .idle
     @Published var activeSheet: FeedbackType?
+    @Published var activePopup: SettingsPopup?
     @Published var isPresentedManageSubscription: Bool = false
     
     // MARK: - Private Properties

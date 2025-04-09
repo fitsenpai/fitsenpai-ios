@@ -14,6 +14,7 @@ class LoginViewModel: ObservableObject {
     @Published var password: String = ""
     @Published var viewState: ViewState = .idle
     @Published var errorMessage: String?
+    @Published var showForgotPassword: Bool = false
     
     @Inject private var signinUseCase: SigninUseCaseProtocol
 

@@ -14,14 +14,13 @@ struct SettingsMainView: View {
     @Environment(\.dismiss) var dismiss
     
     @State private var showRateApp = false
-    @State private var showDeleteAccountSheet = false
     @State private var showSafariView = false
     @State private var safariURL: URL?
+    @State private var isPresentedManageSubscription: Bool = false
     
     @StateObject private var viewModel = SettingsViewModel()
     
     @EnvironmentObject var appState: AppViewModel
-    let logoutUseCase = LogoutUseCase()
     
     // URLs
     private let supportEmail = "support@fitsenpai.com"
@@ -68,7 +67,7 @@ struct SettingsMainView: View {
                 }
             }
             .padding(.horizontal, 24)
-            .manageSubscriptionsSheet(isPresented: $viewModel.isPresentedManageSubscription)
+            .manageSubscriptionsSheet(isPresented: $isPresentedManageSubscription)
         }
         
         .environmentObject(viewModel)
@@ -229,7 +228,9 @@ struct SettingsMainView: View {
         .padding()
         .contentShape(Rectangle())
         .onTapGesture {
-            showRateApp = true
+            withoutAnimation {
+                viewModel.activePopup = .rating
+            }
         }
         .sheet(item: $viewModel.activeSheet, content: { type in
             switch type {
@@ -243,19 +244,31 @@ struct SettingsMainView: View {
                     .background(.thickMaterial)
             }
         })
-        .fullScreenCover(isPresented: $showRateApp) {
+        .fullScreenCover(item: $viewModel.activePopup, content: { popup in
             ZStack {
                 Color.black.opacity(0.1)
                     .ignoresSafeArea()
                     .onTapGesture {
                         showRateApp = false
                     }
-                RateAppPopupView(isPresented: $showRateApp) {
-                    viewModel.activeSheet = .negative
+                switch popup {
+                case .rating:
+                    RateAppPopupView {
+                        viewModel.activeSheet = .negative
+                    }
+                case .logout:
+                    LogoutPopupView {
+                        Task {
+                            let success = await viewModel.signOut()
+                            if success {
+                                appState.isLoggedIn = false
+                            }
+                        }
+                    }
                 }
             }
             .background(BackgroundClearView())
-        }
+        })
     }
     
     private var accountSection: some View {
@@ -264,7 +277,11 @@ struct SettingsMainView: View {
             if !appViewModel.isLimitedAccess {
                 Divider()
                 Button {
-                    viewModel.isPresentedManageSubscription = true
+                    Task {
+                        await MainActor.run {
+                            isPresentedManageSubscription = true
+                        }
+                    }
                 } label: {
                     settingsLinkLabel("Manage subscription")
                 }
@@ -272,11 +289,8 @@ struct SettingsMainView: View {
                 linkRow("Change password")
                 Divider()
                 Button {
-                    Task {
-                        let success = await viewModel.signOut()
-                        if success {
-                            appState.isLoggedIn = false
-                        }
+                    withoutAnimation {
+                        viewModel.activePopup = .logout
                     }
                 } label: {
                     HStack {

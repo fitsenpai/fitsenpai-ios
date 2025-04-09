@@ -127,7 +127,7 @@ struct ChangeWorkoutSheetSheet: View {
                 .frame(width: 40, height: 40)
             
             FSText(text: "Change workouts?", fontStyle: .heading25)
-            FSText(text: "Get a new set of workouts for this day. Add instruction below (optional).", fontStyle: .body14, alignment: .center)
+            FSText(text: "Get a new set of workouts for this day. Add instruction below (optional).", fontStyle: .body14, lineSpacing: 8, alignment: .center)
             
             VStack(spacing: 12) {
                 TextEditor(text: $instructionText)

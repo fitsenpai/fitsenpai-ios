@@ -48,7 +48,12 @@ struct OnboardingView: View {
                         handleSwipe(translation: value.translation.width)
                     }
             )
-            .navigationDestination(item: $viewModel.navDestination, destination: { view in
+            .onReceive(appState.$shouldLogin, perform: { shouldLogin in
+                if shouldLogin {
+                    appState.navDestination = .signin
+                }
+            })
+            .navigationDestination(item: $appState.navDestination, destination: { view in
                 switch view {
                 case .signin:
                     LoginView()
@@ -138,7 +143,7 @@ struct OnboardingView: View {
                 letterSpace: 0,
                 cornerRadius: 32
             ) {
-                viewModel.handleCreatePlan()
+                appState.handleCreatePlan()
             }
             
             FSButton(
@@ -147,7 +152,7 @@ struct OnboardingView: View {
                 cornerRadius: 32,
                 background: .gray246
             ) {
-                viewModel.handleExistingAccount()
+                appState.handleExistingAccount()
             }
         }
         .padding(.horizontal, 24)

@@ -26,7 +26,11 @@ class AppViewModel: ObservableObject {
     /// Use case for retrieving the current user data.
     @Inject private var getUserUseCase: GetUserUseCaseProtocol
     
+    @Published var navDestination: OnboardingNavDestination? = nil
+    
     @Published var loadingVM: GeneralInfoViewModel = .loadingConfig
+    
+    @Published var shouldLogin: Bool = false
     
     @Published var user: FSUser?
     
@@ -112,5 +116,13 @@ class AppViewModel: ObservableObject {
         CoreServices.registerAll()
         // Register self as singleton
         DependencyInjector.register(self)
+    }
+    
+    func handleCreatePlan() {
+        navDestination = .createPlan
+    }
+    
+    func handleExistingAccount() {
+        navDestination = .signin
     }
 }

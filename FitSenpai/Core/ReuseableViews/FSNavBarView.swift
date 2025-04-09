@@ -11,26 +11,28 @@ struct FSNavBarView: View {
     @State private var navDestination: SettingsNavigation?
     
     var body: some View {
-        HStack {
-            Image(.logoFsBlack)
-                .resizable()
-                .frame(width: 150, height: 20)
-            Spacer()
-            Button {
-                navDestination = .settings
-            } label: {
-                Image(.iconGear)
+        NavigationStack {
+            HStack {
+                Image(.logoFsBlack)
                     .resizable()
-                    .frame(width: 25, height: 25)
-                    .foregroundStyle(.gray)
+                    .frame(width: 150, height: 20)
+                Spacer()
+                Button {
+                    navDestination = .settings
+                } label: {
+                    Image(.iconGear)
+                        .resizable()
+                        .frame(width: 25, height: 25)
+                        .foregroundStyle(.gray)
+                }
             }
-        }
-        .padding(.vertical, 16)
-        .padding(.horizontal, 24)
-        .navigationDestination(item: $navDestination) { destination in
-            switch destination {
-            case .settings:
-                SettingsMainView()
+            .padding(.vertical, 16)
+            .padding(.horizontal, 24)
+            .navigationDestination(item: $navDestination) { destination in
+                switch destination {
+                case .settings:
+                    SettingsMainView()
+                }
             }
         }
         

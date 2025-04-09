@@ -9,65 +9,25 @@ struct NewPasswordView: View {
     @State private var showSuccess = false
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 24) {
-            Text("Enter new password")
-                .font(.system(size: 28, weight: .semibold))
-            
-            Text("Please enter your new password below. Must be at least 8 characters.")
-                .font(.system(size: 16))
-                .foregroundColor(.gray)
+        VStack(alignment: .leading, spacing: 32) {
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Enter new password")
+                    .font(.bodyBold28)
+                
+                Text("Please enter your new password below. \nMust be at least 8 characters.")
+                    .font(.body16)
+                    .lineSpacing(8)
+            }
             
             // New password
-            VStack(alignment: .leading, spacing: 8) {
-                Text("New password")
-                    .font(.system(size: 16))
-                
-                HStack {
-                    if showNewPassword {
-                        TextField("", text: $newPassword)
-                    } else {
-                        SecureField("", text: $newPassword)
-                    }
-                    
-                    Button {
-                        showNewPassword.toggle()
-                    } label: {
-                        Image(systemName: showNewPassword ? "eye.slash" : "eye")
-                            .foregroundColor(.gray)
-                    }
-                }
-                .padding()
-                .background(Color.gray.opacity(0.1))
-                .cornerRadius(12)
-            }
+            RoundedBorderTextField(text: $newPassword, label: "New Password", isSecure: true, showAccessory: true, cornerRadius: 12)
             
             // Confirm password
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Confirm password")
-                    .font(.system(size: 16))
-                
-                HStack {
-                    if showConfirmPassword {
-                        TextField("", text: $confirmPassword)
-                    } else {
-                        SecureField("", text: $confirmPassword)
-                    }
-                    
-                    Button {
-                        showConfirmPassword.toggle()
-                    } label: {
-                        Image(systemName: showConfirmPassword ? "eye.slash" : "eye")
-                            .foregroundColor(.gray)
-                    }
-                }
-                .padding()
-                .background(Color.gray.opacity(0.1))
-                .cornerRadius(12)
-            }
+            RoundedBorderTextField(text: $confirmPassword, label: "Confirm Password", isSecure: true, showAccessory: true, cornerRadius: 12)
             
             Spacer()
             
-            FSButton(title: "Save changes", cornerRadius: 30) {
+            FSButton(title: "Save changes", fontStyle: .bodyBold16, cornerRadius: 32) {
                 showSuccess = true
             }
         }

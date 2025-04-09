@@ -23,7 +23,11 @@ struct LoginView: View {
                 RoundedBorderTextField(text: $viewModel.email, label: "Email", cornerRadius: 12)
                 VStack(alignment: .leading, spacing: 10) {
                     RoundedBorderTextField(text: $viewModel.password, label: "Password", isSecure: true, showAccessory: true, cornerRadius: 12)
-                    FSText(text: "Forgot password?", fontStyle: .body14, letterSpace: 0, color: Color.fsSubtitleColor, isUnderlined: true)
+                    Button {
+                        viewModel.showForgotPassword = true
+                    } label: {
+                        FSText(text: "Forgot password?", fontStyle: .body14, letterSpace: 0, color: Color.fsSubtitleColor, isUnderlined: true)
+                    }
                 }
             }
 
@@ -85,6 +89,9 @@ struct LoginView: View {
         .padding(.top, 63)
         .navigationBarBackButtonHidden()
         .loadingOverlay(state: $viewModel.viewState)
+        .navigationDestination(isPresented: $viewModel.showForgotPassword) {
+            ForgotPasswordView()
+        }
     }
 }
 

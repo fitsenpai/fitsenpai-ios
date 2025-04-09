@@ -12,7 +12,6 @@ final class OnboardingViewModel: ObservableObject {
     
     @Published private(set) var currentPage = 0
     @Published private(set) var slideDirection: Edge = .trailing
-    @Published var navDestination: OnboardingNavDestination? = nil
     private var timer: AnyCancellable?
     private let timerInterval: TimeInterval = 5.0
     
@@ -60,13 +59,5 @@ final class OnboardingViewModel: ObservableObject {
                 currentPage = OnboardingSlide.slides.count - 1
             }
         }
-    }
-    
-    func handleCreatePlan() {
-        navDestination = .createPlan
-    }
-    
-    func handleExistingAccount() {
-        navDestination = .signin
     }
 }
