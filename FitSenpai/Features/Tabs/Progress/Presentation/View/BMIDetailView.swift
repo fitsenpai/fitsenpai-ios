@@ -22,6 +22,11 @@ struct BMIDetailView: View {
             }
             .padding(24)
         }
+        .sheet(isPresented: $viewModel.showBrowser) {
+            if let url = URL(string: "https://www.cdc.gov/bmi/about/index.html") {
+                SafariView(url: url)
+            }
+        }
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {

@@ -22,7 +22,10 @@ struct MealDetailView: View {
             HStack {
                 FSText(text: "Protein Pancakse", fontStyle: .heading20, color: .fsTitle)
                 Spacer()
-                Image(.iconStar)
+                Image(.iconBookmark)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 25, height: 25)
             }
             GrayPillView(text: viewModel.schedule, fontStyle: .body14, cornerRadius: 24)
         }

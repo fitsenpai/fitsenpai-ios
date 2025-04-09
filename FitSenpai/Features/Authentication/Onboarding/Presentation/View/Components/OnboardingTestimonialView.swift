@@ -9,7 +9,7 @@ import SwiftUI
 
 struct OnboardingTestimonialView: View {
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(alignment: .leading, spacing: 16) {
             HStack {
                 ForEach(0..<5) { _ in
                     Image(.star)
@@ -21,19 +21,23 @@ struct OnboardingTestimonialView: View {
             }
             
             FSText(
-                text: "I started in 2023 and have already lost 15% body fat! I didn't need to hire a trainer or spend all day figuring out what to eat.\n\n- Corina V.",
-                fontStyle: .italic16
+                text: "I started in 2023 and have already lost 15% body fat! I didn't need to hire a trainer or spend all day figuring out what to eat.",
+                fontStyle: .italic16,
+                lineSpacing: 8
+            )
+            
+            FSText(
+                text: "- Czarina V.",
+                fontStyle: .body14,
+                color: .gray
             )
             
             Image("testimonial_image")
                 .resizable()
-                .aspectRatio(contentMode: .fit)
+                .scaledToFit()
+                .frame(maxWidth: .infinity)
                 .cornerRadius(12)
-                .padding(.horizontal, 24)
-                .padding(.vertical, 12)
-            
-            Spacer()
-            
+                .padding(.vertical, 6)
         }
     }
 }

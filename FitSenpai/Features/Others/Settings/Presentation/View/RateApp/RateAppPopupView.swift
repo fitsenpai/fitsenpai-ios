@@ -2,19 +2,20 @@ import SwiftUI
 
 struct RateAppPopupView: View {
     @Binding var isPresented: Bool
-    @State private var showRatingStars = false
+    @State var showRatingStars = false
     @State private var rating: Int = 0
     
+    var onNegativeFeedback: () -> Void
+    
     var body: some View {
-        VStack(spacing: 24) {
+        VStack {
             if !showRatingStars {
                 initialPromptView
             } else {
                 ratingStarsView
             }
         }
-        .frame(width: 300)
-        .padding(24)
+        .frame(maxWidth: 270)
         .background(Color.white)
         .cornerRadius(16)
         .shadow(color: Color.black.opacity(0.1), radius: 10)
@@ -22,75 +23,87 @@ struct RateAppPopupView: View {
     
     private var initialPromptView: some View {
         VStack(spacing: 24) {
-            Text("Did you find Fit Senpai helpful?")
-                .font(.system(size: 16, weight: .medium))
-                .multilineTextAlignment(.center)
-            
-            Text("Help us improve your fitness journey.")
-                .font(.system(size: 14))
-                .foregroundColor(.gray)
+            Text("Did you find Fit Senpai\nhelpful?")
+                .font(.medium16)
                 .multilineTextAlignment(.center)
             
             HStack(spacing: 16) {
                 Button("No") {
-                    // Show feedback form or contact support
                     isPresented = false
+                    onNegativeFeedback()
                 }
-                .frame(width: 100)
-                .padding()
+                .font(.bodyBold14)
+                .frame(width: 100, height: 40)
                 .background(Color.gray.opacity(0.1))
-                .cornerRadius(25)
+                .foregroundColor(.gray)
+                .cornerRadius(32)
                 
                 Button("Yes") {
                     showRatingStars = true
                 }
-                .frame(width: 100)
-                .padding()
-                .background(Color.green)
-                .foregroundColor(.white)
-                .cornerRadius(25)
+                .font(.bodyBold14)
+                .frame(width: 100, height: 40)
+                .background(Color.fsPrimary)
+                .foregroundColor(.black)
+                .cornerRadius(32)
             }
         }
+        .padding(.vertical, 24)
     }
     
     private var ratingStarsView: some View {
-        VStack(spacing: 24) {
-            Text("Rate Fit Senpai")
-                .font(.system(size: 16, weight: .medium))
-                .multilineTextAlignment(.center)
+        VStack(spacing: 0) {
+            VStack(spacing: 8) {
+                Text("Rate Fit Senpai")
+                    .font(.bodyBold16)
+                    .multilineTextAlignment(.center)
+                
+                Text("Tap a star to rate it on the\nApp Store.")
+                    .font(.medium14)
+                    .multilineTextAlignment(.center)
+            }
+            .padding(.vertical, 24)
             
-            Text("Tap a star to rate it on the App Store.")
-                .font(.system(size: 14))
-                .foregroundColor(.gray)
-                .multilineTextAlignment(.center)
-            
-            HStack(spacing: 8) {
-                ForEach(1...5, id: \.self) { star in
-                    Image(systemName: rating >= star ? "star.fill" : "star")
-                        .font(.system(size: 24))
-                        .foregroundColor(rating >= star ? .yellow : .gray)
-                        .onTapGesture {
-                            rating = star
-                            handleRating(star)
-                        }
+            VStack(spacing: 12) {
+                Divider()
+                    .frame(maxWidth: .infinity)
+                
+                HStack(spacing: 8) {
+                    ForEach(1...5, id: \.self) { star in
+                        Image(systemName: rating >= star ? "star.fill" : "star")
+                            .font(.system(size: 24))
+                            .foregroundColor(.blue)
+                            .onTapGesture {
+                                Task {
+                                    await handleRating(star)
+                                }
+                            }
+                    }
                 }
+                
+                Divider()
+                    .frame(maxWidth: .infinity)
+                
+                Button("Not now") {
+                    isPresented = false
+                }
+                .foregroundColor(.blue)
+                .padding(.bottom, 12)
             }
-            
-            Button("Not now") {
-                isPresented = false
-            }
-            .foregroundColor(.blue)
-            .padding(.top, 8)
         }
     }
     
-    private func handleRating(_ rating: Int) {
+    private func handleRating(_ rating: Int) async {
+        self.rating = rating
+        try? await Task.sleep(for: .seconds(1))
+        isPresented = false
         if rating >= 4 {
             // Open App Store
             if let appStoreURL = URL(string: "https://apps.apple.com/app/idYOUR_APP_ID") {
-                UIApplication.shared.open(appStoreURL)
+                await UIApplication.shared.open(appStoreURL)
             }
+        } else {
+            onNegativeFeedback()
         }
-        isPresented = false
     }
 }

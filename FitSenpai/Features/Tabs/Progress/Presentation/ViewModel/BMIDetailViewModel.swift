@@ -5,6 +5,7 @@ class BMIDetailViewModel: ObservableObject {
     @Published var bmi: Double
     @Published var bmiCategory: BMICategory
     @Published var healthRisks: [String]
+    @Published var showBrowser: Bool = false
     
     init(bmi: Double) {
         self.bmi = bmi
@@ -34,8 +35,7 @@ class BMIDetailViewModel: ObservableObject {
     }
     
     func openSource() {
-        // Implement source URL opening logic
-        // You can use UIApplication.shared.open() here
+        showBrowser.toggle()
     }
     
     private static func calculateBMICategory(_ bmi: Double) -> BMICategory {

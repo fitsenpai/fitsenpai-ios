@@ -104,12 +104,13 @@ struct HeightInputView: View {
 }
 
 struct WeightInputView: View {
+    var title: String = "Weight"
     @Binding var weight: Double
     let isMetric: Bool
     
     var body: some View {
         VStack(alignment: .center, spacing: 8) {
-            FSText(text: "Weight", fontStyle: .bodyBold16)
+            FSText(text: title, fontStyle: .bodyBold16)
             
             HStack {
                 Picker("", selection: Binding(

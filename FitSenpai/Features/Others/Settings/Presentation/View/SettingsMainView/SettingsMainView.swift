@@ -2,6 +2,7 @@ import SwiftUI
 import Combine
 
 struct SettingsMainView: View {
+    @EnvironmentObject private var appViewModel: AppViewModel
     @Environment(\.dismiss) var dismiss
     
     @State private var showRateApp = false
@@ -53,8 +54,10 @@ struct SettingsMainView: View {
                     accountSection
                 }
                 
-                deleteAccountButton
-                    .padding(.bottom, 24)
+                if !appViewModel.isLimitedAccess {
+                    deleteAccountButton
+                        .padding(.bottom, 24)
+                }
             }
             .padding(.horizontal, 24)
         }
@@ -84,7 +87,7 @@ struct SettingsMainView: View {
     private var profileHeader: some View {
         FSCard(borderColor: .gray230) {
             HStack(alignment: .center, spacing: 16) {
-                Image(.imgDummyProf1)
+                Image(appViewModel.isLimitedAccess ? .avatarPlaceholder : .imgDummyProf1)
                     .resizable()
                     .frame(width: 75, height: 75)
                     .overlay(alignment: .bottomTrailing) {
@@ -100,14 +103,13 @@ struct SettingsMainView: View {
                     }
                 
                 VStack(alignment: .leading, spacing: 8) {
-                    
-                    HStack(alignment: .center, spacing: 8) {
-                        FSText(text: viewModel.fullname, fontStyle: .heading20)
-            
+                    if appViewModel.isLimitedAccess {
+                        FSPill(text: "GUEST", color: .gray)
+                    } else {
                         FSPill(text: "PRO", color: .fsPrimary)
                     }
                     
-                    Text(verbatim: "bella@fitsenpai.com")
+                    Text(verbatim: appViewModel.isLimitedAccess ? "Anonymous user" : "bella@fitsenpai.com")
                         .font(.body16)
                         .foregroundColor(.black.opacity(0.6))
                 }
@@ -126,8 +128,6 @@ struct SettingsMainView: View {
     
     private var profileSection: some View {
         VStack(spacing: 0) {
-            settingsRow("Name", value: viewModel.fullname)
-            Divider()
             settingsRow("Age", value: "\(viewModel.age)")
             Divider()
             settingsRow("Gender", value: viewModel.selectedGender.rawValue)
@@ -209,7 +209,7 @@ struct SettingsMainView: View {
     
     private var rateAppRow: some View {
         HStack {
-            Text("Rate the app")
+            Text("Give feedback")
                 .foregroundColor(.black)
             Spacer()
             Image(systemName: "chevron.right")
@@ -221,15 +221,28 @@ struct SettingsMainView: View {
         .onTapGesture {
             showRateApp = true
         }
-        .sheet(isPresented: $showRateApp) {
+        .sheet(item: $viewModel.activeSheet, content: { type in
+            switch type {
+            case .negative:
+                NegativeFeedbackSheet(feedbackType: $viewModel.activeSheet)
+                    .flexibleSheet()
+                    .background(.thickMaterial)
+            case .positive, .negativeInput:
+                NegativeFeedbackInoutSheet()
+                    .flexibleSheet()
+                    .background(.thickMaterial)
+            }
+        })
+        .fullScreenCover(isPresented: $showRateApp) {
             ZStack {
-                Color.black.opacity(0.3)
+                Color.black.opacity(0.1)
                     .ignoresSafeArea()
                     .onTapGesture {
                         showRateApp = false
                     }
-                
-                RateAppPopupView(isPresented: $showRateApp)
+                RateAppPopupView(isPresented: $showRateApp) {
+                    viewModel.activeSheet = .negative
+                }
             }
             .background(BackgroundClearView())
         }
@@ -238,33 +251,35 @@ struct SettingsMainView: View {
     private var accountSection: some View {
         VStack(spacing: 0) {
             linkRow("Restore purchase")
-            Divider()
-            Button {
-                URLHelper.openAppStore()
-            } label: {
-                settingsLinkLabel("Manage subscription")
-            }
-            Divider()
-            linkRow("Change password")
-            Divider()
-            Button {
-                Task {
-                    let success = await viewModel.signOut()
-                    if success {
-                        appState.isLoggedIn = false
+            if !appViewModel.isLimitedAccess {
+                Divider()
+                Button {
+                    URLHelper.openAppStore()
+                } label: {
+                    settingsLinkLabel("Manage subscription")
+                }
+                Divider()
+                linkRow("Change password")
+                Divider()
+                Button {
+                    Task {
+                        let success = await viewModel.signOut()
+                        if success {
+                            appState.isLoggedIn = false
+                        }
                     }
+                } label: {
+                    HStack {
+                        Text("Log out")
+                            .foregroundColor(.black)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .foregroundColor(.gray)
+                            .font(.system(size: 14))
+                    }
+                    .padding()
+                    .contentShape(Rectangle())
                 }
-            } label: {
-                HStack {
-                    Text("Log out")
-                        .foregroundColor(.black)
-                    Spacer()
-                    Image(systemName: "chevron.right")
-                        .foregroundColor(.gray)
-                        .font(.system(size: 14))
-                }
-                .padding()
-                .contentShape(Rectangle())
             }
         }
         .background(Color.gray246)

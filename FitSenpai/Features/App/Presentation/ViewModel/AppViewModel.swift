@@ -26,6 +26,10 @@ class AppViewModel: ObservableObject {
     /// Use case for retrieving the current user data.
     @Inject private var getUserUseCase: GetUserUseCaseProtocol
     
+    @Published var loadingVM: GeneralInfoViewModel = .loadingConfig
+    
+    @Published var user: FSUser?
+    
     // MARK: - Initializer
     
     /// Initializes the app view model and begins user session validation.
@@ -91,7 +95,7 @@ class AppViewModel: ObservableObject {
     /// Updates the global environment with the given user and sets the login state.
     /// - Parameter user: The user to set in the global environment.
     func updateUser(_ user: FSUser) {
-        globalAppEnvObject.user = user
+        self.user = user
         self.isLoggedIn = true
     }
     

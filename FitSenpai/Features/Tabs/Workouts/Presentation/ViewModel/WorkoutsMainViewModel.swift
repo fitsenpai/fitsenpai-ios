@@ -23,6 +23,7 @@ class WorkoutsMainViewModel: ObservableObject {
     @Published var isWeeklyPlanLoading: Bool = false
     @Published var showGeneratePlan: Bool = true
     @Published var showingDetail = false
+    @Published var showRateApp = false
     @Published var activeSheet: WorkoutSheet?
     
     // Cache for workout plans by date
@@ -61,6 +62,9 @@ class WorkoutsMainViewModel: ObservableObject {
             Calendar.current.date(byAdding: .day, value: 8, to: Date())!: 0.9
         ]
         let highlightedDays: Set<Int> = [1,2,4,6]
+        let plan1 = DailyWorkoutPlan.mock()
+        let plan2 = DailyWorkoutPlan.mock()
+        self.workoutPlans = [plan1, plan2]
         return (progressDate, highlightedDays)
     }
     

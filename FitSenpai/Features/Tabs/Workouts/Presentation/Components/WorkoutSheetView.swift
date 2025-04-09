@@ -121,7 +121,7 @@ struct ChangeWorkoutSheetSheet: View {
     var body: some View {
         VStack(spacing: 20) {
             SheetIndicator()
-            Image(.iconMessageGreen)
+            Image(.iconRepeatSquare)
                 .resizable()
                 .scaledToFit()
                 .frame(width: 40, height: 40)

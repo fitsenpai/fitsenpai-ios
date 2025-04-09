@@ -7,6 +7,9 @@ class ProgressViewModel: ObservableObject {
     @Published var bmiValue: Double = 17.1
     @Published var bmiCategory: BMICategory = .normal
     @Published var showBMIDetail = false
+    @Published var showUpdateWeight = false
+    @Published var weight: Double = 72.0   // Default 159lb in kg
+    @Published var isMetric: Bool = false
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -16,7 +19,7 @@ class ProgressViewModel: ObservableObject {
     }
     
     func updateWeight() {
-        // Implement weight update logic
+        showUpdateWeight.toggle()
     }
     
     private func setupBindings() {

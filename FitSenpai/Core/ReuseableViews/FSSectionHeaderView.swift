@@ -11,6 +11,7 @@ struct FSSectionHeaderView: View {
     let text: String
     var showGenerateButton: Bool = true
     @State private var feedbackType: FeedbackType?
+    @State private var showRateApp: Bool = false
     
     var regenerateAction: () -> Void
     
@@ -25,6 +26,20 @@ struct FSSectionHeaderView: View {
                 feedbackButtons
             }
             .frame(height: 16)
+        }
+        
+        .fullScreenCover(isPresented: $showRateApp) {
+            ZStack {
+                Color.black.opacity(0.1)
+                    .ignoresSafeArea()
+                    .onTapGesture {
+                        showRateApp.toggle()
+                    }
+                RateAppPopupView(isPresented: $showRateApp, showRatingStars: true) {
+                    feedbackType = .negative
+                }
+            }
+            .background(BackgroundClearView())
         }
         .sheet(item: $feedbackType, content: { type in
             switch type {
@@ -52,7 +67,7 @@ struct FSSectionHeaderView: View {
             }
             
             Button {
-                feedbackType = .positive
+                showRateApp.toggle()
             } label: {
                 Image("ic_thumbs_up")
                     .resizable()

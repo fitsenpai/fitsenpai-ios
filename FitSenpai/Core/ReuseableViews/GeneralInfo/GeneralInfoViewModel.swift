@@ -18,6 +18,7 @@ struct GeneralInfoViewModel {
     let buttonLabel: String
     var containerHeight: CGFloat = 320
     var showButton : Bool = true
+    var showBorder : Bool = true
     var isLoading : Bool = false
     let buttonAction: () -> Void
     
@@ -33,6 +34,6 @@ struct GeneralInfoViewModel {
         buttonAction: { print("Button tapped") }
     )
     
-    static let loadingConfig = GeneralInfoViewModel(iconName: "", iconTint: .clear, iconBackground: .clear, title: "", mainLabel: "Checking session...", buttonLabel: "", containerHeight: .infinity, showButton: false, isLoading: true, buttonAction: {
+    static let loadingConfig = GeneralInfoViewModel(iconName: "", iconTint: .clear, iconBackground: .clear, title: "", mainLabel: "Checking session...", buttonLabel: "", containerHeight: .infinity, showButton: false, showBorder: false, isLoading: true, buttonAction: {
     })
 }

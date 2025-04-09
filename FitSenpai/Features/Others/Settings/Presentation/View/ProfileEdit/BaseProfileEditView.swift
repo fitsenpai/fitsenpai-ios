@@ -25,13 +25,10 @@ struct BaseProfileEditView<Content: View>: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
             VStack(alignment: .leading, spacing: 8) {
-                Text(title)
-                    .font(.system(size: 28, weight: .semibold))
+                FSText(text: title, fontStyle: .bodyBold28)
                 
                 if let subtitle {
-                    Text(subtitle)
-                        .font(.system(size: 14))
-                        .foregroundColor(.secondary)
+                    FSText(text: subtitle, fontStyle: .body14, color: .secondary)
                 }
             }
             

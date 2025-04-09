@@ -25,6 +25,10 @@ struct ProgressMainView: View {
                 BMIDetailView(viewModel: BMIDetailViewModel(bmi: viewModel.bmiValue))
                     .navigationBarBackButtonHidden()
             })
+            .navigationDestination(isPresented: $viewModel.showUpdateWeight, destination: {
+                WeightEditView(viewModel: viewModel)
+                    .navigationBarBackButtonHidden()
+            })
         }
     }
 }

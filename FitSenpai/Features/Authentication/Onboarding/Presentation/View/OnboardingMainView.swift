@@ -42,7 +42,14 @@ struct OnboardingMainView: View {
                     isLimited = true
                     accessToken = "test-token"
                     dismiss()
-                    appViewModel.isLoggedIn = true
+                    appViewModel.viewState = .loading
+                    appViewModel.loadingVM = .init(iconName: "", iconTint: .clear, iconBackground: .clear, title: "Getting everything ready for you", mainLabel: "Customizing your workout plan...", buttonLabel: "", showButton: false, showBorder: false, isLoading: true, buttonAction: { })
+                    Task { @MainActor in
+                        try? await Task.sleep(for: .seconds(3))
+                      
+                        appViewModel.viewState = .idle
+                        appViewModel.isLoggedIn = true
+                    }
                 }
             }
         }

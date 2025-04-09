@@ -66,7 +66,7 @@ struct GeneralInfoView: View {
         }
         .padding(24)
         .frame(maxWidth: .infinity ,idealHeight: 320, maxHeight: viewModel.containerHeight, alignment: .center)
-        .roundedBorder(cornerRadius: 8, lineWidth: 1, borderColor: Color.gray230)
+        .roundedBorder(cornerRadius: 8, lineWidth: 1, borderColor: viewModel.showBorder ? Color.gray230 : Color.clear)
     }
 }
 
