@@ -59,26 +59,12 @@ struct OnboardingMainView: View {
     private var stepContent: some View {
         VStack {
             VStack(alignment: .leading, spacing: 12) {
-                FSText(text: viewModel.currentStep.title, fontStyle: .heading28, lineSpacing: -1, alignment: .leading)
-                    .transition(
-                        .asymmetric(
-                            insertion: .move(edge: viewModel.isMovingForward ? .trailing : .leading)
-                                .combined(with: .opacity),
-                            removal: .move(edge: viewModel.isMovingForward ? .leading : .trailing)
-                                .combined(with: .opacity)
-                        )
-                    )
-                
+                FSTextView(viewModel.currentStep.title, typography: .h2, alignment: .leading)
+                    .transition(.opacity)
+                    
                 if let subtitle = viewModel.currentStep.subtitle {
-                    FSText(text: subtitle, fontStyle: .body16, alignment: .leading)
-                        .transition(
-                            .asymmetric(
-                                insertion: .move(edge: viewModel.isMovingForward ? .trailing : .leading)
-                                    .combined(with: .opacity),
-                                removal: .move(edge: viewModel.isMovingForward ? .leading : .trailing)
-                                    .combined(with: .opacity)
-                            )
-                        )
+                    FSTextView(subtitle, typography: .p, alignment: .leading)
+                        .transition(.opacity)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -86,14 +72,7 @@ struct OnboardingMainView: View {
             
             Group {
                 contentForStep
-                    .transition(
-                        .asymmetric(
-                            insertion: .move(edge: viewModel.isMovingForward ? .trailing : .leading)
-                                .combined(with: .opacity),
-                            removal: .move(edge: viewModel.isMovingForward ? .leading : .trailing)
-                                .combined(with: .opacity)
-                        )
-                    )
+                    .transition(.opacity)
             }
             .padding(.horizontal, 24)
             
@@ -169,14 +148,6 @@ struct OnboardingMainView: View {
         .disabled(!viewModel.canProceed)
         .padding(.horizontal, 24)
         .padding(.bottom, 24)
-        .transition(
-            .asymmetric(
-                insertion: .move(edge: viewModel.isMovingForward ? .trailing : .leading)
-                    .combined(with: .opacity),
-                removal: .move(edge: viewModel.isMovingForward ? .leading : .trailing)
-                    .combined(with: .opacity)
-            )
-        )
     }
 }
 

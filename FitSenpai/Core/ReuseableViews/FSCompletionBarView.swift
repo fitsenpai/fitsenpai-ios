@@ -15,9 +15,9 @@ struct FSCompletionBarView: View {
             ProgressView(value: progress)
                 .accentColor(.fsPrimary)
             HStack {
-                FSText(text: titleText, fontStyle: .body14, color: .fsSubtitleColor)
+                FSText(text: titleText, fontStyle: .body14, color: .fsMutedForeground)
                 Spacer()
-                FSText(text: "\(Int(progress * 100))%", fontStyle: .body14, color: .fsSubtitleColor)
+                FSText(text: "\(Int(progress * 100))%", fontStyle: .body14, color: .fsMutedForeground)
             }
         }
     }

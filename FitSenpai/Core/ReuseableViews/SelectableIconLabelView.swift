@@ -32,9 +32,9 @@ struct SelectableIconLabelView: View {
                     .frame(width: 40, height: 40)
             }
             VStack(alignment: .leading, spacing: 10) {
-                FSText(text: title, fontStyle: isSelected ? .bodyBold16 : .body16, color: .blackBackground)
+                FSText(text: title, fontStyle: isSelected ? .bodyBold16 : .body16, color: .fsBlack)
                 if let subtitle = subtitle {
-                    FSText(text: subtitle, fontStyle: .body10, color: .blackBackground)
+                    FSText(text: subtitle, fontStyle: .body10, color: .fsBlack)
                 }
             }
         }

@@ -42,7 +42,7 @@ struct GeneralInfoView: View {
             FSText(
                 text: viewModel.mainLabel,
                 fontStyle: .body14,
-                color: .fsSubtitleColor,
+                color: .fsMutedForeground,
                 lineSpacing: 8,
                 alignment: .center
             )

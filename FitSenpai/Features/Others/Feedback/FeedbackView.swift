@@ -47,7 +47,7 @@ struct FeedbackView: View {
             FSText (text: "Additional comments(optional)", fontStyle: .medium16)
             TextEditor(text: $comment)
                 .font(.body14)
-                .foregroundColor(Color.fsSubtitleColor)
+                .foregroundColor(Color.fsMutedForeground)
                 .onChange(of: comment, { oldValue, newValue in
                     //
                 })

@@ -39,7 +39,7 @@ struct RoundedBorderTextField: View {
                         isInputHidden.toggle()
                     }) {
                         Image(systemName: isInputHidden ? "eye.slash" : "eye")
-                            .foregroundColor(.fsSubtitleColor)
+                            .foregroundColor(.fsMutedForeground)
                     }
                     .padding(.trailing)
                 }

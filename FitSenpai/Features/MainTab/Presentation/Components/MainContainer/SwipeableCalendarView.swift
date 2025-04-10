@@ -20,7 +20,7 @@ struct SwipeableCalendarView: View {
         VStack {
             // Week Range
             HStack(alignment: .center) {
-                FSText(text: weekRangeText, fontStyle: .medium14, color: .fsSubtitleColor)
+                FSText(text: weekRangeText, fontStyle: .medium14, color: .fsMutedForeground)
                     .padding(.leading, 12)
                 
                 Spacer()

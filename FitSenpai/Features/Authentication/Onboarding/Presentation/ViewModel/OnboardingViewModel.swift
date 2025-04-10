@@ -48,6 +48,7 @@ final class OnboardingViewModel: ObservableObject {
                 currentPage = 0
             }
         }
+        setupTimer()
     }
     
     func moveToPreviousPage() {
@@ -59,5 +60,6 @@ final class OnboardingViewModel: ObservableObject {
                 currentPage = OnboardingSlide.slides.count - 1
             }
         }
+        setupTimer()
     }
 }

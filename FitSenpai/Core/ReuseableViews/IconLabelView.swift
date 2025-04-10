@@ -49,6 +49,6 @@ struct IconLabelView: View {
 }
 
 #Preview {
-    IconLabelView(fsMetric: .WorkoutRep, value: 12, fontStyle: .body12, fontColor: .fsSubtitleColor, iconSize: 12, spacing: 8, showBorder: true)
+    IconLabelView(fsMetric: .WorkoutRep, value: 12, fontStyle: .body12, fontColor: .fsMutedForeground, iconSize: 12, spacing: 8, showBorder: true)
 }
 

@@ -43,7 +43,7 @@ struct TestimonialView: View {
         .padding(20)
         .background {
             RoundedCornerShape(corners: [.allCorners], radius: 16)
-                .fill(Color.deepBlackBackground)
+                .fill(Color.fsDeepBlack)
                 .frame(maxHeight: .infinity)
         }
         

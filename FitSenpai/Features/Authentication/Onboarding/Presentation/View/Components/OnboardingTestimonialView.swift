@@ -8,6 +8,10 @@
 import SwiftUI
 
 struct OnboardingTestimonialView: View {
+    let testimony = "I started in 2023 and have already lost 15% body fat! I didn't need to hire a trainer or spend all day figuring out what to eat."
+    let author: String = "- Czarina V."
+    let image: String = "testimonial_image"
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
@@ -20,17 +24,9 @@ struct OnboardingTestimonialView: View {
                 Spacer()
             }
             
-            FSText(
-                text: "I started in 2023 and have already lost 15% body fat! I didn't need to hire a trainer or spend all day figuring out what to eat.",
-                fontStyle: .italic16,
-                lineSpacing: 8
-            )
+            FSTextView(testimony, font: .italic, typography: .p_ui)
             
-            FSText(
-                text: "- Czarina V.",
-                fontStyle: .body14,
-                color: .gray
-            )
+            FSTextView(author, typography: .body_medium, color: .gray)
             
             Image("testimonial_image")
                 .resizable()

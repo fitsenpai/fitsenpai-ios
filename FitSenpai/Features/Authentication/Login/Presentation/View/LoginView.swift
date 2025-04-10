@@ -26,7 +26,7 @@ struct LoginView: View {
                     Button {
                         viewModel.showForgotPassword = true
                     } label: {
-                        FSText(text: "Forgot password?", fontStyle: .body14, letterSpace: 0, color: Color.fsSubtitleColor, isUnderlined: true)
+                        FSText(text: "Forgot password?", fontStyle: .body14, letterSpace: 0, color: Color.fsMutedForeground, isUnderlined: true)
                     }
                 }
             }
@@ -48,7 +48,7 @@ struct LoginView: View {
             
             ZStack {
                 Divider()
-                FSText(text: "or login with", fontStyle: .body14, letterSpace: 0, color: Color.fsSubtitleColor, isUnderlined: false)
+                FSText(text: "or login with", fontStyle: .body14, letterSpace: 0, color: Color.fsMutedForeground, isUnderlined: false)
                     .padding(.horizontal, 24)
                     .background(Color.white)
             }

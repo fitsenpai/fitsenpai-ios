@@ -29,7 +29,7 @@ struct SaveMoneyView: View {
             }
             Spacer()
             FSText(text: "Why pay more for the same results?", fontStyle: .bodyBold16, alignment: .center)
-            VStack(spacing: 12) {
+            VStack(spacing: 8) {
                 HStack(spacing: 2) {
                     FSText(text: "Fit Senpai users", fontStyle: .body14, alignment: .center)
                     FSText(text: "save up to 90%", fontStyle: .bodyBold14, color: .fsAccentForeground, alignment: .center)

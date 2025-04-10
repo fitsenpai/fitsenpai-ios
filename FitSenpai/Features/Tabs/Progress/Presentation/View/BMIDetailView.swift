@@ -123,7 +123,7 @@ struct BMIDetailView: View {
         Button {
             viewModel.openSource()
         } label: {
-            FSText(text: "Source", fontStyle: .bodyBold14, letterSpace: 0, color: Color.fsSubtitleColor, isUnderlined: true)
+            FSText(text: "Source", fontStyle: .bodyBold14, letterSpace: 0, color: Color.fsMutedForeground, isUnderlined: true)
         }
 
     }

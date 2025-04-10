@@ -14,12 +14,20 @@
 		<string>PlusJakartaSans-Italic.ttf</string>
 		<string>PlusJakartaSans-Light.ttf</string>
 		<string>PlusJakartaSans-Medium.ttf</string>
-		<string>PlusJakartaSans-Regular.ttf</string>
 		<string>PlusJakartaSans-SemiBold.ttf</string>
 		<string>SpaceGrotesk-Bold.ttf</string>
 		<string>SpaceGrotesk-Medium.ttf</string>
 		<string>SpaceGrotesk-Light.ttf</string>
 		<string>SpaceGrotesk-SemiBold.ttf</string>
+		<string>PlusJakartaSans-BoldItalic.ttf</string>
+		<string>PlusJakartaSans-ExtraBold.ttf</string>
+		<string>PlusJakartaSans-ExtraBoldItalic.ttf</string>
+		<string>PlusJakartaSans-ExtraLight.ttf</string>
+		<string>PlusJakartaSans-ExtraLightItalic.ttf</string>
+		<string>PlusJakartaSans-LightItalic.ttf</string>
+		<string>PlusJakartaSans-MediumItalic.ttf</string>
+		<string>PlusJakartaSans-SemiBoldItalic.ttf</string>
+		<string>PlusJakartaSans-Regular.ttf</string>
 	</array>
 	<key>AppEnvironment</key>
 	<string>dev</string>

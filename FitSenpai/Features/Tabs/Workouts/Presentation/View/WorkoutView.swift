@@ -17,11 +17,11 @@ struct WorkoutView: View {
     
     var horizontalInfoView: some View  {
         HStack {
-            IconLabelView(fsMetric: .WorkoutSet, value: 4, fontStyle: .body10, fontColor: .fsSubtitleColor, iconSize: 12)
+            IconLabelView(fsMetric: .WorkoutSet, value: 4, fontStyle: .body10, fontColor: .fsMutedForeground, iconSize: 12)
             
-            IconLabelView(fsMetric: .WorkoutRep, value: 12, fontStyle: .body10, fontColor: .fsSubtitleColor, iconSize: 12)
+            IconLabelView(fsMetric: .WorkoutRep, value: 12, fontStyle: .body10, fontColor: .fsMutedForeground, iconSize: 12)
             
-            IconLabelView(fsMetric: .WorkoutTime, value: 10, fontStyle: .body10, fontColor: .fsSubtitleColor, iconSize: 12)
+            IconLabelView(fsMetric: .WorkoutTime, value: 10, fontStyle: .body10, fontColor: .fsMutedForeground, iconSize: 12)
         }
     }
     

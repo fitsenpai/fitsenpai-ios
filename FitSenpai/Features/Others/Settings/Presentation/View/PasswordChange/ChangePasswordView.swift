@@ -21,7 +21,7 @@ struct ChangePasswordView: View {
                 Button {
                     navigateToForgotPassword = true
                 } label: {
-                    FSText(text: "Forgot password?", fontStyle: .body14, letterSpace: 0, color: .fsSubtitleColor, isUnderlined: true)
+                    FSText(text: "Forgot password?", fontStyle: .body14, letterSpace: 0, color: .fsMutedForeground, isUnderlined: true)
                 }
             }
             

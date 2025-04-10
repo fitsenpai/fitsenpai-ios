@@ -34,7 +34,7 @@ struct SubscriptionPlanCard: View {
                             } else {
                                 Text(plan.period)
                                     .font(.body12)
-                                    .foregroundColor(.fsSubtitleColor)
+                                    .foregroundColor(.fsMutedForeground)
                             }
                         }
                         

@@ -37,11 +37,11 @@ struct CheckboxLabelView: View {
                         .frame(width: 29, height: 29)
                 }
             })
-            FSText(text: title, fontStyle: .body14, color: .fsSubtitleColor)
+            FSText(text: title, fontStyle: .body14, color: .fsMutedForeground)
             
             Spacer()
             
-            FSText(text: detailInfo, fontStyle: .body14, color: .fsSubtitleColor)
+            FSText(text: detailInfo, fontStyle: .body14, color: .fsMutedForeground)
             
         }
     }

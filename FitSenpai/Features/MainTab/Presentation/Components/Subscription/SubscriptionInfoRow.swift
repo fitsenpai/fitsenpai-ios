@@ -21,7 +21,7 @@ struct SubscriptionInfoRow: View {
                     .font(.bodyBold18)
                 Text(description)
                     .font(.body12)
-                    .foregroundColor(.fsSubtitleColor)
+                    .foregroundColor(.fsMutedForeground)
             }
         }
     }

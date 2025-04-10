@@ -2,6 +2,7 @@ import SwiftUI
 
 struct SubscriptionView: View {
     @Environment(\.dismiss) var dismiss
+    @EnvironmentObject private var appViewModel: AppViewModel
     @StateObject private var viewModel = SubscriptionViewModel()
     
     var body: some View {
@@ -114,7 +115,8 @@ struct SubscriptionView: View {
             }
             
             FSButton(title: "Try it FREE", fontStyle: .bodyBold16, cornerRadius: 32) {
-                viewModel.handleSubscription()
+                appViewModel.isLimitedAccess = false
+                dismiss()
             }
             
             SubscriptionFooterView(

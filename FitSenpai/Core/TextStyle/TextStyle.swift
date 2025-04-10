@@ -29,6 +29,7 @@ extension Font {
     static let italic16 = custom("PlusJakartaSans-Italic", size: 16)
     static let body8 = custom("PlusJakartaSans-Regular", size: 8)
     static let body10 = custom("PlusJakartaSans-Regular", size: 10)
+    static let body11 = custom("PlusJakartaSans-Regular", size: 11)
     static let body12 = custom("PlusJakartaSans-Regular", size: 12)
     static let body14 = custom("PlusJakartaSans-Regular", size: 14)
     static let body16 = custom("PlusJakartaSans-Regular", size: 16)

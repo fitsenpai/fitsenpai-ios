@@ -226,7 +226,7 @@ struct OnboardingStep {
         // Workout Location
         .init(
             id: "workout_location",
-            title: "Choose your workout location",
+            title: "Choose your workout\nlocation",
             subtitle: nil,
             options: [
                 .init(id: "home", title: "Home", subtitle: "No equipment needed", icon: "ic_house"),
@@ -284,7 +284,7 @@ struct OnboardingStep {
         ),
         .init(
             id: "health_restrictions_input",
-            title: "Enter health concerns",
+            title: "Other health concerns",
             subtitle: "Separate multiple items with a comma",
             options: [],
             type: .input(previousStep: "health_restrictions")
@@ -306,7 +306,7 @@ struct OnboardingStep {
         ),
         .init(
             id: "diet_input",
-            title: "Enter specific diet",
+            title: "Other specific diet",
             subtitle: nil,
             options: [],
             type: .input(previousStep: "diet")
@@ -328,7 +328,7 @@ struct OnboardingStep {
         ),
         .init(
             id: "allergies_input",
-            title: "Enter food allergies",
+            title: "Other food allergies",
             subtitle: "Separate multiple items with a comma",
             options: [],
             type: .input(previousStep: "allergies")

@@ -73,10 +73,7 @@ struct SelectionItemView: View {
             }
             
             VStack(alignment: .leading, spacing: 4) {
-                FSText(
-                    text: item.title,
-                    fontStyle: isSelected ? .bodyBold16 :.body16
-                )
+                FSTextView(item.title, typography: isSelected ? .p_ui_bold : .p_ui)
                 
                 if let subtitle = item.subtitle {
                     FSText(
@@ -89,7 +86,9 @@ struct SelectionItemView: View {
             Spacer()
             
         }
-        .padding(16)
+        .padding(.vertical, 16)
+        .padding(.leading, 16)
+        .padding(.trailing, 8)
         .background(
             RoundedRectangle(cornerRadius: 12)
                 .fill(isSelected ? Color.white : Color.gray246)

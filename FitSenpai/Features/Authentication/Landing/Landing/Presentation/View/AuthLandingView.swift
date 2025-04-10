@@ -26,7 +26,7 @@ struct AuthLandingView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.blackBackground
+                Color.fsBlack
                     .ignoresSafeArea()
                 
                 VStack {

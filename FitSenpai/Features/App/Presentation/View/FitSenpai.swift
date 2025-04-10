@@ -29,6 +29,7 @@ struct FitSenpai: App {
                         .environmentObject(appState)
                 }
             }
+            .preferredColorScheme(.light)
         }
     }
 }

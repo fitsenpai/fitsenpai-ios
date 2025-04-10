@@ -13,7 +13,7 @@ struct GrayPillView: View {
     var cornerRadius: CGFloat = 8
     
     var body: some View {
-        FSText(text: text, fontStyle: fontStyle, color: .fsSubtitleColor)
+        FSText(text: text, fontStyle: fontStyle, color: .fsMutedForeground)
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
             .background(RoundedRectangle(cornerRadius: cornerRadius).fill(Color.gray246))

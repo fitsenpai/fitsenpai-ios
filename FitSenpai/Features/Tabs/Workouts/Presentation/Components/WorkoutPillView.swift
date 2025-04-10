@@ -24,7 +24,7 @@ struct WorkoutPillView: View {
                 .fixedSize(horizontal: true,vertical: false)
             Text(label)
                 .font(.body14)
-                .foregroundStyle(Color.fsSubtitleColor)
+                .foregroundStyle(Color.fsMutedForeground)
                 .fixedSize(horizontal: true,vertical: false)
         }
         .frame(maxWidth: .infinity)

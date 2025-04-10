@@ -32,7 +32,7 @@ struct GroceriesMainView: View {
                 }
                 .font(.body12)
                 .frame(maxWidth: .infinity)
-                .foregroundStyle(Color.fsSubtitleColor)
+                .foregroundStyle(Color.fsMutedForeground)
                 .lineSpacing(3)
             }
         }

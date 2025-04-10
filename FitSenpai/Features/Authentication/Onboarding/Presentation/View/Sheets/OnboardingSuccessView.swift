@@ -17,23 +17,18 @@ struct OnboardingSuccessView: View {
     @State private var confettiRotation: Double = -10
     @State private var confettiOpacity: Double = 0
     
+    let title = "Thanks for trusting us!"
+    let subtitle = "We'll always keep your\ninformation private and secure."
+    
     var body: some View {
         VStack(spacing: 16) {
             OnboardingHeaderView(progress: 1, hideBackButton: true) { }
             
             Spacer()
             
-            FSText(
-                text: "Thanks for trusting us!",
-                fontStyle: .heading28,
-                alignment: .center
-            )
+            FSTextView(title, typography: .h2, alignment: .center)
             
-            FSText(
-                text: "We'll always keep your\ninformation private and secure.",
-                fontStyle: .body16,
-                alignment: .center
-            )
+            FSTextView(subtitle, typography: .p_ui, alignment: .center)
             
             FSButton(
                 title: "Continue",

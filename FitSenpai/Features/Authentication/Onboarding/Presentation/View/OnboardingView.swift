@@ -41,6 +41,7 @@ struct OnboardingView: View {
                 .edgesIgnoringSafeArea(.all)
                 .background(Color.white)
             }
+//            .onAppear(perform: viewModel.startAutoScroll)
             .onDisappear(perform: viewModel.stopAutoScroll)
             .gesture(
                 DragGesture()
@@ -98,27 +99,14 @@ struct OnboardingView: View {
     
     private func slideContent(_ slide: OnboardingSlide) -> some View {
         VStack(spacing: 16) {
-            FSText(
-                text: slide.title,
-                fontStyle: .heading28,
-                letterSpace: 0,
-                lineSpacing: 4,
-                alignment: .center
-            )
-            .fixedSize(horizontal: false, vertical: true)
-            .transition(.opacity)
-            .id("title\(viewModel.currentPage)")
+           
+            FSTextView(slide.title, typography: .h3, alignment: .center)
+                .transition(.opacity)
+                .id("title\(viewModel.currentPage)")
             
-            FSText(
-                text: slide.subtitle,
-                fontStyle: .body16,
-                letterSpace: 0,
-                lineSpacing: 4,
-                alignment: .center
-            )
-            .fixedSize(horizontal: false, vertical: true)
-            .transition(.opacity)
-            .id("subtitle\(viewModel.currentPage)")
+            FSTextView(slide.subtitle, typography: .body, alignment: .center)
+                .transition(.opacity)
+                .id("subtitle\(viewModel.currentPage)")
         }
         .padding(.horizontal, 24)
         .animation(.easeInOut(duration: 0.3), value: viewModel.currentPage)
