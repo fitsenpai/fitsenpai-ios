@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Lottie
 
 struct GeneralInfoView: View {
     let viewModel: GeneralInfoViewModel
@@ -49,17 +50,9 @@ struct GeneralInfoView: View {
             .padding(.bottom, 12)
             
             if viewModel.isLoading {
-                Image(.logoSm)
-                    .resizable()
-                    .frame(width: 32, height: 32)
-                    .rotationEffect(.degrees(isAnimating ? 360 : 0))
-                    .animation(.linear(duration: 1).repeatForever(autoreverses: false), value: isAnimating)
-                    .onAppear {
-                        isAnimating = true
-                    }
-                    .onDisappear {
-                        isAnimating = false
-                    }
+                LottieView(animation: .named("fs-loading"))
+                  .playing(loopMode: .loop)
+                  .frame(width: 32, height: 32)
             }
             
             if viewModel.showButton {
