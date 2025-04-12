@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SuperwallKit
 
 struct MainContainerView<Content: View>: View {
     @EnvironmentObject private var viewModel: MainViewModel
@@ -24,7 +25,8 @@ struct MainContainerView<Content: View>: View {
 
                 if isLimited {
                     UpgrageCardView {
-                        viewModel.activeSheet = .subscription
+//                        viewModel.activeSheet = .subscription
+                        Superwall.shared.register(placement: "campaign_trigger")
                     }
                 }
                 
