@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct FSSectionHeaderView: View {
+    @Environment(\.requestReview) var requestReview
     let text: String
     var showGenerateButton: Bool = true
     @State private var feedbackType: FeedbackType?
@@ -17,7 +18,7 @@ struct FSSectionHeaderView: View {
     
     var body: some View {
         HStack(spacing: 12) {
-            FSText(text: text, fontStyle: .heading25, color: .fsTitle)
+            FSTextView(text, typography: .h3)
             Spacer()
             HStack(spacing: 15) {
                 if showGenerateButton {
@@ -46,11 +47,15 @@ struct FSSectionHeaderView: View {
             case .negative:
                 NegativeFeedbackSheet(feedbackType: $feedbackType)
                     .flexibleSheet()
-                    .background(.thickMaterial)
-            case .positive, .negativeInput:
-                NegativeFeedbackInoutSheet()
+                    .background(.white)
+                    .presentationCornerRadius(32)
+            case .negativeInput:
+                NegativeFeedbackInoutSheet {
+                    feedbackType = .negative
+                }
                     .flexibleSheet()
-                    .background(.thickMaterial)
+                    .background(.white)
+                    .presentationCornerRadius(32)
             }
         })
         
@@ -67,9 +72,10 @@ struct FSSectionHeaderView: View {
             }
             
             Button {
-                withoutAnimation {
-                    showRateApp.toggle()
-                }
+//                withoutAnimation {
+//                    showRateApp.toggle()
+//                }
+                requestReview()
             } label: {
                 Image("ic_thumbs_up")
                     .resizable()

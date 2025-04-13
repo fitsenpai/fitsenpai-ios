@@ -37,7 +37,6 @@ struct OnboardingSuccessView: View {
                 background: .fsPrimary
             ) {
                 withAnimation(.easeInOut(duration: 0.3)) {
-                    viewModel.logSelections()
                     dismiss()
                     onDismiss()
                 }

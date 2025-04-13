@@ -20,19 +20,19 @@ class AppViewModel: ObservableObject {
     /// Represents the current view state of the app, used for loading indicators.
     @Published var viewState: ViewState = .loading
     
+    @Published var navDestination: OnboardingNavDestination? = nil
+    
+    @Published var loadingConfig: FSLoadingConfig = .defaultConfig
+    
+    @Published var shouldLogin: Bool = false
+    
+    @Published var user: FSUser?
+    
     /// Indicates whether the users access is limited.
     @AppState(\.isLimited) var isLimitedAccess: Bool
     
     /// Use case for retrieving the current user data.
     @Inject private var getUserUseCase: GetUserUseCaseProtocol
-    
-    @Published var navDestination: OnboardingNavDestination? = nil
-    
-    @Published var loadingVM: GeneralInfoViewModel = .loadingConfig
-    
-    @Published var shouldLogin: Bool = false
-    
-    @Published var user: FSUser?
     
     // MARK: - Initializer
     
@@ -79,11 +79,24 @@ class AppViewModel: ObservableObject {
         }
     }
     
+    func createLimitedWorkoutPlan() async {
+        self.viewState = .loading
+        self.loadingConfig = .init(title: "Getting everything ready for you", subtitle: "Customizing your workout plan...")
+        try? await Task.sleep(for: .seconds(3))
+        self.isLimitedAccess = true
+        self.viewState = .idle
+        self.isLoggedIn = true
+    }
+    
     // MARK: - Private Methods
     
     /// Retrieves the currently authenticated user and updates the global environment.
     private func getCurrentUser() async {
         defer { self.viewState = .idle }
+        guard !isLimitedAccess else {
+            self.isLoggedIn = true
+            return
+        }
         
         do {
             let user = try await self.getUserUseCase.execute()

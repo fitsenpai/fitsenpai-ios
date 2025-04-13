@@ -14,15 +14,14 @@ struct GenericTextListView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            FSText(text: title, fontStyle: .medium16)
+            FSTextView(title, typography: .p_ui_medium)
                 .padding(.bottom, 8)
 
             VStack(alignment: .leading, spacing: 12) {
                 ForEach(Array(instructions.enumerated()), id: \.offset) { index, instruction in
                     HStack(alignment: .top, spacing: 8) {
-                        FSText(text: isNumbered ? "\(index + 1)." : "•", fontStyle: .body14, color: .black)
-                        FSText(text: instruction, fontStyle: .body14, color: .black, lineSpacing: 6)
-                            .fixedSize(horizontal: false, vertical: true)
+                        FSTextView(isNumbered ? "\(index + 1)." : "•", typography: .body)
+                        FSTextView(instruction, typography: .body)
                     }
                 }
             }

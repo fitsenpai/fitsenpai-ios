@@ -13,9 +13,9 @@ struct DietaryEditView: View {
     
     var body: some View {
         if showCustomInput {
-            RestrictionsInputView(
-                title: "dietary preference",
-                placeholder: "",
+            OthersInputView(
+                title: "Other dietary preference",
+                placeholder: "Pescatarian",
                 initialValue: viewModel.customDietaryPreference,
                 showCustomInput: $showCustomInput,
                 onSave: { value in

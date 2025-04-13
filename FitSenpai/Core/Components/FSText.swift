@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-enum FSTypograpy {
+enum FSTypography {
     case h1
     case h2
     case h3
@@ -114,7 +114,7 @@ enum FSTypograpy {
     }
 }
 
-extension FSTypograpy {
+extension FSTypography {
     enum FontName: String {
         case reg
     }
@@ -123,14 +123,14 @@ extension FSTypograpy {
 struct FSTextView: View {
     var value: String
     var font: FSFont?
-    var typography: FSTypograpy
+    var typography: FSTypography
     var color: Color
     var alignment: TextAlignment
     var lineLimit: Int? = nil
     var underlined: Bool = false
     var shouldHighlightURLs: Bool = false
     
-    init(_ value: String, font: FSFont? = nil, typography: FSTypograpy, color: Color = .fsBlack, alignment: TextAlignment = .leading, lineLimit: Int? = nil, shouldHighlightURLs: Bool = false) {
+    init(_ value: String, font: FSFont? = nil, typography: FSTypography, color: Color = .fsBlack, alignment: TextAlignment = .leading, lineLimit: Int? = nil, shouldHighlightURLs: Bool = false) {
         self.value = value
         self.font = font
         self.typography = typography

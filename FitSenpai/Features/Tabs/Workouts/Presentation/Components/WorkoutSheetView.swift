@@ -25,7 +25,7 @@ struct NegativeFeedbackSheet: View {
                 .scaledToFit()
                 .frame(width: 40, height: 40)
             
-            FSText(text: "Tell us more", fontStyle: .heading25)
+            FSTextView("Tell us more", typography: .h3)
             
             VStack(spacing: 12) {
                 HStack(spacing: 8) {
@@ -59,6 +59,7 @@ struct NegativeFeedbackSheet: View {
 struct NegativeFeedbackInoutSheet: View {
     @Environment(\.dismiss) private var dismiss
     @State var feedbackText: String = ""
+    var onBackPress: () -> Void
     
     var body: some View {
         VStack(spacing: 20) {
@@ -72,8 +73,7 @@ struct NegativeFeedbackInoutSheet: View {
                 .scaledToFit()
                 .frame(width: 40, height: 40)
             
-            
-            FSText(text: "Tell us more", fontStyle: .heading25)
+            FSTextView("Tell us more", typography: .h3)
             
             VStack(spacing: 12) {
                 TextEditor(text: $feedbackText)
@@ -90,9 +90,7 @@ struct NegativeFeedbackInoutSheet: View {
                     .scrollContentBackground(.hidden)
                     .overlay(alignment: .topLeading, content: {
                         if feedbackText.isEmpty {
-                            Text("Let us know how we can improve this for you...")
-                                .font(.body14)
-                                .foregroundColor(.gray)
+                            FSTextView("Let us know how we can improve this for you...", typography: .body, color: .fsMutedForeground)
                                 .padding(.horizontal, 16)
                                 .padding(.vertical, 20)
                                 .frame(maxWidth: .infinity, alignment: .topLeading)
@@ -101,11 +99,16 @@ struct NegativeFeedbackInoutSheet: View {
             }
             .padding(.vertical, 16)
             
-            FSButton(title: "Submit", fontStyle: .bodyBold14, cornerRadius: 32) {
-                dismiss()
+            HStack(spacing: 10) {
+                FSButton(title: "Back", fontStyle: .bodyBold14, cornerRadius: 32, background: .gray230) {
+                    onBackPress()
+                }
+                FSButton(title: "Submit", fontStyle: .bodyBold14, cornerRadius: 32) {
+                    dismiss()
+                }
+                .disabled(feedbackText.isEmpty)
+                .opacity(feedbackText.isEmpty ? 0.3 : 1)
             }
-            .disabled(feedbackText.isEmpty)
-            .opacity(feedbackText.isEmpty ? 0.3 : 1)
         }
         .padding(.horizontal, 24)
         .padding(.bottom, 24)
@@ -115,6 +118,7 @@ struct NegativeFeedbackInoutSheet: View {
 }
 
 struct ChangeWorkoutSheetSheet: View {
+    @AppState(\.isLimited) private var isLimitedAccess: Bool
     @Environment(\.dismiss) private var dismiss
     @State var instructionText: String = ""
     
@@ -155,8 +159,13 @@ struct ChangeWorkoutSheetSheet: View {
             }
             .padding(.vertical, 16)
             
-            FSButton(title: "Confirm", fontStyle: .bodyBold14, cornerRadius: 32) {
-                dismiss()
+            VStack(spacing: 5) {
+                FSButton(title: isLimitedAccess ? "Upgrade to continue" :  "Confirm", fontStyle: .bodyBold14, cornerRadius: 32) {
+                    dismiss()
+                }
+                if isLimitedAccess {
+                    FSTextView("This feature is only available for Pro users.", typography: .detail_semi, color: .fsMutedForeground)
+                }
             }
         }
         .padding(.horizontal, 24)

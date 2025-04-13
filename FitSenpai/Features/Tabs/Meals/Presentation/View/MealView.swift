@@ -14,26 +14,30 @@ struct MealView: View {
     
     var body: some View {
         HStack(alignment: .center, spacing: 12) {
-            Image(image)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 80, height: 80)
-                .clipShape(.rect(cornerRadius: 8))
+            
+            /// NOTE: Hiding image for now
+            // Image(image)
+            //     .resizable()
+            //     .scaledToFit()
+            //     .frame(width: 80, height: 80)
+            //     .clipShape(.rect(cornerRadius: 8))
+            
             VStack(alignment: .leading, spacing: 8) {
                 HStack(alignment: .center) {
-                    FSText(text: title, fontStyle: .medium16, color: .fsTitle, lineLimit: 1)
+                    FSTextView(title, typography: .p_ui_medium)
                     Spacer()
                     GrayPillView(text: String(describing: mealPeriod), fontStyle: .body10)
-                        .padding(.trailing, 12)
-                        .padding(.leading, 4)
                 }
                 NutrientsInfoView(calorieAmount: 350, proteinAmount: 30, carbsAmount: 40, fatAmount: 15)
             }
+            .padding(.horizontal, 12)
         }
-        .background(
+        .frame(height: 80)
+        .background(Color.white.colorMultiply(.clear))
+        .overlay {
             RoundedRectangle(cornerRadius: 8)
                 .stroke(Color.gray230, lineWidth: 1)
-        )
+        }
     }
 }
 

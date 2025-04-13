@@ -23,6 +23,7 @@ struct FSButton: View {
     
     var body: some View {
         Button {
+            triggerHaptics()
             tapAction()
         } label: {
             HStack {
@@ -59,6 +60,11 @@ struct FSButton: View {
                 return 60
             }
         }
+    }
+    
+    func triggerHaptics() {
+        let generator = UIImpactFeedbackGenerator(style: .light)
+        generator.impactOccurred()
     }
 }
 

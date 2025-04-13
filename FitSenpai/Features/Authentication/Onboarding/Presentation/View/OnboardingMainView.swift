@@ -13,11 +13,11 @@ struct OnboardingMainView: View {
     @Environment(\.dismiss) private var dismiss
     
     @AppState(\.accessToken) private var accessToken: String?
-    @AppState(\.isLimited) private var isLimited: Bool
     
     func onDismiss() {
         withAnimation(.easeInOut(duration: 0.3)) {
             if viewModel.currentStepIndex > 0 {
+                viewModel.triggerHaptics()
                 viewModel.moveToPreviousStep()
             } else {
                 dismiss()
@@ -39,16 +39,9 @@ struct OnboardingMainView: View {
             case .success:
                 OnboardingSuccessView(viewModel: viewModel) {
                     viewModel.logSelections()
-                    isLimited = true
-                    accessToken = "test-token"
                     dismiss()
-                    appViewModel.viewState = .loading
-                    appViewModel.loadingVM = .init(iconName: "", iconTint: .clear, iconBackground: .clear, title: "Getting everything ready for you", mainLabel: "Customizing your workout plan...", buttonLabel: "", showButton: false, showBorder: false, isLoading: true, buttonAction: { })
-                    Task { @MainActor in
-                        try? await Task.sleep(for: .seconds(3))
-                      
-                        appViewModel.viewState = .idle
-                        appViewModel.isLoggedIn = true
+                    Task {
+                        await appViewModel.createLimitedWorkoutPlan()
                     }
                 }
             }
@@ -141,6 +134,7 @@ struct OnboardingMainView: View {
             cornerRadius: 32,
             background: viewModel.canProceed ? .fsPrimary : .gray.opacity(0.3)
         ) {
+            viewModel.triggerHaptics()
             withAnimation(.easeInOut(duration: 0.3)) {
                 viewModel.moveToNextStep()
             }

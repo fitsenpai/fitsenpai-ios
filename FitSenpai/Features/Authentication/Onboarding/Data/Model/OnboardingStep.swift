@@ -9,7 +9,7 @@ enum StepType {
     case notification
     case enableNnotification
     case saveMoney
-    case input(previousStep: String)
+    case input(previousStep: String, placeholder: String)
 }
 
 struct OnboardingStep {
@@ -61,7 +61,7 @@ struct OnboardingStep {
     }
     
     var isInputStep: Bool {
-        if case .input(_) = type { return true }
+        if case .input(_, _) = type { return true }
         return false
     }
     
@@ -287,7 +287,7 @@ struct OnboardingStep {
             title: "Other health concerns",
             subtitle: "Separate multiple items with a comma",
             options: [],
-            type: .input(previousStep: "health_restrictions")
+            type: .input(previousStep: "health_restrictions", placeholder: "Shoulder injury")
         ),
         
         // Diet and its input
@@ -302,14 +302,14 @@ struct OnboardingStep {
                 .init(id: "vegan", title: "Vegan", icon: "ic_leaves"),
                 .init(id: "other", title: "Other", icon: "ic_dots")
             ],
-            type: .selection(isMultiple: true)
+            type: .selection(isMultiple: false)
         ),
         .init(
             id: "diet_input",
             title: "Other specific diet",
             subtitle: nil,
             options: [],
-            type: .input(previousStep: "diet")
+            type: .input(previousStep: "diet", placeholder: "Pescatarian")
         ),
         
         // Allergies and its input
@@ -331,7 +331,7 @@ struct OnboardingStep {
             title: "Other food allergies",
             subtitle: "Separate multiple items with a comma",
             options: [],
-            type: .input(previousStep: "allergies")
+            type: .input(previousStep: "allergies", placeholder: "Shrimp")
         ),
      
         // Cooking Style

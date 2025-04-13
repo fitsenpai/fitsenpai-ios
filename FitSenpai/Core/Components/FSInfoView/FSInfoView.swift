@@ -1,5 +1,5 @@
 //
-//  GeneralInfoView.swift
+//  FSInfoView.swift
 //  FitSenpai
 //
 //  Created by Mark Daquis on 4/8/25.
@@ -8,9 +8,9 @@
 import SwiftUI
 import Lottie
 
-struct GeneralInfoView: View {
-    let viewModel: GeneralInfoViewModel
-    @State var isAnimating: Bool = false
+struct FSInfoView: View {
+    let viewModel: FSInfoViewModel
+    @State private var isAnimating: Bool = false
     
     // MARK: - Icon View
     private var icon: some View {
@@ -52,7 +52,7 @@ struct GeneralInfoView: View {
             if viewModel.isLoading {
                 LottieView(animation: .named("fs-loading"))
                   .playing(loopMode: .loop)
-                  .frame(width: 32, height: 32)
+                  .frame(width: 40, height: 40)
             }
             
             if viewModel.showButton {
@@ -66,5 +66,5 @@ struct GeneralInfoView: View {
 }
 
 #Preview {
-    GeneralInfoView(viewModel: .defaultConfig)
+    FSInfoView(viewModel: .defaultConfig)
 }

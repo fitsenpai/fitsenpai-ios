@@ -6,54 +6,64 @@
 //
 
 import SwiftUI
+import SuperwallKit
 
 struct MealDetailView: View {
-    
     @ObservedObject var viewModel: MealDetailViewModel
-    
-    private var subviewWidth: CGFloat {
-        let w = UIScreen.main.bounds.width - 32
-        return (w - 1 * 3 - 8 * 3) / 4 // Calculate the width for each subview
-    }
-    
-    var header: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            SheetIndicator()
-            HStack {
-                FSText(text: "Protein Pancakse", fontStyle: .heading20, color: .fsTitle)
-                Spacer()
-                Image(.iconBookmark)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 25, height: 25)
-            }
-            GrayPillView(text: viewModel.schedule, fontStyle: .body14, cornerRadius: 24)
-        }
-    }
+    @Environment(\.dismiss) private var dismiss
+    @AppState(\.isLimited) private var isLimitedAccess: Bool
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 16) {
-                header
-                mealInfoHorizontalView
-                
-                Image("img_meal")
-                    .resizable()
-                    .frame(height: 200)
-                
-                VStack (spacing: 20) {
+        VStack(spacing: 12) {
+            headerSection
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    GrayPillView(text: viewModel.schedule, fontStyle: .body14, cornerRadius: 24)
+                    mealInfoHorizontalView
+                    
+                    /// NOTE: Hiding image for now
+                    //  Image("img_meal")
+                    //    .resizable()
+                    //    .frame(height: 200)
+                    
                     GenericTextListView(title: "Ingredients", instructions: viewModel.ingredients, isNumbered: false)
                     
                     GenericTextListView(title: "Recipe", instructions: viewModel.recipe, isNumbered: true)
                 }
+                .padding(.horizontal, 1)
+            }
+            .scrollIndicators(.hidden)
+            
+            if isLimitedAccess {
+                FSButton(title: "Unlock full week", fontStyle: .bodyBold16, cornerRadius: 32, tapAction: {
+                    Superwall.shared.register(placement: "campaign_trigger")
+                })
             }
         }
-        .scrollIndicators(.hidden)
         .padding(24)
         .background {
             Color.workoutBackgroundColor
         }
-        
+        .overlay(alignment: .top) {
+            SheetIndicator()
+                .padding(12)
+        }
+    }
+    
+    var headerSection: some View {
+        HStack {
+            FSTextView("Protein Pancakse", typography: .h4)
+            Spacer()
+            Image(.iconBookmark)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 25, height: 25)
+                .onTapGesture {
+                    if isLimitedAccess {
+                        Superwall.shared.register(placement: "campaign_trigger")
+                    }
+                }
+        }
     }
     
     var mealInfoHorizontalView: some View {
@@ -65,8 +75,6 @@ struct MealDetailView: View {
         }
         .frame(maxWidth: .infinity)
     }
-    
-    
 }
 
 struct MealDetailView_Previews: PreviewProvider {

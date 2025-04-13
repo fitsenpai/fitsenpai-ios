@@ -16,12 +16,12 @@ struct WorkoutView: View {
     @State private var isLoading = true // Track loading state
     
     var horizontalInfoView: some View  {
-        HStack {
-            IconLabelView(fsMetric: .WorkoutSet, value: 4, fontStyle: .body10, fontColor: .fsMutedForeground, iconSize: 12)
+        HStack(spacing: 10) {
+            IconLabelView(fsMetric: .WorkoutSet, value: 4, typography: .detail, fontColor: .fsMutedForeground, iconSize: 12)
             
-            IconLabelView(fsMetric: .WorkoutRep, value: 12, fontStyle: .body10, fontColor: .fsMutedForeground, iconSize: 12)
+            IconLabelView(fsMetric: .WorkoutRep, value: 12, typography: .detail, fontColor: .fsMutedForeground, iconSize: 12)
             
-            IconLabelView(fsMetric: .WorkoutTime, value: 10, fontStyle: .body10, fontColor: .fsMutedForeground, iconSize: 12)
+            IconLabelView(fsMetric: .WorkoutTime, value: 10, typography: .detail, fontColor: .fsMutedForeground, iconSize: 12)
         }
     }
     
@@ -29,11 +29,10 @@ struct WorkoutView: View {
         HStack(alignment: .center, spacing: 0) {
             videoPreview
             HStack(spacing: 0) {
-                VStack(alignment: .leading, spacing: 10 ) {
-                    FSText(text: title, fontStyle: .medium16, color: .fsTitle, lineLimit: 1)
+                VStack(alignment: .leading, spacing: 10) {
+                    FSTextView(title, typography: .p_ui_medium, lineLimit: 1)
                     if showInfo {
                         horizontalInfoView
-                            .ignoresSafeArea()
                     }
                 }
                 Spacer()

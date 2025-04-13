@@ -6,7 +6,6 @@
 //
 
 enum FeedbackType: Identifiable {
-    case positive
     case negative
     case negativeInput
     

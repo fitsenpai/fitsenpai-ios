@@ -13,7 +13,6 @@ struct SettingsMainView: View {
     @EnvironmentObject private var appViewModel: AppViewModel
     @Environment(\.dismiss) var dismiss
     
-    @State private var showRateApp = false
     @State private var showSafariView = false
     @State private var safariURL: URL?
     @State private var isPresentedManageSubscription: Bool = false
@@ -30,7 +29,7 @@ struct SettingsMainView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 32) {
-                FSText(text: "Settings", fontStyle: .heading24)
+                FSTextView("Settings", typography: .h3)
                     .padding(.top, 32)
                 
                 VStack(alignment: .leading, spacing: 4) {
@@ -65,9 +64,62 @@ struct SettingsMainView: View {
                     deleteAccountButton
                         .padding(.bottom, 24)
                 }
+                
+               
+                
+                // Debug buttons
+                #if DEBUG
+                // Version info
+                HStack(spacing: 24) {
+                    Spacer()
+                    buildVersionText
+                        .padding(.bottom, 4)
+                    
+                    Menu {
+                        Button(role: .destructive, action: clearAllData) {
+                            Label("Clear All Data", systemImage: "trash")
+                        }
+                        
+                        Button(action: clearCache) {
+                            Label("Clear Cache", systemImage: "arrow.triangle.2.circlepath")
+                        }
+                    } label: {
+                        Text("Debug Menu")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(.bottom, 8)
+                    Spacer()
+                }
+                #endif
             }
             .padding(.horizontal, 24)
             .manageSubscriptionsSheet(isPresented: $isPresentedManageSubscription)
+            .fullScreenCover(item: $viewModel.activePopup, content: { popup in
+                ZStack {
+                    Color.black.opacity(0.1)
+                        .ignoresSafeArea()
+                        .onTapGesture {
+                            viewModel.activeSheet = nil
+                        }
+                    switch popup {
+                    case .rating:
+                        RateAppPopupView {
+                            viewModel.activeSheet = .negative
+                        }
+                    case .logout:
+                        LogoutPopupView {
+                            Task {
+                                let success = await viewModel.signOut()
+                                if success {
+                                    appState.isLoggedIn = false
+                                }
+                            }
+                        }
+                    }
+                }
+                .background(BackgroundClearView())
+            })
         }
         
         .environmentObject(viewModel)
@@ -113,14 +165,12 @@ struct SettingsMainView: View {
                 
                 VStack(alignment: .leading, spacing: 8) {
                     if appViewModel.isLimitedAccess {
-                        FSPill(text: "GUEST", color: .gray)
+                        FSPill(text: "GUEST", color: .fsMutedForeground)
                     } else {
                         FSPill(text: "PRO", color: .fsPrimary)
                     }
                     
-                    Text(verbatim: appViewModel.isLimitedAccess ? "Anonymous user" : "bella@fitsenpai.com")
-                        .font(.body16)
-                        .foregroundColor(.black.opacity(0.6))
+                    FSTextView(appViewModel.isLimitedAccess ? "Anonymous user" : "bella@fitsenpai.com", typography: .p_ui_medium, color: .fsMutedForeground)
                 }
             }
             .padding(5)
@@ -129,9 +179,7 @@ struct SettingsMainView: View {
     }
     
     private func sectionHeader(_ title: String) -> some View {
-        Text(title)
-            .font(.bodyBold14)
-            .foregroundColor(.black.opacity(0.6))
+        FSTextView(title, typography: .suble_semibold, color: .fsMutedForeground)
             .padding(.vertical, 8)
     }
     
@@ -218,11 +266,10 @@ struct SettingsMainView: View {
     
     private var rateAppRow: some View {
         HStack {
-            Text("Give feedback")
-                .foregroundColor(.black)
+            FSTextView("Give feedback", typography: .p_ui_medium)
             Spacer()
             Image(systemName: "chevron.right")
-                .foregroundColor(.gray)
+                .foregroundColor(.fsMutedForeground)
                 .font(.system(size: 14))
         }
         .padding()
@@ -238,36 +285,13 @@ struct SettingsMainView: View {
                 NegativeFeedbackSheet(feedbackType: $viewModel.activeSheet)
                     .flexibleSheet()
                     .background(.thickMaterial)
-            case .positive, .negativeInput:
-                NegativeFeedbackInoutSheet()
+            case .negativeInput:
+                NegativeFeedbackInoutSheet {
+                    viewModel.activeSheet = .negativeInput
+                }
                     .flexibleSheet()
                     .background(.thickMaterial)
             }
-        })
-        .fullScreenCover(item: $viewModel.activePopup, content: { popup in
-            ZStack {
-                Color.black.opacity(0.1)
-                    .ignoresSafeArea()
-                    .onTapGesture {
-                        showRateApp = false
-                    }
-                switch popup {
-                case .rating:
-                    RateAppPopupView {
-                        viewModel.activeSheet = .negative
-                    }
-                case .logout:
-                    LogoutPopupView {
-                        Task {
-                            let success = await viewModel.signOut()
-                            if success {
-                                appState.isLoggedIn = false
-                            }
-                        }
-                    }
-                }
-            }
-            .background(BackgroundClearView())
         })
     }
     
@@ -294,11 +318,10 @@ struct SettingsMainView: View {
                     }
                 } label: {
                     HStack {
-                        Text("Log out")
-                            .foregroundColor(.black)
+                        FSTextView("Log out", typography: .p_ui_medium)
                         Spacer()
                         Image(systemName: "chevron.right")
-                            .foregroundColor(.gray)
+                            .foregroundColor(.fsMutedForeground)
                             .font(.system(size: 14))
                     }
                     .padding()
@@ -317,11 +340,10 @@ struct SettingsMainView: View {
         } label: {
             VStack(spacing: 0) {
                 HStack {
-                    Text("Delete account")
-                        .foregroundColor(.red)
+                    FSTextView("Delete account", typography: .p_ui_medium, color: .red)
                     Spacer()
                     Image(systemName: "chevron.right")
-                        .foregroundColor(.gray)
+                        .foregroundColor(.fsMutedForeground)
                         .font(.system(size: 14))
                 }
                 .padding()
@@ -363,17 +385,15 @@ struct SettingsMainView: View {
             case "Health concerns":
                 HealthConcernsEditView(viewModel: viewModel)
             default:
-                Text("Edit \(title)")
+                FSTextView("Edit \(title)", typography: .p_ui_medium)
             }
         } label: {
             HStack {
-                Text(title)
-                    .foregroundColor(.black)
+                FSTextView(title, typography: .p_ui_medium)
                 Spacer()
-                Text(value)
-                    .foregroundColor(.gray)
+                FSTextView(value, typography: .p_ui, color: .fsMutedForeground)
                 Image(systemName: "chevron.right")
-                    .foregroundColor(.gray)
+                    .foregroundColor(.fsMutedForeground)
                     .font(.system(size: 14))
             }
             .padding()
@@ -387,18 +407,15 @@ struct SettingsMainView: View {
             switch title {
             case "Change password":
                 ChangePasswordView()
-            case "Rate the app":
-                Text("Rate the app") // This should be handled by the rate app popup
             default:
-                Text(title)
+                FSTextView(title, typography: .p_ui_medium)
             }
         } label: {
             HStack {
-                Text(title)
-                    .foregroundColor(.black)
+                FSTextView(title, typography: .p_ui_medium)
                 Spacer()
                 Image(systemName: "chevron.right")
-                    .foregroundColor(.gray)
+                    .foregroundColor(.fsMutedForeground)
                     .font(.system(size: 14))
             }
             .padding()
@@ -409,11 +426,10 @@ struct SettingsMainView: View {
     
     private func settingsLinkLabel(_ title: String) -> some View {
         HStack {
-            Text(title)
-                .foregroundColor(.black)
+            FSTextView(title, typography: .p_ui_medium)
             Spacer()
             Image(systemName: "chevron.right")
-                .foregroundColor(.gray)
+                .foregroundColor(.fsMutedForeground)
                 .font(.system(size: 14))
         }
         .padding()
@@ -425,6 +441,56 @@ struct SettingsMainView: View {
         return weekDays.sorted(by: { $0.rawValue < $1.rawValue })
             .map { $0.shortName }
             .joined(separator: " ")
+    }
+    
+    private var buildVersionText: some View {
+        HStack(spacing: 4) {
+            Text("Version")
+                .foregroundColor(.secondary)
+            Text(Bundle.main.releaseVersionNumber ?? "")
+                .foregroundColor(.secondary)
+            Text("(\(Bundle.main.buildVersionNumber ?? ""))")
+                .foregroundColor(.secondary)
+        }
+        .font(.caption2)
+    }
+    
+    private func clearAllData() {
+        // Clear UserDefaults
+        if let bundleID = Bundle.main.bundleIdentifier {
+            UserDefaults.standard.removePersistentDomain(forName: bundleID)
+        }
+        
+        // Clear auth tokens
+        AppSession.shared.clearTokens()
+        
+        // Clear URL cache
+        URLCache.shared.removeAllCachedResponses()
+        
+        // Clear file cache if any
+        clearCache()
+        
+        appViewModel.isLoggedIn = false
+    }
+    
+    private func clearCache() {
+        // Clear NSCache
+        let cache = NSCache<NSString, AnyObject>()
+        cache.removeAllObjects()
+        
+        // Clear temporary files
+        let temporaryDirectoryURL = FileManager.default.temporaryDirectory
+        do {
+            let temporaryFiles = try FileManager.default.contentsOfDirectory(
+                at: temporaryDirectoryURL,
+                includingPropertiesForKeys: nil
+            )
+            try temporaryFiles.forEach { url in
+                try FileManager.default.removeItem(at: url)
+            }
+        } catch {
+            print("Error clearing cache: \(error)")
+        }
     }
 }
 

@@ -11,7 +11,10 @@ import BottomSheet
 struct WorkoutsMainView: View {
     @EnvironmentObject var mainViewModel: MainViewModel
     @StateObject private var viewModel: WorkoutsMainViewModel
+    @AppState(\.isLimited) private var isLimitedAccess: Bool
     
+    @State private var isLoaded: Bool = false
+
     init() {
         let repo = WorkoutRepoImpl(client: FSClient.shared!)
         let useCase = WorkoutUseCase(workoutRepo: repo)
@@ -19,7 +22,7 @@ struct WorkoutsMainView: View {
         self._viewModel = StateObject(wrappedValue: viewModel)
     }
     
-    var generatingViewModel: GeneralInfoViewModel {
+    var generatingViewModel: FSInfoViewModel {
         .init(
             iconName: "",
             iconTint: .fsAccentForeground,
@@ -34,7 +37,7 @@ struct WorkoutsMainView: View {
         )
     }
     
-    var readyViewModel: GeneralInfoViewModel {
+    var readyViewModel: FSInfoViewModel {
         .init(
             iconName: "icon_sparkle",
             iconTint: .fsAccentForeground,
@@ -44,7 +47,7 @@ struct WorkoutsMainView: View {
             buttonLabel: "Generate workouts",
             buttonAction: {
                 Task {
-                    let (progressData, days) = await viewModel.generateWorkputPlan()
+                    let (progressData, days) = await viewModel.generateWorkoutPlan()
                     mainViewModel.progressData = progressData
                     mainViewModel.highlightedDays = days
                 }
@@ -55,13 +58,17 @@ struct WorkoutsMainView: View {
     var body: some View {
         MainContainerView {
             VStack(alignment: .leading) {
-                if viewModel.showGeneratePlan {
-                    GeneralInfoView(viewModel: viewModel.isWorkoutLoading ? generatingViewModel : readyViewModel)
+                if viewModel.isWorkoutLoading {
+                    FSInfoView(viewModel: generatingViewModel)
                     .padding(.vertical, 12)
-                    Spacer()
                 } else {
-                    WorkoutListSection(viewModel: viewModel)
+                    if viewModel.showGeneratePlan {
+                        FSInfoView(viewModel: readyViewModel)
+                    } else {
+                        WorkoutListSection(viewModel: viewModel)
+                    }
                 }
+                Spacer()
             }
             .onAppear(perform: fetchInitialData)
             .onChange(of: mainViewModel.selectedDate) { _, newValue in
@@ -75,15 +82,24 @@ struct WorkoutsMainView: View {
                 case .changeWorkout:
                     ChangeWorkoutSheetSheet()
                         .flexibleSheet()
-                        .background(.thickMaterial)
+                        .background(.white)
+                        .presentationCornerRadius(32)
                 }
             })
         }
     }
     
     private func fetchInitialData() {
-        if let uuid = globalAppEnvObject.user?.id {
-            viewModel.fetchWorkoutPlans(forUser: uuid, date: mainViewModel.selectedDate)
+        guard !isLoaded else { return }
+        isLoaded = true
+        if isLimitedAccess {
+            Task {
+                let (progressData, days) = await viewModel.getLimitedWorkoutPlan()
+                mainViewModel.progressData = progressData
+                mainViewModel.highlightedDays = days
+            }
+        } else {
+            viewModel.showGeneratePlan = true
         }
     }
     

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import AVKit
+import SuperwallKit
 
 struct WorkoutDetailView: View {
     @Environment(\.dismiss) private var dismiss
@@ -14,9 +15,70 @@ struct WorkoutDetailView: View {
     
     @State private var player = AVPlayer(url: URL(string: UserDefaults.standard.string(forKey: "videoURL") ?? "https://txvhbjocxiodvtqreskj.supabase.co/storage/v1/object/public/workouts/abdominals/seated_floor_crunches.mp4?")!)
     
-    private var subviewWidth: CGFloat {
-        let w = UIScreen.main.bounds.width - 32
-        return (w - 1 * 2 - 8 * 2) / 3 // Calculate the width for each subview
+    @AppState(\.isLimited) private var isLimitedAccess: Bool
+   
+    var body: some View {
+        VStack(spacing: 12) {
+            headerSection
+            ScrollView {
+                VStack(spacing: 20) {
+                    workoutSection
+                    VStack(spacing: 16) {
+                        PlayerView(player: $player)
+                            .frame(height: 345)
+                            .onAppear() {
+                                player.play()
+                            }
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(Color.gray230, lineWidth: 1)
+                            )
+                            .cornerRadius(12)
+                            .ignoresSafeArea()
+                        
+                        GenericTextListView(title: "How to perform this exercise:", instructions: viewModel.workoutSteps, isNumbered: true)
+                    }
+                }
+            }
+            .scrollIndicators(.hidden)
+            
+            if isLimitedAccess {
+                FSButton(title: "Unlock full week", fontStyle: .bodyBold16, cornerRadius: 32, tapAction: {
+                    Superwall.shared.register(placement: "campaign_trigger")
+                })
+            } else {
+                FSButton(title: "Complete", fontStyle: .bodyBold16, cornerRadius: 32, tapAction: {
+                    dismiss()
+                })
+            }
+            
+        }
+      
+        .padding(24)
+        .background {
+            Color.workoutBackgroundColor.ignoresSafeArea()
+        }
+        .overlay(alignment: .top) {
+            SheetIndicator()
+                .padding(12)
+        }
+        
+    }
+    
+    var headerSection: some View {
+        HStack {
+            FSTextView(viewModel.title, typography: .h4)
+            Spacer()
+            Image(.iconBookmark)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 25, height: 25)
+                .onTapGesture {
+                    if isLimitedAccess {
+                        Superwall.shared.register(placement: "campaign_trigger")
+                    }
+                }
+        }
     }
     
     var targetGroupHorizontalList: some View {
@@ -35,45 +97,10 @@ struct WorkoutDetailView: View {
     
     var workoutSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                FSText(text: viewModel.title, fontStyle: .heading20, color: .fsTitle)
-                Spacer()
-                Image(.iconBookmark)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 25, height: 25)
-            }
+            
             targetGroupHorizontalList
             workoutInfoHorizontalView
         }
-    }
-    
-    var body: some View {
-        VStack {
-            SheetIndicator()
-            VStack(spacing: 24) {
-                workoutSection
-                PlayerView(player: $player)
-                    .onAppear() {
-                        player.play()
-                    }
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color.gray230, lineWidth: 1)
-                    )
-                    .cornerRadius(12)
-                    .ignoresSafeArea()
-                GenericTextListView(title: "How to perform this exercise:", instructions: viewModel.workoutSteps, isNumbered: true)
-                FSButton(title: "Complete", fontStyle: .bodyBold16, cornerRadius: 32, tapAction: {
-                    dismiss()
-                })
-            }
-        }
-        .padding(16)
-        .background {
-            Color.workoutBackgroundColor
-        }
-        
     }
 }
 

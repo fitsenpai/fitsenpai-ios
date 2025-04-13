@@ -21,7 +21,7 @@ class WorkoutsMainViewModel: ObservableObject {
     @Published var weeklyPlan: WeeklyPlan?
     @Published var upNextWeekNumber: Int?
     @Published var isWeeklyPlanLoading: Bool = false
-    @Published var showGeneratePlan: Bool = true
+    @Published var showGeneratePlan: Bool = false
     @Published var showingDetail = false
     @Published var showRateApp = false
     @Published var activeSheet: WorkoutSheet?
@@ -38,11 +38,38 @@ class WorkoutsMainViewModel: ObservableObject {
         self.workoutUseCase = workoutUseCase
     }
     
-    func generateWorkputPlan() async -> ([Date: Double], Set<Int>) {
+    func generateWorkoutPlan() async -> ([Date: Double], Set<Int>) {
         isWorkoutLoading.toggle()
-        try? await Task.sleep(nanoseconds: 5_000_000_000)
+        try? await Task.sleep(nanoseconds: 2_000_000_000)
         isWorkoutLoading.toggle()
-        showGeneratePlan.toggle()
+        showGeneratePlan = false
+        let progressDate = [
+            // Today with 50% progress
+            Date(): 0.5,
+            
+            // Tomorrow with 30% progress
+            Calendar.current.date(byAdding: .day, value: 2, to: Date())!: 0.3,
+            
+            // Day after tomorrow with 80% progress
+            Calendar.current.date(byAdding: .day, value: 4, to: Date())!: 0.8,
+            Calendar.current.date(byAdding: .day, value: 5, to: Date())!: 0.1,
+            
+            // Tomorrow with 30% progress
+            Calendar.current.date(byAdding: .day, value: 6, to: Date())!: 0.3,
+            Calendar.current.date(byAdding: .day, value: 7, to: Date())!: 0.7,
+            
+            // Day after tomorrow with 80% progress
+            Calendar.current.date(byAdding: .day, value: 8, to: Date())!: 0.9
+        ]
+        let highlightedDays: Set<Int> = [1,2,4,6]
+        let plan1 = DailyWorkoutPlan.mock()
+        let plan2 = DailyWorkoutPlan.mock()
+        self.workoutPlans = [plan1, plan2]
+        return (progressDate, highlightedDays)
+    }
+    
+    func getLimitedWorkoutPlan() async -> ([Date: Double], Set<Int>) {
+        showGeneratePlan = false
         let progressDate = [
             // Today with 50% progress
             Date(): 0.5,

@@ -8,27 +8,31 @@
 import SwiftUI
 
 struct WeightUpdatePrompt: View {
-    let onUpdateWeight: () -> Void
+    var title: String
+    var subtitle: String
+    var icon: ImageResource
+    var buttonText: String
+    let onButtonTap: () -> Void
     
     var body: some View {
         FSCard(backgroundColor: .fsSecondary.opacity(0.7)) {
             HStack(alignment: .bottom) {
-                VStack(alignment: .leading, spacing: 5) {
+                VStack(alignment: .leading, spacing: 8) {
                     HStack(spacing: 8) {
-                        FSText(text: "Keep going!", fontStyle: .bodyBold14, color: .fsAccentForeground)
+                        FSText(text: title, fontStyle: .bodyBold14, color: .fsAccentForeground)
                         
-                        Image(.iconSparkle)
+                        Image(icon)
                             .resizable()
                             .scaledToFit()
                             .frame(width: 18, height: 18)
                             .foregroundStyle(Color.fsAccentForeground)
                     }
                     
-                    FSText(text: "Tracking your weight helps\nyou see real progress.", fontStyle: .medium12, color: .black.opacity(0.5))
+                    FSText(text: subtitle, fontStyle: .medium11, color: .fsMutedForeground, lineSpacing: 3)
                 }
                 
                 Spacer()
-                FSButton(title: "Update weight", fontStyle: .bodyBold12, letterSpace: 0, cornerRadius: 20, size: .sm, tapAction: onUpdateWeight)
+                FSButton(title: buttonText, fontStyle: .bodyBold12, letterSpace: 0, cornerRadius: 20, size: .sm, tapAction: onButtonTap)
                     .frame(width: 124)
             }
             .padding(4)

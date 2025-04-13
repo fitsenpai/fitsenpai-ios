@@ -24,6 +24,15 @@ class OnboardingMainViewModel: ObservableObject {
     // Input text for other inputs
     @Published var inputText: String = ""
     
+    var inputTextPlaceHolder: String {
+        if case .input(_, let placeholder) = currentStep.type {
+            return placeholder
+        }
+        return ""
+    }
+    
+    
+    
     // Height & Weight
     @Published var isMetric = false {
         didSet {
@@ -41,7 +50,6 @@ class OnboardingMainViewModel: ObservableObject {
     }
     @Published var height: Double = 70 // Default: 5'10" (70 inches) / 177.8cm
     @Published var weight: Double = 150 // Default: 150lbs / 68kg
-//    @Published var progress: Double = 0
     
     // Age
     @Published var age: Int = 18
@@ -72,8 +80,8 @@ class OnboardingMainViewModel: ObservableObject {
         isSelectionInProgress = true
         selectedOptions = [item.id]
         stepSelections[currentStep.id] = selectedOptions
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+        triggerHaptics()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             withAnimation(.easeInOut(duration: 0.3)) {
                 self.isSelectionInProgress = false
                 self.moveToNextStep()
@@ -83,6 +91,7 @@ class OnboardingMainViewModel: ObservableObject {
     
     // Handler for multiple selection steps (with continue button)
     func handleMultipleSelection(_ item: SelectionItem) {
+        triggerHaptics()
         if item.id == "other" {
             selectedOptions = ["other"]
             // Restore previous input if it exists
@@ -155,23 +164,13 @@ class OnboardingMainViewModel: ObservableObject {
         }
         return false
     }
-    
-//    private func calculateProgress() {
-//        let totalSteps = Double(OnboardingStep.steps.count)
-//        let current = Double(currentStepIndex + 1)
-//        self.progress = current / totalSteps
-//    }
 
     func moveToNextStep() {
         isMovingForward = true
-        
-//        defer {
-//            calculateProgress()
-//        }
-        
+
         // Save current state
         if currentStep.isInputStep {
-            if case .input(let previousStep) = currentStep.type {
+            if case .input(let previousStep, _) = currentStep.type {
                 stepInputs[previousStep] = inputText
                 currentStepIndex += 1
                 selectedOptions = stepSelections[currentStep.id] ?? []
@@ -233,8 +232,10 @@ class OnboardingMainViewModel: ObservableObject {
             // Check if previous step was input
             let previousStep = OnboardingStep.steps[currentStepIndex - 1]
             if previousStep.isInputStep {
+               
                 // Check if we should show input step
-                if case .input(let originalStepId) = previousStep.type {
+                if case .input(let originalStepId, _) = previousStep.type {
+
                     if let originalSelections = stepSelections[originalStepId],
                        originalSelections.contains("other") {
                         currentStepIndex -= 1
@@ -255,6 +256,7 @@ class OnboardingMainViewModel: ObservableObject {
     
     // ADD: Function to request notification permissions
     func requestNotificationPermission() {
+        self.triggerHaptics()
         let center = UNUserNotificationCenter.current()
         center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
             DispatchQueue.main.async {
@@ -269,6 +271,7 @@ class OnboardingMainViewModel: ObservableObject {
     
     // Modify showOnboardingSheet function
     func showOnboardingSheet(_ sheet: OnboardingSheets) {
+        triggerHaptics()
         self.onboardingSheet = sheet
     }
     
@@ -298,5 +301,10 @@ class OnboardingMainViewModel: ObservableObject {
         print("\nAge: \(age)")
         
         print("=== End of Selections ===")
+    }
+    
+    func triggerHaptics() {
+        let generator = UIImpactFeedbackGenerator(style: .light)
+        generator.impactOccurred()
     }
 }

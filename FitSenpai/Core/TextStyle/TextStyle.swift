@@ -42,6 +42,7 @@ extension Font {
     static let bodyBold28 = custom("PlusJakartaSans-Bold", size: 28)
     static let medium8 = custom("PlusJakartaSans-Medium", size: 8)
     static let medium10 = custom("PlusJakartaSans-Medium", size: 10)
+    static let medium11 = custom("PlusJakartaSans-Medium", size: 11)
     static let medium12 = custom("PlusJakartaSans-Medium", size: 12)
     static let medium14 = custom("PlusJakartaSans-Medium", size: 14)
     static let medium16 = custom("PlusJakartaSans-Medium", size: 16)

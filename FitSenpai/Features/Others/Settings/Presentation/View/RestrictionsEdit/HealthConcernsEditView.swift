@@ -20,9 +20,10 @@ struct HealthConcernsEditView: View {
     }
     
     private var customInputView: some View {
-        RestrictionsInputView(
-            title: "health concerns",
-            placeholder: "",
+        OthersInputView(
+            title: "Other health concerns",
+            subtitle: "Separate multiple items with a comma",
+            placeholder: "Shoulder injury",
             initialValue: viewModel.customHealthConcern,
             showCustomInput: $showCustomInput,
             onSave: handleCustomInput

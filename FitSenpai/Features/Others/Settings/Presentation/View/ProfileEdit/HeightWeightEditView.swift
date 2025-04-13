@@ -17,7 +17,6 @@ struct HeightWeightEditView: View {
     var body: some View {
         BaseProfileEditView(
             title: "Height & Weight",
-            subtitle: "This will be used to personalize your plan.",
             onSave: {
                 Task { @MainActor in
                     await viewModel.updateHeightWeight(

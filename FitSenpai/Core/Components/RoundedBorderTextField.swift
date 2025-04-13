@@ -13,6 +13,7 @@ struct RoundedBorderTextField: View {
     var placeholder: String = ""
     var isSecure: Bool = false
     var showAccessory: Bool = false
+    var height: CGFloat = 44
     var cornerRadius: CGFloat = 6.0
     
     @State private var isInputHidden: Bool = true
@@ -25,11 +26,11 @@ struct RoundedBorderTextField: View {
                 if isSecure && isInputHidden {
                     SecureField(placeholder, text: $text)
                         .padding(.horizontal)
-                        .frame(height: 44)
+                        .frame(height: height)
                 } else {
                     TextField(placeholder, text: $text)
                         .padding(.horizontal)
-                        .frame(height: 44)
+                        .frame(height: height)
                         .autocorrectionDisabled()
                         .autocapitalization(.none)
                 }

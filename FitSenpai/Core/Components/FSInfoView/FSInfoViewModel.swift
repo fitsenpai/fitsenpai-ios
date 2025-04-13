@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 // MARK: - ViewModel
-struct GeneralInfoViewModel {
+struct FSInfoViewModel {
     let iconName: String
     let iconTint: Color
     let iconBackground: Color
@@ -23,7 +23,7 @@ struct GeneralInfoViewModel {
     let buttonAction: () -> Void
     
     // Default initializer for testing or previews
-    static let defaultConfig = GeneralInfoViewModel(
+    static let defaultConfig = FSInfoViewModel(
         iconName: "ic_calendar_check",
         iconTint: .fsAccentForeground,
         iconBackground: .fsAccent,
@@ -34,6 +34,6 @@ struct GeneralInfoViewModel {
         buttonAction: { print("Button tapped") }
     )
     
-    static let loadingConfig = GeneralInfoViewModel(iconName: "", iconTint: .clear, iconBackground: .clear, title: "", mainLabel: "Checking session...", buttonLabel: "", containerHeight: .infinity, showButton: false, showBorder: false, isLoading: true, buttonAction: {
+    static let loadingConfig = FSInfoViewModel(iconName: "", iconTint: .clear, iconBackground: .clear, title: "", mainLabel: "Checking session...", buttonLabel: "", containerHeight: .infinity, showButton: false, showBorder: false, isLoading: true, buttonAction: {
     })
 }

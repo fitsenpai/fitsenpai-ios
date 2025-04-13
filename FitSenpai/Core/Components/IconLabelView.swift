@@ -10,7 +10,7 @@ import SwiftUI
 struct IconLabelView: View {
     var fsMetric: FSMetric
     var value: Int
-    var fontStyle: Font
+    var typography: FSTypography
     var fontColor: Color
     var iconSize: CGFloat
     var spacing: CGFloat = 4
@@ -24,7 +24,7 @@ struct IconLabelView: View {
                 .resizable()
                 .frame(width: iconSize, height: iconSize)
                 .scaledToFit()
-            FSText(text: fsMetric.getInfoForIcon(value).description, fontStyle: fontStyle, color: fontColor)
+            FSTextView(fsMetric.getInfoForIcon(value).description, typography: typography, color: fontColor)
         }
         .if(isFullWidth) { view in
             view.frame(maxWidth: .infinity)
@@ -46,9 +46,5 @@ struct IconLabelView: View {
         }
         
     }
-}
-
-#Preview {
-    IconLabelView(fsMetric: .WorkoutRep, value: 12, fontStyle: .body12, fontColor: .fsMutedForeground, iconSize: 12, spacing: 8, showBorder: true)
 }
 

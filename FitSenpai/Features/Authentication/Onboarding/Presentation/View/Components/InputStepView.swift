@@ -11,8 +11,7 @@ struct InputStepView: View {
     @ObservedObject var viewModel: OnboardingMainViewModel
     
     var body: some View {
-        RoundedBorderTextField(text: $viewModel.inputText, label: "", cornerRadius: 12) .padding(.top, 16)
-
+        RoundedBorderTextField(text: $viewModel.inputText, placeholder: viewModel.inputTextPlaceHolder, height: 50, cornerRadius: 12) .padding(.top, 16)
     }
 }
 

@@ -16,18 +16,13 @@ struct WorkoutListSection: View {
                 viewModel.activeSheet = .changeWorkout
             }
             FSCompletionBarView(titleText: "Upper Body", progress: 0.2)
-            if viewModel.isWorkoutLoading {
-                ProgressView()
-            } else {
-                workoutList
-            }
+            workoutList
         }
     }
     
     private var workoutList: some View {
         ScrollView {
             VStack(spacing: 12) {
-                Color.clear.frame(height: 2)
                 ForEach(viewModel.workoutPlans, id: \.id) { workout in
                     WorkoutView(
                         image: "ic_workout",
@@ -39,12 +34,12 @@ struct WorkoutListSection: View {
                     .onTapGesture {
                         viewModel.showingDetail.toggle()
                     }
-                    .frame(height: 88)
                     .sheet(isPresented: $viewModel.showingDetail) {
                         WorkoutDetailView(viewModel: WorkoutDetailViewModel(routine: Routine.initTest()))
                     }
                 }
             }
+            .padding(.horizontal, 1)
         }
         .scrollIndicators(.hidden)
     }

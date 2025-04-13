@@ -20,9 +20,10 @@ struct AllergiesEditView: View {
     }
     
     private var customInputView: some View {
-        RestrictionsInputView(
-            title: "food allergies",
-            placeholder: "",
+        OthersInputView(
+            title: "Other food allergies",
+            subtitle: "Separate multiple items with a comma",
+            placeholder: "Shrimp",
             initialValue: viewModel.customAllergy,
             showCustomInput: $showCustomInput,
             onSave: handleCustomInput

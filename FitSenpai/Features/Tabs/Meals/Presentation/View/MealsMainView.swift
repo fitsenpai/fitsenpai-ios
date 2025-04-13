@@ -36,16 +36,26 @@ struct MealsMainView: View {
                 ScrollView {
                     VStack(spacing: 12) {
                         MealView(image: "sample1", title: "Protein Pancakes", mealPeriod: .Breakfast)
+                            .onTapGesture {
+                                showingDetail.toggle()
+                            }
                         
                         MealView(image: "sample2", title: "Chicken Salad", mealPeriod: .Lunch)
+                            .onTapGesture {
+                                showingDetail.toggle()
+                            }
                         
                         MealView(image: "sample3", title: "Salmon and Asparagus", mealPeriod: .Dinner)
+                            .onTapGesture {
+                                showingDetail.toggle()
+                            }
                         
                         MealView(image: "sample4", title: "Salmon and Asparagus", mealPeriod: .Lunch)
+                            .onTapGesture {
+                                showingDetail.toggle()
+                            }
                     }
-                    .onTapGesture {
-                        showingDetail.toggle()
-                    }
+                   
                     .sheet(isPresented: $showingDetail, content: {
                         MealDetailView(viewModel: MealDetailViewModel())
                     })
@@ -64,7 +74,7 @@ struct MealsMainView: View {
                     IconLabelView(
                         fsMetric: item.4,
                         value: item.1,
-                        fontStyle: .bodyBold14,
+                        typography: .body,
                         fontColor: item.3,
                         iconSize: 16
                     )

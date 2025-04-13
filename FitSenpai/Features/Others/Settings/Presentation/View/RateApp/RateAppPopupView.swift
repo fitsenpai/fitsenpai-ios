@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct RateAppPopupView: View {
+    @Environment(\.requestReview) var requestReview
     @Environment(\.dismiss) private var dismiss
     @State var showRatingStars = false
     @State private var rating: Int = 0
@@ -22,12 +23,12 @@ struct RateAppPopupView: View {
     }
     
     private var initialPromptView: some View {
-        VStack(spacing: 24) {
+        VStack(spacing: 20) {
             Text("Did you find Fit Senpai\nhelpful?")
                 .font(.medium16)
                 .multilineTextAlignment(.center)
             
-            HStack(spacing: 16) {
+            HStack(spacing: 10) {
                 Button("No") {
                     withoutAnimation {
                         dismiss()
@@ -41,7 +42,10 @@ struct RateAppPopupView: View {
                 .cornerRadius(32)
                 
                 Button("Yes") {
-                    showRatingStars = true
+                    withoutAnimation {
+                        dismiss()
+                    }
+                    requestReview()
                 }
                 .font(.bodyBold14)
                 .frame(width: 100, height: 40)

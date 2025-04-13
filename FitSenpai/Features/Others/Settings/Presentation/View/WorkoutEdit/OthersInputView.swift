@@ -1,7 +1,8 @@
 import SwiftUI
 
-struct RestrictionsInputView: View {
+struct OthersInputView: View {
     let title: String
+    var subtitle: String?
     let placeholder: String
     let initialValue: String
     let onSave: (String) -> Void
@@ -12,12 +13,14 @@ struct RestrictionsInputView: View {
     
     init(
         title: String,
+        subtitle: String? = nil,
         placeholder: String,
         initialValue: String = "",
         showCustomInput: Binding<Bool>,
         onSave: @escaping (String) -> Void
     ) {
         self.title = title
+        self.subtitle = subtitle
         self.placeholder = placeholder
         self.initialValue = initialValue
         self._showCustomInput = showCustomInput
@@ -27,7 +30,8 @@ struct RestrictionsInputView: View {
     
     var body: some View {
         BaseProfileEditView(
-            title: "Enter \(title)",
+            title: title,
+            subtitle: subtitle,
             onSave: {
                 if !inputText.isEmpty {
                     onSave(inputText)
@@ -41,17 +45,17 @@ struct RestrictionsInputView: View {
             VStack(alignment: .leading, spacing: 24) {
                 RoundedBorderTextField(
                     text: $inputText,
-                    label: placeholder,
-                    cornerRadius: 12
+                    placeholder: placeholder,
+                    cornerRadius: 8
                 )
+                .padding(.vertical, 12)
             }
-            .padding(.horizontal)
         }
     }
 }
 
 #Preview {
-    RestrictionsInputView(
+    OthersInputView(
         title: "dietary preference",
         placeholder: "Enter your dietary preference",
         showCustomInput: .constant(true)

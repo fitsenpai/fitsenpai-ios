@@ -19,14 +19,17 @@ struct FitSenpai: App {
     var body: some Scene {
         WindowGroup {
             Group {
-                if appState.viewState == .loading {
-                    GeneralInfoView(viewModel: appState.loadingVM)
-                } else if appState.isLoggedIn {
-                    FSTabView()
-                        .environmentObject(appState)
-                } else {
-                    OnboardingView()
-                        .environmentObject(appState)
+                switch appState.viewState {
+                case .loading, .fetching:
+                    FSLoading(config: $appState.loadingConfig)
+                default:
+                    if appState.isLoggedIn {
+                        FSTabView()
+                            .environmentObject(appState)
+                    } else {
+                        OnboardingView()
+                            .environmentObject(appState)
+                    }
                 }
             }
             .preferredColorScheme(.light)
