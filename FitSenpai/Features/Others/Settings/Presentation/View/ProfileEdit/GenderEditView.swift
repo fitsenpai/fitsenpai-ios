@@ -22,9 +22,7 @@ struct GenderEditView: View {
         ) {
             SelectableOptionsView(
                 options: Gender.allCases,
-                selection: $selectedGender,
-                iconProvider: { $0.iconName },
-                titleProvider: { $0.rawValue }
+                selection: $selectedGender
             )
         }
     }

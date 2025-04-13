@@ -46,8 +46,6 @@ struct DietaryEditView: View {
                     selection: $selectedPreference,
                     selections: .constant([]), // Unused for single select
                     showCustomInput: $showCustomInput,
-                    iconProvider: { $0.iconName },
-                    titleProvider: { $0.rawValue },
                     isOtherOption: { $0 == .other },
                     isNoneOption: { $0 == .none }
                 )

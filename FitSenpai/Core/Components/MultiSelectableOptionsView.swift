@@ -1,10 +1,19 @@
 import SwiftUI
 
-struct MultiSelectableOptionsView<T: Identifiable & Hashable>: View {
+protocol SelectableItemProtocol: CaseIterable, Identifiable & Hashable {
+    var title: String { get }
+    var subtitle: String? { get }
+    var icon: ImageResource? { get }
+}
+
+extension SelectableItemProtocol {
+    var subtitle: String? { nil }
+    var icon: ImageResource? { nil }
+}
+
+struct MultiSelectableOptionsView<T: SelectableItemProtocol>: View {
     let options: [T]
     @Binding var selections: Set<T>
-    var iconProvider: ((T) -> String)? = nil
-    var titleProvider: ((T) -> String)? = nil
     
     var body: some View {
         VStack(spacing: 12) {
@@ -12,8 +21,9 @@ struct MultiSelectableOptionsView<T: Identifiable & Hashable>: View {
                 SelectableOptionCell(
                     option: option,
                     isSelected: selections.contains(option),
-                    iconName: iconProvider?(option),
-                    title: titleProvider?(option)
+                    iconName: option.icon,
+                    title: option.title,
+                    subtitle: option.subtitle
                 ) {
                     if selections.contains(option) {
                         selections.remove(option)
@@ -27,11 +37,9 @@ struct MultiSelectableOptionsView<T: Identifiable & Hashable>: View {
 }
 
 // MARK: - Reusable Selection View
-struct SelectableOptionsView<T: Identifiable>: View {
+struct SelectableOptionsView<T: SelectableItemProtocol>: View {
     let options: [T]
     @Binding var selection: T
-    var iconProvider: ((T) -> String)? = nil
-    var titleProvider: ((T) -> String)? = nil
     
     var body: some View {
         VStack(spacing: 12) {
@@ -39,8 +47,9 @@ struct SelectableOptionsView<T: Identifiable>: View {
                 SelectableOptionCell(
                     option: option,
                     isSelected: option.id == selection.id,
-                    iconName: iconProvider?(option),
-                    title: titleProvider?(option)
+                    iconName: option.icon,
+                    title: option.title,
+                    subtitle: option.subtitle
                 ) {
                     selection = option
                 }
@@ -53,8 +62,9 @@ struct SelectableOptionsView<T: Identifiable>: View {
 struct SelectableOptionCell<T>: View {
     let option: T
     let isSelected: Bool
-    let iconName: String?
-    let title: String?
+    let iconName: ImageResource?
+    let title: String
+    let subtitle: String?
     let action: () -> Void
     
     private let iconSize: CGFloat = 16
@@ -63,7 +73,7 @@ struct SelectableOptionCell<T>: View {
     var body: some View {
         Button(action: action) {
             HStack {
-                HStack(spacing: 12) {
+                HStack(spacing: 20) {
                     if let iconName {
                         IconContainer(
                             iconName: iconName,
@@ -71,10 +81,16 @@ struct SelectableOptionCell<T>: View {
                         )
                     }
                     
-                    FSText(
-                        text: title ?? "",
-                        fontStyle: isSelected ? .bodyBold16 : .body16
-                    )
+                    VStack(alignment: .leading, spacing: 4) {
+                        FSTextView(title, typography: isSelected ? .p_ui_bold : .p_ui)
+                        
+                        if let subtitle {
+                            FSText(
+                                text: subtitle,
+                                fontStyle: .body12
+                            )
+                        }
+                    }
                 }
                 
                 Spacer()
@@ -97,7 +113,7 @@ struct SelectableOptionCell<T>: View {
 
 // MARK: - Icon Container
 private struct IconContainer: View {
-    let iconName: String
+    let iconName: ImageResource
     let isSelected: Bool
     
     var body: some View {
@@ -109,7 +125,7 @@ private struct IconContainer: View {
             
         }
         .padding(8)
-        .frame(width: 36, height: 36)
+        .frame(width: 40, height: 40)
         .background(
             Circle()
                 .fill(isSelected ? Color.gray246 : Color.white)

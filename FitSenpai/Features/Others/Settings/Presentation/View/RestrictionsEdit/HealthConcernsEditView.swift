@@ -47,8 +47,6 @@ struct HealthConcernsEditView: View {
             selection: .constant(.none),
             selections: $selectedConcerns,
             showCustomInput: $showCustomInput,
-            iconProvider: { $0.iconName },
-            titleProvider: { $0.rawValue },
             isOtherOption: { $0 == .other },
             isNoneOption: { $0 == .none }
         )

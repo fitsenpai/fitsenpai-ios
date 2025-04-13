@@ -22,9 +22,7 @@ struct ActivityLevelEditView: View {
         ) {
             SelectableOptionsView(
                 options: ActivityLevel.allCases,
-                selection: $selectedLevel,
-                iconProvider: { $0.iconName },
-                titleProvider: { $0.rawValue }
+                selection: $selectedLevel
             )
         }
     }

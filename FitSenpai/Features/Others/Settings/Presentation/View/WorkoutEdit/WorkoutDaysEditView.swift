@@ -24,8 +24,7 @@ struct WorkoutDaysEditView: View {
         ) {
             MultiSelectableOptionsView<WeekDay>(
                 options: WeekDay.allCases,
-                selections: $selectedDays,
-                titleProvider: { $0.fullName }
+                selections: $selectedDays
             )
         }
     }

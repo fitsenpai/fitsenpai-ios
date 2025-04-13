@@ -1,24 +1,27 @@
 import Foundation
+import SwiftUI
 
 // MARK: - Gender
-enum Gender: String, CaseIterable, Identifiable {
+enum Gender: String, SelectableItemProtocol {
     case male = "Male"
     case female = "Female"
     case other = "Other"
     
     var id: String { rawValue }
     
-    var iconName: String {
+    var title: String { rawValue }
+    
+    var icon: ImageResource? {
         switch self {
-        case .male: return "ic_male"
-        case .female: return "ic_female"
-        case .other: return "ic_dots"
+        case .male: return .icMale
+        case .female: return .icFemale
+        case .other: return .icDots
         }
     }
 }
 
 // MARK: - Activity Level
-enum ActivityLevel: String, CaseIterable, Identifiable {
+enum ActivityLevel: String, SelectableItemProtocol {
     case sedentary = "Sedentary"
     case light = "Light activity"
     case moderate = "Moderate"
@@ -27,7 +30,9 @@ enum ActivityLevel: String, CaseIterable, Identifiable {
     
     var id: String { rawValue }
     
-    var description: String {
+    var title: String { rawValue }
+    
+    var subtitle: String? {
         switch self {
         case .sedentary: return "Mostly sitting, little exercise"
         case .light: return "1-2 workouts/week"
@@ -37,18 +42,18 @@ enum ActivityLevel: String, CaseIterable, Identifiable {
         }
     }
     
-    var iconName: String {
+    var icon: ImageResource? {
         switch self {
-        case .sedentary: return "ic_chair"
-        case .light: return "ic_jog"
-        case .moderate: return "ic_bike"
-        case .heavy: return "ic_dumble"
-        case .athlete: return "ic_swim"
+        case .sedentary: return .icChair
+        case .light: return .icJog
+        case .moderate: return .icBike
+        case .heavy: return .icDumble
+        case .athlete: return .icSwim
         }
     }
 }
 
-enum FitnessGoals: String, CaseIterable, Identifiable {
+enum FitnessGoals: String, SelectableItemProtocol {
     case fatLoss = "Fat loss"
     case muscleGain = "Muscle gain"
     case generalFitness = "General fitness"
@@ -57,24 +62,18 @@ enum FitnessGoals: String, CaseIterable, Identifiable {
     
     var id: String { rawValue }
     
-    var iconName: String {
-        switch self {
-        case .fatLoss: return "ic_line_chart_down"
-        case .muscleGain: return "ic_dumble"
-        case .generalFitness: return "ic_sparkle"
-        case .increasedEndurance: return "ic_lightning"
-        case .aesthetic: return "ic_sparkle"
-        }
-    }
+    var title: String { rawValue }
 }
 
 // MARK: - Workout Location
-enum WorkoutLocation: String, CaseIterable, Identifiable {
+enum WorkoutLocation: String, SelectableItemProtocol {
     case home = "Home"
     case gym = "Gym"
     case mixed = "Mixed"
     
     var id: String { rawValue }
+    
+    var title: String { rawValue }
     
     var subtitle: String {
         switch self {
@@ -84,17 +83,17 @@ enum WorkoutLocation: String, CaseIterable, Identifiable {
         }
     }
     
-    var iconName: String {
+    var icon: ImageResource? {
         switch self {
-        case .home: return "ic_house"
-        case .gym: return "ic_building"
-        case .mixed: return "ic_arrows"
+        case .home: return .icHouse
+        case .gym: return .icBuilding
+        case .mixed: return .icArrows
         }
     }
 }
 
 // MARK: - Workout Duration
-enum WorkoutDuration: String, CaseIterable, Identifiable {
+enum WorkoutDuration: String, SelectableItemProtocol {
     case fifteen = "15 mins"
     case thirty = "30 mins"
     case fortyFive = "45 mins"
@@ -102,15 +101,19 @@ enum WorkoutDuration: String, CaseIterable, Identifiable {
     case more = "60+ mins"
     
     var id: String { rawValue }
+    
+    var title: String { rawValue }
 }
 
 // MARK: - Exercise Difficulty
-enum ExerciseDifficulty: String, CaseIterable, Identifiable {
+enum ExerciseDifficulty: String, SelectableItemProtocol {
     case beginner = "Beginner"
     case intermediate = "Intermediate"
     case advanced = "Advanced"
     
     var id: String { rawValue }
+    
+    var title: String { rawValue }
     
     var subtitle: String {
         switch self {
@@ -120,17 +123,17 @@ enum ExerciseDifficulty: String, CaseIterable, Identifiable {
         }
     }
     
-    var iconName: String {
+    var icon: ImageResource? {
         switch self {
-        case .beginner: return "ic_jog"
-        case .intermediate: return "ic_dumble"
-        case .advanced: return "ic_lightning"
+        case .beginner: return .icJog
+        case .intermediate: return .icDumble
+        case .advanced: return .icLightning
         }
     }
 }
 
 // MARK: - Dietary Preference
-enum DietaryPreference: String, CaseIterable, Identifiable {
+enum DietaryPreference: String, SelectableItemProtocol {
     case none = "None"
     case highProtein = "High protein, low carb"
     case vegetarian = "Vegetarian"
@@ -139,19 +142,21 @@ enum DietaryPreference: String, CaseIterable, Identifiable {
     
     var id: String { rawValue }
     
-    var iconName: String {
+    var title: String { rawValue }
+
+    var icon: ImageResource? {
         switch self {
-        case .none: return "ic_x"
-        case .highProtein: return "ic_fish"
-        case .vegetarian: return "ic_orange"
-        case .vegan: return "ic_leaves"
-        case .other: return "ic_dots"
+        case .none: return .icX
+        case .highProtein: return .icFish
+        case .vegetarian: return .icOrange
+        case .vegan: return .icLeaves
+        case .other: return .icDots
         }
     }
 }
 
 // MARK: - Allergy
-enum Allergy: String, CaseIterable, Identifiable {
+enum Allergy: String, SelectableItemProtocol {
     case none = "None"
     case nuts = "Nuts"
     case milkAndDairy = "Milk and dairy"
@@ -160,19 +165,21 @@ enum Allergy: String, CaseIterable, Identifiable {
     
     var id: String { rawValue }
     
-    var iconName: String {
+    var title: String { rawValue }
+
+    var icon: ImageResource? {
         switch self {
-        case .none: return "ic_x"
-        case .nuts: return "ic_nuts"
-        case .milkAndDairy: return "ic_cheese"
-        case .shellfish: return "ic_shrimp"
-        case .other: return "ic_dots"
+        case .none: return .icX
+        case .nuts: return .icNuts
+        case .milkAndDairy: return .icCheese
+        case .shellfish: return .icShrimp
+        case .other: return .icDots
         }
     }
 }
 
 // MARK: - WeekDay
-enum WeekDay: Int, CaseIterable, Identifiable {
+enum WeekDay: Int, SelectableItemProtocol {
     case sunday = 0
     case monday = 1
     case tuesday = 2
@@ -182,6 +189,8 @@ enum WeekDay: Int, CaseIterable, Identifiable {
     case saturday = 6
     
     var id: Int { rawValue }
+    
+    var title: String { shortName }
     
     var shortName: String {
         switch self {
@@ -209,7 +218,7 @@ enum WeekDay: Int, CaseIterable, Identifiable {
 }
 
 // MARK: - Health Concern
-enum HealthConcern: String, CaseIterable, Identifiable {
+enum HealthConcern: String, SelectableItemProtocol {
     case none = "None"
     case jointPain = "Joint pain"
     case backIssues = "Back issues"
@@ -218,13 +227,15 @@ enum HealthConcern: String, CaseIterable, Identifiable {
     
     var id: String { rawValue }
     
-    var iconName: String {
+    var title: String { rawValue }
+    
+    var icon: ImageResource? {
         switch self {
-        case .none: return "ic_x"
-        case .jointPain: return "ic_bone"
-        case .backIssues: return "ic_hike"
-        case .heartCondition: return "ic_heart_2"
-        case .other: return "ic_dots"
+        case .none: return .icX
+        case .jointPain: return .icBone
+        case .backIssues: return .icHike
+        case .heartCondition: return .icHeart2
+        case .other: return .icDots
         }
     }
 }

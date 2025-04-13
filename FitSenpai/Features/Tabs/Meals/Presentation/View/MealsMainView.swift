@@ -69,12 +69,12 @@ struct MealsMainView: View {
         LazyVGrid(columns: columns, spacing: 12) {
             ForEach(items, id: \.0) { item in
                 HStack {
-                    FSText(text: item.0, fontStyle: .medium14)
+                    FSTextView(item.0, typography: .body_medium)
                     Spacer()
                     IconLabelView(
                         fsMetric: item.4,
                         value: item.1,
-                        typography: .body,
+                        typography: .body_bold,
                         fontColor: item.3,
                         iconSize: 16
                     )

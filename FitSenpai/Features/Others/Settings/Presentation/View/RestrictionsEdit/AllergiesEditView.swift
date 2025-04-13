@@ -47,8 +47,6 @@ struct AllergiesEditView: View {
             selection: .constant(.none),
             selections: $selectedAllergies,
             showCustomInput: $showCustomInput,
-            iconProvider: { $0.iconName },
-            titleProvider: { $0.rawValue },
             isOtherOption: { $0 == .other },
             isNoneOption: { $0 == .none }
         )

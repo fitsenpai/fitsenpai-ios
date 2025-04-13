@@ -1,14 +1,12 @@
 import SwiftUI
 
-struct RestrictionsOptionsView<T>: View where T: Identifiable & Hashable {
+struct RestrictionsOptionsView<T>: View where T: SelectableItemProtocol {
     let title: String
     let options: [T]
     let isMultiSelect: Bool
     @Binding var selection: T
     @Binding var selections: Set<T>
     @Binding var showCustomInput: Bool
-    let iconProvider: (T) -> String
-    let titleProvider: (T) -> String
     let isOtherOption: (T) -> Bool
     let isNoneOption: (T) -> Bool
     
@@ -19,8 +17,6 @@ struct RestrictionsOptionsView<T>: View where T: Identifiable & Hashable {
         selection: Binding<T>,
         selections: Binding<Set<T>>,
         showCustomInput: Binding<Bool>,
-        iconProvider: @escaping (T) -> String,
-        titleProvider: @escaping (T) -> String,
         isOtherOption: @escaping (T) -> Bool,
         isNoneOption: @escaping (T) -> Bool
     ) {
@@ -30,8 +26,6 @@ struct RestrictionsOptionsView<T>: View where T: Identifiable & Hashable {
         self._selection = selection
         self._selections = selections
         self._showCustomInput = showCustomInput
-        self.iconProvider = iconProvider
-        self.titleProvider = titleProvider
         self.isOtherOption = isOtherOption
         self.isNoneOption = isNoneOption
     }
@@ -49,26 +43,33 @@ struct RestrictionsOptionsView<T>: View where T: Identifiable & Hashable {
         Button {
             handleSelection(option)
         } label: {
-            HStack(spacing: 16) {
-                
-                ZStack {
-                    Image(iconProvider(option))
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 16, height: 16)
-                    
+            HStack(spacing: 20) {
+                if let icon = option.icon {
+                    ZStack {
+                        Image(icon)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 16, height: 16)
+                        
+                    }
+                    .padding(8)
+                    .frame(width: 40, height: 40)
+                    .background(
+                        Circle()
+                            .fill(isSelected(option) ? Color.gray246 : Color.white)
+                    )
                 }
-                .padding(8)
-                .frame(width: 36, height: 36)
-                .background(
-                    Circle()
-                        .fill(isSelected(option) ? Color.gray246 : Color.white)
-                )
                 
-                FSText(
-                    text: titleProvider(option),
-                    fontStyle: isSelected(option) ? .bodyBold16 : .body16
-                )
+                VStack(alignment: .leading, spacing: 4) {
+                    FSTextView(title, typography: isSelected(option) ? .p_ui_bold : .p_ui)
+                    
+                    if let subtitle = option.subtitle {
+                        FSText(
+                            text: subtitle,
+                            fontStyle: .body12
+                        )
+                    }
+                }
                 Spacer()
             }
             .foregroundColor(.black)

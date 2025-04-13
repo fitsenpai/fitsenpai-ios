@@ -14,37 +14,91 @@ import Supabase
 class AppViewModel: ObservableObject {
     // MARK: - Properties
     
+    /// The authenticated user object, if available.
+    @Published var user: FSUser?
+    
     /// Indicates whether the user is currently logged in.
     @Published var isLoggedIn: Bool = false
     
     /// Represents the current view state of the app, used for loading indicators.
     @Published var viewState: ViewState = .loading
     
+    /// Determines the current navigation destination during onboarding.
     @Published var navDestination: OnboardingNavDestination? = nil
     
+    /// Configuration for displaying loading indicators throughout the app.
     @Published var loadingConfig: FSLoadingConfig = .defaultConfig
     
+    /// A flag indicating whether the user should be directed to the login screen.
     @Published var shouldLogin: Bool = false
     
-    @Published var user: FSUser?
-    
-    /// Indicates whether the users access is limited.
+    /// A flag indicating whether the user should be directed to the login screen.
+    var isProduction: Bool {
+        return EnvironmentManager.shared.value(for: .isProduction) ?? false
+    }
+
+    /// Indicates whether the user's access is limited to a restricted experience.
     @AppState(\.isLimited) var isLimitedAccess: Bool
     
-    /// Use case for retrieving the current user data.
+    /// Use case for fetching the current user from a data source (e.g., Supabase).
     @Inject private var getUserUseCase: GetUserUseCaseProtocol
     
     // MARK: - Initializer
     
-    /// Initializes the app view model and begins user session validation.
+    /// Initializes the AppViewModel.
+    ///
+    /// This sets up dependencies and attempts to fetch the current user to determine
+    /// the authentication state and access level.
     init() {
         self.setupDependencies()
         Task { @MainActor in
             await self.getCurrentUser()
         }
     }
+  
+}
+
+
+// MARK: - Public Methods
+
+extension AppViewModel {
     
-    // MARK: - Public Methods
+    /// Updates the global environment with the given user and sets the login state.
+    /// - Parameter user: The user to set in the global environment.
+    func updateUser(_ user: FSUser) {
+        self.user = user
+        self.isLoggedIn = true
+    }
+
+    func createLimitedWorkoutPlan() async {
+        self.viewState = .loading
+        self.loadingConfig = .init(title: "Getting everything ready for you", subtitle: "Customizing your workout plan...")
+        try? await Task.sleep(for: .seconds(3))
+        self.isLimitedAccess = true
+        self.viewState = .idle
+        self.isLoggedIn = true
+    }
+    
+    func handleCreatePlan() {
+        navDestination = .createPlan
+    }
+    
+    func handleExistingAccount() {
+        navDestination = .signin
+    }
+}
+
+
+// MARK: - Private Methods
+
+private extension AppViewModel {
+    /// Registers core services and the view model itself for dependency injection.
+    func setupDependencies() {
+        // Register all core services
+        CoreServices.registerAll()
+        // Register self as singleton
+        DependencyInjector.register(self)
+    }
 
     /// (Deprecated) Initializes the user session by checking for an active session in Supabase.
     /// This function will be removed in the future.
@@ -79,19 +133,8 @@ class AppViewModel: ObservableObject {
         }
     }
     
-    func createLimitedWorkoutPlan() async {
-        self.viewState = .loading
-        self.loadingConfig = .init(title: "Getting everything ready for you", subtitle: "Customizing your workout plan...")
-        try? await Task.sleep(for: .seconds(3))
-        self.isLimitedAccess = true
-        self.viewState = .idle
-        self.isLoggedIn = true
-    }
-    
-    // MARK: - Private Methods
-    
     /// Retrieves the currently authenticated user and updates the global environment.
-    private func getCurrentUser() async {
+    func getCurrentUser() async {
         defer { self.viewState = .idle }
         guard !isLimitedAccess else {
             self.isLoggedIn = true
@@ -109,13 +152,6 @@ class AppViewModel: ObservableObject {
         }
     }
     
-    /// Updates the global environment with the given user and sets the login state.
-    /// - Parameter user: The user to set in the global environment.
-    func updateUser(_ user: FSUser) {
-        self.user = user
-        self.isLoggedIn = true
-    }
-    
     /// Initializes the global environment object with the given Supabase user.
     /// - Parameter user: The Supabase user to convert and assign.
     private func initGlobalEnv(user: User) {
@@ -123,19 +159,4 @@ class AppViewModel: ObservableObject {
         globalAppEnvObject.user = fsUser
     }
     
-    /// Registers core services and the view model itself for dependency injection.
-    private func setupDependencies() {
-        // Register all core services
-        CoreServices.registerAll()
-        // Register self as singleton
-        DependencyInjector.register(self)
-    }
-    
-    func handleCreatePlan() {
-        navDestination = .createPlan
-    }
-    
-    func handleExistingAccount() {
-        navDestination = .signin
-    }
 }

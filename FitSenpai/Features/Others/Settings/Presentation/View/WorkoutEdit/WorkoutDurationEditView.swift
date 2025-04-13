@@ -21,8 +21,7 @@ struct WorkoutDurationEditView: View {
         ) {
             SelectableOptionsView(
                 options: WorkoutDuration.allCases,
-                selection: $selectedDuration,
-                titleProvider: { $0.rawValue }
+                selection: $selectedDuration
             )
         }
     }

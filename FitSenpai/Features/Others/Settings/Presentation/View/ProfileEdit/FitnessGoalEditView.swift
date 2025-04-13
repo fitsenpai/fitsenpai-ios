@@ -44,9 +44,7 @@ struct FitnessGoalEditView: View {
         ) {
             SelectableOptionsView(
                 options: FitnessGoals.allCases,
-                selection: $selectedGoal,
-                iconProvider: { $0.iconName },
-                titleProvider: { $0.rawValue }
+                selection: $selectedGoal
             )
         }
     }

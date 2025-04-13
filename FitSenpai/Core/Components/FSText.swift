@@ -21,6 +21,7 @@ enum FSTypography {
     case list
     case body
     case body_medium
+    case body_bold
     case suble
     case suble_medium
     case suble_semibold
@@ -43,7 +44,7 @@ enum FSTypography {
             18
         case .p, .p_ui, .p_ui_medium, .p_ui_bold, .list, .blockquote:
             16
-        case .body, .body_medium, .suble, .suble_medium,.suble_semibold, .small:
+        case .body, .body_medium, .body_bold, .suble, .suble_medium,.suble_semibold, .small:
             14
         case .detail_semi:
             12
@@ -54,7 +55,7 @@ enum FSTypography {
     
     var fontName: String {
         switch self {
-        case .h1, .h2, .p_ui_bold:
+        case .h1, .h2, .p_ui_bold, .body_bold:
             return FSFont.bold.name
         case .h3, .h4, .large, .detail_semi, .suble, .suble_semibold:
             return FSFont.semibold.name
@@ -67,7 +68,7 @@ enum FSTypography {
     
     var letterSpaceTracking: CGFloat {
         switch self {
-        case .h2, .body: tracking(fromPercentage: -1, fontSize: fontSize)
+        case .h2, .body, .body_bold: tracking(fromPercentage: -1, fontSize: fontSize)
         case .h3, .body_medium: tracking(fromPercentage: -2, fontSize: fontSize)
         case .h4: tracking(fromPercentage: -0.5, fontSize: fontSize)
         default: 0
@@ -84,7 +85,7 @@ enum FSTypography {
             return calculateLineSpacing(fromLineHeight: 32, fontSize: fontSize)
         case .h4, .large, .lead:
             return calculateLineSpacing(fromLineHeight: 28, fontSize: fontSize)
-        case .p, .p_ui, .p_ui_medium, .p_ui_bold, .list, .body, .body_medium, .blockquote:
+        case .p, .p_ui, .p_ui_medium, .p_ui_bold, .list, .body, .body_medium, .body_bold, .blockquote:
             return calculateLineSpacing(fromLineHeight: 24, fontSize: fontSize)
         case .suble, .suble_medium, .suble_semibold, .detail_semi:
             return calculateLineSpacing(fromLineHeight: 20, fontSize: fontSize)

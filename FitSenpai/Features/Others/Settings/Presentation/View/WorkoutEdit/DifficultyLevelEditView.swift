@@ -20,9 +20,7 @@ struct DifficultyLevelEditView: View {
         ) {
             SelectableOptionsView(
                 options: ExerciseDifficulty.allCases,
-                selection: $selectedDifficulty,
-                iconProvider: { $0.iconName },
-                titleProvider: { $0.rawValue }
+                selection: $selectedDifficulty
             )
         }
     }

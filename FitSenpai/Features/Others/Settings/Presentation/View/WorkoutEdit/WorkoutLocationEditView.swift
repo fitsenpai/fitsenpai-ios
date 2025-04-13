@@ -20,9 +20,7 @@ struct WorkoutLocationEditView: View {
         ) {
             SelectableOptionsView(
                 options: WorkoutLocation.allCases,
-                selection: $selectedLocation,
-                iconProvider: { $0.iconName },
-                titleProvider: { $0.rawValue }
+                selection: $selectedLocation
             )
         }
     }

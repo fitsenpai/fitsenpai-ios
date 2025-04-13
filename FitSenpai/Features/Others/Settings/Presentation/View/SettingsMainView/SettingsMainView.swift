@@ -66,32 +66,30 @@ struct SettingsMainView: View {
                 }
                 
                
-                
-                // Debug buttons
-                #if DEBUG
-                // Version info
-                HStack(spacing: 24) {
-                    Spacer()
-                    buildVersionText
-                        .padding(.bottom, 4)
-                    
-                    Menu {
-                        Button(role: .destructive, action: clearAllData) {
-                            Label("Clear All Data", systemImage: "trash")
-                        }
+                // MARK: Debug menu
+                if !appViewModel.isProduction {
+                    HStack(spacing: 24) {
+                        Spacer()
+                        buildVersionText
+                            .padding(.bottom, 4)
                         
-                        Button(action: clearCache) {
-                            Label("Clear Cache", systemImage: "arrow.triangle.2.circlepath")
+                        Menu {
+                            Button(role: .destructive, action: clearAllData) {
+                                Label("Clear All Data", systemImage: "trash")
+                            }
+                            
+                            Button(action: clearCache) {
+                                Label("Clear Cache", systemImage: "arrow.triangle.2.circlepath")
+                            }
+                        } label: {
+                            Text("Debug Menu")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
                         }
-                    } label: {
-                        Text("Debug Menu")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
+                        .padding(.bottom, 8)
+                        Spacer()
                     }
-                    .padding(.bottom, 8)
-                    Spacer()
                 }
-                #endif
             }
             .padding(.horizontal, 24)
             .manageSubscriptionsSheet(isPresented: $isPresentedManageSubscription)
