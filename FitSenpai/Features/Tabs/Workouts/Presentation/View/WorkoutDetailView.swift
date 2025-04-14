@@ -44,11 +44,13 @@ struct WorkoutDetailView: View {
             
             if isLimitedAccess {
                 FSButton(title: "Unlock full week", fontStyle: .bodyBold16, cornerRadius: 32, tapAction: {
+                    triggerHaptics()
                     Superwall.shared.register(placement: "campaign_trigger")
                 })
             } else {
                 FSButton(title: "Complete", fontStyle: .bodyBold16, cornerRadius: 32, tapAction: {
                     dismiss()
+                    triggerHaptics()
                 })
             }
             
@@ -77,6 +79,7 @@ struct WorkoutDetailView: View {
                     if isLimitedAccess {
                         Superwall.shared.register(placement: "campaign_trigger")
                     }
+                    triggerHaptics()
                 }
         }
     }
@@ -97,7 +100,6 @@ struct WorkoutDetailView: View {
     
     var workoutSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            
             targetGroupHorizontalList
             workoutInfoHorizontalView
         }

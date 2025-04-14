@@ -17,7 +17,7 @@ struct OnboardingMainView: View {
     func onDismiss() {
         withAnimation(.easeInOut(duration: 0.3)) {
             if viewModel.currentStepIndex > 0 {
-                viewModel.triggerHaptics()
+                triggerHaptics()
                 viewModel.moveToPreviousStep()
             } else {
                 dismiss()
@@ -134,7 +134,7 @@ struct OnboardingMainView: View {
             cornerRadius: 32,
             background: viewModel.canProceed ? .fsPrimary : .gray.opacity(0.3)
         ) {
-            viewModel.triggerHaptics()
+            triggerHaptics()
             withAnimation(.easeInOut(duration: 0.3)) {
                 viewModel.moveToNextStep()
             }

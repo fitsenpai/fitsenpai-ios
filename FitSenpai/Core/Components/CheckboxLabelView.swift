@@ -23,7 +23,7 @@ struct CheckboxLabelView: View {
                 
                 if isChecked {
                     onItemSelected?()
-                }else{
+                } else {
                     onItemDeselected?()
                 }
             }, label: {
@@ -37,11 +37,12 @@ struct CheckboxLabelView: View {
                         .frame(width: 29, height: 29)
                 }
             })
-            FSText(text: title, fontStyle: .body14, color: .fsMutedForeground)
+            
+            FSTextView(title, typography: .body, color: .fsMutedForeground)
             
             Spacer()
             
-            FSText(text: detailInfo, fontStyle: .body14, color: .fsMutedForeground)
+            FSTextView(detailInfo, typography: .body, color: .fsMutedForeground.opacity(0.8))
             
         }
     }

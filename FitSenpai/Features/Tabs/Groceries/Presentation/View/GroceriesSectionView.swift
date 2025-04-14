@@ -21,6 +21,7 @@ struct GroceriesSectionView: View {
                     withAnimation(.easeInOut) {
                         isShowingDetails.toggle()
                     }
+                    triggerHaptics()
                 } label: {
                     HStack {
                         ZStack(alignment: .center) {
@@ -32,8 +33,8 @@ struct GroceriesSectionView: View {
                                 .scaledToFit()
                                 .frame(width: 16, height: 16)
                         }
-                        
-                        FSText(text: foodCategory.title(), fontStyle: .body14, color: .fsTitle)
+                        FSTextView("\(foodCategory.title()) \(foodItems.count)", typography: .body_medium)
+
                         Spacer()
                         Button(action: {
                             withAnimation(.easeInOut) {
@@ -60,9 +61,11 @@ struct GroceriesSectionView: View {
                                 isChecked: selectedItems.contains { $0.name == item.name },
                                 onItemSelected: {
                                     selectedItems.append(item)
+                                    triggerHaptics()
                                 },
                                 onItemDeselected: {
                                     selectedItems.removeAll { $0.name == item.name }
+                                    triggerHaptics()
                                 }
                             )
                         }

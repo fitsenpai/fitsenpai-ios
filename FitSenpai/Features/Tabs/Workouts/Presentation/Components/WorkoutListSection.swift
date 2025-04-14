@@ -14,6 +14,7 @@ struct WorkoutListSection: View {
         VStack(spacing: 16) {
             FSSectionHeaderView(text: "Workouts") {
                 viewModel.activeSheet = .changeWorkout
+                triggerHaptics()
             }
             FSCompletionBarView(titleText: "Upper Body", progress: 0.2)
             workoutList
@@ -33,6 +34,7 @@ struct WorkoutListSection: View {
                     )
                     .onTapGesture {
                         viewModel.showingDetail.toggle()
+                        triggerHaptics()
                     }
                     .sheet(isPresented: $viewModel.showingDetail) {
                         WorkoutDetailView(viewModel: WorkoutDetailViewModel(routine: Routine.initTest()))

@@ -61,6 +61,7 @@ struct WorkoutView: View {
     var checkBoxButton: some View {
         Button(action: {
             isSelected.toggle()
+            triggerHaptics()
         }, label: {
             if isSelected {
                 Image("ic_checkbox_selected")

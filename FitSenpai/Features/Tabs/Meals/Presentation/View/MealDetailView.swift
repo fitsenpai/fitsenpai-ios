@@ -36,6 +36,7 @@ struct MealDetailView: View {
             
             if isLimitedAccess {
                 FSButton(title: "Unlock full week", fontStyle: .bodyBold16, cornerRadius: 32, tapAction: {
+                    triggerHaptics()
                     Superwall.shared.register(placement: "campaign_trigger")
                 })
             }
@@ -62,6 +63,7 @@ struct MealDetailView: View {
                     if isLimitedAccess {
                         Superwall.shared.register(placement: "campaign_trigger")
                     }
+                    triggerHaptics()
                 }
         }
     }

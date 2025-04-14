@@ -39,7 +39,7 @@ struct NotificationsStepView: View {
             VStack(spacing: 8) {
                 HStack(spacing: 0) {
                     Button(action: {
-                        viewModel.triggerHaptics()
+                        triggerHaptics()
                         withAnimation {
                             viewModel.moveToNextStep()
                         }

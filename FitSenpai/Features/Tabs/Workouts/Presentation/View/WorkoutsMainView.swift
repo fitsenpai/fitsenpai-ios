@@ -33,7 +33,9 @@ struct WorkoutsMainView: View {
             containerHeight: .infinity,
             showButton: false,
             isLoading: true,
-            buttonAction: { }
+            buttonAction: {
+                triggerHaptics()
+            }
         )
     }
     
@@ -51,6 +53,7 @@ struct WorkoutsMainView: View {
                     mainViewModel.progressData = progressData
                     mainViewModel.highlightedDays = days
                 }
+                triggerHaptics()
             }
         )
     }

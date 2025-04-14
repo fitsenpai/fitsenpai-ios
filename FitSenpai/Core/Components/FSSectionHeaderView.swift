@@ -65,6 +65,7 @@ struct FSSectionHeaderView: View {
         Group {
             Button {
                 feedbackType = .negative
+                triggerHaptics()
             } label: {
                 Image("ic_thumbs_down")
                     .resizable()
@@ -76,6 +77,7 @@ struct FSSectionHeaderView: View {
 //                    showRateApp.toggle()
 //                }
                 requestReview()
+                triggerHaptics()
             } label: {
                 Image("ic_thumbs_up")
                     .resizable()

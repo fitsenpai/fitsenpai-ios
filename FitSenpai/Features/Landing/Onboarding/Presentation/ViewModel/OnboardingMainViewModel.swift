@@ -256,7 +256,7 @@ class OnboardingMainViewModel: ObservableObject {
     
     // ADD: Function to request notification permissions
     func requestNotificationPermission() {
-        self.triggerHaptics()
+        triggerHaptics()
         let center = UNUserNotificationCenter.current()
         center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
             DispatchQueue.main.async {
@@ -301,10 +301,5 @@ class OnboardingMainViewModel: ObservableObject {
         print("\nAge: \(age)")
         
         print("=== End of Selections ===")
-    }
-    
-    func triggerHaptics() {
-        let generator = UIImpactFeedbackGenerator(style: .light)
-        generator.impactOccurred()
     }
 }

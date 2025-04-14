@@ -38,21 +38,25 @@ struct MealsMainView: View {
                         MealView(image: "sample1", title: "Protein Pancakes", mealPeriod: .Breakfast)
                             .onTapGesture {
                                 showingDetail.toggle()
+                                triggerHaptics()
                             }
                         
                         MealView(image: "sample2", title: "Chicken Salad", mealPeriod: .Lunch)
                             .onTapGesture {
                                 showingDetail.toggle()
+                                triggerHaptics()
                             }
                         
                         MealView(image: "sample3", title: "Salmon and Asparagus", mealPeriod: .Dinner)
                             .onTapGesture {
                                 showingDetail.toggle()
+                                triggerHaptics()
                             }
                         
                         MealView(image: "sample4", title: "Salmon and Asparagus", mealPeriod: .Lunch)
                             .onTapGesture {
                                 showingDetail.toggle()
+                                triggerHaptics()
                             }
                     }
                    

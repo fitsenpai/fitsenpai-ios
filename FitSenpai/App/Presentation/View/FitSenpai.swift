@@ -36,3 +36,8 @@ struct FitSenpai: App {
         }
     }
 }
+
+public func triggerHaptics() {
+    let generator = UIImpactFeedbackGenerator(style: .light)
+    generator.impactOccurred()
+}
