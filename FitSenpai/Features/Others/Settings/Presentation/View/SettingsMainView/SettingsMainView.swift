@@ -17,7 +17,7 @@ struct SettingsMainView: View {
     @State private var safariURL: URL?
     @State private var isPresentedManageSubscription: Bool = false
     
-    @StateObject private var viewModel = SettingsViewModel()
+    @StateObject private var viewModel: SettingsViewModel
     
     @EnvironmentObject var appState: AppViewModel
     
@@ -25,6 +25,10 @@ struct SettingsMainView: View {
     private let supportEmail = "support@fitsenpai.com"
     private let termsURL = "https://www.fitsenpai.com/terms"
     private let privacyURL = "https://www.fitsenpai.com/privacy-policy"
+    
+    init(profile: FSProfile?) {
+        self._viewModel = StateObject(wrappedValue: SettingsViewModel(profile: profile))
+    }
     
     var body: some View {
         ScrollView {
@@ -189,13 +193,13 @@ struct SettingsMainView: View {
         VStack(spacing: 0) {
             settingsRow("Age", value: "\(viewModel.age)")
             Divider()
-            settingsRow("Gender", value: viewModel.selectedGender.rawValue)
+            settingsRow("Gender", value: viewModel.selectedGender?.title)
             Divider()
             settingsRow("Height & Weight", value: viewModel.formattedHeightWeight)
             Divider()
-            settingsRow("Fitness goal", value: viewModel.selectedFitnessGoal.rawValue)
+            settingsRow("Fitness goal", value: viewModel.selectedFitnessGoal?.rawValue)
             Divider()
-            settingsRow("Activity level", value: viewModel.selectedActivityLevel.rawValue)
+            settingsRow("Activity level", value: viewModel.selectedActivityLevel?.rawValue)
         }
         .background(Color.gray246)
         .cornerRadius(12)
@@ -204,13 +208,13 @@ struct SettingsMainView: View {
     
     private var preferencesSection: some View {
         VStack(spacing: 0) {
-            settingsRow("Workout location", value: viewModel.selectedWorkoutLocation.rawValue)
+            settingsRow("Workout location", value: viewModel.selectedWorkoutDuration?.title)
             Divider()
             settingsRow("Workout days", value: formatWorkoutDays(viewModel.workoutDays))
             Divider()
-            settingsRow("Workout duration", value: viewModel.selectedWorkoutDuration.rawValue)
+            settingsRow("Workout duration", value: viewModel.selectedWorkoutDuration?.title)
             Divider()
-            settingsRow("Difficulty level", value: viewModel.selectedExerciseDifficulty.rawValue)
+            settingsRow("Difficulty level", value: viewModel.selectedWorkoutExperience?.title)
             Divider()
             settingsRow("Dietary", value: viewModel.displayDietaryPreference)
         }
@@ -365,7 +369,7 @@ struct SettingsMainView: View {
         }
     }
     
-    private func settingsRow(_ title: String, value: String) -> some View {
+    private func settingsRow(_ title: String, value: String?) -> some View {
         NavigationLink {
             switch title {
             case "Name":
@@ -401,7 +405,7 @@ struct SettingsMainView: View {
             HStack {
                 FSTextView(title, typography: .p_ui_medium)
                 Spacer()
-                FSTextView(value, typography: .p_ui, color: .fsMutedForeground)
+                FSTextView(value ?? "", typography: .p_ui, color: .fsMutedForeground)
                 Image(systemName: "chevron.right")
                     .foregroundColor(.fsMutedForeground)
                     .font(.system(size: 14))
@@ -446,8 +450,7 @@ struct SettingsMainView: View {
         .contentShape(Rectangle())
     }
     
-    private func formatWorkoutDays(_ days: Set<Int>) -> String {
-        let weekDays = days.compactMap { WeekDay(rawValue: $0) }
+    private func formatWorkoutDays(_ weekDays: [WeekDay]) -> String {
         return weekDays.sorted(by: { $0.rawValue < $1.rawValue })
             .map { $0.shortName }
             .joined(separator: " ")
@@ -505,8 +508,4 @@ struct SettingsMainView: View {
         }
         triggerHaptics()
     }
-}
-
-#Preview {
-    SettingsMainView()
 }

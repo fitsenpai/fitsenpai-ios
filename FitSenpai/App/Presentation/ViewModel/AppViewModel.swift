@@ -17,6 +17,9 @@ class AppViewModel: ObservableObject {
     /// The authenticated user object, if available.
     @Published var user: FSUser?
     
+    /// The authenticated user profile object, if available.
+    @Published var userProfile: FSProfile?
+    
     /// Indicates whether the user is currently logged in.
     @Published var isLoggedIn: Bool = false
     

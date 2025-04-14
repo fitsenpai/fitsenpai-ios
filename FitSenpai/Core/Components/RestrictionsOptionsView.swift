@@ -4,8 +4,8 @@ struct RestrictionsOptionsView<T>: View where T: SelectableItemProtocol {
     let title: String
     let options: [T]
     let isMultiSelect: Bool
-    @Binding var selection: T
-    @Binding var selections: Set<T>
+    @Binding var selection: T?
+    @Binding var selections: [T]
     @Binding var showCustomInput: Bool
     let isOtherOption: (T) -> Bool
     let isNoneOption: (T) -> Bool
@@ -14,8 +14,8 @@ struct RestrictionsOptionsView<T>: View where T: SelectableItemProtocol {
         title: String,
         options: [T],
         isMultiSelect: Bool,
-        selection: Binding<T>,
-        selections: Binding<Set<T>>,
+        selection: Binding<T?>,
+        selections: Binding<[T]>,
         showCustomInput: Binding<Bool>,
         isOtherOption: @escaping (T) -> Bool,
         isNoneOption: @escaping (T) -> Bool
@@ -95,20 +95,24 @@ struct RestrictionsOptionsView<T>: View where T: SelectableItemProtocol {
             return
         }
         
+        if let otherOption = options.first(where: isOtherOption) {
+            selections = selections.filter({ $0 != otherOption })
+        }
+        
         if isMultiSelect {
             if isNoneOption(option) {
                 selections = [option]
             } else {
                 // Remove "None" option if it exists
-                let noneOption = options.first(where: isNoneOption)
-                if let noneOption = noneOption {
-                    selections.remove(noneOption)
+               
+                if let noneOption = options.first(where: isNoneOption) {
+                    selections = selections.filter({ $0 != noneOption })
                 }
                 
                 if selections.contains(option) {
-                    selections.remove(option)
+                    selections = selections.filter({ $0 != option })
                 } else {
-                    selections.insert(option)
+                    selections.append(option)
                 }
             }
         } else {

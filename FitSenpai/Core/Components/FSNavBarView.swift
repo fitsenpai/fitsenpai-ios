@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct FSNavBarView: View {
+    @EnvironmentObject private var appViewModel: AppViewModel
+
     @State private var navDestination: SettingsNavigation?
     
     var body: some View {
@@ -32,7 +34,7 @@ struct FSNavBarView: View {
             .navigationDestination(item: $navDestination) { destination in
                 switch destination {
                 case .settings:
-                    SettingsMainView()
+                    SettingsMainView(profile: appViewModel.userProfile)
                 }
             }
         }

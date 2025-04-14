@@ -3,7 +3,7 @@ import SwiftUI
 struct GenderEditView: View {
     @ObservedObject var viewModel: SettingsViewModel
     @Environment(\.dismiss) var dismiss
-    @State private var selectedGender: Gender
+    @State private var selectedGender: Gender?
     
     init(viewModel: SettingsViewModel) {
         self.viewModel = viewModel

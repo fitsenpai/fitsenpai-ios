@@ -2,7 +2,7 @@ import SwiftUI
 
 struct WorkoutDurationEditView: View {
     @ObservedObject var viewModel: SettingsViewModel
-    @State private var selectedDuration: WorkoutDuration
+    @State private var selectedDuration: WorkoutDuration?
     @Environment(\.dismiss) var dismiss
 
     init(viewModel: SettingsViewModel) {

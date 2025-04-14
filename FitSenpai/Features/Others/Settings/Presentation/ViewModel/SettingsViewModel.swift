@@ -8,22 +8,21 @@ class SettingsViewModel: ObservableObject {
     @Published var firstName: String = "Bella"
     @Published var lastName: String = "Oakley"
     @Published var age: Int = 25
-    @Published var selectedGender: Gender = .female
-    @Published var selectedActivityLevel: ActivityLevel = .moderate
-    @Published var selectedFitnessGoal: FitnessGoals = .muscleGain
-    @Published var selectedWorkoutLocation: WorkoutLocation = .home
-    @Published var workoutDays: Set<Int> = [1, 3, 4, 5]  // Monday, Wednesday, Thursday, Friday
-    @Published var selectedWorkoutDuration: WorkoutDuration = .thirty
-    @Published var selectedDifficultyLevel: ExerciseDifficulty = .advanced
-    @Published var selectedDietaryPreference: DietaryPreference = .none
-    @Published var customDietaryPreference: String = ""
-    @Published var selectedExerciseDifficulty: ExerciseDifficulty = .advanced
-    @Published var selectedAllergies: Set<Allergy> = []
-    @Published var customAllergy: String = ""
-    @Published var selectedHealthConcerns: Set<HealthConcern> = []
-    @Published var customHealthConcern: String = ""
-    @Published var height: Double = 183.0  // Default 6ft in cm
-    @Published var weight: Double = 72.0   // Default 159lb in kg
+    @Published var selectedGender: Gender?
+    @Published var selectedActivityLevel: ActivityLevel?
+    @Published var selectedFitnessGoal: FitnessGoals?
+    @Published var selectedWorkoutLocation: WorkoutLocation?
+    @Published var workoutDays: [WeekDay] = []
+    @Published var selectedWorkoutDuration: WorkoutDuration?
+    @Published var selectedWorkoutExperience: WorkoutExperience?
+    @Published var selectedDietaryPreference: DietaryPreference?
+    @Published var customDietaryPreference: String?
+    @Published var selectedAllergies: [Allergy] = []
+    @Published var customAllergy: String?
+    @Published var selectedHealthConcerns: [HealthConcern] = []
+    @Published var customHealthConcern: String?
+    @Published var height: Double = 0  // Default 6ft in cm
+    @Published var weight: Double = 0  // Default 159lb in kg
     @Published var isMetric: Bool = false
     @Published var viewState: ViewState = .idle
     @Published var activeSheet: FeedbackType?
@@ -37,11 +36,30 @@ class SettingsViewModel: ObservableObject {
     @Inject private var singoutUseCase: SignOutUseCaseProtocol
     
     // MARK: - Init
+    convenience init(profile: FSProfile?) {
+        
+        self.init()
+        guard let profile else { return }
+        // Convert profile values to corresponding enums
+        self.age = profile.age ?? 0
+        self.height = profile.height ?? 0
+        self.weight = profile.weight ?? 0
+        self.selectedGender = profile.gender
+        self.selectedActivityLevel = profile.activityLevel
+        self.selectedFitnessGoal = profile.mainGoal
+        self.selectedWorkoutLocation = profile.workoutLocation
+        self.workoutDays = profile.workoutDays
+        self.selectedWorkoutDuration = profile.workoutDuration
+        self.selectedWorkoutExperience = profile.workoutExperience
+        self.selectedDietaryPreference = profile.diet
+        self.customDietaryPreference = profile.otherDiet
+        self.selectedAllergies = profile.allergies
+        self.customAllergy = profile.otherAllergies
+        self.selectedHealthConcerns = profile.healthRestrictions
+        self.customHealthConcern = profile.otherHealthRestrictions
+    }
+    
     init() {
-        // TODO: Initialize with user data from backend
-        self.firstName = "Bella"
-        self.lastName = "Oakley"
-        self.age = 25
         setupBindings()
     }
     
@@ -55,17 +73,17 @@ extension SettingsViewModel {
     }
     
     var displayDietaryPreference: String {
-        if selectedDietaryPreference == .none {
+        guard let selectedDietaryPreference, selectedDietaryPreference != .none else  {
             return "None"
         }
-        if selectedDietaryPreference == .other && !customDietaryPreference.isEmpty {
+        if selectedDietaryPreference == .other, let customDietaryPreference, !customDietaryPreference.isEmpty {
             return customDietaryPreference
         }
-        return selectedDietaryPreference.rawValue
+        return selectedDietaryPreference.title
     }
     
     var displayAllergies: String {
-        if selectedAllergies.isEmpty || selectedAllergies == [.none] {
+        if selectedAllergies.isEmpty {
             return "None"
         }
         
@@ -73,7 +91,7 @@ extension SettingsViewModel {
             .filter { $0 != .other }
             .map { $0.rawValue }
         
-        if selectedAllergies.contains(.other) && !customAllergy.isEmpty {
+        if selectedAllergies.contains(.other), let customAllergy, !customAllergy.isEmpty {
             display.append(customAllergy)
         }
         
@@ -81,7 +99,7 @@ extension SettingsViewModel {
     }
     
     var displayHealthConcerns: String {
-        if selectedHealthConcerns.isEmpty || selectedHealthConcerns == [.none] {
+        if selectedHealthConcerns.isEmpty {
             return "None"
         }
         
@@ -89,7 +107,7 @@ extension SettingsViewModel {
             .filter { $0 != .other }
             .map { $0.rawValue }
         
-        if selectedHealthConcerns.contains(.other) && !customHealthConcern.isEmpty {
+        if selectedHealthConcerns.contains(.other), let customHealthConcern, !customHealthConcern.isEmpty {
             display.append(customHealthConcern)
         }
         
@@ -153,66 +171,67 @@ extension SettingsViewModel {
         // TODO: Implement API call to update age
     }
     
-    func updateGender(_ gender: Gender) async {
+    func updateGender(_ gender: Gender?) async {
         selectedGender = gender
         // TODO: Implement API call to update gender
     }
     
-    func updateActivityLevel(_ level: ActivityLevel) async {
+    func updateActivityLevel(_ level: ActivityLevel?) async {
         selectedActivityLevel = level
         // TODO: Implement API call to update activity level
     }
     
-    func updateFitnessGoal(_ goal: FitnessGoals) async {
+    func updateFitnessGoal(_ goal: FitnessGoals?) async {
         selectedFitnessGoal = goal
         // TODO: Implement API call to update fitness goal
     }
     
-    func updateWorkoutLocation(_ location: WorkoutLocation) async {
+    func updateWorkoutLocation(_ location: WorkoutLocation?) async {
         selectedWorkoutLocation = location
         // TODO: Implement API call
     }
     
-    func updateWorkoutDays(_ days: Set<Int>) async {
+    func updateWorkoutDays(_ days: [WeekDay]) async {
         workoutDays = days
         // TODO: Implement API call
     }
     
-    func updateWorkoutDuration(_ duration: WorkoutDuration) async {
+    func updateWorkoutDuration(_ duration: WorkoutDuration?) async {
         selectedWorkoutDuration = duration
         // TODO: Implement API call
     }
     
-    func updateDifficultyLevel(_ level: ExerciseDifficulty) async {
-        selectedDifficultyLevel = level
-        // TODO: Implement API call
-    }
-    
-    func updateDietaryPreference(_ preference: DietaryPreference, customValue: String = "") async {
+    func updateDietaryPreference(_ preference: DietaryPreference?, customValue: String = "") async {
         selectedDietaryPreference = preference
         if preference == .other {
             customDietaryPreference = customValue
+        } else {
+            customDietaryPreference = nil
         }
         // TODO: Implement API call
     }
     
-    func updateExerciseDifficulty(_ level: ExerciseDifficulty) async {
-        selectedExerciseDifficulty = level
+    func updateExerciseDifficulty(_ level: WorkoutExperience?) async {
+        selectedWorkoutExperience = level
         // TODO: Implement API call
     }
     
-    func updateAllergies(_ allergies: Set<Allergy>, customValue: String = "") async {
+    func updateAllergies(_ allergies: [Allergy], customValue: String = "") async {
         selectedAllergies = allergies
         if allergies.contains(.other) {
             customAllergy = customValue
+        } else {
+            customAllergy = nil
         }
         // TODO: Implement API call
     }
     
-    func updateHealthConcerns(_ concerns: Set<HealthConcern>, customValue: String = "") async {
+    func updateHealthConcerns(_ concerns: [HealthConcern], customValue: String = "") async {
         selectedHealthConcerns = concerns
         if concerns.contains(.other) {
             customHealthConcern = customValue
+        } else {
+            customAllergy = nil
         }
         // TODO: Implement API call
     }
@@ -239,6 +258,4 @@ extension SettingsViewModel {
             return false
         }
     }
-    
 }
-

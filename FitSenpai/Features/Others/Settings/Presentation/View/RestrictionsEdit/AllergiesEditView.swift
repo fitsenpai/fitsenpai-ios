@@ -2,7 +2,7 @@ import SwiftUI
 
 struct AllergiesEditView: View {
     @ObservedObject var viewModel: SettingsViewModel
-    @State private var selectedAllergies: Set<Allergy>
+    @State private var selectedAllergies: [Allergy]
     @State private var showCustomInput: Bool = false
     @Environment(\.dismiss) var dismiss
     
@@ -24,7 +24,7 @@ struct AllergiesEditView: View {
             title: "Other food allergies",
             subtitle: "Separate multiple items with a comma",
             placeholder: "Shrimp",
-            initialValue: viewModel.customAllergy,
+            initialValue: viewModel.customAllergy ?? "",
             showCustomInput: $showCustomInput,
             onSave: handleCustomInput
         )
@@ -44,7 +44,7 @@ struct AllergiesEditView: View {
             title: "Allergies",
             options: Allergy.allCases,
             isMultiSelect: true,
-            selection: .constant(.none),
+            selection: .constant(Allergy.none),
             selections: $selectedAllergies,
             showCustomInput: $showCustomInput,
             isOtherOption: { $0 == .other },

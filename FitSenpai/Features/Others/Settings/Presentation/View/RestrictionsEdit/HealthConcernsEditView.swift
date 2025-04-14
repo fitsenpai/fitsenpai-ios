@@ -2,7 +2,7 @@ import SwiftUI
 
 struct HealthConcernsEditView: View {
     @ObservedObject var viewModel: SettingsViewModel
-    @State private var selectedConcerns: Set<HealthConcern>
+    @State private var selectedConcerns: [HealthConcern]
     @State private var showCustomInput: Bool = false
     @Environment(\.dismiss) var dismiss
     
@@ -24,7 +24,7 @@ struct HealthConcernsEditView: View {
             title: "Other health concerns",
             subtitle: "Separate multiple items with a comma",
             placeholder: "Shoulder injury",
-            initialValue: viewModel.customHealthConcern,
+            initialValue: viewModel.customHealthConcern ?? "",
             showCustomInput: $showCustomInput,
             onSave: handleCustomInput
         )
@@ -44,7 +44,7 @@ struct HealthConcernsEditView: View {
             title: "Health Concerns",
             options: HealthConcern.allCases,
             isMultiSelect: true,
-            selection: .constant(.none),
+            selection: .constant(HealthConcern.none),
             selections: $selectedConcerns,
             showCustomInput: $showCustomInput,
             isOtherOption: { $0 == .other },

@@ -2,7 +2,7 @@ import SwiftUI
 
 struct DietaryEditView: View {
     @ObservedObject var viewModel: SettingsViewModel
-    @State private var selectedPreference: DietaryPreference
+    @State private var selectedPreference: DietaryPreference?
     @State private var showCustomInput: Bool = false
     @Environment(\.dismiss) var dismiss
     
@@ -16,7 +16,7 @@ struct DietaryEditView: View {
             OthersInputView(
                 title: "Other dietary preference",
                 placeholder: "Pescatarian",
-                initialValue: viewModel.customDietaryPreference,
+                initialValue: viewModel.customDietaryPreference ?? "",
                 showCustomInput: $showCustomInput,
                 onSave: { value in
                     Task { @MainActor in

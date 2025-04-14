@@ -3,7 +3,7 @@ import SwiftUI
 struct FitnessGoalEditView: View {
     @ObservedObject var viewModel: SettingsViewModel
     @Environment(\.dismiss) var dismiss
-    @State private var selectedGoal: FitnessGoals
+    @State private var selectedGoal: FitnessGoals?
     
     enum FitnessGoal: String, CaseIterable, Identifiable {
         case fatLoss = "Fat loss"

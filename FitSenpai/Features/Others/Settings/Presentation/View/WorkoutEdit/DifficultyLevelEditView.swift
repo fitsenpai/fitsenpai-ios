@@ -2,11 +2,11 @@ import SwiftUI
 
 struct DifficultyLevelEditView: View {
     @ObservedObject var viewModel: SettingsViewModel
-    @State private var selectedDifficulty: ExerciseDifficulty
+    @State private var selectedDifficulty: WorkoutExperience?
     
     init(viewModel: SettingsViewModel) {
         self.viewModel = viewModel
-        _selectedDifficulty = State(initialValue: viewModel.selectedExerciseDifficulty)
+        _selectedDifficulty = State(initialValue: viewModel.selectedWorkoutExperience)
     }
     
     var body: some View {
@@ -19,7 +19,7 @@ struct DifficultyLevelEditView: View {
             }
         ) {
             SelectableOptionsView(
-                options: ExerciseDifficulty.allCases,
+                options: WorkoutExperience.allCases,
                 selection: $selectedDifficulty
             )
         }

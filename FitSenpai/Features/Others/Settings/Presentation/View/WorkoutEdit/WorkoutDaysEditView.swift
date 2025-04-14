@@ -2,12 +2,12 @@ import SwiftUI
 
 struct WorkoutDaysEditView: View {
     @ObservedObject var viewModel: SettingsViewModel
-    @State private var selectedDays: Set<WeekDay>
+    @State private var selectedDays: [WeekDay]
     
     init(viewModel: SettingsViewModel) {
         self.viewModel = viewModel
         // Convert Set<Int> to Set<WeekDay>
-        let initialDays = Set(viewModel.workoutDays.map { WeekDay(rawValue: $0) ?? .monday })
+        let initialDays = viewModel.workoutDays
         _selectedDays = State(initialValue: initialDays)
     }
     
@@ -18,7 +18,7 @@ struct WorkoutDaysEditView: View {
             onSave: {
                 Task { @MainActor in
                     // Convert Set<WeekDay> back to Set<Int>
-                    await viewModel.updateWorkoutDays(Set(selectedDays.map { $0.rawValue }))
+                    await viewModel.updateWorkoutDays(selectedDays)
                 }
             }
         ) {

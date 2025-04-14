@@ -38,7 +38,9 @@ struct OnboardingMainView: View {
             switch sheet {
             case .success:
                 OnboardingSuccessView(viewModel: viewModel) {
-                    viewModel.logSelections()
+                   
+                    appViewModel.userProfile = viewModel.createProfile()
+                    appViewModel.userProfile?.printLogs()
                     dismiss()
                     Task {
                         await appViewModel.createLimitedWorkoutPlan()
@@ -112,6 +114,9 @@ struct OnboardingMainView: View {
                 fat: viewModel.macroFat
             )
             .padding(.top, 32)
+            .onAppear {
+                viewModel.calculateMacros()
+            }
         case .testimonial:
             OnboardingTestimonialView()
         case .notification:

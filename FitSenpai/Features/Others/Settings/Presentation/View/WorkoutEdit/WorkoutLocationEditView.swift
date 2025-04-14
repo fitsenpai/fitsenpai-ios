@@ -2,7 +2,7 @@ import SwiftUI
 
 struct WorkoutLocationEditView: View {
     @ObservedObject var viewModel: SettingsViewModel
-    @State private var selectedLocation: WorkoutLocation
+    @State private var selectedLocation: WorkoutLocation?
     
     init(viewModel: SettingsViewModel) {
         self.viewModel = viewModel

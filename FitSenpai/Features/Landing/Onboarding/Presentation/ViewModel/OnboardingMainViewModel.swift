@@ -17,7 +17,7 @@ enum NavigationDirection {
 
 class OnboardingMainViewModel: ObservableObject {
     @Published var currentStepIndex = 0
-    @Published var selectedOptions: Set<String> = []
+    @Published var selectedOptions: [SelectionItem] = []
     @Published var isSelectionInProgress = false
     @Published var otherInputText: String = ""
     @Published var showOtherInput = false
@@ -29,13 +29,13 @@ class OnboardingMainViewModel: ObservableObject {
     @Published var age: Int = 18
     
     // Macro breakdown
-    @Published var macroCalories: Int = 1558
-    @Published var macroProtein: Int = 118
-    @Published var macroCarbs: Int = 124
-    @Published var macroFat: Int = 64
+    @Published var macroCalories: Int = 0
+    @Published var macroProtein: Int = 0
+    @Published var macroCarbs: Int = 0
+    @Published var macroFat: Int = 0
     
     // Store selections for each step
-    private var stepSelections: [StepID: Set<String>] = [:]
+    private var stepSelections: [StepID: [SelectionItem]] = [:]
     private var stepInputs: [StepID: String] = [:]
     
     // Input text for other inputs
@@ -73,21 +73,20 @@ class OnboardingMainViewModel: ObservableObject {
     
     // IMPROVE: Selection handling
     private func updateSelections(with item: SelectionItem) {
-        if item.id == "other" {
-            selectedOptions = ["other"]
+        if item.isOthers {
+            selectedOptions = [item]
             inputText = stepInputs[currentStep.id] ?? ""
-        } else if item.id == "none" {
-            selectedOptions = ["none"]
+        } else if item.isNone {
+            selectedOptions = [item]
             clearInput()
         } else {
-            selectedOptions.remove("none")
-            selectedOptions.remove("other")
+            selectedOptions.removeAll { $0.isOthers || $0.isNone }
             clearInput()
             
-            if selectedOptions.contains(item.id) {
-                selectedOptions.remove(item.id)
+            if let index = selectedOptions.firstIndex(where: { $0.id == item.id }) {
+                selectedOptions.remove(at: index)
             } else {
-                selectedOptions.insert(item.id)
+                selectedOptions.append(item)
             }
         }
         stepSelections[currentStep.id] = selectedOptions
@@ -103,7 +102,7 @@ class OnboardingMainViewModel: ObservableObject {
         guard !isSelectionInProgress else { return }
         
         isSelectionInProgress = true
-        selectedOptions = [item.id]
+        selectedOptions = [item]
         stepSelections[currentStep.id] = selectedOptions
         triggerHaptics()
         
@@ -170,7 +169,7 @@ class OnboardingMainViewModel: ObservableObject {
         }
         
         stepSelections[currentStep.id] = selectedOptions
-        if selectedOptions.contains("other") {
+        if selectedOptions.contains(where: { $0.isOthers }) {
             stepInputs[currentStep.id] = inputText
         }
     }
@@ -188,7 +187,7 @@ class OnboardingMainViewModel: ObservableObject {
         
         let nextStep = OnboardingStep.steps[nextIndex]
         if nextStep.isInputStep {
-            if selectedOptions.contains("other") {
+            if selectedOptions.contains(where: { $0.isOthers }) {
                 currentStepIndex = nextIndex
                 inputText = stepInputs[currentStep.id] ?? ""
             } else {
@@ -217,7 +216,7 @@ class OnboardingMainViewModel: ObservableObject {
         if previousStep.isInputStep {
             if case .input(let originalStepId, _) = previousStep.type,
                let originalSelections = stepSelections[originalStepId],
-               originalSelections.contains("other") {
+               originalSelections.contains(where: { $0.isOthers }) {
                 currentStepIndex -= 1
                 inputText = stepInputs[originalStepId] ?? ""
             } else {
@@ -257,29 +256,146 @@ class OnboardingMainViewModel: ObservableObject {
         onboardingSheet = sheet
     }
     
-    // IMPROVE: Structured logging
-    func logSelections() {
-        var log = ["=== Onboarding Selections ===\n"]
-        
-        // Step selections
-        OnboardingStep.steps.forEach { step in
-            if let selections = stepSelections[step.id] {
-                log.append("\(step.title):")
-                if selections.contains("other") {
-                    log.append("- Other: \(stepInputs[step.id] ?? "")")
-                } else {
-                    selections.forEach { log.append("- \($0)") }
-                }
-            }
+    func getValue<T: SelectableItemProtocol>(for id: StepID) -> T? {
+        let value = stepSelections[id]?.first?.id
+        return T(rawValue: value)
+    }
+    
+    func getValues<T: SelectableItemProtocol>(for id: StepID) -> [T]? {
+        let value = stepSelections[id]?
+            .compactMap({ $0.id }).compactMap({ T(rawValue: $0) })
+        return value
+    }
+
+    // CHANGE: createProfile() method implementation
+    func createProfile() -> FSProfile {
+        return FSProfile(
+            gender: getValue(for: .gender),
+            activityLevel: getValue(for: .activityLevel),
+            mainGoal: getValue(for: .mainGoal),
+            height: height > 0 ? height : nil,
+            weight: weight > 0 ? weight : nil,
+            age: age > 0 ? age : nil,
+            workoutExperience: getValue(for: .workoutExperience),
+            workoutLocation: getValue(for: .workoutLocation),
+            workoutDays: getValues(for: .workoutDays) ?? [],
+            workoutDuration: getValue(for: .workoutDuration),
+            healthRestrictions: getValues(for: .healthRestrictions) ?? [],
+            otherHealthRestrictions: stepInputs[.healthRestrictions],
+            diet: getValue(for: .diet),
+            otherDiet: stepInputs[.diet],
+            allergies: getValues(for: .allergies) ?? [],
+            otherAllergies: stepInputs[.allergies],
+            cookingStyle: getValue(for: .cookingStyle),
+            pastTrainings: getValues(for: .pastTraining) ?? [],
+            barriers: getValue(for: .barriers),
+            goals: getValue(for: .goals),
+            isMetric: isMetric
+        )
+    }
+
+    // ADD: Helper methods for getting stored selections
+    private func getSelectedTitle(for stepID: StepID) -> String {
+        guard let selections = stepSelections[stepID],
+              let firstSelection = selections.first,
+              let step = OnboardingStep.steps.first(where: { $0.id == stepID }),
+              let option = step.options.first(where: { $0.id == firstSelection.id }) else {
+            return ""
+        }
+        return option.title
+    }
+
+    private func getSelectedTitles(for stepID: StepID) -> [String] {
+        guard let selections = stepSelections[stepID],
+              let step = OnboardingStep.steps.first(where: { $0.id == stepID }) else {
+            return []
+        }
+        return selections.compactMap { selection in
+            step.options.first { $0.id == selection.id }?.title
+        }
+    }
+
+    private func getCombinedTitles(for stepID: StepID, inputStep: StepID) -> [String] {
+        var titles = getSelectedTitles(for: stepID)
+        if let selections = stepSelections[stepID],
+           selections.contains(where: { $0.isOthers }),
+           let input = stepInputs[stepID] {
+            let additionalValues = input.split(separator: ",").map { String($0.trimmingCharacters(in: .whitespaces)) }
+            titles.removeAll { $0.lowercased() == "other" }
+            titles.append(contentsOf: additionalValues)
+        }
+        return titles.filter { !$0.isEmpty && $0.lowercased() != "none" }
+    }
+
+    private func getCombinedTitle(for stepID: StepID, inputStep: StepID) -> String {
+        if let selections = stepSelections[stepID],
+           selections.contains(where: { $0.isOthers }),
+           let input = stepInputs[stepID] {
+            return input.trimmingCharacters(in: .whitespaces)
+        }
+        return getSelectedTitle(for: stepID)
+    }
+
+    // IMPROVE: Notification handling with completion
+    func calculateMacros() {
+        let gender: MacroCalculator.Gender
+        if stepSelections[.gender]?.contains(where: { $0.id == 1 }) ?? false {
+            gender = .male
+        } else if stepSelections[.gender]?.contains(where: { $0.id == 2 }) ?? false {
+            gender = .female
+        } else {
+            gender = .other
         }
         
-        // Measurements
-        log.append("\nMeasurements:")
-        log.append("Height: \(height) \(isMetric ? "cm" : "inches")")
-        log.append("Weight: \(weight) \(isMetric ? "kg" : "lbs")")
-        log.append("\nAge: \(age)")
-        log.append("=== End of Selections ===")
+        let activityLevel: MacroCalculator.ActivityLevel
+        if stepSelections[.activityLevel]?.contains(where: { $0.id == 1 }) ?? false {
+            activityLevel = .sedentary
+        } else if stepSelections[.activityLevel]?.contains(where: { $0.id == 2 }) ?? false {
+            activityLevel = .light
+        } else if stepSelections[.activityLevel]?.contains(where: { $0.id == 3 }) ?? false {
+            activityLevel = .moderate
+        } else if stepSelections[.activityLevel]?.contains(where: { $0.id == 4 }) ?? false {
+            activityLevel = .heavy
+        } else if stepSelections[.activityLevel]?.contains(where: { $0.id == 5 }) ?? false {
+            activityLevel = .athlete
+        } else {
+            activityLevel = .sedentary
+        }
         
-        print(log.joined(separator: "\n"))
+        let goal: MacroCalculator.FitnessGoal
+        if stepSelections[.mainGoal]?.contains(where: { $0.id == 1 }) ?? false {
+            goal = .fatLoss
+        } else if stepSelections[.mainGoal]?.contains(where: { $0.id == 2 }) ?? false {
+            goal = .muscleGain
+        } else if stepSelections[.mainGoal]?.contains(where: { $0.id == 3 }) ?? false {
+            goal = .generalFitness
+        } else if stepSelections[.mainGoal]?.contains(where: { $0.id == 4 }) ?? false {
+            goal = .endurance
+        } else if stepSelections[.mainGoal]?.contains(where: { $0.id == 5 }) ?? false {
+            goal = .aesthetic
+        } else {
+            goal = .fatLoss
+        }
+        
+        let calculator = MacroCalculator(
+            height: height,
+            weight: weight,
+            age: age,
+            gender: gender,
+            activityLevel: activityLevel,
+            goal: goal,
+            isMetric: isMetric
+        )
+        
+        let macros = calculator.calculateMacros()
+        
+        macroCalories = macros.calories
+        macroProtein = macros.protein
+        macroFat = macros.fat
+        macroCarbs = macros.carbs
     }
+}
+
+extension OnboardingMainViewModel {
+    
 }

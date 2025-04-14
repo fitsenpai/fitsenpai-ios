@@ -1,9 +1,12 @@
 import SwiftUI
 
 protocol SelectableItemProtocol: CaseIterable, Identifiable & Hashable {
+    var id: String { get }
     var title: String { get }
     var subtitle: String? { get }
     var icon: ImageResource? { get }
+    
+    init?(rawValue: Int?)
 }
 
 extension SelectableItemProtocol {
@@ -13,7 +16,7 @@ extension SelectableItemProtocol {
 
 struct MultiSelectableOptionsView<T: SelectableItemProtocol>: View {
     let options: [T]
-    @Binding var selections: Set<T>
+    @Binding var selections: [T]
     
     var body: some View {
         VStack(spacing: 12) {
@@ -26,9 +29,9 @@ struct MultiSelectableOptionsView<T: SelectableItemProtocol>: View {
                     subtitle: option.subtitle
                 ) {
                     if selections.contains(option) {
-                        selections.remove(option)
+                        selections = selections.filter { $0.id != option.id }
                     } else {
-                        selections.insert(option)
+                        selections.append(option)
                     }
                 }
             }
@@ -39,14 +42,14 @@ struct MultiSelectableOptionsView<T: SelectableItemProtocol>: View {
 // MARK: - Reusable Selection View
 struct SelectableOptionsView<T: SelectableItemProtocol>: View {
     let options: [T]
-    @Binding var selection: T
+    @Binding var selection: T?
     
     var body: some View {
         VStack(spacing: 12) {
             ForEach(options) { option in
                 SelectableOptionCell(
                     option: option,
-                    isSelected: option.id == selection.id,
+                    isSelected: option.id == selection?.id,
                     iconName: option.icon,
                     title: option.title,
                     subtitle: option.subtitle

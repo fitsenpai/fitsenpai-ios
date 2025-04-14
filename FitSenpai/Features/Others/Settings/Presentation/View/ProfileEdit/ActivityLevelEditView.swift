@@ -3,7 +3,7 @@ import SwiftUI
 struct ActivityLevelEditView: View {
     @ObservedObject var viewModel: SettingsViewModel
     @Environment(\.dismiss) var dismiss
-    @State private var selectedLevel: ActivityLevel
+    @State private var selectedLevel: ActivityLevel?
     
     init(viewModel: SettingsViewModel) {
         self.viewModel = viewModel

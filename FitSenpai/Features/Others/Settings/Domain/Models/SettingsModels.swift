@@ -7,6 +7,15 @@ enum Gender: String, SelectableItemProtocol {
     case female = "Female"
     case other = "Other"
     
+    init?(rawValue: Int?) {
+        switch rawValue {
+        case 1: self = .male
+        case 2: self = .female
+        case 3: self = .other
+        default: return nil
+        }
+    }
+    
     var id: String { rawValue }
     
     var title: String { rawValue }
@@ -27,6 +36,17 @@ enum ActivityLevel: String, SelectableItemProtocol {
     case moderate = "Moderate"
     case heavy = "Heavy training"
     case athlete = "Athlete"
+    
+    init?(rawValue: Int?) {
+        switch rawValue {
+        case 1: self = .sedentary
+        case 2: self = .light
+        case 3: self = .moderate
+        case 4: self = .heavy
+        case 5: self = .athlete
+        default: return nil
+        }
+    }
     
     var id: String { rawValue }
     
@@ -60,6 +80,17 @@ enum FitnessGoals: String, SelectableItemProtocol {
     case increasedEndurance = "Increased endurance"
     case aesthetic = "Aesthetic"
     
+    init?(rawValue: Int?) {
+        switch rawValue {
+        case 1: self = .fatLoss
+        case 2: self = .muscleGain
+        case 3: self = .generalFitness
+        case 4: self = .increasedEndurance
+        case 5: self = .aesthetic
+        default: return nil
+        }
+    }
+    
     var id: String { rawValue }
     
     var title: String { rawValue }
@@ -70,6 +101,15 @@ enum WorkoutLocation: String, SelectableItemProtocol {
     case home = "Home"
     case gym = "Gym"
     case mixed = "Mixed"
+    
+    init?(rawValue: Int?) {
+        switch rawValue {
+        case 1: self = .home
+        case 2: self = .gym
+        case 3: self = .mixed
+        default: return nil
+        }
+    }
     
     var id: String { rawValue }
     
@@ -100,37 +140,22 @@ enum WorkoutDuration: String, SelectableItemProtocol {
     case sixty = "60 mins"
     case more = "60+ mins"
     
+    init?(rawValue: Int?) {
+        switch rawValue {
+        case 1: self = .fifteen
+        case 2: self = .thirty
+        case 3: self = .fortyFive
+        case 4: self = .sixty
+        case 5: self = .more
+        default: return nil
+        }
+    }
+    
     var id: String { rawValue }
     
     var title: String { rawValue }
 }
 
-// MARK: - Exercise Difficulty
-enum ExerciseDifficulty: String, SelectableItemProtocol {
-    case beginner = "Beginner"
-    case intermediate = "Intermediate"
-    case advanced = "Advanced"
-    
-    var id: String { rawValue }
-    
-    var title: String { rawValue }
-    
-    var subtitle: String {
-        switch self {
-        case .beginner: return "I'm new to fitness"
-        case .intermediate: return "I workout from time to time"
-        case .advanced: return "I exercise regularly"
-        }
-    }
-    
-    var icon: ImageResource? {
-        switch self {
-        case .beginner: return .icJog
-        case .intermediate: return .icDumble
-        case .advanced: return .icLightning
-        }
-    }
-}
 
 // MARK: - Dietary Preference
 enum DietaryPreference: String, SelectableItemProtocol {
@@ -139,6 +164,17 @@ enum DietaryPreference: String, SelectableItemProtocol {
     case vegetarian = "Vegetarian"
     case vegan = "Vegan"
     case other = "Other"
+    
+    init?(rawValue: Int?) {
+        switch rawValue {
+        case 1: self = .none
+        case 2: self = .highProtein
+        case 3: self = .vegetarian
+        case 4: self = .vegan
+        case 5: self = .other
+        default: return nil
+        }
+    }
     
     var id: String { rawValue }
     
@@ -163,6 +199,17 @@ enum Allergy: String, SelectableItemProtocol {
     case shellfish = "Shellfish"
     case other = "Other"
     
+    init?(rawValue: Int?) {
+        switch rawValue {
+        case 1: self = .none
+        case 2: self = .nuts
+        case 3: self = .milkAndDairy
+        case 4: self = .shellfish
+        case 5: self = .other
+        default: return nil
+        }
+    }
+    
     var id: String { rawValue }
     
     var title: String { rawValue }
@@ -179,16 +226,29 @@ enum Allergy: String, SelectableItemProtocol {
 }
 
 // MARK: - WeekDay
-enum WeekDay: Int, SelectableItemProtocol {
-    case sunday = 0
-    case monday = 1
-    case tuesday = 2
-    case wednesday = 3
-    case thursday = 4
-    case friday = 5
-    case saturday = 6
+enum WeekDay: String, SelectableItemProtocol {
+    case sunday
+    case monday
+    case tuesday
+    case wednesday
+    case thursday
+    case friday
+    case saturday
     
-    var id: Int { rawValue }
+    init?(rawValue: Int?) {
+        switch rawValue {
+        case 1: self = .sunday
+        case 2: self = .monday
+        case 3: self = .tuesday
+        case 4: self = .wednesday
+        case 5: self = .thursday
+        case 6: self = .friday
+        case 7: self = .saturday
+        default: return nil
+        }
+    }
+    
+    var id: String { rawValue }
     
     var title: String { shortName }
     
@@ -225,6 +285,17 @@ enum HealthConcern: String, SelectableItemProtocol {
     case heartCondition = "Heart condition"
     case other = "Other"
     
+    init?(rawValue: Int?) {
+        switch rawValue {
+        case 1: self = .none
+        case 2: self = .jointPain
+        case 3: self = .backIssues
+        case 4: self = .heartCondition
+        case 5: self = .other
+        default: return nil
+        }
+    }
+    
     var id: String { rawValue }
     
     var title: String { rawValue }
@@ -236,6 +307,176 @@ enum HealthConcern: String, SelectableItemProtocol {
         case .backIssues: return .icHike
         case .heartCondition: return .icHeart2
         case .other: return .icDots
+        }
+    }
+}
+
+enum PastTraining: String, SelectableItemProtocol {
+    
+    case personalTrainers = "Personal trainers"
+    case fitnessApps = "Joint pain"
+    case workoutVideos = "Back issues"
+    case program = "Heart condition"
+    case none = "None"
+    
+    init?(rawValue: Int?) {
+        switch rawValue {
+        case 1: self = .personalTrainers
+        case 2: self = .fitnessApps
+        case 3: self = .workoutVideos
+        case 4: self = .program
+        case 5: self = .none
+        default: return nil
+        }
+    }
+    
+    var id: String { rawValue }
+    
+    var title: String { rawValue }
+    
+    var icon: ImageResource? {
+        switch self {
+        case .personalTrainers:
+            return .icHandshake
+        case .fitnessApps:
+            return .icPhone
+        case .workoutVideos:
+            return .icPlayWorkout
+        case .program:
+            return .icSpoonFork
+        case .none:
+            return .icX
+        }
+    }
+}
+
+enum WorkoutExperience: String, SelectableItemProtocol {
+    case beginner = "Beginner"
+    case intermediate = "Intermediate"
+    case advanced = "Advanced"
+    
+    init?(rawValue: Int?) {
+        switch rawValue {
+        case 1: self = .beginner
+        case 2: self = .intermediate
+        case 3: self = .advanced
+        default: return nil
+        }
+    }
+    
+    var id: String { rawValue }
+    
+    var title: String { rawValue }
+    
+    var subtitle: String {
+        switch self {
+        case .beginner: return "I'm new to fitness"
+        case .intermediate: return "I workout from time to time"
+        case .advanced: return "I exercise regularly"
+        }
+    }
+    
+    var icon: ImageResource? {
+        switch self {
+        case .beginner: return .icJog
+        case .intermediate: return .icDumble
+        case .advanced: return .icLightning
+        }
+    }
+}
+
+enum Barriers: String, SelectableItemProtocol {
+    case consistency = "Lack of consistency"
+    case eatingHabits = "Unhealthy eating habits"
+    case expensive = "Fitness is too expensive"
+    case busy = "Busy schedule"
+    case unsure = "Not sure where to start"
+    
+    init?(rawValue: Int?) {
+        switch rawValue {
+        case 1: self = .consistency
+        case 2: self = .eatingHabits
+        case 3: self = .expensive
+        case 4: self = .busy
+        case 5: self = .unsure
+        default: return nil
+        }
+    }
+    
+    var id: String { rawValue }
+    
+    var title: String { rawValue }
+    
+    var icon: ImageResource? {
+        switch self {
+        case .consistency: return .icLineChartDown
+        case .eatingHabits: return .icBurger
+        case .expensive: return .icCurrency
+        case .busy: return .icCalendarX
+        case .unsure: return .icSmileyMelting
+        }
+    }
+}
+
+enum Goals: String, SelectableItemProtocol {
+    case motivation = "Stay motivated and consistent"
+    case healthyLiving = "Eat and live healthier"
+    case saveMoney = "Save money while getting fit"
+    case energy = "Boost my energy and mood"
+    case confidence = "Feel better about my body"
+    
+    init?(rawValue: Int?) {
+        switch rawValue {
+        case 1: self = .motivation
+        case 2: self = .healthyLiving
+        case 3: self = .saveMoney
+        case 4: self = .energy
+        case 5: self = .confidence
+        default: return nil
+        }
+    }
+    
+    var id: String { rawValue }
+    
+    var title: String { rawValue }
+    
+    var icon: ImageResource? {
+        switch self {
+        case .motivation: return .icLineChart
+        case .healthyLiving: return .icCarrot
+        case .saveMoney: return .icPiggy
+        case .energy: return .icSun
+        case .confidence: return .icSparkle
+        }
+    }
+}
+
+enum CookingStyle: String, SelectableItemProtocol {
+    case quick = "Quick & easy"
+    case enjoyCooking = "I enjoy cooking"
+    case simple = "Simple meals only"
+    case orderFood = "Mostly order food"
+    
+    init?(rawValue: Int?) {
+        switch rawValue {
+        case 1: self = .quick
+        case 2: self = .enjoyCooking
+        case 3: self = .simple
+        case 4: self = .orderFood
+        default: return nil
+        }
+    }
+    
+    var id: String { rawValue }
+    
+    var title: String { rawValue }
+    
+    var icon: ImageResource? {
+        switch self {
+        case .quick: return .iconTimer
+        case .enjoyCooking: return .iconCooking
+        case .simple: return .iconListNumber
+        case .orderFood: return .iconCart
         }
     }
 }

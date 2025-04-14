@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SingleSelectionListView: View {
     let items: [SelectionItem]
-    @Binding var selectedItems: Set<String>
+    @Binding var selectedItems: [SelectionItem]
     let onSelection: (SelectionItem) -> Void
     @ObservedObject var viewModel: OnboardingMainViewModel
     
@@ -18,7 +18,7 @@ struct SingleSelectionListView: View {
             ForEach(items) { item in
                 SelectionItemView(
                     item: item,
-                    isSelected: selectedItems.contains(item.id),
+                    isSelected: selectedItems.contains(where: { $0.id == item.id }),
                     isDisabled: viewModel.isSelectionInProgress,
                     action: {
                         onSelection(item)
@@ -31,7 +31,7 @@ struct SingleSelectionListView: View {
 
 struct MultipleSelectionListView: View {
     let items: [SelectionItem]
-    @Binding var selectedItems: Set<String>
+    @Binding var selectedItems: [SelectionItem]
     let onSelection: (SelectionItem) -> Void
     
     var body: some View {
@@ -39,7 +39,7 @@ struct MultipleSelectionListView: View {
             ForEach(items) { item in
                 SelectionItemView(
                     item: item,
-                    isSelected: selectedItems.contains(item.id),
+                    isSelected: selectedItems.contains(where: { $0.id == item.id }),
                     isDisabled: false,
                     action: {
                         onSelection(item)
