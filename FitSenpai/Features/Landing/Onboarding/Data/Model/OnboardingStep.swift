@@ -9,11 +9,39 @@ enum StepType {
     case notification
     case enableNnotification
     case saveMoney
-    case input(previousStep: String, placeholder: String)
+    case input(previousStep: StepID, placeholder: String)
+}
+
+enum StepID: String {
+    case gender
+    case activityLevel
+    case pastTraining
+    case testimonial
+    case measurements
+    case age
+    case mainGoal
+    case macroBreakdown
+    case barriers
+    case goals
+    case saveMoney
+    case workoutExperience
+    case workoutLocation
+    case workoutDays
+    case workoutDuration
+    case healthRestrictions
+    case healthRestrictionsInput
+    case diet
+    case dietInput
+    case allergies
+    case allergiesInput
+    case cookingStyle
+    case notifications
+    case enableNotifications
+    
 }
 
 struct OnboardingStep {
-    let id: String
+    let id: StepID
     let title: String
     let subtitle: String?
     let options: [SelectionItem]
@@ -67,9 +95,9 @@ struct OnboardingStep {
     
     var buttonTitle: String? {
         switch id {
-            case "past_training", "measurements", "age", "workout_days",
-                 "health_restrictions", "allergies", "health_restrictions_input",
-                 "diet_input", "allergies_input", "diet":
+        case .pastTraining, .measurements, .age, .workoutDays,
+                .healthRestrictions, .allergies, .healthRestrictionsInput,
+                .dietInput, .allergiesInput, .diet:
                 return "Next"
             default:
                 return "Continue"
@@ -79,7 +107,7 @@ struct OnboardingStep {
     static let steps: [OnboardingStep] = [
         // Gender Selection
         .init(
-            id: "gender",
+            id: .gender,
             title: "Choose your gender",
             subtitle: "This will be used to personalize your plan.",
             options: [
@@ -92,7 +120,7 @@ struct OnboardingStep {
         
         // Daily Activity Level
         .init(
-            id: "activity_level",
+            id: .activityLevel,
             title: "How active are you daily?",
             subtitle: nil,
             options: [
@@ -107,7 +135,7 @@ struct OnboardingStep {
         
         // Past Training Experience
         .init(
-            id: "past_training",
+            id: .pastTraining,
             title: "Which of these have you tried in the past?",
             subtitle: nil,
             options: [
@@ -122,7 +150,7 @@ struct OnboardingStep {
         
         // Testimonial
         .init(
-            id: "testimonial",
+            id: .testimonial,
             title: "Fit Senpai helped me lose 15% body fat!",
             subtitle: nil,
             options: [],
@@ -131,7 +159,7 @@ struct OnboardingStep {
         
         // Height & Weight
         .init(
-            id: "measurements",
+            id: .measurements,
             title: "Height & Weight",
             subtitle: "This will be used to personalize your plan.",
             options: [],
@@ -140,7 +168,7 @@ struct OnboardingStep {
         
         // Age
         .init(
-            id: "age",
+            id: .age,
             title: "What's your age?",
             subtitle: "This will be used to personalize your plan.",
             options: [],
@@ -149,7 +177,7 @@ struct OnboardingStep {
         
         // Main Goal
         .init(
-            id: "main_goal",
+            id: .mainGoal,
             title: "What is your main goal?",
             subtitle: "This will be used to personalize your plan.",
             options: [
@@ -164,7 +192,7 @@ struct OnboardingStep {
         
         // Macro Breakdown
         .init(
-            id: "macro_breakdown",
+            id: .macroBreakdown,
             title: "",
             subtitle: nil,
             options: [],
@@ -173,7 +201,7 @@ struct OnboardingStep {
         
         // Barriers
         .init(
-            id: "barriers",
+            id: .barriers,
             title: "What's stopping you from living healthier?",
             subtitle: nil,
             options: [
@@ -188,7 +216,7 @@ struct OnboardingStep {
         
         // Goals
         .init(
-            id: "goals",
+            id: .goals,
             title: "What would you like to accomplish?",
             subtitle: nil,
             options: [
@@ -203,7 +231,7 @@ struct OnboardingStep {
         
         // Save Money
         .init(
-            id: "save_money",
+            id: .saveMoney,
             title: "Achieve goals without spending too much",
             subtitle: nil,
             options: [],
@@ -212,7 +240,7 @@ struct OnboardingStep {
         
         // Workout Experience
         .init(
-            id: "workout_experience",
+            id: .workoutExperience,
             title: "How experienced are you with working out?",
             subtitle: nil,
             options: [
@@ -225,7 +253,7 @@ struct OnboardingStep {
         
         // Workout Location
         .init(
-            id: "workout_location",
+            id: .workoutLocation,
             title: "Choose your workout\nlocation",
             subtitle: nil,
             options: [
@@ -238,7 +266,7 @@ struct OnboardingStep {
         
         // Workout Days
         .init(
-            id: "workout_days",
+            id: .workoutDays,
             title: "Which days work best for your workouts?",
             subtitle: nil,
             options: [
@@ -255,7 +283,7 @@ struct OnboardingStep {
         
         // Workout Duration
         .init(
-            id: "workout_duration",
+            id: .workoutDuration,
             title: "Choose duration for your workouts",
             subtitle: nil,
             options: [
@@ -270,7 +298,7 @@ struct OnboardingStep {
         
         // Health Restrictions
         .init(
-            id: "health_restrictions",
+            id: .healthRestrictions,
             title: "Do you have any health concerns?",
             subtitle: nil,
             options: [
@@ -283,16 +311,16 @@ struct OnboardingStep {
             type: .selection(isMultiple: true)
         ),
         .init(
-            id: "health_restrictions_input",
+            id: .healthRestrictionsInput,
             title: "Other health concerns",
             subtitle: "Separate multiple items with a comma",
             options: [],
-            type: .input(previousStep: "health_restrictions", placeholder: "Shoulder injury")
+            type: .input(previousStep: .healthRestrictions, placeholder: "Shoulder injury")
         ),
         
         // Diet and its input
         .init(
-            id: "diet",
+            id: .diet,
             title: "Do you follow a specific diet?",
             subtitle: nil,
             options: [
@@ -305,16 +333,16 @@ struct OnboardingStep {
             type: .selection(isMultiple: false)
         ),
         .init(
-            id: "diet_input",
+            id: .dietInput,
             title: "Other specific diet",
             subtitle: nil,
             options: [],
-            type: .input(previousStep: "diet", placeholder: "Pescatarian")
+            type: .input(previousStep: .diet, placeholder: "Pescatarian")
         ),
         
         // Allergies and its input
         .init(
-            id: "allergies",
+            id: .allergies,
             title: "Do you have any food allergies?",
             subtitle: nil,
             options: [
@@ -327,16 +355,16 @@ struct OnboardingStep {
             type: .selection(isMultiple: true)
         ),
         .init(
-            id: "allergies_input",
+            id: .allergiesInput,
             title: "Other food allergies",
             subtitle: "Separate multiple items with a comma",
             options: [],
-            type: .input(previousStep: "allergies", placeholder: "Shrimp")
+            type: .input(previousStep: .allergies, placeholder: "Shrimp")
         ),
      
         // Cooking Style
         .init(
-            id: "cooking_style",
+            id: .cookingStyle,
             title: "What’s your cooking style?",
             subtitle: nil,
             options: [
@@ -350,7 +378,7 @@ struct OnboardingStep {
         
         // Notifications
         .init(
-            id: "notifications",
+            id: .notifications,
             title: "",
             subtitle: "",
             options: [],
@@ -359,7 +387,7 @@ struct OnboardingStep {
         
         // Enable Notifications
         .init(
-            id: "enable_notifications",
+            id: .enableNotifications,
             title: "",
             subtitle: "",
             options: [],

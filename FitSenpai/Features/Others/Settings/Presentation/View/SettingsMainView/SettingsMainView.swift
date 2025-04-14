@@ -481,7 +481,7 @@ struct SettingsMainView: View {
         clearCache()
         
         appViewModel.isLoggedIn = false
-        
+        appViewModel.isLimitedAccess = false
         triggerHaptics()
     }
     
