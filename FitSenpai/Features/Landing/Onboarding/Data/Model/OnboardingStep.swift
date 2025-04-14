@@ -275,7 +275,7 @@ struct OnboardingStep {
             subtitle: nil,
             options: [
                 .init(id: "none", title: "None", icon: "ic_x"),
-                .init(id: "joint_pain", title: "Joint pain", icon: "ic_bone"),
+                .init(id: "joint_pain", title: "Joint pain", icon: "ic_bone_whole"),
                 .init(id: "back_issues", title: "Back issues", icon: "ic_hike"),
                 .init(id: "heart_condition", title: "Heart condition", icon: "ic_heart_2"),
                 .init(id: "other", title: "Other", icon: "ic_dots")

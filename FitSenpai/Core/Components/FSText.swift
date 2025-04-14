@@ -11,6 +11,7 @@ enum FSTypography {
     case h1
     case h2
     case h3
+    case h3_heavy
     case h4
     case large
     case lead
@@ -36,7 +37,7 @@ enum FSTypography {
             48
         case .h2:
             28
-        case .h3:
+        case .h3, .h3_heavy:
             25
         case .h4, .lead:
             20
@@ -55,6 +56,8 @@ enum FSTypography {
     
     var fontName: String {
         switch self {
+        case .h3_heavy:
+            return FSFont.heavy.name
         case .h1, .h2, .p_ui_bold, .body_bold:
             return FSFont.bold.name
         case .h3, .h4, .large, .detail_semi, .suble, .suble_semibold:
@@ -70,6 +73,7 @@ enum FSTypography {
         switch self {
         case .h2, .body, .body_bold: tracking(fromPercentage: -1, fontSize: fontSize)
         case .h3, .body_medium: tracking(fromPercentage: -2, fontSize: fontSize)
+        case .h3_heavy: tracking(fromPercentage: -1.2, fontSize: fontSize)
         case .h4: tracking(fromPercentage: -0.5, fontSize: fontSize)
         default: 0
         }
@@ -83,6 +87,8 @@ enum FSTypography {
             return calculateLineSpacing(fromLineHeight: 40, fontSize: fontSize)
         case .h3:
             return calculateLineSpacing(fromLineHeight: 32, fontSize: fontSize)
+        case .h3_heavy:
+            return calculateLineSpacing(fromLineHeight: 25, fontSize: fontSize)
         case .h4, .large, .lead:
             return calculateLineSpacing(fromLineHeight: 28, fontSize: fontSize)
         case .p, .p_ui, .p_ui_medium, .p_ui_bold, .list, .body, .body_medium, .body_bold, .blockquote:

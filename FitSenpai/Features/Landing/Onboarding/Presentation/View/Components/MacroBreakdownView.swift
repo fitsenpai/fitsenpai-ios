@@ -16,8 +16,8 @@ struct MacroBreakdownView: View {
     var body: some View {
         VStack(spacing: 16) {
             VStack(spacing: 16) {
-                FSText(text: "Your personalized macro breakdown", fontStyle: .heading28, alignment: .center)
-                FSText(text: "Based on your profile, here's what your body needs to reach your goal", fontStyle: .body16, alignment: .center)
+                FSTextView("Your personalized macro breakdown", typography: .h2, alignment: .center)
+                FSTextView("Based on your profile, here's what your body needs to reach your goal", typography: .p_ui, alignment: .center)
             }
             .padding(.horizontal, 12)
             .padding(.bottom, 40)
@@ -29,7 +29,7 @@ struct MacroBreakdownView: View {
             
             HStack(spacing: 16) {
                 MacroItem(value: "\(carbs)g", label: "Carbs", color: .fsSky400, icon: "ic_carbs")
-                MacroItem(value: "\(fat)g", label: "Fat", color: .fsViolet400, icon: "ic_fat")
+                MacroItem(value: "\(fat)g", label: "Fat", color: .fsViolet400, icon: "icon_avocado_purple")
             }
             Spacer()
         }
@@ -45,7 +45,7 @@ struct MacroItem: View {
     var body: some View {
         ZStack {
             VStack(spacing: 8) {
-                FSText(text: value, fontStyle: .bodyBold28, color: color)
+                FSTextView(value, typography: .h3_heavy, color: color)
 
                 HStack(spacing: 4) {
                     Image(icon)
@@ -53,7 +53,7 @@ struct MacroItem: View {
                         .scaledToFit()
                         .frame(width: 14, height: 14)
                     
-                    FSText(text: label, fontStyle: .body12, color: .black)
+                    FSText(text: label, fontStyle: .medium12, color: .black)
                 }
             }
         }

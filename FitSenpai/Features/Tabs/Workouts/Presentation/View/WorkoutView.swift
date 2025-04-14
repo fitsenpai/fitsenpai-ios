@@ -53,20 +53,6 @@ struct WorkoutView: View {
             if let videoURL = videoURL {
                 VideoPreviewView(videoURL: videoURL, isLoading: $isLoading) // Pass loading state to VideoPreviewView
             }
-          
-            if isLoading {
-                // Show a loading indicator or placeholder
-                ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                    .frame(width: 24, height: 24)
-            } else {
-                Color.black.opacity(0.1)
-                    .clipShape(RoundedRectangle(cornerRadius: 4))
-                // When not loading, show the play icon
-                Image("ic_play")
-                    .resizable()
-                    .frame(width: 11, height: 13)
-            }
         }
         .frame(width: 80, height: 80)
         .clipShape(RoundedRectangle(cornerRadius: 8))

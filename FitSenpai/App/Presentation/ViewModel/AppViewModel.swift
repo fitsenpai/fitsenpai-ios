@@ -72,7 +72,7 @@ extension AppViewModel {
 
     func createLimitedWorkoutPlan() async {
         self.viewState = .loading
-        self.loadingConfig = .init(title: "Getting everything ready for you", subtitle: "Customizing your workout plan...")
+        self.loadingConfig = .init(title: "Getting everything\nready for you", subtitle: "Customizing your workout plan...")
         try? await Task.sleep(for: .seconds(3))
         self.isLimitedAccess = true
         self.viewState = .idle

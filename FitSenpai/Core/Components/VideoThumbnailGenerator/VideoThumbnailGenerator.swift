@@ -33,8 +33,9 @@ class VideoThumbnailGenerator {
 
 struct VideoPreviewView: View {
     let videoURL: URL
-    @State private var thumbnailURL: URL? = nil
     @Binding var isLoading: Bool
+    @State private var thumbnailURL: URL? = nil
+    @State private var onRefresh: Bool = true
     
     var body: some View {
         VStack {
@@ -42,19 +43,45 @@ struct VideoPreviewView: View {
                 ShimmerView(cornerRadius: 8)
                     .frame(width: 80, height: 80)
             } else {
-                if let thumbnailURL = thumbnailURL {
-                    KFImage(thumbnailURL)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 200, height: 200)
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                        .shadow(radius: 10)
-//                        .onFailure { error in
-//                            print("Error loading thumbnail from cache: \(error.localizedDescription)")
-//                        }
-                } else {
-                    Text("Failed to load thumbnail")
-                        .foregroundColor(.red)
+                ZStack {
+                    if let thumbnailURL, onRefresh {
+                        KFImage(thumbnailURL)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 200, height: 200)
+                            .clipShape(.rect(cornerRadius: 10))
+                            .shadow(radius: 10)
+                        
+                        Color.black.opacity(0.1)
+                            .clipShape(RoundedRectangle(cornerRadius: 4))
+                        
+                        // When not loading, show the play icon
+                        Image("ic_play")
+                            .resizable()
+                            .frame(width: 12, height: 12)
+                        
+                    } else {
+                        Color.gray.opacity(0.1)
+                            .clipShape(RoundedRectangle(cornerRadius: 4))
+                        
+                        Button {
+                            isLoading = true
+                            generateThumbnailAndCache(from: videoURL)
+                        } label: {
+                            Image(.icArrows)
+                                .renderingMode(.template)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 12, height: 12)
+                                .foregroundStyle(.white)
+                        }
+                    }
+                    
+                    if isLoading {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                            .frame(width: 24, height: 24)
+                    }
                 }
             }
         }

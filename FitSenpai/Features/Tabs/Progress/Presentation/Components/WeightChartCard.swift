@@ -13,10 +13,9 @@ struct WeightChartCard: View {
     var body: some View {
         FSCard(borderColor: Color.gray.opacity(0.2)) {
             VStack(alignment: .leading, spacing: 48) {
-                FSText(text: "Your Weight", fontStyle: .medium20)
-                
+                FSTextView("Your Weight", typography: .h4)
                 WeightChartView(data: data)
-                    .frame(height: 140)
+                    .frame(height: 153)
             }
             .padding(12)
         }

@@ -130,9 +130,9 @@ struct ChangeWorkoutSheetSheet: View {
                 .scaledToFit()
                 .frame(width: 40, height: 40)
             
-            FSText(text: "Change workouts?", fontStyle: .heading25)
-            FSText(text: "Get a new set of workouts for this day. Add instruction below (optional).", fontStyle: .body14, lineSpacing: 8, alignment: .center)
-            
+            FSTextView("Change workouts?", typography: .h3)
+            FSTextView("Get a new set of workouts for this day. Add instruction below (optional).", typography: .body, alignment: .center)
+
             VStack(spacing: 12) {
                 TextEditor(text: $instructionText)
                     .font(.body14)

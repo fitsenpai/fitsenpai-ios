@@ -15,13 +15,15 @@ struct WeightChartView: View {
     
     private var xAxisDates: [Date] {
         let calendar = Calendar.current
-        let startDate = calendar.date(from: DateComponents(year: 2024, month: 2, day: 2))!
-        
+        let startDate = calendar.date(from: DateComponents(year: 2024, month: 2, day: 1))!
+    
         return [
             startDate,
-            calendar.date(byAdding: .day, value: 14, to: startDate)!,
-            calendar.date(byAdding: .day, value: 28, to: startDate)!,
-            calendar.date(byAdding: .day, value: 42, to: startDate)!
+            calendar.date(byAdding: .day, value: 15, to: startDate)!,
+            calendar.date(byAdding: .day, value: 30, to: startDate)!,
+            calendar.date(byAdding: .day, value: 45, to: startDate)!,
+            calendar.date(byAdding: .day, value: 60, to: startDate)!,
+            calendar.date(byAdding: .day, value: 75, to: startDate)!
         ]
     }
     
@@ -33,8 +35,9 @@ struct WeightChartView: View {
                     RuleMark(
                         x: .value("Date", date)
                     )
-                    .foregroundStyle(Color.gray.opacity(0.1))
+                    .foregroundStyle(Color.gray.opacity(0.08))
                     .lineStyle(StrokeStyle(lineWidth: 1))
+                    .opacity(date == xAxisDates.first || date == xAxisDates.last ? 0 : 1)
                 }
                 
                 // Add horizontal dashed lines for main weight values
@@ -47,21 +50,21 @@ struct WeightChartView: View {
                 }
                 
                 // Data points and line
-                ForEach(data) { point in
-                    LineMark(
-                        x: .value("Date", point.date),
-                        y: .value("Weight", point.weight)
-                    )
-                    .foregroundStyle(.blue)
-                    .interpolationMethod(.catmullRom)
-                    
-                    PointMark(
-                        x: .value("Date", point.date),
-                        y: .value("Weight", point.weight)
-                    )
-                    .foregroundStyle(.blue)
-                }
-                .opacity(0) // Hide the line and points for now
+//                ForEach(data) { point in
+//                    LineMark(
+//                        x: .value("Date", point.date),
+//                        y: .value("Weight", point.weight)
+//                    )
+//                    .foregroundStyle(.blue)
+//                    .interpolationMethod(.catmullRom)
+//                    
+//                    PointMark(
+//                        x: .value("Date", point.date),
+//                        y: .value("Weight", point.weight)
+//                    )
+//                    .foregroundStyle(.blue)
+//                }
+//                .opacity(0) // Hide the line and points for now
             }
             .chartXAxis {
                 AxisMarks(preset: .aligned, values: xAxisDates) { value in
@@ -72,8 +75,8 @@ struct WeightChartView: View {
                                 fontStyle: .body10,
                                 color: .gray
                             )
+                            .opacity(value.index == 0 || value.index == xAxisDates.count - 1 ? 0 : 1)
                         }
-                        
                     }
                 }
             }
@@ -105,7 +108,7 @@ struct WeightChartView: View {
         WeightDataPoint(date: Calendar.current.date(from: DateComponents(year: 2024, month: 3, day: 16))!, weight: 48),
         WeightDataPoint(date: Calendar.current.date(from: DateComponents(year: 2024, month: 4, day: 2))!, weight: 48)
     ])
-    .frame(height: 120)
+    .frame(height: 153)
     .padding()
-    .background(Color(.systemGray6))
+    .background(Color(.white))
 }

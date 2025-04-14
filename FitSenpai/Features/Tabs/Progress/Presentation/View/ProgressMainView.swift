@@ -8,19 +8,15 @@ struct ProgressMainView: View {
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: 24) {
-                FSText(text: "Progress", fontStyle: .heading24)
+                FSTextView("Progress", typography: .h3)
                 TimeframeSelectorView(selectedTimeframe: $viewModel.selectedTimeframe)
                 ScrollView {
                     VStack(alignment: .leading, spacing: 24) {
                         WeightChartCard(data: viewModel.weightData)
                         if isLimitedAccess {
-                            WeightUpdatePrompt(
-                                title: "Upgrade to Pro",
-                                subtitle: "Unlock all workouts and meals\nfor the entire week.",
-                                icon: .iconCrownGreen,
-                                buttonText: "Try for $0",
-                                onButtonTap: onTryForFreeTapped
-                            )
+                            UpgrageCardView {
+                                onTryForFreeTapped()
+                            }
                         } else {
                             WeightUpdatePrompt(
                                 title: "Keep going!",

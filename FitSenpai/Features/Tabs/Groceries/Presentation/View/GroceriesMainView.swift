@@ -40,19 +40,22 @@ struct GroceriesMainView: View {
     
     var groceryListView: some View {
         ScrollView {
-            GroceriesSectionView(selectedItems: [], foodCategory: .proteins, foodItems: [FoodItem(name: "Grilled chicken", amount: "750g"), FoodItem(name: "Salmon", amount: "750g"), FoodItem(name: "Whey protein", amount: "300g")], isShowingDetails: false)
-            
-            GroceriesSectionView(selectedItems: [], foodCategory: .dairyAndAlternatives, foodItems: [FoodItem(name: "Grilled chicken", amount: "750g"), FoodItem(name: "Salmon", amount: "750g"), FoodItem(name: "Whey protein", amount: "300g")], isShowingDetails: false)
-            
-            GroceriesSectionView(selectedItems: [], foodCategory: .vegetables, foodItems: [FoodItem(name: "Grilled chicken", amount: "750g"), FoodItem(name: "Salmon", amount: "750g"), FoodItem(name: "Whey protein", amount: "300g")], isShowingDetails: false)
-            
-            GroceriesSectionView(selectedItems: [], foodCategory: .oilsAndDressings, foodItems: [FoodItem(name: "Grilled chicken", amount: "750g"), FoodItem(name: "Salmon", amount: "750g"), FoodItem(name: "Whey protein", amount: "300g")], isShowingDetails: false)
-            
-            GroceriesSectionView(selectedItems: [], foodCategory: .fruits, foodItems: [FoodItem(name: "Grilled chicken", amount: "750g"), FoodItem(name: "Salmon", amount: "750g"), FoodItem(name: "Whey protein", amount: "300g")], isShowingDetails: false)
-            
-            GroceriesSectionView(selectedItems: [], foodCategory: .bakingEssentials, foodItems: [FoodItem(name: "Grilled chicken", amount: "750g"), FoodItem(name: "Salmon", amount: "750g"), FoodItem(name: "Whey protein", amount: "300g")], isShowingDetails: false)
-            
-            GroceriesSectionView(selectedItems: [], foodCategory: .dairyAndAlternatives, foodItems: [FoodItem(name: "Grilled chicken", amount: "750g"), FoodItem(name: "Salmon", amount: "750g"), FoodItem(name: "Whey protein", amount: "300g")], isShowingDetails: false)
+            VStack(alignment: .leading, spacing: 12) {
+                GroceriesSectionView(selectedItems: [], foodCategory: .proteins, foodItems: [FoodItem(name: "Grilled chicken", amount: "750g"), FoodItem(name: "Salmon", amount: "750g"), FoodItem(name: "Whey protein", amount: "300g")], isShowingDetails: false)
+                
+                GroceriesSectionView(selectedItems: [], foodCategory: .dairyAndAlternatives, foodItems: [FoodItem(name: "Grilled chicken", amount: "750g"), FoodItem(name: "Salmon", amount: "750g"), FoodItem(name: "Whey protein", amount: "300g")], isShowingDetails: false)
+                
+                GroceriesSectionView(selectedItems: [], foodCategory: .vegetables, foodItems: [FoodItem(name: "Grilled chicken", amount: "750g"), FoodItem(name: "Salmon", amount: "750g"), FoodItem(name: "Whey protein", amount: "300g")], isShowingDetails: false)
+                
+                GroceriesSectionView(selectedItems: [], foodCategory: .oilsAndDressings, foodItems: [FoodItem(name: "Grilled chicken", amount: "750g"), FoodItem(name: "Salmon", amount: "750g"), FoodItem(name: "Whey protein", amount: "300g")], isShowingDetails: false)
+                
+                GroceriesSectionView(selectedItems: [], foodCategory: .fruits, foodItems: [FoodItem(name: "Grilled chicken", amount: "750g"), FoodItem(name: "Salmon", amount: "750g"), FoodItem(name: "Whey protein", amount: "300g")], isShowingDetails: false)
+                
+                GroceriesSectionView(selectedItems: [], foodCategory: .bakingEssentials, foodItems: [FoodItem(name: "Grilled chicken", amount: "750g"), FoodItem(name: "Salmon", amount: "750g"), FoodItem(name: "Whey protein", amount: "300g")], isShowingDetails: false)
+                
+                GroceriesSectionView(selectedItems: [], foodCategory: .dairyAndAlternatives, foodItems: [FoodItem(name: "Grilled chicken", amount: "750g"), FoodItem(name: "Salmon", amount: "750g"), FoodItem(name: "Whey protein", amount: "300g")], isShowingDetails: false)
+            }
+            .padding(.horizontal, 1)
         }
         .scrollIndicators(.hidden)
     }
