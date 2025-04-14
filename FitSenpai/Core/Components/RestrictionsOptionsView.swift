@@ -61,7 +61,7 @@ struct RestrictionsOptionsView<T>: View where T: SelectableItemProtocol {
                 }
                 
                 VStack(alignment: .leading, spacing: 4) {
-                    FSTextView(title, typography: isSelected(option) ? .p_ui_bold : .p_ui)
+                    FSTextView(option.title, typography: isSelected(option) ? .p_ui_bold : .p_ui)
                     
                     if let subtitle = option.subtitle {
                         FSText(
@@ -89,6 +89,7 @@ struct RestrictionsOptionsView<T>: View where T: SelectableItemProtocol {
     }
     
     private func handleSelection(_ option: T) {
+        triggerHaptics()
         if isOtherOption(option) {
             showCustomInput = true
             return

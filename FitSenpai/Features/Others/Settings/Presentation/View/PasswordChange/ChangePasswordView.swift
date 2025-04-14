@@ -19,6 +19,7 @@ struct ChangePasswordView: View {
                 RoundedBorderTextField(text: $currentPassword, label: "Current Password", isSecure: true, showAccessory: true, cornerRadius: 12)
                 
                 Button {
+                    triggerHaptics()
                     navigateToForgotPassword = true
                 } label: {
                     FSText(text: "Forgot password?", fontStyle: .body14, letterSpace: 0, color: .fsMutedForeground, isUnderlined: true)
@@ -34,6 +35,7 @@ struct ChangePasswordView: View {
             Spacer()
             
             FSButton(title: "Save changes", fontStyle: .bodyBold16, cornerRadius: 32) {
+                triggerHaptics()
                 dismiss()
             }
         }
@@ -41,7 +43,10 @@ struct ChangePasswordView: View {
         .navigationBarBackButtonHidden()
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: { dismiss() }) {
+                Button(action: {
+                    triggerHaptics()
+                    dismiss()
+                }) {
                     Image(systemName: "arrow.left")
                         .foregroundColor(.black)
                         .frame(width: 24, height: 24)

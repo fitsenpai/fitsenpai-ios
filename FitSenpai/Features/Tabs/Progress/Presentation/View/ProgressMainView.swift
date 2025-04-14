@@ -30,7 +30,10 @@ struct ProgressMainView: View {
                         BMISummaryCard(
                             bmiValue: viewModel.bmiValue,
                             bmiCategory: viewModel.bmiCategory,
-                            onInfoTap: { viewModel.showBMIDetail = true }
+                            onInfoTap: {
+                                triggerHaptics()
+                                viewModel.showBMIDetail = true
+                            }
                         )
                     }
                 }
@@ -48,6 +51,7 @@ struct ProgressMainView: View {
     }
     
     func onTryForFreeTapped() {
+        triggerHaptics()
         Superwall.shared.register(placement: "campaign_trigger")
     }
 }

@@ -29,6 +29,7 @@ struct FSToggle: View {
                     .offset(x: isOn ? 10 : -10)
             }
             .onTapGesture {
+                triggerHaptics()
                 withAnimation(.easeInOut(duration: 0.2)) {
                     isOn.toggle()
                 }

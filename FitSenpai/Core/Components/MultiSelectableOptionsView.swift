@@ -71,7 +71,7 @@ struct SelectableOptionCell<T>: View {
     private let iconContainerSize: CGFloat = 36
     
     var body: some View {
-        Button(action: action) {
+        Button(action: onTapGesture) {
             HStack {
                 HStack(spacing: 20) {
                     if let iconName {
@@ -108,6 +108,11 @@ struct SelectableOptionCell<T>: View {
             )
             .contentShape(Rectangle())
         }
+    }
+    
+    func onTapGesture() {
+        triggerHaptics()
+        action()
     }
 }
 

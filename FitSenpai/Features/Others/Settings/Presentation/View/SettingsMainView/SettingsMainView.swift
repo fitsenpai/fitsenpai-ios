@@ -98,15 +98,18 @@ struct SettingsMainView: View {
                     Color.black.opacity(0.1)
                         .ignoresSafeArea()
                         .onTapGesture {
+                            triggerHaptics()
                             viewModel.activeSheet = nil
                         }
                     switch popup {
                     case .rating:
                         RateAppPopupView {
+                            triggerHaptics()
                             viewModel.activeSheet = .negative
                         }
                     case .logout:
                         LogoutPopupView {
+                            triggerHaptics()
                             Task {
                                 let success = await viewModel.signOut()
                                 if success {
@@ -125,6 +128,7 @@ struct SettingsMainView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: {
+                    triggerHaptics()
                     dismiss()
                 }) {
                     Image(systemName: "arrow.left")
@@ -230,6 +234,7 @@ struct SettingsMainView: View {
         VStack(spacing: 0) {
             // Contact Support
             Button {
+                triggerHaptics()
                 URLHelper.openMail(to: supportEmail)
             } label: {
                 settingsLinkLabel("Contact support")
@@ -240,6 +245,7 @@ struct SettingsMainView: View {
             Button {
                 safariURL = URL(string: termsURL)
                 showSafariView = true
+                triggerHaptics()
             } label: {
                 settingsLinkLabel("Terms & conditions")
             }
@@ -249,6 +255,7 @@ struct SettingsMainView: View {
             Button {
                 safariURL = URL(string: privacyURL)
                 showSafariView = true
+                triggerHaptics()
             } label: {
                 settingsLinkLabel("Privacy policy")
             }
@@ -276,19 +283,22 @@ struct SettingsMainView: View {
             withoutAnimation {
                 viewModel.activePopup = .rating
             }
+            triggerHaptics()
         }
         .sheet(item: $viewModel.activeSheet, content: { type in
             switch type {
             case .negative:
                 NegativeFeedbackSheet(feedbackType: $viewModel.activeSheet)
                     .flexibleSheet()
-                    .background(.thickMaterial)
+                    .background(.white)
+                    .presentationCornerRadius(32)
             case .negativeInput:
                 NegativeFeedbackInoutSheet {
                     viewModel.activeSheet = .negativeInput
                 }
                     .flexibleSheet()
-                    .background(.thickMaterial)
+                    .background(.white)
+                    .presentationCornerRadius(32)
             }
         })
     }
@@ -304,6 +314,7 @@ struct SettingsMainView: View {
                             isPresentedManageSubscription = true
                         }
                     }
+                    triggerHaptics()
                 } label: {
                     settingsLinkLabel("Manage subscription")
                 }
@@ -314,6 +325,7 @@ struct SettingsMainView: View {
                     withoutAnimation {
                         viewModel.activePopup = .logout
                     }
+                    triggerHaptics()
                 } label: {
                     HStack {
                         FSTextView("Log out", typography: .p_ui_medium)
@@ -469,6 +481,8 @@ struct SettingsMainView: View {
         clearCache()
         
         appViewModel.isLoggedIn = false
+        
+        triggerHaptics()
     }
     
     private func clearCache() {
@@ -489,6 +503,7 @@ struct SettingsMainView: View {
         } catch {
             print("Error clearing cache: \(error)")
         }
+        triggerHaptics()
     }
 }
 

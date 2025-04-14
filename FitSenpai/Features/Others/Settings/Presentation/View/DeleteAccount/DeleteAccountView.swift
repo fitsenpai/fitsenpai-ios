@@ -27,6 +27,7 @@ struct DeleteAccountView: View {
             VStack(spacing: 14) {
                 ForEach(DeletionReason.allCases, id: \.self) { reason in
                     Button {
+                        triggerHaptics()
                         selectedReason = reason
                     } label: {
                         HStack {
@@ -54,9 +55,11 @@ struct DeleteAccountView: View {
                 
                 FSButton(title: "Delete account", fontStyle: .bodyBold16, foregroundColor: .white, cornerRadius: 32, background: .red) {
                     navigateToSuccess = true
+                    triggerHaptics()
                 }
                 
                 FSButton(title: "Cancel", fontStyle: .bodyBold16, foregroundColor: .gray156, cornerRadius: 32, background: .white, borderColor: .gray156) {
+                    triggerHaptics()
                     dismiss()
                 }
             }
@@ -65,7 +68,10 @@ struct DeleteAccountView: View {
         .navigationBarBackButtonHidden()
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: { dismiss() }) {
+                Button(action: {
+                    triggerHaptics()
+                    dismiss()
+                }) {
                     Image(systemName: "arrow.left")
                         .foregroundColor(.black)
                         .frame(width: 24, height: 24)

@@ -21,6 +21,7 @@ struct ForgotPasswordView: View {
             Spacer()
             
             FSButton(title: "Get password reset link", fontStyle: .bodyBold16, cornerRadius: 32) {
+                triggerHaptics()
                 navigateToNewPassword = true
             }
         }
@@ -28,7 +29,10 @@ struct ForgotPasswordView: View {
         .navigationBarBackButtonHidden()
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: { dismiss() }) {
+                Button(action: {
+                    triggerHaptics()
+                    dismiss()
+                }) {
                     Image(systemName: "arrow.left")
                         .foregroundColor(.black)
                         .frame(width: 24, height: 24)

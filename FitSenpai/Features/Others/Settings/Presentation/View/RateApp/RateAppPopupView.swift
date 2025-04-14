@@ -30,6 +30,7 @@ struct RateAppPopupView: View {
             
             HStack(spacing: 10) {
                 Button("No") {
+                    triggerHaptics()
                     withoutAnimation {
                         dismiss()
                     }
@@ -42,6 +43,7 @@ struct RateAppPopupView: View {
                 .cornerRadius(32)
                 
                 Button("Yes") {
+                    triggerHaptics()
                     withoutAnimation {
                         dismiss()
                     }
@@ -91,6 +93,7 @@ struct RateAppPopupView: View {
                     .frame(maxWidth: .infinity)
                 
                 Button("Not now") {
+                    triggerHaptics()
                     withoutAnimation {
                         dismiss()
                     }
@@ -102,6 +105,7 @@ struct RateAppPopupView: View {
     }
     
     private func handleRating(_ rating: Int) async {
+        triggerHaptics()
         self.rating = rating
         try? await Task.sleep(for: .seconds(1))
         withoutAnimation {

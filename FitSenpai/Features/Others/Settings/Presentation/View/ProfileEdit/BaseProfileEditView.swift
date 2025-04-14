@@ -37,6 +37,7 @@ struct BaseProfileEditView<Content: View>: View {
             Spacer()
             
             FSButton(title: "Save changes", fontStyle: .bodyBold16, cornerRadius: 32) {
+                triggerHaptics()
                 onSave()
                 dismiss()
             }
@@ -48,6 +49,7 @@ struct BaseProfileEditView<Content: View>: View {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: {
                     onBack?() ?? dismiss()
+                    triggerHaptics()
                 }) {
                     Image(systemName: "arrow.left")
                         .foregroundColor(.black)

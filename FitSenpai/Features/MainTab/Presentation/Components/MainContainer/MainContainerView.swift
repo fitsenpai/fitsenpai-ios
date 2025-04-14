@@ -25,8 +25,10 @@ struct MainContainerView<Content: View>: View {
 
                 if isLimited {
                     UpgrageCardView {
+                        triggerHaptics()
 //                        viewModel.activeSheet = .subscription
                         Superwall.shared.register(placement: "campaign_trigger")
+                        
                     }
                     .padding(.horizontal, 24)
                 }

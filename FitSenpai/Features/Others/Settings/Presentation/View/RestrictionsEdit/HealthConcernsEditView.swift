@@ -53,6 +53,7 @@ struct HealthConcernsEditView: View {
     }
     
     private func handleCustomInput(_ value: String) {
+        triggerHaptics()
         // When saving custom input, clear other selections and only keep "Other"
         Task { @MainActor in
             await viewModel.updateHealthConcerns([.other], customValue: value)
@@ -61,6 +62,7 @@ struct HealthConcernsEditView: View {
     }
     
     private func handleSave() {
+        triggerHaptics()
         if selectedConcerns.contains(.other) {
             showCustomInput = true
         } else {

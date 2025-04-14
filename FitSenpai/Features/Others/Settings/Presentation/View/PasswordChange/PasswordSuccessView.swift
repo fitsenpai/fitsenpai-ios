@@ -19,13 +19,17 @@ struct PasswordSuccessView: View {
             FSButton(title: "Back to dashboard", fontStyle: .bodyBold16, cornerRadius: 32) {
                 // Dismiss all the way back to settings
                 dismiss()
+                triggerHaptics()
             }
         }
         .padding(24)
         .navigationBarBackButtonHidden()
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: { dismiss() }) {
+                Button(action: {
+                    dismiss()
+                    triggerHaptics()
+                }) {
                     Image(systemName: "arrow.left")
                         .foregroundColor(.black)
                         .frame(width: 24, height: 24)

@@ -26,7 +26,7 @@ final class MainViewModel: ObservableObject {
     init() {  }
     
     func updateCurrentWeekStartDate(to date: Date) {
-        
+        triggerHaptics()
     }
     
 }

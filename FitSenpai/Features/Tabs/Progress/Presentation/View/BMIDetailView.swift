@@ -31,6 +31,7 @@ struct BMIDetailView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: {
+                    triggerHaptics()
                     dismiss()
                 }) {
                     Image(systemName: "arrow.left")
@@ -121,6 +122,7 @@ struct BMIDetailView: View {
     
     var sourceLinkButton: some View {
         Button {
+            triggerHaptics()
             viewModel.openSource()
         } label: {
             FSText(text: "Source", fontStyle: .bodyBold14, letterSpace: 0, color: Color.fsMutedForeground, isUnderlined: true)

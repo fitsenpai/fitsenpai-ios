@@ -28,14 +28,19 @@ struct NewPasswordView: View {
             Spacer()
             
             FSButton(title: "Save changes", fontStyle: .bodyBold16, cornerRadius: 32) {
+                triggerHaptics()
                 showSuccess = true
+                
             }
         }
         .padding(24)
         .navigationBarBackButtonHidden()
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: { dismiss() }) {
+                Button(action: {
+                    triggerHaptics()
+                    dismiss()
+                }) {
                     Image(systemName: "arrow.left")
                         .foregroundColor(.black)
                         .frame(width: 24, height: 24)

@@ -18,6 +18,7 @@ struct FSNavBarView: View {
                     .frame(width: 150, height: 20)
                 Spacer()
                 Button {
+                    triggerHaptics()
                     navDestination = .settings
                 } label: {
                     Image(.iconGear)

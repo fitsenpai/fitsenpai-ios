@@ -51,19 +51,23 @@ final class SubscriptionViewModel: ObservableObject {
     ]
     
     func handleSubscription() {
+        triggerHaptics()
         // Handle subscription logic
     }
     
     func handleTerms() {
+        triggerHaptics()
         safariURL = URL(string: termsURL)
         showSafariView = true
     }
     
     func handleRestore() {
+        triggerHaptics()
         // Handle restore purchase
     }
     
     func handlePrivacy() {
+        triggerHaptics()
         // Handle privacy
     }
 }

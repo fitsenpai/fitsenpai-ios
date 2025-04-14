@@ -14,6 +14,7 @@ struct TimeframeSelectorView: View {
         HStack(spacing: 0) {
             ForEach(ProgressTimeframe.allCases, id: \.self) { timeframe in
                 Button {
+                    triggerHaptics()
                     selectedTimeframe = timeframe
                 } label: {
                     FSText(

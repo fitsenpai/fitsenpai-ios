@@ -18,6 +18,7 @@ struct LogoutPopupView: View {
             
             HStack(spacing: 10) {
                 Button("Cancel") {
+                    triggerHaptics()
                     withoutAnimation {
                         dismiss()
                     }
@@ -29,6 +30,7 @@ struct LogoutPopupView: View {
                 .cornerRadius(32)
                 
                 Button("Log out") {
+                    triggerHaptics()
                     withoutAnimation {
                         dismiss()
                     }

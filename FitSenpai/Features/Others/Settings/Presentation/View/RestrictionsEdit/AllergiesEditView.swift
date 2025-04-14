@@ -53,6 +53,7 @@ struct AllergiesEditView: View {
     }
     
     private func handleCustomInput(_ value: String) {
+        triggerHaptics()
         // When saving custom input, clear other selections and only keep "Other"
         Task { @MainActor in
             await viewModel.updateAllergies([.other], customValue: value)
@@ -61,6 +62,7 @@ struct AllergiesEditView: View {
     }
     
     private func handleSave() {
+        triggerHaptics()
         if selectedAllergies.contains(.other) {
             showCustomInput = true
         } else {

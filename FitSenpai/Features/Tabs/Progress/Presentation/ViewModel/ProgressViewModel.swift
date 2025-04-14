@@ -19,6 +19,7 @@ class ProgressViewModel: ObservableObject {
     }
     
     func updateWeight() {
+        triggerHaptics()
         showUpdateWeight.toggle()
     }
     
