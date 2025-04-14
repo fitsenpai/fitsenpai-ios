@@ -9,6 +9,6 @@ import Foundation
 import Auth
 
 class GlobalAppEnvironment: ObservableObject {
-    @Published var user:FSUser?
+    @Published var user: FSUser?
     @Published var weekToGenerate: Int?
 }

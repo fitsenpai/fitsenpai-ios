@@ -1,0 +1,58 @@
+//
+//  RoundedBorderTextField.swift
+//  FitSenpai
+//
+//  Created by Kevin Andrew Maloles on 11/21/24.
+//
+
+import SwiftUI
+
+struct RoundedBorderTextField: View {
+    @Binding var text: String
+    var label: String = ""
+    var placeholder: String = ""
+    var isSecure: Bool = false
+    var showAccessory: Bool = false
+    var height: CGFloat = 44
+    var cornerRadius: CGFloat = 6.0
+    
+    @State private var isInputHidden: Bool = true
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            FSText(text: label, fontStyle: .body16, color: .fsTitle)
+            
+            HStack {
+                if isSecure && isInputHidden {
+                    SecureField(placeholder, text: $text)
+                        .padding(.horizontal)
+                        .frame(height: height)
+                } else {
+                    TextField(placeholder, text: $text)
+                        .padding(.horizontal)
+                        .frame(height: height)
+                        .autocorrectionDisabled()
+                        .autocapitalization(.none)
+                }
+                
+                if showAccessory {
+                    Button(action: {
+                        isInputHidden.toggle()
+                    }) {
+                        Image(systemName: isInputHidden ? "eye.slash" : "eye")
+                            .foregroundColor(.fsMutedForeground)
+                    }
+                    .padding(.trailing)
+                }
+            }
+            .background(
+                RoundedRectangle(cornerRadius: cornerRadius)
+                    .stroke(Color.fsInputBorderColor, lineWidth: 1)
+            )
+        }
+    }
+}
+
+#Preview {
+    RoundedBorderTextField(text: .constant(""), label: "Email", isSecure: true, showAccessory: true)
+}

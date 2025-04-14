@@ -14,9 +14,10 @@ class FSColor {
     static let primary = UIColor(hexString: AppColor.Green.rawValue)
     static let secondary = UIColor(hexString: AppColor.MutedGreen.rawValue)
     static let title = UIColor(hexString: AppColor.Foreground.rawValue)
-    static let subtitle = UIColor(hexString: AppColor.MutedForeground.rawValue)
-    static let blackBackground = UIColor(hexString: AppColor.Black.rawValue)
+    static let mutedForeground = UIColor(hexString: AppColor.MutedForeground.rawValue)
+    static let black = UIColor(hexString: AppColor.Black.rawValue)
     static let deepBlackBackground = UIColor(hexString: AppColor.DeepBlack.rawValue)
+    static let gray = UIColor(hexString: AppColor.Gray.rawValue)
     static let gray26 = UIColor(hexString: AppColor.LightGray.rawValue)
     static let purple = UIColor(hexString: AppColor.Purple.rawValue)
     static let white2 = UIColor(hexString: "#fcfbfd")
@@ -33,6 +34,7 @@ enum AppColor: String {
     case Black                = "#181818"
     case DeepBlack            = "#070901"
     case Green                = "#A8DE24"
+    case Gray                 = "#222223"
     case MutedGreen           = "#F2FADE"
     case AccentGreen          = "#719F11"
     case LightGray            = "#262626"
@@ -50,9 +52,10 @@ extension Color {
     static let fsAccentForeground = Color(red:113/255, green:159/255, blue:17/255)
     static let fsTitle = Color(uiColor: FSColor.title)
     static let fsInputBorderColor = Color(red:230/255, green:230/255, blue:230/255)
-    static let fsSubtitleColor = Color(uiColor: FSColor.subtitle)
-    static let blackBackground = Color(uiColor: FSColor.blackBackground)
-    static let deepBlackBackground = Color(uiColor: FSColor.deepBlackBackground)
+    static let fsMutedForeground = Color(uiColor: FSColor.mutedForeground)
+    static let fsBlack = Color(uiColor: FSColor.black)
+    static let fsDeepBlack = Color(uiColor: FSColor.deepBlackBackground)
+    static let fsGray = Color(uiColor: FSColor.gray)
     static let gray26 = Color(uiColor: FSColor.gray26)
     static let gray156 = Color(red:156/255, green:156/255, blue:156/255)
     static let gray246 = Color(red:246/255, green:246/255, blue:246/255)

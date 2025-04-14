@@ -1,0 +1,62 @@
+//
+//  AppDelegate.swift
+//  FitSenpai
+//
+//  Created by Kevin Andrew Maloles on 11/20/24.
+//
+
+import UIKit
+import Supabase
+import SuperwallKit
+
+class AppDelegate: UIResponder, UIApplicationDelegate {
+
+    var window: UIWindow?
+    let log = FSLogger.self
+    
+    static func shared() -> AppDelegate {
+        return UIApplication.shared.delegate as! AppDelegate
+    }
+    
+    
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        // Configure window
+        setupLogger()
+        setupSupabase()
+        setupSuperwall()
+        
+        return true
+    }
+
+    // MARK: UISceneSession Lifecycle
+
+    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+        // Called when a new scene session is being created.
+        // Use this method to select a configuration to create the new scene with.
+        return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
+    }
+
+    func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
+        // Called when the user discards a scene session.
+        // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
+        // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
+    }
+    
+    func setupLogger() {
+        log.clean = false
+        log.currentMode = .verbose
+    }
+    
+    func setupSupabase(){
+        guard let url:String = EnvironmentManager.shared.value(for: .supabaseProjectURL), let key:String = EnvironmentManager.shared.value(for: .supabaseKey) else {
+            return
+        }
+        let _ = SupabaseClient(supabaseURL: URL(string: url)!, supabaseKey: key)
+    }
+    
+    func setupSuperwall() {
+        Superwall.configure(apiKey: "pk_46e1d4de08443cebfe5adf0aebbe795dbf96125a991a6a6d")
+    }
+
+}
+

@@ -1,5 +1,5 @@
 {
-  "originHash" : "8b7c25537482d849caaeff67c13afb959d6b992ffc3a961f58d779b1465b2600",
+  "originHash" : "cab8158d6cf81d401796b2e0e58d8affcafe22e9176a4ed046c43008c763f91b",
   "pins" : [
     {
       "identity" : "bottomsheet",
@@ -20,6 +20,15 @@
       }
     },
     {
+      "identity" : "lottie-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/airbnb/lottie-ios",
+      "state" : {
+        "revision" : "047aa81b77adcbf583a966dfef620d17650cc656",
+        "version" : "4.5.1"
+      }
+    },
+    {
       "identity" : "objectmapper",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/tristanhimmelman/ObjectMapper.git",
@@ -35,6 +44,24 @@
       "state" : {
         "revision" : "e2ca2908d80e0b5e2e22659cfe9af4651cebf7c2",
         "version" : "2.26.0"
+      }
+    },
+    {
+      "identity" : "superscript-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/superwall/Superscript-iOS",
+      "state" : {
+        "revision" : "a1ccc64da3c1b208c50de0ea46812f0027b14858",
+        "version" : "0.1.18"
+      }
+    },
+    {
+      "identity" : "superwall-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/superwall/Superwall-iOS",
+      "state" : {
+        "revision" : "191447cb00820b76959049f36c8f88489b14ec87",
+        "version" : "4.0.6"
       }
     },
     {

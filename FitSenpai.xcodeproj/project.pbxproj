@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		938DBF752DA918B0005A0D5C /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 938DBF742DA918B0005A0D5C /* Lottie */; };
+		938DBF782DAA1EFD005A0D5C /* SuperwallKit in Frameworks */ = {isa = PBXBuildFile; productRef = 938DBF772DAA1EFD005A0D5C /* SuperwallKit */; };
 		F2802BE02CF721CA00617942 /* ObjectMapper in Frameworks */ = {isa = PBXBuildFile; productRef = F2802BDF2CF721CA00617942 /* ObjectMapper */; };
 		F2CF8CE62CF62FDF00461D0D /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = F2CF8CE52CF62FDF00461D0D /* Auth */; };
 		F2CF8CE82CF62FDF00461D0D /* Functions in Frameworks */ = {isa = PBXBuildFile; productRef = F2CF8CE72CF62FDF00461D0D /* Functions */; };
@@ -57,6 +59,8 @@
 				F2CF8CEA2CF62FDF00461D0D /* PostgREST in Frameworks */,
 				F2CF8CE82CF62FDF00461D0D /* Functions in Frameworks */,
 				F2CF8CF32CF630F700461D0D /* Kingfisher in Frameworks */,
+				938DBF782DAA1EFD005A0D5C /* SuperwallKit in Frameworks */,
+				938DBF752DA918B0005A0D5C /* Lottie in Frameworks */,
 				F2CF8CF02CF62FDF00461D0D /* Supabase in Frameworks */,
 				F2CF8CE62CF62FDF00461D0D /* Auth in Frameworks */,
 				F2CF8CEE2CF62FDF00461D0D /* Storage in Frameworks */,
@@ -112,6 +116,8 @@
 				F2CF8CF22CF630F700461D0D /* Kingfisher */,
 				F2802BDF2CF721CA00617942 /* ObjectMapper */,
 				F2F8CA312D06F5B100E3DCF3 /* BottomSheet */,
+				938DBF742DA918B0005A0D5C /* Lottie */,
+				938DBF772DAA1EFD005A0D5C /* SuperwallKit */,
 			);
 			productName = FitSenpai;
 			productReference = F2802BC62CF6395300617942 /* FitSenpai.app */;
@@ -146,6 +152,8 @@
 				F2802BDE2CF721CA00617942 /* XCRemoteSwiftPackageReference "ObjectMapper" */,
 				F2F8CA302D06F5B100E3DCF3 /* XCRemoteSwiftPackageReference "BottomSheet" */,
 				12084EDF2D1696E2003E3769 /* XCRemoteSwiftPackageReference "swift-nio" */,
+				938DBF732DA918B0005A0D5C /* XCRemoteSwiftPackageReference "lottie-ios" */,
+				938DBF762DAA1EFD005A0D5C /* XCRemoteSwiftPackageReference "Superwall-iOS" */,
 			);
 			preferredProjectObjectVersion = 56;
 			productRefGroup = F24B334E2CEDB421004AD370;
@@ -212,7 +220,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -302,19 +310,19 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = SJLNKJK54M;
+				DEVELOPMENT_TEAM = SJLNKJK54M;
 				EXCLUDED_ARCHS = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = FitSenpai/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Fit Senpai";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -324,10 +332,13 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.fitsenpai.FitSenpai;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "app development_provisioning";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -336,19 +347,19 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = SJLNKJK54M;
+				DEVELOPMENT_TEAM = SJLNKJK54M;
 				EXCLUDED_ARCHS = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = FitSenpai/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Fit Senpai";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -357,10 +368,13 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.fitsenpai.FitSenpai;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "app development_provisioning";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -394,6 +408,22 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 2.77.0;
+			};
+		};
+		938DBF732DA918B0005A0D5C /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.5.1;
+			};
+		};
+		938DBF762DAA1EFD005A0D5C /* XCRemoteSwiftPackageReference "Superwall-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/superwall/Superwall-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.6;
 			};
 		};
 		F2802BDE2CF721CA00617942 /* XCRemoteSwiftPackageReference "ObjectMapper" */ = {
@@ -431,6 +461,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		938DBF742DA918B0005A0D5C /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 938DBF732DA918B0005A0D5C /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			productName = Lottie;
+		};
+		938DBF772DAA1EFD005A0D5C /* SuperwallKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 938DBF762DAA1EFD005A0D5C /* XCRemoteSwiftPackageReference "Superwall-iOS" */;
+			productName = SuperwallKit;
+		};
 		F2802BDF2CF721CA00617942 /* ObjectMapper */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = F2802BDE2CF721CA00617942 /* XCRemoteSwiftPackageReference "ObjectMapper" */;
