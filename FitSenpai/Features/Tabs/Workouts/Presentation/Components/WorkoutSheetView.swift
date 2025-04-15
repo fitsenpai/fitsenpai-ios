@@ -159,8 +159,8 @@ struct ChangeWorkoutSheetSheet: View {
             }
             .padding(.vertical, 16)
             
-            VStack(spacing: 5) {
-                FSButton(title: isLimitedAccess ? "Upgrade to continue" :  "Confirm", fontStyle: .bodyBold14, cornerRadius: 32) {
+            VStack(spacing: 10) {
+                FSButton(title: isLimitedAccess ? "Upgrade to continue" :  "Confirm", fontStyle: .bodyBold16, cornerRadius: 32) {
                     dismiss()
                 }
                 if isLimitedAccess {

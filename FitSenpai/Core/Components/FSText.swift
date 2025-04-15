@@ -30,6 +30,7 @@ enum FSTypography {
     case detail
     case detail_semi
     case blockquote
+    case custom(size: CGFloat)
     
     var fontSize: CGFloat {
         switch self {
@@ -51,6 +52,8 @@ enum FSTypography {
             12
         case .detail:
             10
+        case .custom(let size):
+            size
         }
     }
     
@@ -99,6 +102,8 @@ enum FSTypography {
             return calculateLineSpacing(fromLineHeight: 14, fontSize: fontSize)
         case .detail:
             return calculateLineSpacing(fromLineHeight: 10, fontSize: fontSize)
+        default:
+            return calculateLineSpacing(fromLineHeight: 24, fontSize: fontSize)
         }
     }
     

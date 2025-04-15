@@ -33,7 +33,7 @@ struct GroceriesSectionView: View {
                                 .scaledToFit()
                                 .frame(width: 16, height: 16)
                         }
-                        FSTextView("\(foodCategory.title()) \(foodItems.count)", typography: .body_medium)
+                        FSTextView("\(foodCategory.title()) (\(foodItems.count))", typography: .body_medium)
 
                         Spacer()
                         Button(action: {

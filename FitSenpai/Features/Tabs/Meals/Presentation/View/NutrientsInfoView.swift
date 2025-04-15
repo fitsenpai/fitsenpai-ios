@@ -15,13 +15,13 @@ struct NutrientsInfoView: View {
     
     var body: some View {
         HStack(spacing: 8) {
-            IconLabelView(fsMetric: .Calories, value: calorieAmount, typography: .detail, fontColor: .fsMutedForeground, iconSize: 12)
+            IconLabelView(fsMetric: .Calories, value: calorieAmount, typography: .custom(size: 12), fontColor: .fsMutedForeground, iconSize: 12)
             
-            IconLabelView(fsMetric: .Protein, value: proteinAmount, typography: .detail, fontColor: .fsMutedForeground, iconSize: 12)
+            IconLabelView(fsMetric: .Protein, value: proteinAmount, typography: .custom(size: 12), fontColor: .fsMutedForeground, iconSize: 12)
             
-            IconLabelView(fsMetric: .Carbs, value: carbsAmount, typography: .detail, fontColor: .fsMutedForeground, iconSize: 12)
+            IconLabelView(fsMetric: .Carbs, value: carbsAmount, typography: .custom(size: 12), fontColor: .fsMutedForeground, iconSize: 12)
             
-            IconLabelView(fsMetric: .Fat, value: fatAmount, typography: .detail, fontColor: .fsMutedForeground, iconSize: 12)
+            IconLabelView(fsMetric: .Fat, value: fatAmount, typography: .custom(size: 12), fontColor: .fsMutedForeground, iconSize: 12)
         }
     }
 }

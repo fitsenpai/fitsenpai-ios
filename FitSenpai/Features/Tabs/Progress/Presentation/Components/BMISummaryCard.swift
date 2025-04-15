@@ -16,7 +16,8 @@ struct BMISummaryCard: View {
         FSCard(borderColor: Color.gray.opacity(0.2)) {
             VStack(alignment: .leading, spacing: 16) {
                 HStack {
-                    FSText(text: "Your BMI", fontStyle: .bodyBold20)
+                    FSTextView("Your BMI", typography: .h4)
+
                     Spacer()
                     Button(action: onInfoTap) {
                         Image(systemName: "questionmark.circle")
