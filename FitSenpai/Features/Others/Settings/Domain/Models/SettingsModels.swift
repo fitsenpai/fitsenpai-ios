@@ -119,7 +119,7 @@ enum WorkoutLocation: String, SelectableItemProtocol {
         switch self {
         case .home: return "No equipment needed"
         case .gym: return "Machine and free-weight exercises"
-        case .mixed: return "Combination of home and gym workouts"
+        case .mixed: return "Combination of home and gym"
         }
     }
     
@@ -419,7 +419,7 @@ enum Barriers: String, SelectableItemProtocol {
 }
 
 enum Goals: String, SelectableItemProtocol {
-    case motivation = "Stay motivated and consistent"
+    case motivation = "Stay motivated & consistent"
     case healthyLiving = "Eat and live healthier"
     case saveMoney = "Save money while getting fit"
     case energy = "Boost my energy and mood"
