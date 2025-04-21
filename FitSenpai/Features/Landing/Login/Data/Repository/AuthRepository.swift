@@ -62,15 +62,31 @@ final class AuthRepository: AuthRepositoryProtocol {
         return (user, session)
     }
     
-    func signInWithApple() async throws -> (FSUser, FSSession) {
-        // TODO: Implement Apple Sign In
-        throw NSError(domain: "AuthRepository", code: -1, userInfo: [NSLocalizedDescriptionKey: "Apple Sign In not implemented"])
+    func signInWithApple(user: String) async throws -> (FSUser, FSSession) {
+        let response = try await remoteDataSource.signInWithApple(user: user)
+       
+        guard let user = response.user?.toDomain() else {
+            throw AuthRepositoryError.missingUser
+        }
+        
+        guard let session = response.session?.toDomain() else {
+            throw AuthRepositoryError.invalidSession
+        }
+        
+        return (user, session)
     }
     
     func signInWithGoogle() async throws -> (FSUser, FSSession) {
-        // TODO: Implement Google Sign In
-        throw NSError(domain: "AuthRepository", code: -1, userInfo: [NSLocalizedDescriptionKey: "Google Sign In not implemented"])
-    }
+        let response = try await remoteDataSource.signInWithGoogle()
+        guard let user = response.user?.toDomain() else {
+            throw AuthRepositoryError.missingUser
+        }
+        
+        guard let session = response.session?.toDomain() else {
+            throw AuthRepositoryError.invalidSession
+        }
+        
+        return (user, session)}
     
     func signOut() async throws {
         try await remoteDataSource.signOut()

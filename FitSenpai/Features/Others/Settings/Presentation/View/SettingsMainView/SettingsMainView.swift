@@ -10,16 +10,13 @@ import Combine
 import StoreKit
 
 struct SettingsMainView: View {
+    @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var appViewModel: AppViewModel
-    @Environment(\.dismiss) var dismiss
-    
+    @EnvironmentObject private var superwall: SuperwallViewModel
+    @StateObject private var viewModel: SettingsViewModel
     @State private var showSafariView = false
     @State private var safariURL: URL?
     @State private var isPresentedManageSubscription: Bool = false
-    
-    @StateObject private var viewModel: SettingsViewModel
-    
-    @EnvironmentObject var appState: AppViewModel
     
     // URLs
     private let supportEmail = "support@fitsenpai.com"
@@ -64,7 +61,7 @@ struct SettingsMainView: View {
                     accountSection
                 }
                 
-                if !appViewModel.isLimitedAccess {
+                if superwall.canLogout {
                     deleteAccountButton
                         .padding(.bottom, 24)
                 }
@@ -117,7 +114,8 @@ struct SettingsMainView: View {
                             Task {
                                 let success = await viewModel.signOut()
                                 if success {
-                                    appState.isLoggedIn = false
+                                    appViewModel.isLoggedIn = false
+                                    superwall.resetUser()
                                 }
                             }
                         }
@@ -154,7 +152,7 @@ struct SettingsMainView: View {
     private var profileHeader: some View {
         FSCard(borderColor: .gray230) {
             HStack(alignment: .center, spacing: 16) {
-                Image(appViewModel.isLimitedAccess ? .avatarPlaceholder : .imgDummyProf1)
+                Image(superwall.canLogout ? .imgDummyProf1 : .avatarPlaceholder)
                     .resizable()
                     .frame(width: 75, height: 75)
                     .overlay(alignment: .bottomTrailing) {
@@ -170,13 +168,13 @@ struct SettingsMainView: View {
                     }
                 
                 VStack(alignment: .leading, spacing: 8) {
-                    if appViewModel.isLimitedAccess {
-                        FSPill(text: "GUEST", color: .fsMutedForeground)
-                    } else {
+                    if superwall.canLogout {
                         FSPill(text: "PRO", color: .fsPrimary)
+                    } else {
+                        FSPill(text: "GUEST", color: .fsMutedForeground)
                     }
                     
-                    FSTextView(appViewModel.isLimitedAccess ? "Anonymous user" : "bella@fitsenpai.com", typography: .p_ui_medium, color: .fsMutedForeground)
+                    FSTextView(superwall.canLogout ? "bella@fitsenpai.com" : "Anonymous user", typography: .p_ui_medium, color: .fsMutedForeground)
                 }
             }
             .padding(5)
@@ -309,8 +307,16 @@ struct SettingsMainView: View {
     
     private var accountSection: some View {
         VStack(spacing: 0) {
-            linkRow("Restore purchase")
-            if !appViewModel.isLimitedAccess {
+            Button {
+                Task {
+                    triggerHaptics()
+                    await superwall.restore()
+                }
+            } label: {
+                settingsLinkLabel("Restore purchase")
+            }
+            
+            if superwall.canLogout {
                 Divider()
                 Button {
                     Task {
@@ -331,15 +337,7 @@ struct SettingsMainView: View {
                     }
                     triggerHaptics()
                 } label: {
-                    HStack {
-                        FSTextView("Log out", typography: .p_ui_medium)
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .foregroundColor(.fsMutedForeground)
-                            .font(.system(size: 14))
-                    }
-                    .padding()
-                    .contentShape(Rectangle())
+                    settingsLinkLabel("Log out")
                 }
             }
         }
@@ -484,7 +482,7 @@ struct SettingsMainView: View {
         clearCache()
         
         appViewModel.isLoggedIn = false
-        appViewModel.isLimitedAccess = false
+        superwall.endTrial()
         triggerHaptics()
     }
     

@@ -16,6 +16,8 @@ enum AuthEndpoint {
     case changePassword(currentPassword: String, newPassword: String)
     case deleteAccount(reason: String)
     case getCurrentUser
+    case signInWithApple(user: String)
+    case signInWithGoogle
 }
 
 extension AuthEndpoint: NetworkEndpoint {
@@ -36,12 +38,16 @@ extension AuthEndpoint: NetworkEndpoint {
             return "/user/delete-account"
         case .getCurrentUser:
             return "/user"
+        case .signInWithApple:
+            return "/user/signInWithApple"
+        case .signInWithGoogle:
+            return "/user/signInWithGoogle"
         }
     }
     
     var method: HTTPMethod {
         switch self {
-        case .signIn, .signUp:
+        case .signIn, .signUp, .signInWithGoogle, .signInWithApple:
             return .post
         case .signOut:
             return .post
@@ -59,7 +65,7 @@ extension AuthEndpoint: NetworkEndpoint {
     var headers: [String: String]? {
         var headers = ["Content-Type": "application/json"]
         switch self {
-        case .signIn, .signUp, .resetPassword:
+        case .signIn, .signUp, .resetPassword, .signInWithGoogle, .signInWithApple:
             // No additional headers needed for public endpoints
             break
         default:
@@ -90,7 +96,7 @@ extension AuthEndpoint: NetworkEndpoint {
             ]
         case let .deleteAccount(reason):
             return ["reason": reason]
-        case .signOut, .getCurrentUser:
+        default:
             return nil
         }
     }

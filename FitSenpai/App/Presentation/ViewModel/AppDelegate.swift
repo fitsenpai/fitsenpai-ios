@@ -7,7 +7,6 @@
 
 import UIKit
 import Supabase
-import SuperwallKit
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -23,8 +22,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Configure window
         setupLogger()
         setupSupabase()
-        setupSuperwall()
-        
         return true
     }
 
@@ -54,9 +51,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let _ = SupabaseClient(supabaseURL: URL(string: url)!, supabaseKey: key)
     }
     
-    func setupSuperwall() {
-        Superwall.configure(apiKey: "pk_46e1d4de08443cebfe5adf0aebbe795dbf96125a991a6a6d")
-    }
-
 }
 

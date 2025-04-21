@@ -115,7 +115,6 @@ struct SubscriptionView: View {
             }
             
             FSButton(title: "Try it FREE", fontStyle: .bodyBold16, cornerRadius: 32) {
-                appViewModel.isLimitedAccess = false
                 dismiss()
             }
             

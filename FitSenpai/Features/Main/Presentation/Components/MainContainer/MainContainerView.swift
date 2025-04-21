@@ -6,11 +6,10 @@
 //
 
 import SwiftUI
-import SuperwallKit
 
 struct MainContainerView<Content: View>: View {
     @EnvironmentObject private var viewModel: MainViewModel
-    @AppState(\.isLimited) private var isLimited: Bool
+    @EnvironmentObject private var superwall: SuperwallViewModel
     
     let content: Content
     
@@ -23,12 +22,10 @@ struct MainContainerView<Content: View>: View {
             VStack(alignment: .leading, spacing: 12) {
                 headerView
 
-                if isLimited {
+                if superwall.isFirstDayTrialActive {
                     UpgrageCardView {
                         triggerHaptics()
-//                        viewModel.activeSheet = .subscription
-                        Superwall.shared.register(placement: "campaign_trigger")
-                        
+                        superwall.presentPaywall(for: .proContent)
                     }
                     .padding(.horizontal, 24)
                 }
@@ -52,7 +49,8 @@ struct MainContainerView<Content: View>: View {
             FSNavBarView()
             
             SwipeableCalendarView(selectedDate: $viewModel.selectedDate, currentWeekStartDate: $viewModel.currentWeekStartDate, progressData: $viewModel.progressData, highlightedDays: $viewModel.highlightedDays)
-                .blur(radius: isLimited ? 4 : 0)
+                .blur(radius: superwall.isFirstDayTrialActive ? 4 : 0)
+                .disabled(superwall.isFirstDayTrialActive)
         }
     }
 }

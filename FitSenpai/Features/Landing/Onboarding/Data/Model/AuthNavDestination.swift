@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum OnboardingNavDestination: CaseIterable {
+enum AuthNavDestination: CaseIterable {
     case signin
     case createPlan
 }

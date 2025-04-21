@@ -1,9 +1,8 @@
 import SwiftUI
-import SuperwallKit
 
 struct ProgressMainView: View {
+    @EnvironmentObject private var superwall: SuperwallViewModel
     @StateObject private var viewModel = ProgressViewModel()
-    @AppState(\.isLimited) private var isLimitedAccess: Bool
 
     var body: some View {
         NavigationStack {
@@ -13,7 +12,7 @@ struct ProgressMainView: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 24) {
                         WeightChartCard(data: viewModel.weightData)
-                        if isLimitedAccess {
+                        if superwall.isFirstDayTrialActive {
                             UpgrageCardView {
                                 onTryForFreeTapped()
                             }
@@ -52,6 +51,6 @@ struct ProgressMainView: View {
     
     func onTryForFreeTapped() {
         triggerHaptics()
-        Superwall.shared.register(placement: "campaign_trigger")
+        superwall.presentPaywall(for: .proContent)
     }
 }

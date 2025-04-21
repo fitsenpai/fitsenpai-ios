@@ -15,6 +15,7 @@ let globalAppEnvObject = GlobalAppEnvironment()
 struct FitSenpai: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var appState = AppViewModel()
+    private let superwallManager = SuperwallViewModel.shared
 
     var body: some Scene {
         WindowGroup {
@@ -26,14 +27,17 @@ struct FitSenpai: App {
                     if appState.isLoggedIn {
                         FSTabView()
                             .environmentObject(appState)
+                            .environmentObject(superwallManager)
                     } else {
                         OnboardingView()
                             .environmentObject(appState)
+                            .environmentObject(superwallManager)
                     }
                 }
             }
             .preferredColorScheme(.light)
         }
+        
     }
 }
 

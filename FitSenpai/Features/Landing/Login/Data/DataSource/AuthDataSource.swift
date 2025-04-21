@@ -9,6 +9,8 @@ import Foundation
 
 protocol AuthDataSourceProtocol {
     func signIn(email: String, password: String) async throws -> LoginResponse
+    func signInWithApple(user: String) async throws -> LoginResponse
+    func signInWithGoogle() async throws -> LoginResponse
     func signUp(name: String, email: String, password: String) async throws -> LoginResponse
     func signOut() async throws
     func sendPasswordResetEmail(to email: String) async throws
@@ -27,6 +29,14 @@ final class AuthRemoteDataSource: AuthDataSourceProtocol {
     
     func signIn(email: String, password: String) async throws -> LoginResponse {
         return try await networkService.request(.signIn(email: email, password: password))
+    }
+    
+    func signInWithApple(user: String) async throws -> LoginResponse {
+        return try await networkService.request(.signInWithApple(user: user))
+    }
+    
+    func signInWithGoogle() async throws -> LoginResponse {
+        return try await networkService.request(.signInWithGoogle)
     }
     
     func signUp(name: String, email: String, password: String) async throws -> LoginResponse {

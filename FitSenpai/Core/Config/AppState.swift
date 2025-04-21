@@ -64,15 +64,43 @@ struct UserDefault<Value> {
             let container = instance.userDefaults
             let key = instance[keyPath: storageKeyPath].key
             let defaultValue = instance[keyPath: storageKeyPath].defaultValue
-            return container.object(forKey: key) as? Value ?? defaultValue
+        
+            
+            if defaultValue is Date? {
+                if let timestamp = container.object(forKey: key) as? TimeInterval {
+                    return Date(timeIntervalSince1970: timestamp) as! Value
+                }
+                return defaultValue
+            }
+            
+            let value = container.object(forKey: key) as? Value ?? defaultValue
+            return value
         }
         set {
             let container = instance.userDefaults
             let key = instance[keyPath: storageKeyPath].key
-            container.set(newValue, forKey: key)
+            
+            if let optional = newValue as? OptionalType, optional.isNil {
+                container.removeObject(forKey: key)
+            } else if let date = newValue as? Date {
+                let timestamp = date.timeIntervalSince1970
+                container.set(timestamp, forKey: key)
+            } else {
+                container.set(newValue, forKey: key)
+            }
+            
+            container.synchronize()
             instance.preferencesChangedSubject.send(wrappedKeyPath)
         }
     }
+}
+
+private protocol OptionalType {
+    var isNil: Bool { get }
+}
+
+extension Optional: OptionalType {
+    var isNil: Bool { self == nil }
 }
 
 final class PublisherObservableObject: ObservableObject {
@@ -87,6 +115,3 @@ final class PublisherObservableObject: ObservableObject {
         })
     }
 }
-
-
-

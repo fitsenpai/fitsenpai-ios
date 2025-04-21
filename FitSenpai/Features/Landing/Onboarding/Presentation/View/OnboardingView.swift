@@ -51,10 +51,10 @@ struct OnboardingView: View {
             )
             .onReceive(appState.$shouldLogin, perform: { shouldLogin in
                 if shouldLogin {
-                    appState.navDestination = .signin
+                    appState.authDestination = .signin
                 }
             })
-            .navigationDestination(item: $appState.navDestination, destination: { view in
+            .navigationDestination(item: $appState.authDestination, destination: { view in
                 switch view {
                 case .signin:
                     LoginView()

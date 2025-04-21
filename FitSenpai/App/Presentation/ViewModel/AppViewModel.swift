@@ -7,11 +7,12 @@
 
 import Foundation
 import Supabase
+import AuthenticationServices
 
 /// A view model responsible for managing the global app state,
 /// including user authentication and initialization logic.
 @MainActor
-class AppViewModel: ObservableObject {
+class AppViewModel: NSObject, ObservableObject {
     // MARK: - Properties
     
     /// The authenticated user object, if available.
@@ -27,7 +28,7 @@ class AppViewModel: ObservableObject {
     @Published var viewState: ViewState = .loading
     
     /// Determines the current navigation destination during onboarding.
-    @Published var navDestination: OnboardingNavDestination? = nil
+    @Published var authDestination: AuthNavDestination? = nil
     
     /// Configuration for displaying loading indicators throughout the app.
     @Published var loadingConfig: FSLoadingConfig = .defaultConfig
@@ -35,30 +36,34 @@ class AppViewModel: ObservableObject {
     /// A flag indicating whether the user should be directed to the login screen.
     @Published var shouldLogin: Bool = false
     
-    /// A flag indicating whether the user should be directed to the login screen.
-    var isProduction: Bool {
-        return EnvironmentManager.shared.value(for: .isProduction) ?? false
-    }
-
-    /// Indicates whether the user's access is limited to a restricted experience.
-    @AppState(\.isLimited) var isLimitedAccess: Bool
+    /// A flag indicating whether the user should be directed to the sign in screen.
+    @Published var shouldSignIn: Bool = false
     
     /// Use case for fetching the current user from a data source (e.g., Supabase).
     @Inject private var getUserUseCase: GetUserUseCaseProtocol
     
-    // MARK: - Initializer
+    /// Auth repository for handling authentication logic
+    @Inject private var authRepository: AuthRepositoryProtocol
+    
+    /// A flag indicating whether the user should be directed to the login screen.
+    var isProduction: Bool {
+        return EnvironmentManager.shared.value(for: .isProduction) ?? false
+    }
     
     /// Initializes the AppViewModel.
     ///
     /// This sets up dependencies and attempts to fetch the current user to determine
     /// the authentication state and access level.
-    init() {
+    override init() {
+        super.init()
         self.setupDependencies()
         Task { @MainActor in
             await self.getCurrentUser()
         }
+        // Register as login presenter
+        SuperwallViewModel.shared.loginPresenter = self
     }
-  
+    
 }
 
 
@@ -72,24 +77,26 @@ extension AppViewModel {
         self.user = user
         self.isLoggedIn = true
     }
-
+    
     func createLimitedWorkoutPlan() async {
+        SuperwallViewModel.shared.startTrial()
+        
         self.viewState = .loading
         self.loadingConfig = .init(title: "Getting everything\nready for you", subtitle: "Customizing your workout plan...")
         try? await Task.sleep(for: .seconds(3))
-        self.isLimitedAccess = true
         self.viewState = .idle
         self.isLoggedIn = true
     }
     
     func handleCreatePlan() {
-        navDestination = .createPlan
+        authDestination = .createPlan
     }
     
     func handleExistingAccount() {
-        navDestination = .signin
+        authDestination = .signin
     }
 }
+
 
 
 // MARK: - Private Methods
@@ -102,7 +109,7 @@ private extension AppViewModel {
         // Register self as singleton
         DependencyInjector.register(self)
     }
-
+    
     /// (Deprecated) Initializes the user session by checking for an active session in Supabase.
     /// This function will be removed in the future.
     /// - Throws: An error if the FSClient could not be initialized.
@@ -138,8 +145,10 @@ private extension AppViewModel {
     
     /// Retrieves the currently authenticated user and updates the global environment.
     func getCurrentUser() async {
+        let superwall = SuperwallViewModel.shared
+        
         defer { self.viewState = .idle }
-        guard !isLimitedAccess else {
+        guard !superwall.isFirstDayTrialActive, !superwall.isSubscrivedWithoutUserID else {
             self.isLoggedIn = true
             return
         }
@@ -147,11 +156,11 @@ private extension AppViewModel {
         do {
             let user = try await self.getUserUseCase.execute()
             updateUser(user)
-            isLimitedAccess = false
+            superwall.endTrial()
+            superwall.switchToUser(with: user.id)
         } catch {
             // TODO: Replace with proper error logging mechanism
             NSLog("Login error: \(error.localizedDescription)")
-            self.isLoggedIn = false
         }
     }
     
@@ -162,4 +171,73 @@ private extension AppViewModel {
         globalAppEnvObject.user = fsUser
     }
     
+}
+
+// MARK: - LoginPresenter
+
+extension AppViewModel: LoginPresenter {
+    func presentLogin() {
+        self.shouldSignIn = true
+    }
+}
+
+// MARK: - ASAuthorizationControllerDelegate
+
+extension AppViewModel: ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
+    
+    // Required by ASAuthorizationControllerPresentationContextProviding
+    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            return windowScene.windows.first { $0.isKeyWindow } ?? UIWindow()
+        }
+        return UIWindow()
+    }
+    
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+        handleAppleSignIn(result: .success(authorization))
+    }
+    
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+        handleAppleSignIn(result: .failure(error))
+    }
+    
+    func loginWithApple() {
+        viewState = .loading
+        defer { viewState = .idle }
+        
+        let request = ASAuthorizationAppleIDProvider().createRequest()
+        request.requestedScopes = [.fullName, .email]
+
+        let controller = ASAuthorizationController(authorizationRequests: [request])
+        controller.delegate = self
+        controller.presentationContextProvider = self
+        controller.performRequests()
+    }
+    
+    // ADD: Apple sign in handler
+    func handleAppleSignIn(result: Result<ASAuthorization, Error>) {
+        viewState = .loading
+        defer { viewState = .idle }
+        switch result {
+        case .success(let authorization):
+            if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
+                print(appleIDCredential)
+                shouldSignIn = false
+
+                // MARK: TODO
+//                Task {
+//                    do {
+//                        let appleUser = appleIDCredential.user
+//                        let (user, _) = try await authRepository.signInWithApple(user: appleUser)
+//                        updateUser(user)
+//                        shouldSignIn = false
+//                    } catch {
+//                        FSLogger.error("Apple sign in error: \(error)")
+//                    }
+//                }
+            }
+        case .failure(let error):
+            FSLogger.error("Apple sign in error: \(error)")
+        }
+    }
 }

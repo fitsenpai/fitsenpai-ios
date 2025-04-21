@@ -9,9 +9,9 @@ import SwiftUI
 import BottomSheet
 
 struct WorkoutsMainView: View {
+    @EnvironmentObject private var superwall: SuperwallViewModel
     @EnvironmentObject var mainViewModel: MainViewModel
     @StateObject private var viewModel: WorkoutsMainViewModel
-    @AppState(\.isLimited) private var isLimitedAccess: Bool
     
     @State private var isLoaded: Bool = false
 
@@ -95,7 +95,7 @@ struct WorkoutsMainView: View {
     private func fetchInitialData() {
         guard !isLoaded else { return }
         isLoaded = true
-        if isLimitedAccess {
+        if superwall.isFirstDayTrialActive {
             Task {
                 let (progressData, days) = await viewModel.getLimitedWorkoutPlan()
                 mainViewModel.progressData = progressData

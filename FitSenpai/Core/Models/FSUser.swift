@@ -9,8 +9,8 @@ import Foundation
 import ObjectMapper
 import Supabase
 
-class FSUser: Mappable {
-    var id: UUID?
+class FSUser {
+    var id: UUID
     var appMetadata: AppMetadata?
     var userMetadata: UserMetadata?
     var aud: String?
@@ -29,30 +29,6 @@ class FSUser: Mappable {
     var lastSignInAt: Date?
     var role: String?
     var updatedAt: Date?
-    
-    required init?(map: Map) {}
-
-    func mapping(map: Map) {
-        id                   <- map["id"]
-        appMetadata          <- map["appMetadata"]
-        userMetadata         <- map["userMetadata"]
-        aud                  <- map["aud"]
-        confirmationSentAt   <- map["confirmationSentAt"]
-        recoverySentAt       <- map["recoverySentAt"]
-        emailChangeSentAt    <- map["emailChangeSentAt"]
-        newEmail             <- map["newEmail"]
-        invitedAt            <- map["invitedAt"]
-        actionLink           <- map["actionLink"]
-        email                <- map["email"]
-        phone                <- map["phone"]
-        createdAt            <- (map["createdAt"], DateTransform())
-        confirmedAt          <- (map["confirmedAt"], DateTransform())
-        emailConfirmedAt     <- (map["emailConfirmedAt"], DateTransform())
-        phoneConfirmedAt     <- (map["phoneConfirmedAt"], DateTransform())
-        lastSignInAt         <- (map["lastSignInAt"], DateTransform())
-        role                 <- map["role"]
-        updatedAt            <- (map["updatedAt"], DateTransform())
-    }
     
     init(fromSupabaseUser user: Supabase.User) {
         self.id = user.id
@@ -85,7 +61,7 @@ class FSUser: Mappable {
     
     init?(fromResponse data: UserDTO?) {
         guard let data else { return nil }
-        self.id = UUID(uuidString: data.id)
+        self.id = UUID(uuidString: data.id) ?? UUID()
         self.email = data.email
         self.phone = data.phone
         self.role = data.role

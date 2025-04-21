@@ -7,16 +7,14 @@
 
 import SwiftUI
 import AVKit
-import SuperwallKit
 
 struct WorkoutDetailView: View {
+    @EnvironmentObject private var superwall: SuperwallViewModel
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var viewModel: WorkoutDetailViewModel
     
     @State private var player = AVPlayer(url: URL(string: UserDefaults.standard.string(forKey: "videoURL") ?? "https://txvhbjocxiodvtqreskj.supabase.co/storage/v1/object/public/workouts/abdominals/seated_floor_crunches.mp4?")!)
-    
-    @AppState(\.isLimited) private var isLimitedAccess: Bool
-   
+       
     var body: some View {
         VStack(spacing: 12) {
             headerSection
@@ -42,10 +40,10 @@ struct WorkoutDetailView: View {
             }
             .scrollIndicators(.hidden)
             
-            if isLimitedAccess {
+            if superwall.isFirstDayTrialActive {
                 FSButton(title: "Unlock full week", fontStyle: .bodyBold16, cornerRadius: 32, tapAction: {
                     triggerHaptics()
-                    Superwall.shared.register(placement: "campaign_trigger")
+                    superwall.presentPaywall(for: .proContent)
                 })
             } else {
                 FSButton(title: "Complete", fontStyle: .bodyBold16, cornerRadius: 32, tapAction: {
@@ -76,8 +74,8 @@ struct WorkoutDetailView: View {
                 .scaledToFit()
                 .frame(width: 25, height: 25)
                 .onTapGesture {
-                    if isLimitedAccess {
-                        Superwall.shared.register(placement: "campaign_trigger")
+                    if superwall.isFirstDayTrialActive {
+                        superwall.presentPaywall(for: .proContent)
                     }
                     triggerHaptics()
                 }

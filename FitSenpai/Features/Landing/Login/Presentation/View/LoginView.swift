@@ -56,9 +56,7 @@ struct LoginView: View {
             HStack {
                 FSButton(icon: "apple-logo", title: "Apple", fontStyle: .bodyBold16, foregroundColor: .white, cornerRadius: 100, background: .black) {
                     Task {
-                        if await viewModel.loginWithApple() {
-                            appViewModel.isLoggedIn = true
-                        }
+                        viewModel.loginWithApple()
                     }
                 }
                 
@@ -91,6 +89,11 @@ struct LoginView: View {
         .loadingOverlay(state: $viewModel.viewState)
         .navigationDestination(isPresented: $viewModel.showForgotPassword) {
             ForgotPasswordView()
+        }
+        .onReceive(viewModel.$shouldLogin) { shouldLogin in
+            if shouldLogin {
+                appViewModel.isLoggedIn = true
+            }
         }
     }
 }

@@ -118,7 +118,7 @@ struct NegativeFeedbackInoutSheet: View {
 }
 
 struct ChangeWorkoutSheetSheet: View {
-    @AppState(\.isLimited) private var isLimitedAccess: Bool
+    @EnvironmentObject private var superwall: SuperwallViewModel
     @Environment(\.dismiss) private var dismiss
     @State var instructionText: String = ""
     
@@ -160,10 +160,10 @@ struct ChangeWorkoutSheetSheet: View {
             .padding(.vertical, 16)
             
             VStack(spacing: 10) {
-                FSButton(title: isLimitedAccess ? "Upgrade to continue" :  "Confirm", fontStyle: .bodyBold16, cornerRadius: 32) {
+                FSButton(title: superwall.isFirstDayTrialActive ? "Upgrade to continue" :  "Confirm", fontStyle: .bodyBold16, cornerRadius: 32) {
                     dismiss()
                 }
-                if isLimitedAccess {
+                if superwall.isFirstDayTrialActive {
                     FSTextView("This feature is only available for Pro users.", typography: .detail_semi, color: .fsMutedForeground)
                 }
             }

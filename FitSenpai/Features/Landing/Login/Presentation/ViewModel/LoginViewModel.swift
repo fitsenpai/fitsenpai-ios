@@ -7,14 +7,16 @@
 
 import Foundation
 import SwiftUI
+import AuthenticationServices
 
 @MainActor
-class LoginViewModel: ObservableObject {
+class LoginViewModel: NSObject, ObservableObject {
     @Published var email: String = ""
     @Published var password: String = ""
     @Published var viewState: ViewState = .idle
     @Published var errorMessage: String?
     @Published var showForgotPassword: Bool = false
+    @Published var shouldLogin: Bool = false
     
     @Inject private var signinUseCase: SigninUseCaseProtocol
 
@@ -42,20 +44,18 @@ class LoginViewModel: ObservableObject {
         }
     }
     
-    func loginWithApple() async -> Bool {
+    func loginWithApple() {
         viewState = .loading
         errorMessage = nil
-        
         defer { viewState = .idle }
         
-        do {
-            let (_, _) = try await signinUseCase.executeWithApple()
-            return true
-        } catch {
-            errorMessage = error.localizedDescription
-            print("Error during Apple login: \(error.localizedDescription)")
-            return false
-        }
+        let request = ASAuthorizationAppleIDProvider().createRequest()
+        request.requestedScopes = [.fullName, .email]
+
+        let controller = ASAuthorizationController(authorizationRequests: [request])
+        controller.delegate = self
+        controller.presentationContextProvider = self
+        controller.performRequests()
     }
     
     func loginWithGoogle() async -> Bool {
@@ -73,4 +73,57 @@ class LoginViewModel: ObservableObject {
             return false
         }
     }
+    
+    private func handleSuccessfulLogin(with authorization: ASAuthorization) {
+          if let userCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
+              print(userCredential.user)
+              
+              if userCredential.authorizedScopes.contains(.fullName) {
+                  print(userCredential.fullName?.givenName ?? "No given name")
+              }
+              
+              if userCredential.authorizedScopes.contains(.email) {
+                  print(userCredential.email ?? "No email")
+              }
+              shouldLogin = true
+
+              // MARK: TODO
+//              Task { @MainActor in
+//                  do {
+//                    
+//                      let (_, _) = try await signinUseCase.executeWithApple(user: userCredential.user)
+//                      shouldLogin = true
+//                  } catch {
+//                      errorMessage = error.localizedDescription
+//                      print("Error during Apple login: \(error.localizedDescription)")
+//                  }
+//              }
+          }
+      }
+      
+      private func handleLoginError(with error: Error) {
+          print("Could not authenticate: \\(error.localizedDescription)")
+      }
+}
+
+extension LoginViewModel: ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
+    // Your existing properties and functions...
+
+    // Required by ASAuthorizationControllerPresentationContextProviding
+    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            return windowScene.windows.first { $0.isKeyWindow } ?? UIWindow()
+        }
+        return UIWindow()
+    }
+
+    // Optional: Handle auth result
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+        handleSuccessfulLogin(with: authorization)
+    }
+
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+        handleLoginError(with: error)
+    }
+    
 }

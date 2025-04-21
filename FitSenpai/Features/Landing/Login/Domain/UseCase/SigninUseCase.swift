@@ -9,7 +9,7 @@ import Foundation
 
 protocol SigninUseCaseProtocol {
     func execute(email: String, password: String) async throws -> (FSUser, FSSession)
-    func executeWithApple() async throws -> (FSUser, FSSession)
+    func executeWithApple(user: String) async throws -> (FSUser, FSSession)
     func executeWithGoogle() async throws -> (FSUser, FSSession)
 }
 
@@ -22,8 +22,8 @@ final class SigninUseCase: SigninUseCaseProtocol {
         return try await authRepository.signIn(email: email, password: password)
     }
     
-    func executeWithApple() async throws -> (FSUser, FSSession) {
-        return try await authRepository.signInWithApple()
+    func executeWithApple(user: String) async throws -> (FSUser, FSSession) {
+        return try await authRepository.signInWithApple(user: user)
     }
     
     func executeWithGoogle() async throws -> (FSUser, FSSession) {

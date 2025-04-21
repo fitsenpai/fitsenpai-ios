@@ -6,12 +6,11 @@
 //
 
 import SwiftUI
-import SuperwallKit
 
 struct MealDetailView: View {
+    @EnvironmentObject private var superwall: SuperwallViewModel
     @ObservedObject var viewModel: MealDetailViewModel
     @Environment(\.dismiss) private var dismiss
-    @AppState(\.isLimited) private var isLimitedAccess: Bool
     
     var body: some View {
         VStack(spacing: 12) {
@@ -34,10 +33,10 @@ struct MealDetailView: View {
             }
             .scrollIndicators(.hidden)
             
-            if isLimitedAccess {
+            if superwall.isFirstDayTrialActive {
                 FSButton(title: "Unlock full week", fontStyle: .bodyBold16, cornerRadius: 32, tapAction: {
                     triggerHaptics()
-                    Superwall.shared.register(placement: "campaign_trigger")
+                    superwall.presentPaywall(for: .proContent)
                 })
             }
         }
@@ -60,8 +59,8 @@ struct MealDetailView: View {
                 .scaledToFit()
                 .frame(width: 25, height: 25)
                 .onTapGesture {
-                    if isLimitedAccess {
-                        Superwall.shared.register(placement: "campaign_trigger")
+                    if superwall.isFirstDayTrialActive {
+                        superwall.presentPaywall(for: .proContent)
                     }
                     triggerHaptics()
                 }

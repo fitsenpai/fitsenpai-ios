@@ -32,6 +32,9 @@ final class Preferences {
     @UserDefault("refreshToken")
     var refreshToken: String? = nil
     
-    @UserDefault("isLimited")
-    var isLimited: Bool = false
+    @UserDefault("trialStartDate")
+    var trialStartDate: Date? = nil
+    
+    @UserDefault("didSubscribedWithoutUserID")
+    var didSubscribedWithoutUserID: Bool = false
 }
