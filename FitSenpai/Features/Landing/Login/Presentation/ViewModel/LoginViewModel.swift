@@ -10,7 +10,7 @@ import SwiftUI
 import AuthenticationServices
 
 @MainActor
-class LoginViewModel: NSObject, ObservableObject {
+class LoginViewModel: ObservableObject {
     @Published var email: String = ""
     @Published var password: String = ""
     @Published var viewState: ViewState = .idle
@@ -19,6 +19,8 @@ class LoginViewModel: NSObject, ObservableObject {
     @Published var shouldLogin: Bool = false
     
     @Inject private var signinUseCase: SigninUseCaseProtocol
+    
+    private let appleSignInManager = AppleSignInManager()
 
     func login() async -> Bool {
         guard !email.isEmpty, !password.isEmpty else {
@@ -47,20 +49,21 @@ class LoginViewModel: NSObject, ObservableObject {
     func loginWithApple() {
         viewState = .loading
         errorMessage = nil
-        defer { viewState = .idle }
         
-        let request = ASAuthorizationAppleIDProvider().createRequest()
-        request.requestedScopes = [.fullName, .email]
-
-        let controller = ASAuthorizationController(authorizationRequests: [request])
-        controller.delegate = self
-        controller.presentationContextProvider = self
-        controller.performRequests()
+        appleSignInManager.signIn { [weak self] result in
+            switch result {
+            case .success(let authorization):
+                self?.handleSuccessfulLogin(with: authorization)
+            case .failure(let error):
+                self?.handleLoginError(with: error)
+            }
+            self?.viewState = .idle
+        }
     }
     
     func loginWithGoogle() async -> Bool {
         viewState = .loading
-            errorMessage = nil
+        errorMessage = nil
         
         defer { viewState = .idle }
         
@@ -102,28 +105,6 @@ class LoginViewModel: NSObject, ObservableObject {
       }
       
       private func handleLoginError(with error: Error) {
-          print("Could not authenticate: \\(error.localizedDescription)")
+          print("Could not authenticate: \(error.localizedDescription)")
       }
-}
-
-extension LoginViewModel: ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
-    // Your existing properties and functions...
-
-    // Required by ASAuthorizationControllerPresentationContextProviding
-    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
-        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
-            return windowScene.windows.first { $0.isKeyWindow } ?? UIWindow()
-        }
-        return UIWindow()
-    }
-
-    // Optional: Handle auth result
-    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
-        handleSuccessfulLogin(with: authorization)
-    }
-
-    func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
-        handleLoginError(with: error)
-    }
-    
 }

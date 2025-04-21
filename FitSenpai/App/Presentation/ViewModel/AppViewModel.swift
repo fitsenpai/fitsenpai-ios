@@ -50,6 +50,8 @@ class AppViewModel: NSObject, ObservableObject {
         return EnvironmentManager.shared.value(for: .isProduction) ?? false
     }
     
+    private let appleSignInManager = AppleSignInManager()
+    
     /// Initializes the AppViewModel.
     ///
     /// This sets up dependencies and attempts to fetch the current user to determine
@@ -94,6 +96,41 @@ extension AppViewModel {
     
     func handleExistingAccount() {
         authDestination = .signin
+    }
+    
+    func loginWithApple() {
+        viewState = .loading
+        
+        appleSignInManager.signIn { [weak self] result in
+            self?.handleAppleSignIn(result: result)
+        }
+    }
+    
+    // ADD: Apple sign in handler
+    func handleAppleSignIn(result: Result<ASAuthorization, Error>) {
+        viewState = .loading
+        defer { viewState = .idle }
+        switch result {
+        case .success(let authorization):
+            if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
+                print(appleIDCredential)
+                shouldSignIn = false
+
+                // MARK: TODO
+//                Task {
+//                    do {
+//                        let appleUser = appleIDCredential.user
+//                        let (user, _) = try await authRepository.signInWithApple(user: appleUser)
+//                        updateUser(user)
+//                        shouldSignIn = false
+//                    } catch {
+//                        FSLogger.error("Apple sign in error: \(error)")
+//                    }
+//                }
+            }
+        case .failure(let error):
+            FSLogger.error("Apple sign in error: \(error)")
+        }
     }
 }
 
@@ -178,66 +215,5 @@ private extension AppViewModel {
 extension AppViewModel: LoginPresenter {
     func presentLogin() {
         self.shouldSignIn = true
-    }
-}
-
-// MARK: - ASAuthorizationControllerDelegate
-
-extension AppViewModel: ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
-    
-    // Required by ASAuthorizationControllerPresentationContextProviding
-    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
-        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
-            return windowScene.windows.first { $0.isKeyWindow } ?? UIWindow()
-        }
-        return UIWindow()
-    }
-    
-    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
-        handleAppleSignIn(result: .success(authorization))
-    }
-    
-    func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
-        handleAppleSignIn(result: .failure(error))
-    }
-    
-    func loginWithApple() {
-        viewState = .loading
-        defer { viewState = .idle }
-        
-        let request = ASAuthorizationAppleIDProvider().createRequest()
-        request.requestedScopes = [.fullName, .email]
-
-        let controller = ASAuthorizationController(authorizationRequests: [request])
-        controller.delegate = self
-        controller.presentationContextProvider = self
-        controller.performRequests()
-    }
-    
-    // ADD: Apple sign in handler
-    func handleAppleSignIn(result: Result<ASAuthorization, Error>) {
-        viewState = .loading
-        defer { viewState = .idle }
-        switch result {
-        case .success(let authorization):
-            if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
-                print(appleIDCredential)
-                shouldSignIn = false
-
-                // MARK: TODO
-//                Task {
-//                    do {
-//                        let appleUser = appleIDCredential.user
-//                        let (user, _) = try await authRepository.signInWithApple(user: appleUser)
-//                        updateUser(user)
-//                        shouldSignIn = false
-//                    } catch {
-//                        FSLogger.error("Apple sign in error: \(error)")
-//                    }
-//                }
-            }
-        case .failure(let error):
-            FSLogger.error("Apple sign in error: \(error)")
-        }
     }
 }
