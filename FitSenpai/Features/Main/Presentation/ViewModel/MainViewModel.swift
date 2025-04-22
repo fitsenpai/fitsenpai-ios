@@ -21,6 +21,7 @@ final class MainViewModel: ObservableObject {
     @Published var selectedTab: MainTab = .workouts
     @Published var progressData: [Date: Double] = [:]
     @Published var highlightedDays: Set<Int> = []
+    @Published var currentWeekOffset: Int = 0
     
     // MARK: - Initialization
     init() {  }

@@ -1,14 +1,16 @@
 import SwiftUI
 
 struct HealthConcernsEditView: View {
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) var dismiss
+
     @ObservedObject var viewModel: SettingsViewModel
     @State private var selectedConcerns: [HealthConcern]
     @State private var showCustomInput: Bool = false
-    @Environment(\.dismiss) var dismiss
     
     init(viewModel: SettingsViewModel) {
         self.viewModel = viewModel
-        _selectedConcerns = State(initialValue: viewModel.selectedHealthConcerns)
+        _selectedConcerns = State(initialValue: viewModel.profile.healthRestrictions)
     }
     
     var body: some View {
@@ -24,7 +26,7 @@ struct HealthConcernsEditView: View {
             title: "Other health concerns",
             subtitle: "Separate multiple items with a comma",
             placeholder: "Shoulder injury",
-            initialValue: viewModel.customHealthConcern ?? "",
+            initialValue: viewModel.profile.otherHealthRestrictions ?? "",
             showCustomInput: $showCustomInput,
             onSave: handleCustomInput
         )
@@ -56,7 +58,7 @@ struct HealthConcernsEditView: View {
         triggerHaptics()
         // When saving custom input, clear other selections and only keep "Other"
         Task { @MainActor in
-            await viewModel.updateHealthConcerns([.other], customValue: value)
+            await viewModel.updateHealthConcerns([.other], customValue: value, modelContext: modelContext)
             dismiss()
         }
     }
@@ -67,7 +69,7 @@ struct HealthConcernsEditView: View {
             showCustomInput = true
         } else {
             Task { @MainActor in
-                await viewModel.updateHealthConcerns(selectedConcerns)
+                await viewModel.updateHealthConcerns(selectedConcerns, modelContext: modelContext)
                 dismiss()
             }
         }

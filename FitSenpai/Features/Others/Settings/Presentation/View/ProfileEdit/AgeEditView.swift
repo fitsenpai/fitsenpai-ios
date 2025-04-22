@@ -1,12 +1,13 @@
 import SwiftUI
 
 struct AgeEditView: View {
+    @Environment(\.modelContext) private var modelContext
     @ObservedObject var viewModel: SettingsViewModel
     @State private var age: Int
     
     init(viewModel: SettingsViewModel) {
         self.viewModel = viewModel
-        _age = State(initialValue: viewModel.age)
+        _age = State(initialValue: viewModel.profile.age)
     }
     
     var body: some View {
@@ -14,7 +15,7 @@ struct AgeEditView: View {
             title: "Age",
             onSave: {
                 Task { @MainActor in
-                    await viewModel.updateAge(age)
+                    await viewModel.updateAge(age, modelContext: modelContext)
                 }
             }
         ) {

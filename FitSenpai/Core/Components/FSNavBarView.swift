@@ -6,12 +6,15 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct FSNavBarView: View {
+    @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var appViewModel: AppViewModel
-
     @State private var navDestination: SettingsNavigation?
     
+    @Query private var userProfile: [FSProfileEntity]
+
     var body: some View {
         NavigationStack {
             HStack {
@@ -34,7 +37,7 @@ struct FSNavBarView: View {
             .navigationDestination(item: $navDestination) { destination in
                 switch destination {
                 case .settings:
-                    SettingsMainView(profile: appViewModel.userProfile)
+                    SettingsMainView(profile: userProfile.first?.toDomain())
                 }
             }
         }

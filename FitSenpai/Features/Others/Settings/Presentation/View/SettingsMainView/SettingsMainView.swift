@@ -8,8 +8,10 @@
 import SwiftUI
 import Combine
 import StoreKit
+import SwiftData
 
 struct SettingsMainView: View {
+    @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var appViewModel: AppViewModel
     @EnvironmentObject private var superwall: SuperwallViewModel
@@ -17,6 +19,8 @@ struct SettingsMainView: View {
     @State private var showSafariView = false
     @State private var safariURL: URL?
     @State private var isPresentedManageSubscription: Bool = false
+    
+    @Query private var userProfile: [FSProfileEntity]
     
     // URLs
     private let supportEmail = "support@fitsenpai.com"
@@ -116,6 +120,7 @@ struct SettingsMainView: View {
                                 if success {
                                     appViewModel.isLoggedIn = false
                                     superwall.resetUser()
+                                    try? modelContext.delete(model: FSProfileEntity.self)
                                 }
                             }
                         }
@@ -189,15 +194,15 @@ struct SettingsMainView: View {
     
     private var profileSection: some View {
         VStack(spacing: 0) {
-            settingsRow("Age", value: "\(viewModel.age)")
+            settingsRow("Age", value: "\(String(describing: viewModel.profile.age))")
             Divider()
-            settingsRow("Gender", value: viewModel.selectedGender?.title)
+            settingsRow("Gender", value: viewModel.profile.gender?.title)
             Divider()
             settingsRow("Height & Weight", value: viewModel.formattedHeightWeight)
             Divider()
-            settingsRow("Fitness goal", value: viewModel.selectedFitnessGoal?.rawValue)
+            settingsRow("Fitness goal", value: viewModel.profile.mainGoal?.rawValue)
             Divider()
-            settingsRow("Activity level", value: viewModel.selectedActivityLevel?.rawValue)
+            settingsRow("Activity level", value: viewModel.profile.activityLevel?.rawValue)
         }
         .background(Color.gray246)
         .cornerRadius(12)
@@ -206,13 +211,13 @@ struct SettingsMainView: View {
     
     private var preferencesSection: some View {
         VStack(spacing: 0) {
-            settingsRow("Workout location", value: viewModel.selectedWorkoutDuration?.title)
+            settingsRow("Workout location", value: viewModel.profile.workoutLocation?.title)
             Divider()
-            settingsRow("Workout days", value: formatWorkoutDays(viewModel.workoutDays))
+            settingsRow("Workout days", value: formatWorkoutDays(viewModel.profile.workoutDays))
             Divider()
-            settingsRow("Workout duration", value: viewModel.selectedWorkoutDuration?.title)
+            settingsRow("Workout duration", value: viewModel.profile.workoutDuration?.title)
             Divider()
-            settingsRow("Difficulty level", value: viewModel.selectedWorkoutExperience?.title)
+            settingsRow("Difficulty level", value: viewModel.profile.workoutExperience?.title)
             Divider()
             settingsRow("Dietary", value: viewModel.displayDietaryPreference)
         }
@@ -472,6 +477,7 @@ struct SettingsMainView: View {
             UserDefaults.standard.removePersistentDomain(forName: bundleID)
         }
         
+        try? modelContext.delete(model: FSProfileEntity.self)
         // Clear auth tokens
         AppSession.shared.clearTokens()
         

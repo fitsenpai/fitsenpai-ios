@@ -1,14 +1,16 @@
 import SwiftUI
 
 struct AllergiesEditView: View {
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) var dismiss
+
     @ObservedObject var viewModel: SettingsViewModel
     @State private var selectedAllergies: [Allergy]
     @State private var showCustomInput: Bool = false
-    @Environment(\.dismiss) var dismiss
     
     init(viewModel: SettingsViewModel) {
         self.viewModel = viewModel
-        _selectedAllergies = State(initialValue: viewModel.selectedAllergies)
+        _selectedAllergies = State(initialValue: viewModel.profile.allergies)
     }
     
     var body: some View {
@@ -24,7 +26,7 @@ struct AllergiesEditView: View {
             title: "Other food allergies",
             subtitle: "Separate multiple items with a comma",
             placeholder: "Shrimp",
-            initialValue: viewModel.customAllergy ?? "",
+            initialValue: viewModel.profile.otherAllergies ?? "",
             showCustomInput: $showCustomInput,
             onSave: handleCustomInput
         )
@@ -56,7 +58,7 @@ struct AllergiesEditView: View {
         triggerHaptics()
         // When saving custom input, clear other selections and only keep "Other"
         Task { @MainActor in
-            await viewModel.updateAllergies([.other], customValue: value)
+            await viewModel.updateAllergies([.other], customValue: value, modelContext: modelContext)
             dismiss()
         }
     }
@@ -67,7 +69,7 @@ struct AllergiesEditView: View {
             showCustomInput = true
         } else {
             Task { @MainActor in
-                await viewModel.updateAllergies(selectedAllergies)
+                await viewModel.updateAllergies(selectedAllergies, modelContext: modelContext)
                 dismiss()
             }
         }

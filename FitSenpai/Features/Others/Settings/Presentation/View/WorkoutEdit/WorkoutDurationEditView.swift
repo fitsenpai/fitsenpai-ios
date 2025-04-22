@@ -1,13 +1,16 @@
 import SwiftUI
 
 struct WorkoutDurationEditView: View {
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) var dismiss
+    
     @ObservedObject var viewModel: SettingsViewModel
     @State private var selectedDuration: WorkoutDuration?
-    @Environment(\.dismiss) var dismiss
+    
 
     init(viewModel: SettingsViewModel) {
         self.viewModel = viewModel
-        _selectedDuration = State(initialValue: viewModel.selectedWorkoutDuration)
+        _selectedDuration = State(initialValue: viewModel.profile.workoutDuration)
     }
     
     var body: some View {
@@ -15,7 +18,7 @@ struct WorkoutDurationEditView: View {
             title: "Workout Duration",
             onSave: {
                 Task { @MainActor in
-                    await viewModel.updateWorkoutDuration(selectedDuration)
+                    await viewModel.updateWorkoutDuration(selectedDuration, modelContext: modelContext)
                 }
             }
         ) {

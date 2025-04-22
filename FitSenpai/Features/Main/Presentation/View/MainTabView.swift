@@ -1,5 +1,5 @@
 //
-//  FSTabView.swift
+//  MainTabView.swift
 //  FitSenpai
 //
 //  Created by Kevin Andrew Maloles on 11/22/24.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct FSTabView: View {
+struct MainTabView: View {
     @StateObject private var viewModel: MainViewModel = .init()
     @EnvironmentObject private var appViewModel: AppViewModel
     @State private var selectedTab = 0
@@ -62,6 +62,6 @@ struct FSTabView: View {
 }
 
 #Preview {
-    FSTabView()
+    MainTabView()
         .environmentObject(AppViewModel())
 }

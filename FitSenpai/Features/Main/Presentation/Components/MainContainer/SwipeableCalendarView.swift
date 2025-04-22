@@ -9,7 +9,7 @@ import SwiftUI
 
 
 struct SwipeableCalendarView: View {
-    @State private var currentWeekOffset = 0 // Tracks the offset for the displayed week
+    @Binding var currentWeekOffset: Int // Tracks the offset for the displayed week
     @State var shouldShowWeekView = true
     @Binding var selectedDate: Date
     @Binding var currentWeekStartDate: Date
@@ -99,7 +99,7 @@ struct SwipeableCalendarView: View {
 
 struct SwipeableCalendarView_Previews: PreviewProvider {
     static var previews: some View {
-        SwipeableCalendarView(selectedDate: .constant(Date()), currentWeekStartDate: .constant(Date()), progressData: .constant([
+        SwipeableCalendarView(currentWeekOffset: .constant(0), selectedDate: .constant(Date()), currentWeekStartDate: .constant(Date()), progressData: .constant([
             // Today with 50% progress
             Date(): 0.5,
             

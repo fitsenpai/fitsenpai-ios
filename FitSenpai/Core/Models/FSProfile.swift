@@ -6,7 +6,7 @@ struct FSProfile {
     var mainGoal: FitnessGoals?
     var height: Double?
     var weight: Double?
-    var age: Int?
+    var age: Int
     var workoutExperience: WorkoutExperience?
     var workoutLocation: WorkoutLocation?
     var workoutDays: [WeekDay]
@@ -23,13 +23,33 @@ struct FSProfile {
     var goals: Goals?
     var isMetric: Bool
 
-    init(gender: Gender? = nil, activityLevel: ActivityLevel? = nil, mainGoal: FitnessGoals? = nil, height: Double? = nil, weight: Double? = nil, age: Int? = nil, workoutExperience: WorkoutExperience? = nil, workoutLocation: WorkoutLocation? = nil, workoutDays: [WeekDay], workoutDuration: WorkoutDuration? = nil, healthRestrictions: [HealthConcern], otherHealthRestrictions: String? = nil, diet: DietaryPreference? = nil, otherDiet: String? = nil, allergies: [Allergy], otherAllergies: String?, cookingStyle: CookingStyle? = nil, pastTrainings: [PastTraining], barriers: Barriers? = nil, goals: Goals? = nil, isMetric: Bool) {
+    init(gender: Gender? = nil,
+         activityLevel: ActivityLevel? = nil,
+         mainGoal: FitnessGoals? = nil,
+         height: Double? = nil,
+         weight: Double? = nil,
+         age: Int? = nil,
+         workoutExperience: WorkoutExperience? = nil,
+         workoutLocation: WorkoutLocation? = nil,
+         workoutDays: [WeekDay] = [],
+         workoutDuration: WorkoutDuration? = nil,
+         healthRestrictions: [HealthConcern] = [],
+         otherHealthRestrictions: String? = nil,
+         diet: DietaryPreference? = nil,
+         otherDiet: String? = nil,
+         allergies: [Allergy] = [],
+         otherAllergies: String? = nil,
+         cookingStyle: CookingStyle? = nil,
+         pastTrainings: [PastTraining] = [],
+         barriers: Barriers? = nil,
+         goals: Goals? = nil,
+         isMetric: Bool = false) {
         self.gender = gender
         self.activityLevel = activityLevel
         self.mainGoal = mainGoal
         self.height = height
         self.weight = weight
-        self.age = age
+        self.age = age ?? 0
         self.workoutExperience = workoutExperience
         self.workoutLocation = workoutLocation
         self.workoutDays = workoutDays
@@ -47,6 +67,32 @@ struct FSProfile {
         self.isMetric = isMetric
     }
     
+    func toEntity() -> FSProfileEntity {
+        return FSProfileEntity(
+            gender: gender?.intValue,
+            activityLevel: activityLevel?.intValue,
+            mainGoal: mainGoal?.intValue,
+            height: height,
+            weight: weight,
+            age: age,
+            workoutExperience: workoutExperience?.intValue,
+            workoutLocation: workoutLocation?.intValue,
+            workoutDays: workoutDays.map { $0.intValue },
+            workoutDuration: workoutDuration?.intValue,
+            healthRestrictions: healthRestrictions.map { $0.intValue },
+            otherHealthRestrictions: otherHealthRestrictions,
+            diet: diet?.intValue,
+            otherDiet: otherDiet,
+            allergies: allergies.map { $0.intValue },
+            otherAllergies: otherAllergies,
+            cookingStyle: cookingStyle?.intValue,
+            pastTrainings: pastTrainings.map { $0.intValue },
+            barriers: barriers?.intValue,
+            goals: goals?.intValue,
+            isMetric: isMetric
+        )
+    }
+
     // IMPROVE: Structured logging
     func printLogs() {
         var log = ["=== Onboarding Selections ===\n"]
@@ -75,9 +121,7 @@ struct FSProfile {
             log.append("Weight: \(weight) \(isMetric ? "kg" : "lbs")")
         }
         
-        if let age {
-            log.append("Age: \(age)")
-        }
+        log.append("Age: \(age)")
         
         // Workout preferences
         log.append("\nWorkout Preferences:")

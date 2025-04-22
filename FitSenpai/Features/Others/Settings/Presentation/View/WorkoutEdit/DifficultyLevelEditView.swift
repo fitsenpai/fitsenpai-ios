@@ -1,12 +1,14 @@
 import SwiftUI
 
 struct DifficultyLevelEditView: View {
+    @Environment(\.modelContext) private var modelContext
+    
     @ObservedObject var viewModel: SettingsViewModel
     @State private var selectedDifficulty: WorkoutExperience?
     
     init(viewModel: SettingsViewModel) {
         self.viewModel = viewModel
-        _selectedDifficulty = State(initialValue: viewModel.selectedWorkoutExperience)
+        _selectedDifficulty = State(initialValue: viewModel.profile.workoutExperience)
     }
     
     var body: some View {
@@ -14,7 +16,7 @@ struct DifficultyLevelEditView: View {
             title: "Difficulty Level",
             onSave: {
                 Task { @MainActor in
-                    await viewModel.updateExerciseDifficulty(selectedDifficulty)
+                    await viewModel.updateExerciseDifficulty(selectedDifficulty, modelContext: modelContext)
                 }
             }
         ) {

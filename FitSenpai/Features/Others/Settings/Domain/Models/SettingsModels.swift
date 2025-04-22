@@ -7,6 +7,14 @@ enum Gender: String, SelectableItemProtocol {
     case female = "Female"
     case other = "Other"
     
+    var intValue: Int {
+        switch self {
+        case .male: return 1
+        case .female: return 2
+        case .other: return 3
+        }
+    }
+    
     init?(rawValue: Int?) {
         switch rawValue {
         case 1: self = .male
@@ -36,6 +44,16 @@ enum ActivityLevel: String, SelectableItemProtocol {
     case moderate = "Moderate"
     case heavy = "Heavy training"
     case athlete = "Athlete"
+    
+    var intValue: Int {
+        switch self {
+        case .sedentary: return 1
+        case .light: return 2
+        case .moderate: return 3
+        case .heavy: return 4
+        case .athlete: return 5
+        }
+    }
     
     init?(rawValue: Int?) {
         switch rawValue {
@@ -80,6 +98,16 @@ enum FitnessGoals: String, SelectableItemProtocol {
     case increasedEndurance = "Increased endurance"
     case aesthetic = "Aesthetic"
     
+    var intValue: Int {
+        switch self {
+        case .fatLoss: return 1
+        case .muscleGain: return 2
+        case .generalFitness: return 3
+        case .increasedEndurance: return 4
+        case .aesthetic: return 5
+        }
+    }
+    
     init?(rawValue: Int?) {
         switch rawValue {
         case 1: self = .fatLoss
@@ -101,6 +129,14 @@ enum WorkoutLocation: String, SelectableItemProtocol {
     case home = "Home"
     case gym = "Gym"
     case mixed = "Mixed"
+    
+    var intValue: Int {
+        switch self {
+        case .home: return 1
+        case .gym: return 2
+        case .mixed: return 3
+        }
+    }
     
     init?(rawValue: Int?) {
         switch rawValue {
@@ -140,6 +176,16 @@ enum WorkoutDuration: String, SelectableItemProtocol {
     case sixty = "60 mins"
     case more = "60+ mins"
     
+    var intValue: Int {
+        switch self {
+        case .fifteen: return 1
+        case .thirty: return 2
+        case .fortyFive: return 3
+        case .sixty: return 4
+        case .more: return 5
+        }
+    }
+    
     init?(rawValue: Int?) {
         switch rawValue {
         case 1: self = .fifteen
@@ -156,7 +202,6 @@ enum WorkoutDuration: String, SelectableItemProtocol {
     var title: String { rawValue }
 }
 
-
 // MARK: - Dietary Preference
 enum DietaryPreference: String, SelectableItemProtocol {
     case none = "None"
@@ -164,6 +209,16 @@ enum DietaryPreference: String, SelectableItemProtocol {
     case vegetarian = "Vegetarian"
     case vegan = "Vegan"
     case other = "Other"
+    
+    var intValue: Int {
+        switch self {
+        case .none: return 1
+        case .highProtein: return 2
+        case .vegetarian: return 3
+        case .vegan: return 4
+        case .other: return 5
+        }
+    }
     
     init?(rawValue: Int?) {
         switch rawValue {
@@ -179,7 +234,7 @@ enum DietaryPreference: String, SelectableItemProtocol {
     var id: String { rawValue }
     
     var title: String { rawValue }
-
+    
     var icon: ImageResource? {
         switch self {
         case .none: return .icX
@@ -199,6 +254,16 @@ enum Allergy: String, SelectableItemProtocol {
     case shellfish = "Shellfish"
     case other = "Other"
     
+    var intValue: Int {
+        switch self {
+        case .none: return 1
+        case .nuts: return 2
+        case .milkAndDairy: return 3
+        case .shellfish: return 4
+        case .other: return 5
+        }
+    }
+    
     init?(rawValue: Int?) {
         switch rawValue {
         case 1: self = .none
@@ -213,7 +278,7 @@ enum Allergy: String, SelectableItemProtocol {
     var id: String { rawValue }
     
     var title: String { rawValue }
-
+    
     var icon: ImageResource? {
         switch self {
         case .none: return .icX
@@ -234,6 +299,18 @@ enum WeekDay: String, SelectableItemProtocol {
     case thursday
     case friday
     case saturday
+    
+    var intValue: Int {
+        switch self {
+        case .sunday: return 1
+        case .monday: return 2
+        case .tuesday: return 3
+        case .wednesday: return 4
+        case .thursday: return 5
+        case .friday: return 6
+        case .saturday: return 7
+        }
+    }
     
     init?(rawValue: Int?) {
         switch rawValue {
@@ -285,6 +362,16 @@ enum HealthConcern: String, SelectableItemProtocol {
     case heartCondition = "Heart condition"
     case other = "Other"
     
+    var intValue: Int {
+        switch self {
+        case .none: return 1
+        case .jointPain: return 2
+        case .backIssues: return 3
+        case .heartCondition: return 4
+        case .other: return 5
+        }
+    }
+    
     init?(rawValue: Int?) {
         switch rawValue {
         case 1: self = .none
@@ -312,12 +399,21 @@ enum HealthConcern: String, SelectableItemProtocol {
 }
 
 enum PastTraining: String, SelectableItemProtocol {
-    
     case personalTrainers = "Personal trainers"
     case fitnessApps = "Joint pain"
     case workoutVideos = "Back issues"
     case program = "Heart condition"
     case none = "None"
+    
+    var intValue: Int {
+        switch self {
+        case .personalTrainers: return 1
+        case .fitnessApps: return 2
+        case .workoutVideos: return 3
+        case .program: return 4
+        case .none: return 5
+        }
+    }
     
     init?(rawValue: Int?) {
         switch rawValue {
@@ -336,16 +432,11 @@ enum PastTraining: String, SelectableItemProtocol {
     
     var icon: ImageResource? {
         switch self {
-        case .personalTrainers:
-            return .icHandshake
-        case .fitnessApps:
-            return .icPhone
-        case .workoutVideos:
-            return .icPlayWorkout
-        case .program:
-            return .icSpoonFork
-        case .none:
-            return .icX
+        case .personalTrainers: return .icHandshake
+        case .fitnessApps: return .icPhone
+        case .workoutVideos: return .icPlayWorkout
+        case .program: return .icSpoonFork
+        case .none: return .icX
         }
     }
 }
@@ -354,6 +445,14 @@ enum WorkoutExperience: String, SelectableItemProtocol {
     case beginner = "Beginner"
     case intermediate = "Intermediate"
     case advanced = "Advanced"
+    
+    var intValue: Int {
+        switch self {
+        case .beginner: return 1
+        case .intermediate: return 2
+        case .advanced: return 3
+        }
+    }
     
     init?(rawValue: Int?) {
         switch rawValue {
@@ -392,6 +491,16 @@ enum Barriers: String, SelectableItemProtocol {
     case busy = "Busy schedule"
     case unsure = "Not sure where to start"
     
+    var intValue: Int {
+        switch self {
+        case .consistency: return 1
+        case .eatingHabits: return 2
+        case .expensive: return 3
+        case .busy: return 4
+        case .unsure: return 5
+        }
+    }
+    
     init?(rawValue: Int?) {
         switch rawValue {
         case 1: self = .consistency
@@ -425,6 +534,16 @@ enum Goals: String, SelectableItemProtocol {
     case energy = "Boost my energy and mood"
     case confidence = "Feel better about my body"
     
+    var intValue: Int {
+        switch self {
+        case .motivation: return 1
+        case .healthyLiving: return 2
+        case .saveMoney: return 3
+        case .energy: return 4
+        case .confidence: return 5
+        }
+    }
+    
     init?(rawValue: Int?) {
         switch rawValue {
         case 1: self = .motivation
@@ -456,6 +575,15 @@ enum CookingStyle: String, SelectableItemProtocol {
     case enjoyCooking = "I enjoy cooking"
     case simple = "Simple meals only"
     case orderFood = "Mostly order food"
+    
+    var intValue: Int {
+        switch self {
+        case .quick: return 1
+        case .enjoyCooking: return 2
+        case .simple: return 3
+        case .orderFood: return 4
+        }
+    }
     
     init?(rawValue: Int?) {
         switch rawValue {

@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import SwiftData
 
 @MainActor
 class SettingsViewModel: ObservableObject {
@@ -7,23 +8,7 @@ class SettingsViewModel: ObservableObject {
     // MARK: - Published Properties
     @Published var firstName: String = "Bella"
     @Published var lastName: String = "Oakley"
-    @Published var age: Int = 25
-    @Published var selectedGender: Gender?
-    @Published var selectedActivityLevel: ActivityLevel?
-    @Published var selectedFitnessGoal: FitnessGoals?
-    @Published var selectedWorkoutLocation: WorkoutLocation?
-    @Published var workoutDays: [WeekDay] = []
-    @Published var selectedWorkoutDuration: WorkoutDuration?
-    @Published var selectedWorkoutExperience: WorkoutExperience?
-    @Published var selectedDietaryPreference: DietaryPreference?
-    @Published var customDietaryPreference: String?
-    @Published var selectedAllergies: [Allergy] = []
-    @Published var customAllergy: String?
-    @Published var selectedHealthConcerns: [HealthConcern] = []
-    @Published var customHealthConcern: String?
-    @Published var height: Double = 0  // Default 6ft in cm
-    @Published var weight: Double = 0  // Default 159lb in kg
-    @Published var isMetric: Bool = false
+    @Published var profile: FSProfile
     @Published var viewState: ViewState = .idle
     @Published var activeSheet: FeedbackType?
     @Published var activePopup: SettingsPopup?
@@ -36,31 +21,8 @@ class SettingsViewModel: ObservableObject {
     @Inject private var singoutUseCase: SignOutUseCaseProtocol
     
     // MARK: - Init
-    convenience init(profile: FSProfile?) {
-        
-        self.init()
-        guard let profile else { return }
-        // Convert profile values to corresponding enums
-        self.age = profile.age ?? 0
-        self.height = profile.height ?? 0
-        self.weight = profile.weight ?? 0
-        self.selectedGender = profile.gender
-        self.selectedActivityLevel = profile.activityLevel
-        self.selectedFitnessGoal = profile.mainGoal
-        self.selectedWorkoutLocation = profile.workoutLocation
-        self.workoutDays = profile.workoutDays
-        self.selectedWorkoutDuration = profile.workoutDuration
-        self.selectedWorkoutExperience = profile.workoutExperience
-        self.selectedDietaryPreference = profile.diet
-        self.customDietaryPreference = profile.otherDiet
-        self.selectedAllergies = profile.allergies
-        self.customAllergy = profile.otherAllergies
-        self.selectedHealthConcerns = profile.healthRestrictions
-        self.customHealthConcern = profile.otherHealthRestrictions
-    }
-    
-    init() {
-        setupBindings()
+    init(profile: FSProfile? = nil) {
+        self.profile = profile ?? FSProfile()
     }
     
 }
@@ -73,25 +35,25 @@ extension SettingsViewModel {
     }
     
     var displayDietaryPreference: String {
-        guard let selectedDietaryPreference, selectedDietaryPreference != .none else  {
+        guard let diet = profile.diet, diet != .none else {
             return "None"
         }
-        if selectedDietaryPreference == .other, let customDietaryPreference, !customDietaryPreference.isEmpty {
-            return customDietaryPreference
+        if diet == .other, let customDiet = profile.otherDiet, !customDiet.isEmpty {
+            return customDiet
         }
-        return selectedDietaryPreference.title
+        return diet.title
     }
     
     var displayAllergies: String {
-        if selectedAllergies.isEmpty {
+        if profile.allergies.isEmpty {
             return "None"
         }
         
-        var display = selectedAllergies
+        var display = profile.allergies
             .filter { $0 != .other }
             .map { $0.rawValue }
         
-        if selectedAllergies.contains(.other), let customAllergy, !customAllergy.isEmpty {
+        if profile.allergies.contains(.other), let customAllergy = profile.otherAllergies, !customAllergy.isEmpty {
             display.append(customAllergy)
         }
         
@@ -99,148 +61,111 @@ extension SettingsViewModel {
     }
     
     var displayHealthConcerns: String {
-        if selectedHealthConcerns.isEmpty {
+        if profile.healthRestrictions.isEmpty {
             return "None"
         }
         
-        var display = selectedHealthConcerns
+        var display = profile.healthRestrictions
             .filter { $0 != .other }
             .map { $0.rawValue }
         
-        if selectedHealthConcerns.contains(.other), let customHealthConcern, !customHealthConcern.isEmpty {
-            display.append(customHealthConcern)
+        if profile.healthRestrictions.contains(.other), let customHealth = profile.otherHealthRestrictions, !customHealth.isEmpty {
+            display.append(customHealth)
         }
         
         return display.joined(separator: ", ")
     }
     
     var formattedHeightWeight: String {
-        if isMetric {
-            return String(format: "%.0f cm, %.0f kg", height, weight)
+        if profile.isMetric {
+            return String(format: "%.0f cm, %.0f kg", profile.height ?? 0, profile.weight ?? 0)
         } else {
-            let feet = Int(floor(height / 30.48))
-            let inches = Int((height.truncatingRemainder(dividingBy: 30.48) / 2.54).rounded())
-            let pounds = Int(weight * 2.20462)
+            let feet = Int(floor((profile.height ?? 0) / 30.48))
+            let inches = Int(((profile.height ?? 0).truncatingRemainder(dividingBy: 30.48) / 2.54).rounded())
+            let pounds = Int((profile.weight ?? 0) * 2.20462)
             return String(format: "%d'%d\", %d lb", feet, inches, pounds)
         }
     }
 }
 
-// MARK: Private functions
-private extension SettingsViewModel {
-    func setupBindings() {
-        $selectedGender
-            .dropFirst()
-            .sink { [weak self] gender in
-                Task {
-                    await self?.updateGender(gender)
-                }
-            }
-            .store(in: &cancellables)
-        
-        $selectedActivityLevel
-            .dropFirst()
-            .sink { [weak self] level in
-                Task {
-                    await self?.updateActivityLevel(level)
-                }
-            }
-            .store(in: &cancellables)
-        
-        $selectedFitnessGoal
-            .dropFirst()
-            .sink { [weak self] goal in
-                Task {
-                    await self?.updateFitnessGoal(goal)
-                }
-            }
-            .store(in: &cancellables)
-    }
-}
-
-// MARK: API UseCase functions
+// MARK: Update functions
 extension SettingsViewModel {
+    private func saveProfile(modelContext: ModelContext) {
+        FSProfileEntity.save(profile, context: modelContext)
+    }
+
+    func updateGender(_ gender: Gender?, modelContext: ModelContext) async {
+        profile.gender = gender
+        saveProfile(modelContext: modelContext)
+    }
+    
+    func updateActivityLevel(_ level: ActivityLevel?, modelContext: ModelContext) async {
+        profile.activityLevel = level
+        saveProfile(modelContext: modelContext)
+    }
+    
+    func updateFitnessGoal(_ goal: FitnessGoals?, modelContext: ModelContext) async {
+        profile.mainGoal = goal
+        saveProfile(modelContext: modelContext)
+    }
+    
+    func updateWorkoutLocation(_ location: WorkoutLocation?, modelContext: ModelContext) async {
+        profile.workoutLocation = location
+        saveProfile(modelContext: modelContext)
+    }
+    
+    func updateWorkoutDays(_ days: [WeekDay], modelContext: ModelContext) async {
+        profile.workoutDays = days
+        saveProfile(modelContext: modelContext)
+    }
+    
+    func updateWorkoutDuration(_ duration: WorkoutDuration?, modelContext: ModelContext) async {
+        profile.workoutDuration = duration
+        saveProfile(modelContext: modelContext)
+    }
+    
+    func updateDietaryPreference(_ preference: DietaryPreference?, customValue: String = "", modelContext: ModelContext) async {
+        profile.diet = preference
+        profile.otherDiet = preference == .other ? customValue : nil
+        saveProfile(modelContext: modelContext)
+    }
+    
+    func updateExerciseDifficulty(_ level: WorkoutExperience?, modelContext: ModelContext) async {
+        profile.workoutExperience = level
+        saveProfile(modelContext: modelContext)
+    }
+    
+    func updateAllergies(_ allergies: [Allergy], customValue: String = "", modelContext: ModelContext) async {
+        profile.allergies = allergies
+        profile.otherAllergies = allergies.contains(.other) ? customValue : nil
+        saveProfile(modelContext: modelContext)
+    }
+    
+    func updateHealthConcerns(_ concerns: [HealthConcern], customValue: String = "", modelContext: ModelContext) async {
+        profile.healthRestrictions = concerns
+        profile.otherHealthRestrictions = concerns.contains(.other) ? customValue : nil
+        saveProfile(modelContext: modelContext)
+    }
+    
+    func updateHeightWeight(height: Double, weight: Double, isMetric: Bool, modelContext: ModelContext) async {
+        profile.height = height
+        profile.weight = weight
+        profile.isMetric = isMetric
+        saveProfile(modelContext: modelContext)
+    }
+    
     func updateName(firstName: String, lastName: String) async {
         self.firstName = firstName
         self.lastName = lastName
         // TODO: Implement API call to update name
     }
     
-    func updateAge(_ newAge: Int) async {
-        age = newAge
-        // TODO: Implement API call to update age
-    }
-    
-    func updateGender(_ gender: Gender?) async {
-        selectedGender = gender
-        // TODO: Implement API call to update gender
-    }
-    
-    func updateActivityLevel(_ level: ActivityLevel?) async {
-        selectedActivityLevel = level
-        // TODO: Implement API call to update activity level
-    }
-    
-    func updateFitnessGoal(_ goal: FitnessGoals?) async {
-        selectedFitnessGoal = goal
-        // TODO: Implement API call to update fitness goal
-    }
-    
-    func updateWorkoutLocation(_ location: WorkoutLocation?) async {
-        selectedWorkoutLocation = location
-        // TODO: Implement API call
-    }
-    
-    func updateWorkoutDays(_ days: [WeekDay]) async {
-        workoutDays = days
-        // TODO: Implement API call
-    }
-    
-    func updateWorkoutDuration(_ duration: WorkoutDuration?) async {
-        selectedWorkoutDuration = duration
-        // TODO: Implement API call
-    }
-    
-    func updateDietaryPreference(_ preference: DietaryPreference?, customValue: String = "") async {
-        selectedDietaryPreference = preference
-        if preference == .other {
-            customDietaryPreference = customValue
-        } else {
-            customDietaryPreference = nil
+    func updateAge(_ newAge: Int, modelContext: ModelContext) async {
+        profile.age = newAge
+        if let profileEntity = try? modelContext.fetch(FetchDescriptor<FSProfileEntity>()).first {
+            profileEntity.age = newAge
+            try? modelContext.save()
         }
-        // TODO: Implement API call
-    }
-    
-    func updateExerciseDifficulty(_ level: WorkoutExperience?) async {
-        selectedWorkoutExperience = level
-        // TODO: Implement API call
-    }
-    
-    func updateAllergies(_ allergies: [Allergy], customValue: String = "") async {
-        selectedAllergies = allergies
-        if allergies.contains(.other) {
-            customAllergy = customValue
-        } else {
-            customAllergy = nil
-        }
-        // TODO: Implement API call
-    }
-    
-    func updateHealthConcerns(_ concerns: [HealthConcern], customValue: String = "") async {
-        selectedHealthConcerns = concerns
-        if concerns.contains(.other) {
-            customHealthConcern = customValue
-        } else {
-            customAllergy = nil
-        }
-        // TODO: Implement API call
-    }
-    
-    func updateHeightWeight(height: Double, weight: Double, isMetric: Bool) async {
-        self.height = height
-        self.weight = weight
-        self.isMetric = isMetric
-        // Add any API calls or data persistence here
     }
     
     func signOut() async -> Bool {
@@ -248,10 +173,7 @@ extension SettingsViewModel {
         defer { viewState = .idle }
         do {
             try await singoutUseCase.execute()
-            
-            // Clear session in AuthUseCase as part of logout
             AppSession.shared.clearTokens()
-            
             return true
         } catch {
             print("Error during logout: \(error.localizedDescription)")

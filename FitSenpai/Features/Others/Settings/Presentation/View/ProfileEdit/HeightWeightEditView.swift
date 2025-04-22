@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct HeightWeightEditView: View {
+    @Environment(\.modelContext) private var modelContext
+
     @Environment(\.dismiss) var dismiss
     @ObservedObject var viewModel: SettingsViewModel
     @State private var isMetric: Bool
@@ -9,9 +11,9 @@ struct HeightWeightEditView: View {
     
     init(viewModel: SettingsViewModel) {
         self.viewModel = viewModel
-        _isMetric = State(initialValue: viewModel.isMetric)
-        _height = State(initialValue: viewModel.height)
-        _weight = State(initialValue: viewModel.weight)
+        _isMetric = State(initialValue: viewModel.profile.isMetric)
+        _height = State(initialValue: viewModel.profile.height ?? 0)
+        _weight = State(initialValue: viewModel.profile.weight ?? 0)
     }
     
     var body: some View {
@@ -22,7 +24,8 @@ struct HeightWeightEditView: View {
                     await viewModel.updateHeightWeight(
                         height: height,
                         weight: weight,
-                        isMetric: isMetric
+                        isMetric: isMetric,
+                        modelContext: modelContext
                     )
                 }
             },

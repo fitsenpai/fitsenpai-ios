@@ -7,7 +7,7 @@
 
 import SwiftUI
 import Foundation
-import Supabase
+import SwiftData
 
 let globalAppEnvObject = GlobalAppEnvironment()
 
@@ -25,7 +25,7 @@ struct FitSenpai: App {
                     FSLoading(config: $appState.loadingConfig)
                 default:
                     if appState.isLoggedIn {
-                        FSTabView()
+                        MainTabView()
                             .environmentObject(appState)
                             .environmentObject(superwallManager)
                     } else {
@@ -37,7 +37,7 @@ struct FitSenpai: App {
             }
             .preferredColorScheme(.light)
         }
-        
+        .modelContainer(for: [FSProfileEntity.self])
     }
 }
 

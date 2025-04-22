@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct FitnessGoalEditView: View {
+    @Environment(\.modelContext) private var modelContext
     @ObservedObject var viewModel: SettingsViewModel
     @Environment(\.dismiss) var dismiss
     @State private var selectedGoal: FitnessGoals?
@@ -29,7 +30,7 @@ struct FitnessGoalEditView: View {
     
     init(viewModel: SettingsViewModel) {
         self.viewModel = viewModel
-        _selectedGoal = State(initialValue: viewModel.selectedFitnessGoal)
+        _selectedGoal = State(initialValue: viewModel.profile.mainGoal)
     }
     
     var body: some View {
@@ -37,7 +38,7 @@ struct FitnessGoalEditView: View {
             title: "Fitness Goal",
             onSave: {
                 Task { @MainActor in
-                    await viewModel.updateFitnessGoal(selectedGoal)
+                    await viewModel.updateFitnessGoal(selectedGoal, modelContext: modelContext)
                 }
                 dismiss()
             }
