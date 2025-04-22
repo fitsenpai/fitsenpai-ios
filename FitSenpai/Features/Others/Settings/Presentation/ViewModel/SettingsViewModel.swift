@@ -8,7 +8,7 @@ class SettingsViewModel: ObservableObject {
     // MARK: - Published Properties
     @Published var firstName: String = "Bella"
     @Published var lastName: String = "Oakley"
-    @Published var profile: FSProfile
+    @Published var profile: FitnessProfile
     @Published var viewState: ViewState = .idle
     @Published var activeSheet: FeedbackType?
     @Published var activePopup: SettingsPopup?
@@ -21,8 +21,8 @@ class SettingsViewModel: ObservableObject {
     @Inject private var singoutUseCase: SignOutUseCaseProtocol
     
     // MARK: - Init
-    init(profile: FSProfile? = nil) {
-        self.profile = profile ?? FSProfile()
+    init(profile: FitnessProfile? = nil) {
+        self.profile = profile ?? FitnessProfile()
     }
     
 }
@@ -91,7 +91,7 @@ extension SettingsViewModel {
 // MARK: Update functions
 extension SettingsViewModel {
     private func saveProfile(modelContext: ModelContext) {
-        FSProfileEntity.save(profile, context: modelContext)
+        FitnessProfileEntity.save(profile, context: modelContext)
     }
 
     func updateGender(_ gender: Gender?, modelContext: ModelContext) async {
@@ -162,7 +162,7 @@ extension SettingsViewModel {
     
     func updateAge(_ newAge: Int, modelContext: ModelContext) async {
         profile.age = newAge
-        if let profileEntity = try? modelContext.fetch(FetchDescriptor<FSProfileEntity>()).first {
+        if let profileEntity = try? modelContext.fetch(FetchDescriptor<FitnessProfileEntity>()).first {
             profileEntity.age = newAge
             try? modelContext.save()
         }

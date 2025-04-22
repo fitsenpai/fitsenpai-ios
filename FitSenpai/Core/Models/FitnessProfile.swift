@@ -1,6 +1,6 @@
 import Foundation
 
-struct FSProfile {
+struct FitnessProfile {
     var gender: Gender?
     var activityLevel: ActivityLevel?
     var mainGoal: FitnessGoals?
@@ -67,8 +67,8 @@ struct FSProfile {
         self.isMetric = isMetric
     }
     
-    func toEntity() -> FSProfileEntity {
-        return FSProfileEntity(
+    func toEntity() -> FitnessProfileEntity {
+        return FitnessProfileEntity(
             gender: gender?.intValue,
             activityLevel: activityLevel?.intValue,
             mainGoal: mainGoal?.intValue,

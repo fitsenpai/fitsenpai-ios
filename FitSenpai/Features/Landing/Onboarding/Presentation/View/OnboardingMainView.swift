@@ -14,7 +14,7 @@ struct OnboardingMainView: View {
     @StateObject private var viewModel = OnboardingMainViewModel()
     @Environment(\.dismiss) private var dismiss
     
-    @Query private var userProfile: [FSProfileEntity]
+    @Query private var userProfile: [FitnessProfileEntity]
     
     func onDismiss() {
         withAnimation(.easeInOut(duration: 0.3)) {

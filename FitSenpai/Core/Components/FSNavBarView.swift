@@ -13,7 +13,7 @@ struct FSNavBarView: View {
     @EnvironmentObject private var appViewModel: AppViewModel
     @State private var navDestination: SettingsNavigation?
     
-    @Query private var userProfile: [FSProfileEntity]
+    @Query private var userProfile: [FitnessProfileEntity]
 
     var body: some View {
         NavigationStack {

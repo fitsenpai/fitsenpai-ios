@@ -268,8 +268,8 @@ class OnboardingMainViewModel: ObservableObject {
     }
 
     // CHANGE: createProfile() method implementation
-    func createProfile() -> FSProfile {
-        return FSProfile(
+    func createProfile() -> FitnessProfile {
+        return FitnessProfile(
             gender: getValue(for: .gender),
             activityLevel: getValue(for: .activityLevel),
             mainGoal: getValue(for: .mainGoal),

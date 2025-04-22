@@ -20,14 +20,14 @@ struct SettingsMainView: View {
     @State private var safariURL: URL?
     @State private var isPresentedManageSubscription: Bool = false
     
-    @Query private var userProfile: [FSProfileEntity]
+    @Query private var userProfile: [FitnessProfileEntity]
     
     // URLs
     private let supportEmail = "support@fitsenpai.com"
     private let termsURL = "https://www.fitsenpai.com/terms"
     private let privacyURL = "https://www.fitsenpai.com/privacy-policy"
     
-    init(profile: FSProfile?) {
+    init(profile: FitnessProfile?) {
         self._viewModel = StateObject(wrappedValue: SettingsViewModel(profile: profile))
     }
     
@@ -120,7 +120,7 @@ struct SettingsMainView: View {
                                 if success {
                                     appViewModel.isLoggedIn = false
                                     superwall.resetUser()
-                                    try? modelContext.delete(model: FSProfileEntity.self)
+                                    try? modelContext.delete(model: FitnessProfileEntity.self)
                                 }
                             }
                         }
@@ -477,7 +477,7 @@ struct SettingsMainView: View {
             UserDefaults.standard.removePersistentDomain(forName: bundleID)
         }
         
-        try? modelContext.delete(model: FSProfileEntity.self)
+        try? modelContext.delete(model: FitnessProfileEntity.self)
         // Clear auth tokens
         AppSession.shared.clearTokens()
         

@@ -37,7 +37,7 @@ struct FitSenpai: App {
             }
             .preferredColorScheme(.light)
         }
-        .modelContainer(for: [FSProfileEntity.self])
+        .modelContainer(for: [FitnessProfileEntity.self])
     }
 }
 

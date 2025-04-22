@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-class FSProfileEntity {
+class FitnessProfileEntity {
     @Attribute(.unique) var id = UUID()
     var gender: Int?
     var activityLevel: Int?
@@ -57,7 +57,7 @@ class FSProfileEntity {
         self.isMetric = isMetric
     }
     
-    func toDomain() -> FSProfile {
+    func toDomain() -> FitnessProfile {
         .init(
             gender: Gender(rawValue: gender),
             activityLevel: ActivityLevel(rawValue: activityLevel),
@@ -83,7 +83,7 @@ class FSProfileEntity {
         )
     }
     
-    func update(from profile: FSProfile, context: ModelContext) {
+    func update(from profile: FitnessProfile, context: ModelContext) {
         self.gender = profile.gender?.intValue
         self.activityLevel = profile.activityLevel?.intValue
         self.mainGoal = profile.mainGoal?.intValue
@@ -109,9 +109,14 @@ class FSProfileEntity {
         try? context.save()
     }
     
-    static func save(_ profile: FSProfile, context: ModelContext) {
-        if let entity = try? context.fetch(FetchDescriptor<FSProfileEntity>()).first {
+    static func save(_ profile: FitnessProfile, context: ModelContext) {
+        if let entity = try? context.fetch(FetchDescriptor<FitnessProfileEntity>()).first {
             entity.update(from: profile, context: context)
+        } else {
+            // CREATE: New entity using toEntity()
+            let entity = profile.toEntity()
+            context.insert(entity)
+            try? context.save()
         }
     }
 }
