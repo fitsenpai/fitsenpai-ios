@@ -142,9 +142,7 @@ private extension AppViewModel {
     /// Registers core services and the view model itself for dependency injection.
     func setupDependencies() {
         // Register all core services
-        CoreServices.registerAll()
-        // Register self as singleton
-        DependencyInjector.register(self)
+        DependencyRegistry.registerAll()
     }
     
     /// (Deprecated) Initializes the user session by checking for an active session in Supabase.

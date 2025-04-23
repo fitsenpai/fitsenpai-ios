@@ -36,5 +36,6 @@ enum DependencyRegistry {
         registerDataSources()
         registerRepositories()
         registerUseCases()
+        DependencyInjector.register(self)
     }
 }
