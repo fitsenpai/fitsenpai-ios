@@ -15,11 +15,9 @@ protocol AuthDataSourceProtocol {
     func signOut() async throws
     func sendPasswordResetEmail(to email: String) async throws
     func changePassword(currentPassword: String, newPassword: String) async throws
-    func deleteAccount(reason: String) async throws
-    func getCurrentUser() async throws -> UserDTO
 }
 
-final class AuthRemoteDataSource: AuthDataSourceProtocol {
+final class AuthDataSource: AuthDataSourceProtocol {
     
     // MARK: - Dependencies
     @Inject(key: .auth)
@@ -53,13 +51,5 @@ final class AuthRemoteDataSource: AuthDataSourceProtocol {
     
     func changePassword(currentPassword: String, newPassword: String) async throws {
         try await networkService.request(.changePassword(currentPassword: currentPassword, newPassword: newPassword))
-    }
-    
-    func deleteAccount(reason: String) async throws {
-        try await networkService.request(.deleteAccount(reason: reason))
-    }
-    
-    func getCurrentUser() async throws -> UserDTO {
-        return try await networkService.request(.getCurrentUser)
     }
 }

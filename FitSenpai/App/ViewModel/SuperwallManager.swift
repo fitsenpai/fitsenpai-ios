@@ -34,7 +34,7 @@ import OSLog
 
 private let logger = Logger(
     subsystem: Bundle.main.bundleIdentifier ?? "SuperwallManager",
-    category: String(describing: SuperwallViewModel.self)
+    category: String(describing: SuperwallManager.self)
 )
 
 enum FSAccessLevel {
@@ -68,11 +68,11 @@ protocol LoginPresenter: AnyObject {
 }
 
 @MainActor
-final class SuperwallViewModel: ObservableObject, SuperwallDelegate {
+final class SuperwallManager: ObservableObject, SuperwallDelegate {
     
     // MARK: - Singleton
     
-    static let shared = SuperwallViewModel()
+    static let shared = SuperwallManager()
     
     // MARK: - Published Properties
     

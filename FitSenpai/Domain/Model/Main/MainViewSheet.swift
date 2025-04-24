@@ -15,3 +15,7 @@ enum MainViewSheet: Identifiable {
         hashValue
     }
 }
+
+enum MainTab {
+    case workouts, meals, groceries, progress
+}

@@ -118,7 +118,7 @@ struct NegativeFeedbackInoutSheet: View {
 }
 
 struct ChangeWorkoutSheetSheet: View {
-    @EnvironmentObject private var superwall: SuperwallViewModel
+    @EnvironmentObject private var superwall: SuperwallManager
     @Environment(\.dismiss) private var dismiss
     @State var instructionText: String = ""
     

@@ -15,7 +15,7 @@ let globalAppEnvObject = GlobalAppEnvironment()
 struct FitSenpai: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var appState = AppViewModel()
-    private let superwallManager = SuperwallViewModel.shared
+    private let superwallManager = SuperwallManager.shared
 
     var body: some Scene {
         WindowGroup {

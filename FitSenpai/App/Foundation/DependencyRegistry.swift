@@ -8,34 +8,33 @@
 import Foundation
 
 enum DependencyRegistry {
-    static func registerNetworkServices() {
-        // Auth Network Service
-        DependencyInjector.register(
-            NetworkService<AuthEndpoint>(),
-            key: .auth
-        )
-    }
-    
-    static func registerDataSources() {
-        // Auth Data Source
-        DependencyInjector.register(AuthRemoteDataSource() as any AuthDataSourceProtocol)
-    }
-    
-    static func registerRepositories() {
-        DependencyInjector.register(AuthRepository() as any AuthRepositoryProtocol)
-    }
-    
-    static func registerUseCases() {
-        DependencyInjector.register(SigninUseCase() as any SigninUseCaseProtocol)
-        DependencyInjector.register(SignOutUseCase() as any SignOutUseCaseProtocol)
-        DependencyInjector.register(GetUserUseCase() as any GetUserUseCaseProtocol)
-    }
     
     static func registerAll() {
         registerNetworkServices()
         registerDataSources()
         registerRepositories()
         registerUseCases()
-        DependencyInjector.register(self)
+    }
+    
+    static func registerNetworkServices() {
+        DependencyInjector.register(NetworkService<AuthEndpoint>(), key: .auth)
+        DependencyInjector.register(NetworkService<UserEndpoint>(), key: .user)
+    }
+    
+    static func registerDataSources() {
+        DependencyInjector.register(AuthDataSource() as any AuthDataSourceProtocol)
+        DependencyInjector.register(UserDataSource() as any UserDataSourceProtocol)
+    }
+    
+    static func registerRepositories() {
+        DependencyInjector.register(AuthRepository() as any AuthRepositoryProtocol)
+        DependencyInjector.register(UserRepository() as any UserRepositoryProtocol)
+    }
+    
+    static func registerUseCases() {
+        DependencyInjector.register(SigninUseCase() as any SigninUseCaseProtocol)
+        DependencyInjector.register(SignOutUseCase() as any SignOutUseCaseProtocol)
+        DependencyInjector.register(GetUserUseCase() as any GetUserUseCaseProtocol)
+        DependencyInjector.register(GetUserProfileUseCase() as any GetUserProfileUseCaseProtocol)
     }
 }

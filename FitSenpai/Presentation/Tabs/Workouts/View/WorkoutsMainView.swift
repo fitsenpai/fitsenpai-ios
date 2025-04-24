@@ -9,7 +9,7 @@ import SwiftUI
 import BottomSheet
 
 struct WorkoutsMainView: View {
-    @EnvironmentObject private var superwall: SuperwallViewModel
+    @EnvironmentObject private var superwall: SuperwallManager
     @EnvironmentObject var mainViewModel: MainViewModel
     @StateObject private var viewModel: WorkoutsMainViewModel
     

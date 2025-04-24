@@ -13,9 +13,9 @@ protocol GetUserUseCaseProtocol {
 
 final class GetUserUseCase: GetUserUseCaseProtocol {
     // MARK: - Dependencies
-    @Inject private var repository: AuthRepositoryProtocol
+    @Inject private var repository: UserRepositoryProtocol
     
     func execute() async throws -> FSUser {
-        return try await repository.getCurrentSession()
+        return try await repository.getUser()
     }
 }

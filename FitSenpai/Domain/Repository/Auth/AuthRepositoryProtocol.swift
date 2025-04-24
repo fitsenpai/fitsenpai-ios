@@ -15,6 +15,4 @@ protocol AuthRepositoryProtocol {
     func signOut() async throws
     func sendPasswordResetEmail(to email: String) async throws
     func changePassword(currentPassword: String, newPassword: String) async throws
-    func deleteAccount(reason: String) async throws
-    func getCurrentSession() async throws -> FSUser
 }

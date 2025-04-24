@@ -14,7 +14,7 @@ struct SettingsMainView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var appViewModel: AppViewModel
-    @EnvironmentObject private var superwall: SuperwallViewModel
+    @EnvironmentObject private var superwall: SuperwallManager
     @StateObject private var viewModel: SettingsViewModel
     @State private var showSafariView = false
     @State private var safariURL: URL?

@@ -2,6 +2,7 @@ import Foundation
 
 enum DIKey {
     case auth
+    case user
     case workout
     case meal
     case profile

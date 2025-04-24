@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ProgressMainView: View {
-    @EnvironmentObject private var superwall: SuperwallViewModel
+    @EnvironmentObject private var superwall: SuperwallManager
     @StateObject private var viewModel = ProgressViewModel()
 
     var body: some View {

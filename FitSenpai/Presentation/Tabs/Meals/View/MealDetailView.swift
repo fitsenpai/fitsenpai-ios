@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MealDetailView: View {
-    @EnvironmentObject private var superwall: SuperwallViewModel
+    @EnvironmentObject private var superwall: SuperwallManager
     @ObservedObject var viewModel: MealDetailViewModel
     @Environment(\.dismiss) private var dismiss
     

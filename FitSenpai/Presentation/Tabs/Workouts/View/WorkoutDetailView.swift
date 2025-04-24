@@ -9,7 +9,7 @@ import SwiftUI
 import AVKit
 
 struct WorkoutDetailView: View {
-    @EnvironmentObject private var superwall: SuperwallViewModel
+    @EnvironmentObject private var superwall: SuperwallManager
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var viewModel: WorkoutDetailViewModel
     

@@ -100,19 +100,4 @@ final class AuthRepository: AuthRepositoryProtocol {
     func changePassword(currentPassword: String, newPassword: String) async throws {
         try await remoteDataSource.changePassword(currentPassword: currentPassword, newPassword: newPassword)
     }
-    
-    func deleteAccount(reason: String) async throws {
-        try await remoteDataSource.deleteAccount(reason: reason)
-        AppSession.shared.clearTokens()
-    }
-    
-    func getCurrentSession() async throws -> FSUser {
-        let response = try await remoteDataSource.getCurrentUser()
-        
-        guard let user = response.toDomain() else {
-            throw AuthRepositoryError.missingUser
-        }
-        
-        return user
-    }
 }

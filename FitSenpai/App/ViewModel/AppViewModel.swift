@@ -63,7 +63,7 @@ class AppViewModel: NSObject, ObservableObject {
             await self.getCurrentUser()
         }
         // Register as login presenter
-        SuperwallViewModel.shared.loginPresenter = self
+        SuperwallManager.shared.loginPresenter = self
     }
     
 }
@@ -81,7 +81,7 @@ extension AppViewModel {
     }
     
     func createLimitedWorkoutPlan() async {
-        SuperwallViewModel.shared.startTrial()
+        SuperwallManager.shared.startTrial()
         
         self.viewState = .loading
         self.loadingConfig = .init(title: "Getting everything\nready for you", subtitle: "Customizing your workout plan...")
@@ -180,7 +180,7 @@ private extension AppViewModel {
     
     /// Retrieves the currently authenticated user and updates the global environment.
     func getCurrentUser() async {
-        let superwall = SuperwallViewModel.shared
+        let superwall = SuperwallManager.shared
         
         defer { self.viewState = .idle }
         guard !superwall.isFirstDayTrialActive, !superwall.isSubscrivedWithoutUserID else {

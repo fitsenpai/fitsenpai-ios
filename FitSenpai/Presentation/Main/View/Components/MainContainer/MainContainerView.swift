@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MainContainerView<Content: View>: View {
     @EnvironmentObject private var viewModel: MainViewModel
-    @EnvironmentObject private var superwall: SuperwallViewModel
+    @EnvironmentObject private var superwall: SuperwallManager
     
     let content: Content
     

@@ -10,9 +10,8 @@ import Foundation
 // MARK: - ViewModel
 final class MainViewModel: ObservableObject {
     
-    enum MainTab {
-        case workouts, meals, groceries, progress
-    }
+    /// Use case for fetching the current user from a data source (e.g., Supabase).
+    @Inject private var getUserProfileUseCase: GetUserProfileUseCaseProtocol
     
     // MARK: - Properties
     @Published var activeSheet: MainViewSheet?
@@ -22,12 +21,28 @@ final class MainViewModel: ObservableObject {
     @Published var progressData: [Date: Double] = [:]
     @Published var highlightedDays: Set<Int> = []
     @Published var currentWeekOffset: Int = 0
+    @Published var profile: FitnessProfile?
     
     // MARK: - Initialization
-    init() {  }
+    init() {
+        self.initializeData()
+    }
+    
+    func initializeData() {
+        Task { @MainActor in
+            await getUserProfile()
+        }
+    }
     
     func updateCurrentWeekStartDate(to date: Date) {
         triggerHaptics()
     }
     
+    func getUserProfile() async {
+        do {
+            self.profile = try await self.getUserProfileUseCase.execute()
+        } catch {
+            print(error)
+        }
+    }
 }
