@@ -5,6 +5,8 @@
 //  Created by Kevin Andrew Maloles on 11/28/24.
 //
 
+/// This is Deprecated and should not be used. Use `WorkoutRepositoryProtocol` instead.
+///
 import Foundation
 import ObjectMapper
 

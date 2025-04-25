@@ -10,6 +10,13 @@ import Foundation
 struct AppMetadataDTO: Decodable {
     let provider: String
     let providers: [String]
+    
+    func toDomain() -> FSUser.AppMetadata {
+        return FSUser.AppMetadata(
+            providers: providers,
+            provider: provider
+        )
+    }
 }
 
 struct IdentityDTO: Decodable {

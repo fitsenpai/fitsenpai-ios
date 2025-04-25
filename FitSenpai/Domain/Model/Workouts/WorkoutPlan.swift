@@ -10,61 +10,23 @@ import ObjectMapper
 
 // MARK: - WorkoutPlan Object
 
-class WorkoutPlan: Mappable, Decodable {
+class WorkoutPlan {
     var id: String?
     var plan: [PlanDetail]?
     var startDate: String?
-    
-    required init?(map: Map) {}
-    
-    func mapping(map: Map) {
-        id <- map["id"]
-        plan <- map["plan"]
-        startDate <- map["start_date"]
-    }
 }
 
 // MARK: - PlanDetail Object
 
-class PlanDetail: Mappable, Decodable {
+class PlanDetail {
     var week: String?
     var endDate: String?
-    var days: [DayDetail]?
-    
-    required init?(map: Map) {}
-    
-    func mapping(map: Map) {
-        week <- map["week"]
-        endDate <- map["end_date"]
-        days <- map["days"]
-    }
-}
-
-// MARK: - DayDetail Object
-
-class DayDetail: Mappable, Decodable {
-    var routines: [Routine]?
-    var totalTime: String?
-    var day: String?
-    var date: String?
-    var totalRoutines: String?
-    var title: String?
-    
-    required init?(map: Map) {}
-    
-    func mapping(map: Map) {
-        routines <- map["routines"]
-        totalTime <- map["total_time"]
-        day <- map["day"]
-        date <- map["date"]
-        totalRoutines <- map["total_routines"]
-        title <- map["title"]
-    }
+    var days: [DailyWorkout]?
 }
 
 // MARK: - Routine Object
 
-class Routine: Mappable, Decodable {
+class Routine {
     var id: String?
     var name: String?
     var muscleGroup: String?
@@ -75,6 +37,19 @@ class Routine: Mappable, Decodable {
     var sets: String?
     var load: String?
     var gifUrl: String?
+    
+    init(id: String? = nil, name: String? = nil, muscleGroup: String? = nil, routineCount: String? = nil, duration: String? = nil, instructions: [String]? = nil, repetition: String? = nil, sets: String? = nil, load: String? = nil, gifUrl: String? = nil) {
+        self.id = id
+        self.name = name
+        self.muscleGroup = muscleGroup
+        self.routineCount = routineCount
+        self.duration = duration
+        self.instructions = instructions
+        self.repetition = repetition
+        self.sets = sets
+        self.load = load
+        self.gifUrl = gifUrl
+    }
     
     static func initTest() -> Routine {
         let routine = Routine()
@@ -88,22 +63,5 @@ class Routine: Mappable, Decodable {
         routine.gifUrl = "https://txvhbjocxiodvtqreskj.supabase.co/storage/v1/object/public/workouts/abdominals/decline_bench_oblique_crunches_bodyweight.mp4?"
         routine.name = "Bench Press"
         return routine
-    }
-    
-    init() {}
-    
-    required init?(map: Map) {}
-    
-    func mapping(map: Map) {
-        id <- map["id"]
-        name <- map["name"]
-        muscleGroup <- map["muscle_group"]
-        routineCount <- map["routine_count"]
-        duration <- map["duration"]
-        instructions <- map["instructions"]
-        repetition <- map["repetition"]
-        sets <- map["sets"]
-        load <- map["load"]
-        gifUrl <- map["gif_url"]
     }
 }

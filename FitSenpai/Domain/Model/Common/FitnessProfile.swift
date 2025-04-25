@@ -22,7 +22,7 @@ struct FitnessProfile {
     var barriers: Barriers?
     var goals: Goals?
     var isMetric: Bool
-
+    
     init(gender: Gender? = nil,
          activityLevel: ActivityLevel? = nil,
          mainGoal: FitnessGoals? = nil,
@@ -92,7 +92,23 @@ struct FitnessProfile {
             isMetric: isMetric
         )
     }
-
+    
+    func toRequestData() -> TrialWorkoutRequest {
+        .init(
+            sex: gender?.rawValue.lowercased(),
+            age: age,
+            height: height,
+            heightType: isMetric ? "cm" : "in",
+            weight: weight,
+            weightType: isMetric ? "kg" : "lb",
+            hasEquipment: workoutLocation == .gym || workoutLocation == .mixed,
+            fitnessGoals: [mainGoal?.rawValue].compactMap({ $0 }),
+            difficultyLevel: workoutExperience?.rawValue,
+            workoutAdditionalNotes: "",
+            workoutDuration: workoutDuration?.rawValue
+        )
+    }
+    
     // IMPROVE: Structured logging
     func printLogs() {
         var log = ["=== Onboarding Selections ===\n"]

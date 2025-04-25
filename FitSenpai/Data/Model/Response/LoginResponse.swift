@@ -21,12 +21,3 @@ struct LoginResponse: Decodable {
         self.session = try? container.decode(SessionDTO.self, forKey: .session)
     }
 }
-
-extension AppMetadataDTO {
-    func toDomain() -> FSUser.AppMetadata {
-        return FSUser.AppMetadata(
-            providers: providers,
-            provider: provider
-        )
-    }
-}

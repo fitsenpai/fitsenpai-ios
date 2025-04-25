@@ -29,7 +29,6 @@ struct MainContainerView<Content: View>: View {
                     }
                     .padding(.horizontal, 24)
                 }
-                
             }
             ZStack {
                 Color.clear

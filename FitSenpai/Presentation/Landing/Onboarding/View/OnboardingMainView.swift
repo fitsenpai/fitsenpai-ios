@@ -48,7 +48,7 @@ struct OnboardingMainView: View {
                     
                     dismiss()
                     Task {
-                        await appViewModel.createLimitedWorkoutPlan()
+                        await appViewModel.createLimitedWorkoutPlan(profile: profile)
                     }
                 }
             }

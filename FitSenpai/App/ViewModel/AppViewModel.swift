@@ -39,11 +39,13 @@ class AppViewModel: NSObject, ObservableObject {
     /// A flag indicating whether the user should be directed to the sign in screen.
     @Published var shouldSignIn: Bool = false
     
+    // MARK: - UseCases
     /// Use case for fetching the current user from a data source (e.g., Supabase).
     @Inject private var getUserUseCase: GetUserUseCaseProtocol
     
     /// Auth repository for handling authentication logic
-    @Inject private var authRepository: AuthRepositoryProtocol
+    @Inject private var trialWorkoutUseCase: TrialWorkoutUseCaseProtocol
+    
     
     /// A flag indicating whether the user should be directed to the login screen.
     var isProduction: Bool {
@@ -80,11 +82,14 @@ extension AppViewModel {
         self.isLoggedIn = true
     }
     
-    func createLimitedWorkoutPlan() async {
+    func createLimitedWorkoutPlan(profile: FitnessProfile) async {
         SuperwallManager.shared.startTrial()
         
         self.viewState = .loading
         self.loadingConfig = .init(title: "Getting everything\nready for you", subtitle: "Customizing your workout plan...")
+        // MARK: TODO
+//        let workout = try? await self.trialWorkoutUseCase.execute(profile.toRequestData())
+        
         try? await Task.sleep(for: .seconds(3))
         self.viewState = .idle
         self.isLoggedIn = true
