@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreKit
 
 protocol GetUserUseCaseProtocol {
     func execute() async throws -> FSUser

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreKit
 
 protocol SigninUseCaseProtocol {
     func execute(email: String, password: String) async throws -> (FSUser, FSSession)

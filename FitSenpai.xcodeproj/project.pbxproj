@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		934465572DBBC738000073D9 /* CoreKit in Frameworks */ = {isa = PBXBuildFile; productRef = 934465562DBBC738000073D9 /* CoreKit */; };
 		938DBF752DA918B0005A0D5C /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 938DBF742DA918B0005A0D5C /* Lottie */; };
 		938DBF782DAA1EFD005A0D5C /* SuperwallKit in Frameworks */ = {isa = PBXBuildFile; productRef = 938DBF772DAA1EFD005A0D5C /* SuperwallKit */; };
 		F2802BE02CF721CA00617942 /* ObjectMapper in Frameworks */ = {isa = PBXBuildFile; productRef = F2802BDF2CF721CA00617942 /* ObjectMapper */; };
@@ -54,6 +55,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				934465572DBBC738000073D9 /* CoreKit in Frameworks */,
 				F2802BE02CF721CA00617942 /* ObjectMapper in Frameworks */,
 				F2F8CA322D06F5B100E3DCF3 /* BottomSheet in Frameworks */,
 				F2CF8CEA2CF62FDF00461D0D /* PostgREST in Frameworks */,
@@ -118,6 +120,7 @@
 				F2F8CA312D06F5B100E3DCF3 /* BottomSheet */,
 				938DBF742DA918B0005A0D5C /* Lottie */,
 				938DBF772DAA1EFD005A0D5C /* SuperwallKit */,
+				934465562DBBC738000073D9 /* CoreKit */,
 			);
 			productName = FitSenpai;
 			productReference = F2802BC62CF6395300617942 /* FitSenpai.app */;
@@ -154,6 +157,7 @@
 				12084EDF2D1696E2003E3769 /* XCRemoteSwiftPackageReference "swift-nio" */,
 				938DBF732DA918B0005A0D5C /* XCRemoteSwiftPackageReference "lottie-ios" */,
 				938DBF762DAA1EFD005A0D5C /* XCRemoteSwiftPackageReference "Superwall-iOS" */,
+				934465552DBBC738000073D9 /* XCRemoteSwiftPackageReference "core-kit" */,
 			);
 			preferredProjectObjectVersion = 56;
 			productRefGroup = F24B334E2CEDB421004AD370;
@@ -412,6 +416,14 @@
 				minimumVersion = 2.77.0;
 			};
 		};
+		934465552DBBC738000073D9 /* XCRemoteSwiftPackageReference "core-kit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/markzero27/core-kit";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		938DBF732DA918B0005A0D5C /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/airbnb/lottie-ios";
@@ -463,6 +475,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		934465562DBBC738000073D9 /* CoreKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 934465552DBBC738000073D9 /* XCRemoteSwiftPackageReference "core-kit" */;
+			productName = CoreKit;
+		};
 		938DBF742DA918B0005A0D5C /* Lottie */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 938DBF732DA918B0005A0D5C /* XCRemoteSwiftPackageReference "lottie-ios" */;

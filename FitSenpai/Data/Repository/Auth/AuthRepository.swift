@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreKit
 
 enum AuthRepositoryError: LocalizedError {
     case invalidSession

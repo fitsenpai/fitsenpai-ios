@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreKit
 
 final class WorkoutRepository: WorkoutRepositoryProtocol {
     

@@ -7,6 +7,7 @@
 
 
 import Foundation
+import CoreKit
 
 protocol GetUserProfileUseCaseProtocol {
     func execute() async throws -> FitnessProfile

@@ -8,6 +8,7 @@
 import Foundation
 import Supabase
 import AuthenticationServices
+import CoreKit
 
 /// A view model responsible for managing the global app state,
 /// including user authentication and initialization logic.

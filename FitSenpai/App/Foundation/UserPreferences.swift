@@ -8,9 +8,9 @@
 import Foundation
 import Combine
 
-final class Preferences {
+final class UserPreferences {
     
-    static let standard = Preferences(userDefaults: .standard)
+    static let standard = UserPreferences(userDefaults: .standard)
     private(set) var userDefaults: UserDefaults
     
     /// Sends through the changed key path whenever a change occurs.
@@ -38,3 +38,4 @@ final class Preferences {
     @UserDefault("didSubscribedWithoutUserID")
     var didSubscribedWithoutUserID: Bool = false
 }
+

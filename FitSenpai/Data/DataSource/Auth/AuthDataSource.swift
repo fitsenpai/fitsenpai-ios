@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreKit
 
 protocol AuthDataSourceProtocol {
     func signIn(email: String, password: String) async throws -> LoginResponse
@@ -20,7 +21,7 @@ protocol AuthDataSourceProtocol {
 final class AuthDataSource: AuthDataSourceProtocol {
     
     // MARK: - Dependencies
-    @Inject(key: .auth)
+    @Inject(key: "auth")
     private var networkService: NetworkService<AuthEndpoint>
     
     // MARK: - Auth API Calls

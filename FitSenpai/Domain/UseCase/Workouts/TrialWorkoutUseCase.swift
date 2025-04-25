@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreKit
 
 protocol TrialWorkoutUseCaseProtocol {
     func execute(_ parameter: TrialWorkoutRequest) async throws -> DailyWorkout

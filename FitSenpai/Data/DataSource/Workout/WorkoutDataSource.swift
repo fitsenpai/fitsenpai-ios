@@ -7,6 +7,7 @@
 
 
 import Foundation
+import CoreKit
 
 protocol WorkoutDataSourceProtocol {
     func generateTrialWorkout(_ params: TrialWorkoutRequest) async throws -> WorkoutDTO
@@ -15,7 +16,7 @@ protocol WorkoutDataSourceProtocol {
 final class WorkoutDataSource: WorkoutDataSourceProtocol {
    
     // MARK: - Dependencies
-    @Inject(key: .workout)
+    @Inject(key: "workout")
     private var networkService: NetworkService<WorkoutEndpoint>
     
     // MARK: - Auth API Calls

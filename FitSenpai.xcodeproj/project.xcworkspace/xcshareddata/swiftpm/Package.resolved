@@ -1,5 +1,5 @@
 {
-  "originHash" : "e5402f8b3b7dfbaffcccf2753ba9d311363e8786e2af2e443dcf4b371254ded5",
+  "originHash" : "170685b00a4c212c6fe1bf6b8b8bafd5082c87f8af666acbf4119e8ed289a657",
   "pins" : [
     {
       "identity" : "bottomsheet",
@@ -8,6 +8,15 @@
       "state" : {
         "revision" : "720ddbd1371fef2a09cc1ab65fc503df37767f9c",
         "version" : "3.1.1"
+      }
+    },
+    {
+      "identity" : "core-kit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/markzero27/core-kit",
+      "state" : {
+        "branch" : "main",
+        "revision" : "04b76207be74d6300d7db6793510e64c6756628e"
       }
     },
     {

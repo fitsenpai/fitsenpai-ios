@@ -7,6 +7,7 @@
 
 
 import Foundation
+import CoreKit
 
 protocol UserDataSourceProtocol {
     func getUser() async throws -> UserDTO
@@ -17,7 +18,7 @@ protocol UserDataSourceProtocol {
 final class UserDataSource: UserDataSourceProtocol {
    
     // MARK: - Dependencies
-    @Inject(key: .user)
+    @Inject(key: "user")
     private var networkService: NetworkService<UserEndpoint>
     
     // MARK: - Auth API Calls

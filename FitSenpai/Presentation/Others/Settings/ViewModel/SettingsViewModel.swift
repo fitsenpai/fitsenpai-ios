@@ -1,6 +1,7 @@
 import Foundation
 import Combine
 import SwiftData
+import CoreKit
 
 @MainActor
 class SettingsViewModel: ObservableObject {

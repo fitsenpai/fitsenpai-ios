@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreKit
 
 // MARK: - ViewModel
 final class MainViewModel: ObservableObject {

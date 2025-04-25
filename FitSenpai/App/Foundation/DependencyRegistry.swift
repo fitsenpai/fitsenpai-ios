@@ -4,7 +4,7 @@
 //
 //  Created by Mark Daquis on 4/3/25.
 //
-
+import CoreKit
 import Foundation
 
 enum DependencyRegistry {
@@ -17,9 +17,9 @@ enum DependencyRegistry {
     }
     
     static func registerNetworkServices() {
-        DependencyInjector.register(NetworkService<AuthEndpoint>(), key: .auth)
-        DependencyInjector.register(NetworkService<UserEndpoint>(), key: .user)
-        DependencyInjector.register(NetworkService<WorkoutEndpoint>(), key: .workout)
+        DependencyInjector.register(NetworkService<AuthEndpoint>(), key: DIKey.auth.rawValue)
+        DependencyInjector.register(NetworkService<UserEndpoint>(), key: DIKey.user.rawValue)
+        DependencyInjector.register(NetworkService<WorkoutEndpoint>(), key: DIKey.workout.rawValue)
     }
     
     static func registerDataSources() {

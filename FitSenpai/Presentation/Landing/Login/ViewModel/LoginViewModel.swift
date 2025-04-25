@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import AuthenticationServices
+import CoreKit
 
 @MainActor
 class LoginViewModel: ObservableObject {
