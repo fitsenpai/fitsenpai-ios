@@ -9,6 +9,7 @@ import SwiftUI
 import Combine
 import StoreKit
 import SwiftData
+import CoreKit
 
 struct SettingsMainView: View {
     @Environment(\.modelContext) private var modelContext
@@ -479,7 +480,7 @@ struct SettingsMainView: View {
         
         try? modelContext.delete(model: FitnessProfileEntity.self)
         // Clear auth tokens
-        AppSession.shared.clearTokens()
+        NetworkSession.shared.clearTokens()
         
         // Clear URL cache
         URLCache.shared.removeAllCachedResponses()

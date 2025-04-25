@@ -91,7 +91,7 @@ final class AuthRepository: AuthRepositoryProtocol {
     
     func signOut() async throws {
         try await remoteDataSource.signOut()
-        AppSession.shared.clearTokens()
+        NetworkSession.shared.clearTokens()
     }
     
     func sendPasswordResetEmail(to email: String) async throws {

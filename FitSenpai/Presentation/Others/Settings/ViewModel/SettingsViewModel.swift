@@ -174,7 +174,7 @@ extension SettingsViewModel {
         defer { viewState = .idle }
         do {
             try await singoutUseCase.execute()
-            AppSession.shared.clearTokens()
+            NetworkSession.shared.clearTokens()
             return true
         } catch {
             print("Error during logout: \(error.localizedDescription)")

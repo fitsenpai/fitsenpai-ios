@@ -29,6 +29,6 @@ final class UserRepository: UserRepositoryProtocol {
     
     func deleteAccount(reason: String) async throws {
         try await remoteDataSource.deleteAccount(reason: reason)
-        AppSession.shared.clearTokens()
+        NetworkSession.shared.clearTokens()
     }
 }

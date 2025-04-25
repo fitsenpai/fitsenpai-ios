@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreKit
 
 enum WorkoutEndpoint {
     case getWorkoutPlan
@@ -37,7 +38,7 @@ extension WorkoutEndpoint: NetworkEndpoint {
         switch self {
         default:
             // Add authorization header for protected endpoints
-            if let token = AppSession.shared.accessToken {
+            if let token = NetworkSession.shared.accessToken {
                 headers["Authorization"] = "Bearer \(token)"
             }
         }

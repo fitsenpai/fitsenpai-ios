@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreKit
 
 enum UserEndpoint {
     case getUser
@@ -40,7 +41,7 @@ extension UserEndpoint: NetworkEndpoint {
         switch self {
         default:
             // Add authorization header for protected endpoints
-            if let token = AppSession.shared.accessToken {
+            if let token = NetworkSession.shared.accessToken {
                 headers["Authorization"] = "Bearer \(token)"
             }
         }
