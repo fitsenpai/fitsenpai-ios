@@ -9,12 +9,10 @@ import SwiftUI
 import SwiftData
 
 struct OnboardingMainView: View {
-    @Environment(\.modelContext) private var modelContext
     @EnvironmentObject var appViewModel: AppViewModel
     @StateObject private var viewModel = OnboardingMainViewModel()
     @Environment(\.dismiss) private var dismiss
     
-    @Query private var userProfile: [FitnessProfileEntity]
     
     func onDismiss() {
         withAnimation(.easeInOut(duration: 0.3)) {
@@ -40,14 +38,9 @@ struct OnboardingMainView: View {
             switch sheet {
             case .success:
                 OnboardingSuccessView(viewModel: viewModel) {
-                    let profile = viewModel.createProfile()
-                    modelContext.insert(profile.toEntity())
-                    
-                    // Save the model context
-                    try? modelContext.save()
-                    
                     dismiss()
                     Task {
+                        let profile = try await viewModel.saveProfile()
                         await appViewModel.createLimitedWorkoutPlan(profile: profile)
                     }
                 }

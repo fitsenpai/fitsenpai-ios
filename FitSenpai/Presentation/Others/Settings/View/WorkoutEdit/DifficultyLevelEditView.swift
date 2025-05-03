@@ -1,27 +1,26 @@
 import SwiftUI
 
 struct DifficultyLevelEditView: View {
-    @Environment(\.modelContext) private var modelContext
     
     @ObservedObject var viewModel: SettingsViewModel
-    @State private var selectedDifficulty: WorkoutExperience?
+    @State private var selectedDifficulty: WorkoutExperienceType?
     
     init(viewModel: SettingsViewModel) {
         self.viewModel = viewModel
-        _selectedDifficulty = State(initialValue: viewModel.profile.workoutExperience)
+        _selectedDifficulty = State(initialValue: WorkoutExperienceType(rawValue: viewModel.profile.workoutExperience?.id ?? ""))
     }
     
     var body: some View {
         BaseProfileEditView(
             title: "Difficulty Level",
             onSave: {
-                Task { @MainActor in
-                    await viewModel.updateExerciseDifficulty(selectedDifficulty, modelContext: modelContext)
+                Task {
+                    await viewModel.updateProfileOption(selectedDifficulty, for: \.workoutExperience)
                 }
             }
         ) {
             SelectableOptionsView(
-                options: WorkoutExperience.allCases,
+                options: WorkoutExperienceType.allCases,
                 selection: $selectedDifficulty
             )
         }

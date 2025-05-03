@@ -1,17 +1,28 @@
 import SwiftUI
 
-protocol SelectableItemProtocol: CaseIterable, Identifiable & Hashable {
+protocol SelectableItemProtocol: CaseIterable, Identifiable & Hashable, RawRepresentable where RawValue == String {
     var id: String { get }
     var title: String { get }
     var subtitle: String? { get }
     var icon: ImageResource? { get }
     
-    init?(rawValue: Int?)
+    func toOption() -> OptionItem
 }
 
 extension SelectableItemProtocol {
     var subtitle: String? { nil }
     var icon: ImageResource? { nil }
+    
+    func toOption() -> OptionItem {
+        .init(id: self.id, name: self.title, description: self.subtitle)
+    }
+    
+    static func from(rawValue: String?) -> Self? {
+        guard let rawValue, let value = Self(rawValue: rawValue) else {
+            return nil
+        }
+        return value
+    }
 }
 
 struct MultiSelectableOptionsView<T: SelectableItemProtocol>: View {
@@ -107,7 +118,7 @@ struct SelectableOptionCell<T>: View {
             .overlay(
                 RoundedRectangle(cornerRadius: 12)
                     .stroke(isSelected ? Color.fsPrimary : Color.clear,
-                           lineWidth: isSelected ? 2 : 0)
+                            lineWidth: isSelected ? 2 : 0)
             )
             .contentShape(Rectangle())
         }

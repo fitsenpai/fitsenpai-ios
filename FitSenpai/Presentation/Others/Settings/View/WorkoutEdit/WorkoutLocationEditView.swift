@@ -1,27 +1,26 @@
 import SwiftUI
 
 struct WorkoutLocationEditView: View {
-    @Environment(\.modelContext) private var modelContext
 
     @ObservedObject var viewModel: SettingsViewModel
-    @State private var selectedLocation: WorkoutLocation?
+    @State private var selectedLocation: WorkoutLocationType?
     
     init(viewModel: SettingsViewModel) {
         self.viewModel = viewModel
-        _selectedLocation = State(initialValue: viewModel.profile.workoutLocation)
+        _selectedLocation = State(initialValue: WorkoutLocationType(rawValue: viewModel.profile.workoutLocation?.id ?? ""))
     }
     
     var body: some View {
         BaseProfileEditView(
             title: "Workout Location",
             onSave: {
-                Task { @MainActor in
-                    await viewModel.updateWorkoutLocation(selectedLocation, modelContext: modelContext)
+                Task {
+                    await viewModel.updateProfileOption(selectedLocation, for: \.workoutLocation)
                 }
             }
         ) {
             SelectableOptionsView(
-                options: WorkoutLocation.allCases,
+                options: WorkoutLocationType.allCases,
                 selection: $selectedLocation
             )
         }

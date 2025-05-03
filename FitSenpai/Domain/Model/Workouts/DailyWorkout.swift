@@ -10,13 +10,15 @@ import Foundation
 import ObjectMapper
 
 class DailyWorkout {
+    var id: String
     var routines: [Routine]
     var totalTime: String
     var day: String
     var totalRoutines: String
     var title: String
     
-    init(routines: [Routine], totalTime: String, day: String,totalRoutines: String, title: String) {
+    init(id: String, routines: [Routine], totalTime: String, day: String, totalRoutines: String, title: String) {
+        self.id = id
         self.routines = routines
         self.totalTime = totalTime
         self.day = day

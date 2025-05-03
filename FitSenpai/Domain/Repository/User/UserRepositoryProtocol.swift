@@ -9,6 +9,7 @@ import Foundation
 
 protocol UserRepositoryProtocol {
     func getUser() async throws -> FSUser
-    func getUserProfile() async throws -> FitnessProfile
+    func getUserProfile() async throws -> UserProfile
     func deleteAccount(reason: String) async throws
+    func saveUserProfile(_ userProfile: UserProfile) async throws -> UserProfile?
 }

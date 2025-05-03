@@ -1,16 +1,15 @@
 import SwiftUI
 
 struct WorkoutDaysEditView: View {
-    @Environment(\.modelContext) private var modelContext
 
     @ObservedObject var viewModel: SettingsViewModel
-    @State private var selectedDays: [WeekDay]
+    @State private var selectedDays: [WeekDayType]
     
     init(viewModel: SettingsViewModel) {
         self.viewModel = viewModel
         // Convert Set<Int> to Set<WeekDay>
         let initialDays = viewModel.profile.workoutDays
-        _selectedDays = State(initialValue: initialDays)
+        _selectedDays = State(initialValue: initialDays.compactMap { WeekDayType(rawValue: $0.id) })
     }
     
     var body: some View {
@@ -18,14 +17,13 @@ struct WorkoutDaysEditView: View {
             title: "Workout Days",
             subtitle: "Which days work best for your workouts?",
             onSave: {
-                Task { @MainActor in
-                    // Convert Set<WeekDay> back to Set<Int>
-                    await viewModel.updateWorkoutDays(selectedDays, modelContext: modelContext)
+                Task {
+                    await viewModel.updateProfileOption(selectedDays, for: \.workoutDays)
                 }
             }
         ) {
-            MultiSelectableOptionsView<WeekDay>(
-                options: WeekDay.allCases,
+            MultiSelectableOptionsView<WeekDayType>(
+                options: WeekDayType.allCases,
                 selections: $selectedDays
             )
         }

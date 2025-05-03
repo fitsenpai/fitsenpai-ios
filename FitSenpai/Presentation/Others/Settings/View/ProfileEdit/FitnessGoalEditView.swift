@@ -1,50 +1,27 @@
 import SwiftUI
 
 struct FitnessGoalEditView: View {
-    @Environment(\.modelContext) private var modelContext
     @ObservedObject var viewModel: SettingsViewModel
     @Environment(\.dismiss) var dismiss
-    @State private var selectedGoal: FitnessGoals?
-    
-    enum FitnessGoal: String, CaseIterable, Identifiable {
-        case fatLoss = "Fat loss"
-        case muscleGain = "Muscle gain"
-        case generalFitness = "General fitness"
-        case increasedEndurance = "Increased endurance"
-        case aesthetic = "Aesthetic"
-        
-        var id: String { rawValue }
-        
-        var displayTitle: String { rawValue }
-        
-        var iconName: String {
-            switch self {
-            case .fatLoss: return "ic_line_chart_down"
-            case .muscleGain: return "ic_dumble"
-            case .generalFitness: return "ic_sparkle"
-            case .increasedEndurance: return "ic_lightning"
-            case .aesthetic: return "ic_sparkle"
-            }
-        }
-    }
+    @State private var selectedGoal: MainGoalType?
     
     init(viewModel: SettingsViewModel) {
         self.viewModel = viewModel
-        _selectedGoal = State(initialValue: viewModel.profile.mainGoal)
+        _selectedGoal = State(initialValue: MainGoalType(rawValue:viewModel.profile.mainGoal?.id ?? ""))
     }
     
     var body: some View {
         BaseProfileEditView(
             title: "Fitness Goal",
             onSave: {
-                Task { @MainActor in
-                    await viewModel.updateFitnessGoal(selectedGoal, modelContext: modelContext)
+                Task {
+                    await viewModel.updateProfileOption(selectedGoal, for: \.mainGoal)
                 }
                 dismiss()
             }
         ) {
             SelectableOptionsView(
-                options: FitnessGoals.allCases,
+                options: MainGoalType.allCases,
                 selection: $selectedGoal
             )
         }

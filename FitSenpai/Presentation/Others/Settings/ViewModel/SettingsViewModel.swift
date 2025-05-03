@@ -9,7 +9,7 @@ class SettingsViewModel: ObservableObject {
     // MARK: - Published Properties
     @Published var firstName: String = "Bella"
     @Published var lastName: String = "Oakley"
-    @Published var profile: FitnessProfile
+    @Published var profile = UserProfile()
     @Published var viewState: ViewState = .idle
     @Published var activeSheet: FeedbackType?
     @Published var activePopup: SettingsPopup?
@@ -20,12 +20,13 @@ class SettingsViewModel: ObservableObject {
     
     // MARK: - Use Cases
     @Inject private var singoutUseCase: SignOutUseCaseProtocol
-    
+    @Inject private var getUserProfileUseCase: GetUserProfileUseCaseProtocol
+    @Inject private var saveUserProfileUseCase: SaveUserProfileUseCaseProtocol
+
     // MARK: - Init
-    init(profile: FitnessProfile? = nil) {
-        self.profile = profile ?? FitnessProfile()
+    init() {
+        self.initializeData()
     }
-    
 }
 
 // MARK: Computed properties
@@ -36,41 +37,47 @@ extension SettingsViewModel {
     }
     
     var displayDietaryPreference: String {
-        guard let diet = profile.diet, diet != .none else {
+        guard let item = profile.dietPreference, let value = DietPreferenceType(rawValue: item.id), value != .none else {
             return "None"
         }
-        if diet == .other, let customDiet = profile.otherDiet, !customDiet.isEmpty {
+        
+        if value == .other, let customDiet = profile.otherDietPreference, !customDiet.isEmpty {
             return customDiet
         }
-        return diet.title
+        
+        return value.title
     }
     
     var displayAllergies: String {
-        if profile.allergies.isEmpty {
+        let allergies = profile.allergies.compactMap({ AllergyType(rawValue: $0.id) })
+        let customAllergy = profile.otherAllergies
+        
+        guard !allergies.isEmpty else {
             return "None"
         }
         
-        var display = profile.allergies
+        var display = allergies
             .filter { $0 != .other }
-            .map { $0.rawValue }
+            .map { $0.title }
         
-        if profile.allergies.contains(.other), let customAllergy = profile.otherAllergies, !customAllergy.isEmpty {
-            display.append(customAllergy)
+        if allergies.contains(.other), !customAllergy.isEmpty {
+            display.append(contentsOf: customAllergy)
         }
         
         return display.joined(separator: ", ")
     }
     
     var displayHealthConcerns: String {
-        if profile.healthRestrictions.isEmpty {
+        let healthRestrictions = profile.healthConcerns.compactMap({ HealthConcernType(rawValue: $0.id) })
+        guard !healthRestrictions.isEmpty else {
             return "None"
         }
         
-        var display = profile.healthRestrictions
+        var display = healthRestrictions
             .filter { $0 != .other }
-            .map { $0.rawValue }
+            .map { $0.title }
         
-        if profile.healthRestrictions.contains(.other), let customHealth = profile.otherHealthRestrictions, !customHealth.isEmpty {
+        if healthRestrictions.contains(.other), let customHealth = profile.otherHealthConcern, !customHealth.isEmpty {
             display.append(customHealth)
         }
         
@@ -78,12 +85,16 @@ extension SettingsViewModel {
     }
     
     var formattedHeightWeight: String {
-        if profile.isMetric {
-            return String(format: "%.0f cm, %.0f kg", profile.height ?? 0, profile.weight ?? 0)
+        guard let value = profile.systemOfMeasurement, let measurement = MeasurementType(rawValue: value.id) else { return "" }
+        
+        if measurement == .metric {
+            return String(format: "%.0f cm, %.0f kg", Double(profile.height ?? 0), Double(profile.weight ?? 0))
         } else {
-            let feet = Int(floor((profile.height ?? 0) / 30.48))
-            let inches = Int(((profile.height ?? 0).truncatingRemainder(dividingBy: 30.48) / 2.54).rounded())
-            let pounds = Int((profile.weight ?? 0) * 2.20462)
+            let heightInCm = Double(profile.height ?? 0)
+            let weightInCm = Double(profile.weight ?? 0)
+            let feet = Int(floor(heightInCm / 30.48))
+            let inches = Int((heightInCm.truncatingRemainder(dividingBy: 30.48) / 2.54).rounded())
+            let pounds = Int(weightInCm * 2.20462)
             return String(format: "%d'%d\", %d lb", feet, inches, pounds)
         }
     }
@@ -91,68 +102,73 @@ extension SettingsViewModel {
 
 // MARK: Update functions
 extension SettingsViewModel {
-    private func saveProfile(modelContext: ModelContext) {
-        FitnessProfileEntity.save(profile, context: modelContext)
-    }
-
-    func updateGender(_ gender: Gender?, modelContext: ModelContext) async {
-        profile.gender = gender
-        saveProfile(modelContext: modelContext)
+    
+    func initializeData() {
+        Task { @MainActor in
+            await getUserProfile()
+        }
     }
     
-    func updateActivityLevel(_ level: ActivityLevel?, modelContext: ModelContext) async {
-        profile.activityLevel = level
-        saveProfile(modelContext: modelContext)
+    func getUserProfile() async {
+        do {
+            self.profile = try await self.getUserProfileUseCase.execute()
+        } catch {
+            print(error)
+        }
     }
     
-    func updateFitnessGoal(_ goal: FitnessGoals?, modelContext: ModelContext) async {
-        profile.mainGoal = goal
-        saveProfile(modelContext: modelContext)
+    private func saveProfile() async throws {
+        let _ = try await saveUserProfileUseCase.execute(self.profile)
     }
     
-    func updateWorkoutLocation(_ location: WorkoutLocation?, modelContext: ModelContext) async {
-        profile.workoutLocation = location
-        saveProfile(modelContext: modelContext)
+    func getTitle<T: SelectableItemProtocol>(
+        for keyPath: WritableKeyPath<UserProfile, OptionItem?>,
+        as type: T.Type
+    ) -> String where T.RawValue == String {
+        let id = profile[keyPath: keyPath]?.id ?? ""
+        return type.from(rawValue: id)?.title ?? ""
     }
     
-    func updateWorkoutDays(_ days: [WeekDay], modelContext: ModelContext) async {
-        profile.workoutDays = days
-        saveProfile(modelContext: modelContext)
+    func updateProfileOption<T: SelectableItemProtocol>(
+        _ selection: T?,
+        for keyPath: WritableKeyPath<UserProfile, OptionItem?>
+    ) async {
+        profile[keyPath: keyPath] = selection?.toOption()
+        try? await saveProfile()
     }
     
-    func updateWorkoutDuration(_ duration: WorkoutDuration?, modelContext: ModelContext) async {
-        profile.workoutDuration = duration
-        saveProfile(modelContext: modelContext)
+    func updateProfileOption<T: SelectableItemProtocol>(
+        _ selections: [T],
+        for keyPath: WritableKeyPath<UserProfile, [OptionItem]>
+    ) async {
+        profile[keyPath: keyPath] = selections.map({ $0.toOption() })
+        try? await saveProfile()
     }
     
-    func updateDietaryPreference(_ preference: DietaryPreference?, customValue: String = "", modelContext: ModelContext) async {
-        profile.diet = preference
-        profile.otherDiet = preference == .other ? customValue : nil
-        saveProfile(modelContext: modelContext)
+    func updateDietaryPreference(_ preference: DietPreferenceType?, customValue: String = "") async {
+        profile.dietPreference = preference?.toOption()
+        profile.otherDietPreference = preference == .other ? customValue : nil
+        try? await saveProfile()
     }
     
-    func updateExerciseDifficulty(_ level: WorkoutExperience?, modelContext: ModelContext) async {
-        profile.workoutExperience = level
-        saveProfile(modelContext: modelContext)
+    func updateAllergies(_ allergies: [AllergyType], customValue: String = "") async {
+        profile.allergies = allergies.map({ $0.toOption() })
+        let customValues = customValue.split(separator: ",").map({ String($0) })
+        profile.otherAllergies = allergies.contains(.other) ? customValues : []
+        try? await saveProfile()
     }
     
-    func updateAllergies(_ allergies: [Allergy], customValue: String = "", modelContext: ModelContext) async {
-        profile.allergies = allergies
-        profile.otherAllergies = allergies.contains(.other) ? customValue : nil
-        saveProfile(modelContext: modelContext)
+    func updateHealthConcerns(_ concerns: [HealthConcernType], customValue: String = "") async {
+        profile.healthConcerns = concerns.map({ $0.toOption() })
+        profile.otherHealthConcern = concerns.contains(.other) ? customValue : nil
+        try? await saveProfile()
     }
     
-    func updateHealthConcerns(_ concerns: [HealthConcern], customValue: String = "", modelContext: ModelContext) async {
-        profile.healthRestrictions = concerns
-        profile.otherHealthRestrictions = concerns.contains(.other) ? customValue : nil
-        saveProfile(modelContext: modelContext)
-    }
-    
-    func updateHeightWeight(height: Double, weight: Double, isMetric: Bool, modelContext: ModelContext) async {
-        profile.height = height
-        profile.weight = weight
-        profile.isMetric = isMetric
-        saveProfile(modelContext: modelContext)
+    func updateHeightWeight(height: Double, weight: Double, measurement: MeasurementType) async {
+        profile.height = Int(height)
+        profile.weight = Int(weight)
+        profile.systemOfMeasurement = measurement.toOption()
+        try? await saveProfile()
     }
     
     func updateName(firstName: String, lastName: String) async {
@@ -161,12 +177,9 @@ extension SettingsViewModel {
         // TODO: Implement API call to update name
     }
     
-    func updateAge(_ newAge: Int, modelContext: ModelContext) async {
-        profile.age = newAge
-        if let profileEntity = try? modelContext.fetch(FetchDescriptor<FitnessProfileEntity>()).first {
-            profileEntity.age = newAge
-            try? modelContext.save()
-        }
+    func updateAge(_ newAge: Int) async {
+        profile.birthYear = "\(newAge)"
+        try? await saveProfile()
     }
     
     func signOut() async -> Bool {

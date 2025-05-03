@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct GenderEditView: View {
-    @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) var dismiss
     
     @ObservedObject var viewModel: SettingsViewModel
@@ -9,15 +8,15 @@ struct GenderEditView: View {
     
     init(viewModel: SettingsViewModel) {
         self.viewModel = viewModel
-        _selectedGender = State(initialValue: viewModel.profile.gender)
+        _selectedGender = State(initialValue: Gender(rawValue: viewModel.profile.gender?.id ?? ""))
     }
     
     var body: some View {
         BaseProfileEditView(
             title: "Gender",
             onSave: {
-                Task { @MainActor in
-                    await viewModel.updateGender(selectedGender, modelContext: modelContext)
+                Task {
+                    await viewModel.updateProfileOption(selectedGender, for: \.gender)
                 }
                 dismiss()
             }

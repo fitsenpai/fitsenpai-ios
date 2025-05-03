@@ -1,16 +1,15 @@
 import SwiftUI
 
 struct AllergiesEditView: View {
-    @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) var dismiss
 
     @ObservedObject var viewModel: SettingsViewModel
-    @State private var selectedAllergies: [Allergy]
+    @State private var selectedAllergies: [AllergyType]
     @State private var showCustomInput: Bool = false
     
     init(viewModel: SettingsViewModel) {
         self.viewModel = viewModel
-        _selectedAllergies = State(initialValue: viewModel.profile.allergies)
+        _selectedAllergies = State(initialValue: viewModel.profile.allergies.compactMap({ AllergyType(rawValue: $0.id) }))
     }
     
     var body: some View {
@@ -26,7 +25,7 @@ struct AllergiesEditView: View {
             title: "Other food allergies",
             subtitle: "Separate multiple items with a comma",
             placeholder: "Shrimp",
-            initialValue: viewModel.profile.otherAllergies ?? "",
+            initialValue: viewModel.profile.otherAllergies.joined(separator: ","),
             showCustomInput: $showCustomInput,
             onSave: handleCustomInput
         )
@@ -44,9 +43,9 @@ struct AllergiesEditView: View {
     private var restrictionsContent: some View {
         RestrictionsOptionsView(
             title: "Allergies",
-            options: Allergy.allCases,
+            options: AllergyType.allCases,
             isMultiSelect: true,
-            selection: .constant(Allergy.none),
+            selection: .constant(AllergyType.none),
             selections: $selectedAllergies,
             showCustomInput: $showCustomInput,
             isOtherOption: { $0 == .other },
@@ -58,7 +57,7 @@ struct AllergiesEditView: View {
         triggerHaptics()
         // When saving custom input, clear other selections and only keep "Other"
         Task { @MainActor in
-            await viewModel.updateAllergies([.other], customValue: value, modelContext: modelContext)
+            await viewModel.updateAllergies([.other], customValue: value)
             dismiss()
         }
     }
@@ -69,7 +68,7 @@ struct AllergiesEditView: View {
             showCustomInput = true
         } else {
             Task { @MainActor in
-                await viewModel.updateAllergies(selectedAllergies, modelContext: modelContext)
+                await viewModel.updateAllergies(selectedAllergies)
                 dismiss()
             }
         }

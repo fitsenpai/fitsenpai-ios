@@ -10,14 +10,14 @@ import Foundation
 import CoreKit
 
 protocol GetUserProfileUseCaseProtocol {
-    func execute() async throws -> FitnessProfile
+    func execute() async throws -> UserProfile
 }
 
 final class GetUserProfileUseCase: GetUserProfileUseCaseProtocol {
     // MARK: - Dependencies
     @Inject private var repository: UserRepositoryProtocol
     
-    func execute() async throws -> FitnessProfile {
+    func execute() async throws -> UserProfile {
         return try await repository.getUserProfile()
     }
 }

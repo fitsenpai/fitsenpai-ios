@@ -26,8 +26,8 @@ class PlanDetail {
 
 // MARK: - Routine Object
 
-class Routine {
-    var id: String?
+class Routine: Identifiable {
+    var id: String
     var name: String?
     var muscleGroup: String?
     var routineCount: String?
@@ -38,7 +38,7 @@ class Routine {
     var load: String?
     var gifUrl: String?
     
-    init(id: String? = nil, name: String? = nil, muscleGroup: String? = nil, routineCount: String? = nil, duration: String? = nil, instructions: [String]? = nil, repetition: String? = nil, sets: String? = nil, load: String? = nil, gifUrl: String? = nil) {
+    init(id: String = UUID().uuidString, name: String? = nil, muscleGroup: String? = nil, routineCount: String? = nil, duration: String? = nil, instructions: [String]? = nil, repetition: String? = nil, sets: String? = nil, load: String? = nil, gifUrl: String? = nil) {
         self.id = id
         self.name = name
         self.muscleGroup = muscleGroup

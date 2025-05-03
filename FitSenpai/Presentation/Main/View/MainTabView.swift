@@ -10,7 +10,7 @@ import SwiftUI
 struct MainTabView: View {
     @StateObject private var viewModel: MainViewModel = .init()
     @EnvironmentObject private var appViewModel: AppViewModel
-    @State private var selectedTab = 0
+    @State private var selectedTab: FSTabs = .workouts
     
     var body: some View {
         NavigationStack {
@@ -18,27 +18,27 @@ struct MainTabView: View {
                 Group {
                     WorkoutsMainView()
                         .tabItem {
-                            Label("Workouts", image: "tab_workout")
+                            Label(FSTabs.workouts.title, image: FSTabs.workouts.icon)
                         }
-                        .tag(0)
+                        .tag(FSTabs.workouts)
                     
                     MealsMainView()
                         .tabItem {
-                            Label("Meals", image: "tab_meals")
+                            Label(FSTabs.meals.title, image: FSTabs.meals.icon)
                         }
-                        .tag(1)
+                        .tag(FSTabs.meals)
                     
                     GroceriesMainView()
                         .tabItem {
-                            Label("Groceries", image: "tab_groceries")
+                            Label(FSTabs.groceries.title, image: FSTabs.groceries.icon)
                         }
-                        .tag(2)
+                        .tag(FSTabs.groceries)
                     
                     ProgressMainView()
                         .tabItem {
-                            Label("Progress", image: "tab_progress")
+                            Label(FSTabs.progress.title, image: FSTabs.progress.icon)
                         }
-                        .tag(3)
+                        .tag(FSTabs.progress)
                 }
                 .toolbarBackground(.white, for: .tabBar)
                 .toolbarBackground(.visible, for: .tabBar)
@@ -50,14 +50,9 @@ struct MainTabView: View {
                 triggerHaptics()
             }
             .fullScreenCover(isPresented: $appViewModel.shouldSignIn) {
-                SignInView()
+                CreateAccountView()
             }
         }
-    }
-    
-    private func triggerHaptics() {
-        let generator = UIImpactFeedbackGenerator(style: .light)
-        generator.impactOccurred()
     }
 }
 

@@ -1,16 +1,16 @@
 import SwiftUI
 
 struct HealthConcernsEditView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Environment(\.dismiss) var dismiss
 
+    @Environment(\.dismiss) var dismiss
     @ObservedObject var viewModel: SettingsViewModel
-    @State private var selectedConcerns: [HealthConcern]
+    @State private var selectedConcerns: [HealthConcernType]
     @State private var showCustomInput: Bool = false
     
     init(viewModel: SettingsViewModel) {
         self.viewModel = viewModel
-        _selectedConcerns = State(initialValue: viewModel.profile.healthRestrictions)
+        _selectedConcerns = State(initialValue: viewModel.profile.healthConcerns.compactMap({ HealthConcernType(rawValue: $0.id) }))
+
     }
     
     var body: some View {
@@ -26,7 +26,7 @@ struct HealthConcernsEditView: View {
             title: "Other health concerns",
             subtitle: "Separate multiple items with a comma",
             placeholder: "Shoulder injury",
-            initialValue: viewModel.profile.otherHealthRestrictions ?? "",
+            initialValue: viewModel.profile.otherHealthConcern ?? "",
             showCustomInput: $showCustomInput,
             onSave: handleCustomInput
         )
@@ -44,9 +44,9 @@ struct HealthConcernsEditView: View {
     private var restrictionsContent: some View {
         RestrictionsOptionsView(
             title: "Health Concerns",
-            options: HealthConcern.allCases,
+            options: HealthConcernType.allCases,
             isMultiSelect: true,
-            selection: .constant(HealthConcern.none),
+            selection: .constant(HealthConcernType.none),
             selections: $selectedConcerns,
             showCustomInput: $showCustomInput,
             isOtherOption: { $0 == .other },
@@ -57,8 +57,8 @@ struct HealthConcernsEditView: View {
     private func handleCustomInput(_ value: String) {
         triggerHaptics()
         // When saving custom input, clear other selections and only keep "Other"
-        Task { @MainActor in
-            await viewModel.updateHealthConcerns([.other], customValue: value, modelContext: modelContext)
+        Task {
+            await viewModel.updateHealthConcerns([.other], customValue: value)
             dismiss()
         }
     }
@@ -69,7 +69,7 @@ struct HealthConcernsEditView: View {
             showCustomInput = true
         } else {
             Task { @MainActor in
-                await viewModel.updateHealthConcerns(selectedConcerns, modelContext: modelContext)
+                await viewModel.updateHealthConcerns(selectedConcerns)
                 dismiss()
             }
         }

@@ -19,9 +19,6 @@ class AppViewModel: NSObject, ObservableObject {
     /// The authenticated user object, if available.
     @Published var user: FSUser?
     
-    /// The authenticated user profile object, if available.
-    @Published var userProfile: FitnessProfile?
-    
     /// Indicates whether the user is currently logged in.
     @Published var isLoggedIn: Bool = false
     
@@ -45,8 +42,9 @@ class AppViewModel: NSObject, ObservableObject {
     @Inject private var getUserUseCase: GetUserUseCaseProtocol
     
     /// Auth repository for handling authentication logic
-    @Inject private var trialWorkoutUseCase: TrialWorkoutUseCaseProtocol
+    @Inject private var WorkoutDemoUseCase: WorkoutDemoUseCaseProtocol
     
+    @AppState(\.loginMethod) var loginMethod: String?
     
     /// A flag indicating whether the user should be directed to the login screen.
     var isProduction: Bool {
@@ -61,7 +59,6 @@ class AppViewModel: NSObject, ObservableObject {
     /// the authentication state and access level.
     override init() {
         super.init()
-        self.setupDependencies()
         Task { @MainActor in
             await self.getCurrentUser()
         }
@@ -83,17 +80,26 @@ extension AppViewModel {
         self.isLoggedIn = true
     }
     
-    func createLimitedWorkoutPlan(profile: FitnessProfile) async {
-        SuperwallManager.shared.startTrial()
+    func createLimitedWorkoutPlan(profile: UserProfile?) async {
+        guard let profile else {
+            fatalError("Profile not saved")
+        }
         
         self.viewState = .loading
-        self.loadingConfig = .init(title: "Getting everything\nready for you", subtitle: "Customizing your workout plan...")
-        // MARK: TODO
-//        let workout = try? await self.trialWorkoutUseCase.execute(profile.toRequestData())
+        defer {
+            self.viewState = .idle
+        }
         
-        try? await Task.sleep(for: .seconds(3))
-        self.viewState = .idle
-        self.isLoggedIn = true
+        self.loadingConfig = .init(title: "Getting everything\nready for you", subtitle: "Customizing your workout plan...")
+
+        do {
+            let _ = try await self.WorkoutDemoUseCase.execute(profile.toRequestBody())
+            SuperwallManager.shared.startTrial()
+            self.loginMethod = LoginMethod.trial.rawValue
+            self.isLoggedIn = true
+        } catch {
+            FSLogger.error(error)
+        }
     }
     
     func handleCreatePlan() {
@@ -104,11 +110,16 @@ extension AppViewModel {
         authDestination = .signin
     }
     
+    func loginWithGoogle() {
+        self.loginMethod = LoginMethod.apple.rawValue
+    }
+    
     func loginWithApple() {
         viewState = .loading
         
         appleSignInManager.signIn { [weak self] result in
             self?.handleAppleSignIn(result: result)
+            self?.loginMethod = LoginMethod.apple.rawValue
         }
     }
     
@@ -145,11 +156,6 @@ extension AppViewModel {
 // MARK: - Private Methods
 
 private extension AppViewModel {
-    /// Registers core services and the view model itself for dependency injection.
-    func setupDependencies() {
-        // Register all core services
-        DependencyRegistry.registerAll()
-    }
     
     /// (Deprecated) Initializes the user session by checking for an active session in Supabase.
     /// This function will be removed in the future.

@@ -16,21 +16,17 @@ struct SettingsMainView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var appViewModel: AppViewModel
     @EnvironmentObject private var superwall: SuperwallManager
-    @StateObject private var viewModel: SettingsViewModel
+    @StateObject private var viewModel: SettingsViewModel = SettingsViewModel()
     @State private var showSafariView = false
     @State private var safariURL: URL?
     @State private var isPresentedManageSubscription: Bool = false
-    
-    @Query private var userProfile: [FitnessProfileEntity]
-    
+        
     // URLs
     private let supportEmail = "support@fitsenpai.com"
     private let termsURL = "https://www.fitsenpai.com/terms"
     private let privacyURL = "https://www.fitsenpai.com/privacy-policy"
     
-    init(profile: FitnessProfile?) {
-        self._viewModel = StateObject(wrappedValue: SettingsViewModel(profile: profile))
-    }
+    init() { }
     
     var body: some View {
         ScrollView {
@@ -121,7 +117,7 @@ struct SettingsMainView: View {
                                 if success {
                                     appViewModel.isLoggedIn = false
                                     superwall.resetUser()
-                                    try? modelContext.delete(model: FitnessProfileEntity.self)
+                                    try? modelContext.delete(model: UserProfileEntity.self)
                                 }
                             }
                         }
@@ -195,15 +191,15 @@ struct SettingsMainView: View {
     
     private var profileSection: some View {
         VStack(spacing: 0) {
-            settingsRow("Age", value: "\(String(describing: viewModel.profile.age))")
+            settingsRow("Age", value: "\(String(describing: Int(viewModel.profile.birthYear ?? "0") ?? 0))")
             Divider()
-            settingsRow("Gender", value: viewModel.profile.gender?.title)
+            settingsRow("Gender", value: viewModel.getTitle(for: \.gender, as: Gender.self))
             Divider()
             settingsRow("Height & Weight", value: viewModel.formattedHeightWeight)
             Divider()
-            settingsRow("Fitness goal", value: viewModel.profile.mainGoal?.rawValue)
+            settingsRow("Fitness goal", value: viewModel.getTitle(for: \.mainGoal, as: MainGoalType.self))
             Divider()
-            settingsRow("Activity level", value: viewModel.profile.activityLevel?.rawValue)
+            settingsRow("Activity level", value: viewModel.getTitle(for: \.activityLevel, as: ActivityLevel.self))
         }
         .background(Color.gray246)
         .cornerRadius(12)
@@ -212,13 +208,13 @@ struct SettingsMainView: View {
     
     private var preferencesSection: some View {
         VStack(spacing: 0) {
-            settingsRow("Workout location", value: viewModel.profile.workoutLocation?.title)
+            settingsRow("Workout location", value: viewModel.getTitle(for: \.workoutLocation, as: WorkoutLocationType.self))
             Divider()
             settingsRow("Workout days", value: formatWorkoutDays(viewModel.profile.workoutDays))
             Divider()
-            settingsRow("Workout duration", value: viewModel.profile.workoutDuration?.title)
+            settingsRow("Workout duration", value: viewModel.getTitle(for: \.workoutDuration, as: WorkoutDurationType.self))
             Divider()
-            settingsRow("Difficulty level", value: viewModel.profile.workoutExperience?.title)
+            settingsRow("Difficulty level", value: viewModel.getTitle(for: \.workoutExperience, as: WorkoutExperienceType.self))
             Divider()
             settingsRow("Dietary", value: viewModel.displayDietaryPreference)
         }
@@ -454,8 +450,9 @@ struct SettingsMainView: View {
         .contentShape(Rectangle())
     }
     
-    private func formatWorkoutDays(_ weekDays: [WeekDay]) -> String {
-        return weekDays.sorted(by: { $0.rawValue < $1.rawValue })
+    private func formatWorkoutDays(_ weekDays: [OptionItem]?) -> String {
+        let workoutDays = weekDays?.compactMap { WeekDayType(rawValue: $0.id) } ?? []
+        return workoutDays.sorted(by: { $0.intValue < $1.intValue })
             .map { $0.shortName }
             .joined(separator: " ")
     }
@@ -478,7 +475,7 @@ struct SettingsMainView: View {
             UserDefaults.standard.removePersistentDomain(forName: bundleID)
         }
         
-        try? modelContext.delete(model: FitnessProfileEntity.self)
+        try? modelContext.delete(model: UserProfileEntity.self)
         // Clear auth tokens
         NetworkSession.shared.clearTokens()
         

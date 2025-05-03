@@ -8,6 +8,7 @@
 import SwiftUI
 import Combine
 import UserNotifications
+import CoreKit
 
 // ADD: Navigation direction enum
 enum NavigationDirection {
@@ -34,12 +35,16 @@ class OnboardingMainViewModel: ObservableObject {
     @Published var macroCarbs: Int = 0
     @Published var macroFat: Int = 0
     
+    // Input text for other inputs
+    @Published var inputText: String = ""
+    
     // Store selections for each step
     private var stepSelections: [StepID: [SelectionItem]] = [:]
     private var stepInputs: [StepID: String] = [:]
     
-    // Input text for other inputs
-    @Published var inputText: String = ""
+    // MARK: - UseCases
+    /// Use case for fetching the current user from a data source (e.g., Supabase).
+    @Inject private var saveUserProfileUseCase: SaveUserProfileUseCaseProtocol
     
     // IMPROVE: Input text placeholder computed property
     var inputTextPlaceHolder: String {
@@ -256,42 +261,47 @@ class OnboardingMainViewModel: ObservableObject {
         onboardingSheet = sheet
     }
     
-    func getValue<T: SelectableItemProtocol>(for id: StepID) -> T? {
-        let value = stepSelections[id]?.first?.id
-        return T(rawValue: value)
+    func getValue(for id: StepID) -> OptionItem {
+        return .init(id: stepSelections[id]?.first?.stringId)
     }
     
-    func getValues<T: SelectableItemProtocol>(for id: StepID) -> [T]? {
-        let value = stepSelections[id]?
-            .compactMap({ $0.id }).compactMap({ T(rawValue: $0) })
-        return value
+    func getValues(for id: StepID) -> [OptionItem] {
+        let values = stepSelections[id]?
+            .compactMap({ $0.stringId })
+            .compactMap({ OptionItem(id: $0) })
+        return values ?? []
     }
 
     // CHANGE: createProfile() method implementation
-    func createProfile() -> FitnessProfile {
-        return FitnessProfile(
+    func createProfile() -> UserProfile {
+        return UserProfile(
+            createdAt: Date().formatted(date: .complete, time: .complete),
             gender: getValue(for: .gender),
             activityLevel: getValue(for: .activityLevel),
+            previousExperience: getValues(for: .pastTraining),
+            height: Int(height),
+            weight: Int(weight),
+            systemOfMeasurement: isMetric ? .init(id: "metric") : .init(id: "imperial"),
+            birthYear: "\(age)",
             mainGoal: getValue(for: .mainGoal),
-            height: height > 0 ? height : nil,
-            weight: weight > 0 ? weight : nil,
-            age: age > 0 ? age : nil,
+            fitnessBarrier: getValue(for: .barriers),
+            fitnessGoal: getValue(for: .goals),
             workoutExperience: getValue(for: .workoutExperience),
             workoutLocation: getValue(for: .workoutLocation),
-            workoutDays: getValues(for: .workoutDays) ?? [],
+            workoutDays: getValues(for: .workoutDays),
             workoutDuration: getValue(for: .workoutDuration),
-            healthRestrictions: getValues(for: .healthRestrictions) ?? [],
-            otherHealthRestrictions: stepInputs[.healthRestrictions],
-            diet: getValue(for: .diet),
-            otherDiet: stepInputs[.diet],
-            allergies: getValues(for: .allergies) ?? [],
-            otherAllergies: stepInputs[.allergies],
-            cookingStyle: getValue(for: .cookingStyle),
-            pastTrainings: getValues(for: .pastTraining) ?? [],
-            barriers: getValue(for: .barriers),
-            goals: getValue(for: .goals),
-            isMetric: isMetric
+            healthConcerns: getValues(for: .healthRestrictions),
+            otherHealthConcern: stepInputs[.healthRestrictions],
+            dietPreference: getValue(for: .diet),
+            otherDietPreference: stepInputs[.diet],
+            allergies: getValues(for: .allergies),
+            otherAllergies: stepInputs[.allergies].map { [$0] } ?? [],
+            cookingStyle: getValue(for: .cookingStyle)
         )
+    }
+    
+    func saveProfile() async throws -> UserProfile? {
+        return try await saveUserProfileUseCase.execute(createProfile())
     }
 
     // ADD: Helper methods for getting stored selections

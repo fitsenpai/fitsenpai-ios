@@ -12,8 +12,8 @@ import CoreKit
 
 @MainActor
 class LoginViewModel: ObservableObject {
-    @Published var email: String = ""
-    @Published var password: String = ""
+    @Published var email: String = "obi+3@gmail.com"
+    @Published var password: String = "test12345"
     @Published var viewState: ViewState = .idle
     @Published var errorMessage: String?
     @Published var showForgotPassword: Bool = false

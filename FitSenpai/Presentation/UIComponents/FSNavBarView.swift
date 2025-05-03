@@ -7,13 +7,11 @@
 
 import SwiftUI
 import SwiftData
+import CoreKit
 
 struct FSNavBarView: View {
-    @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var appViewModel: AppViewModel
     @State private var navDestination: SettingsNavigation?
-    
-    @Query private var userProfile: [FitnessProfileEntity]
 
     var body: some View {
         NavigationStack {
@@ -37,7 +35,7 @@ struct FSNavBarView: View {
             .navigationDestination(item: $navDestination) { destination in
                 switch destination {
                 case .settings:
-                    SettingsMainView(profile: userProfile.first?.toDomain())
+                    SettingsMainView()
                 }
             }
         }

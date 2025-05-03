@@ -1,16 +1,15 @@
 import SwiftUI
 
 struct DietaryEditView: View {
-    @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) var dismiss
 
     @ObservedObject var viewModel: SettingsViewModel
-    @State private var selectedPreference: DietaryPreference?
+    @State private var selectedPreference: DietPreferenceType?
     @State private var showCustomInput: Bool = false
     
     init(viewModel: SettingsViewModel) {
         self.viewModel = viewModel
-        _selectedPreference = State(initialValue: viewModel.profile.diet)
+        _selectedPreference = State(initialValue: DietPreferenceType(rawValue: viewModel.profile.dietPreference?.id ?? ""))
     }
     
     var body: some View {
@@ -18,11 +17,11 @@ struct DietaryEditView: View {
             OthersInputView(
                 title: "Other dietary preference",
                 placeholder: "Pescatarian",
-                initialValue: viewModel.profile.otherDiet ?? "",
+                initialValue: viewModel.profile.otherDietPreference ?? "",
                 showCustomInput: $showCustomInput,
                 onSave: { value in
                     Task { @MainActor in
-                        await viewModel.updateDietaryPreference(.other, customValue: value, modelContext: modelContext)
+                        await viewModel.updateDietaryPreference(.other, customValue: value)
                         dismiss()
                     }
                 }
@@ -35,7 +34,7 @@ struct DietaryEditView: View {
                         showCustomInput = true
                     } else {
                         Task { @MainActor in
-                            await viewModel.updateDietaryPreference(selectedPreference, modelContext: modelContext)
+                            await viewModel.updateDietaryPreference(selectedPreference)
                             dismiss()
                         }
                     }
@@ -43,7 +42,7 @@ struct DietaryEditView: View {
             ) {
                 RestrictionsOptionsView(
                     title: "Dietary Preference",
-                    options: DietaryPreference.allCases,
+                    options: DietPreferenceType.allCases,
                     isMultiSelect: false,
                     selection: $selectedPreference,
                     selections: .constant([]), // Unused for single select

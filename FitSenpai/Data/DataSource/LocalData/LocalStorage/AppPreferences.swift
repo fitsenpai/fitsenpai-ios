@@ -11,13 +11,13 @@ import Combine
 /// A singleton class for managing and storing user preferences using `UserDefaults`.
 /// This class provides an interface to save and retrieve user-specific settings
 /// such as user ID, email, access tokens, and trial start date.
-final class UserPreferences {
+final class AppPreferences {
     
     /// A shared instance for accessing user preferences.
     ///
     /// This singleton is used to provide a centralized instance for accessing
     /// user preferences throughout the app.
-    static let standard = UserPreferences(userDefaults: .standard)
+    static let standard = AppPreferences(userDefaults: .standard)
     
     /// A `UserDefaults` instance used for reading and writing user preferences.
     private(set) var userDefaults: UserDefaults
@@ -71,4 +71,10 @@ final class UserPreferences {
     /// This value is used to track whether the user has subscribed without an ID.
     @UserDefault("didSubscribedWithoutUserID")
     var didSubscribedWithoutUserID: Bool = false
+    
+    /// The users login method.
+    ///
+    /// This value is used to track whether the user login via email, apple or google.
+    @UserDefault("loginMethod")
+    var loginMethod: String? = nil
 }

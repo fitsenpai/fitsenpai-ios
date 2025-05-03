@@ -13,10 +13,10 @@ import Combine
 struct AppState<Value>: DynamicProperty {
     
     @ObservedObject private var preferencesObserver: PublisherObservableObject
-    private let keyPath: ReferenceWritableKeyPath<UserPreferences, Value>
-    private let preferences: UserPreferences
+    private let keyPath: ReferenceWritableKeyPath<AppPreferences, Value>
+    private let preferences: AppPreferences
     
-    init(_ keyPath: ReferenceWritableKeyPath<UserPreferences, Value>, preferences: UserPreferences = .standard) {
+    init(_ keyPath: ReferenceWritableKeyPath<AppPreferences, Value>, preferences: AppPreferences = .standard) {
         self.keyPath = keyPath
         self.preferences = preferences
         let publisher = preferences

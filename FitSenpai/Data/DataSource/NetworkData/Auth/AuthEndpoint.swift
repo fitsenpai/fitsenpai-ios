@@ -24,11 +24,11 @@ extension AuthEndpoint: NetworkEndpoint {
     var path: String {
         switch self {
         case .signIn:
-            return "/user/login"
+            return "/auth/login"
         case .signUp:
-            return "/user/register"
+            return "/auth/register"
         case .signOut:
-            return "/user/logout"
+            return "/auth/logout"
         case .resetPassword:
             return "/user/reset-password"
         case .changePassword:

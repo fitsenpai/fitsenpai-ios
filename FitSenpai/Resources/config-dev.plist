@@ -11,6 +11,6 @@
 	<key>isProduction</key>
 	<false/>
 	<key>baseURL</key>
-	<string>https://dev-app.fitsenpai.com/api</string>
+	<string>https://backend-long-sea-1697.fly.dev/api</string>
 </dict>
 </plist>

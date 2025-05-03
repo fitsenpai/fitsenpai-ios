@@ -7,6 +7,7 @@
 
 import CoreKit
 import Foundation
+import SwiftData
 
 /// A registry for managing and registering all dependencies needed for the FitSenpai app.
 enum DependencyRegistry {
@@ -14,7 +15,7 @@ enum DependencyRegistry {
     /// Registers all necessary dependencies by calling each specific registration function.
     /// This function acts as a centralized place to register all services, data sources,
     /// repositories, and use cases needed by the app.
-    static func registerAll() {
+    static func registerDependencies() {
         registerNetworkServices()
         registerDataSources()
         registerRepositories()
@@ -23,20 +24,17 @@ enum DependencyRegistry {
     
     /// Registers network services with the `DependencyInjector`.
     ///
-    /// This function registers the network service for authentication (`AuthEndpoint`),
-    /// user management (`UserEndpoint`), and workout management (`WorkoutEndpoint`) using 
-    /// the `DependencyInjector`. These services handle the API interactions for the app.
+    /// This function registers the network services. These services handle the API interactions for the app.
     static func registerNetworkServices() {
-        DependencyInjector.register(NetworkService<AuthEndpoint>(), key: DIKey.auth.rawValue)
-        DependencyInjector.register(NetworkService<UserEndpoint>(), key: DIKey.user.rawValue)
-        DependencyInjector.register(NetworkService<WorkoutEndpoint>(), key: DIKey.workout.rawValue)
+        DependencyInjector.register(NetworkService<AuthEndpoint>(), key: "auth")
+        DependencyInjector.register(NetworkService<UserEndpoint>(), key: "user")
+        DependencyInjector.register(NetworkService<WorkoutEndpoint>(), key: "workout")
     }
     
     /// Registers data sources with the `DependencyInjector`.
     ///
-    /// This function registers data sources for authentication, user, and workout
-    /// management, each conforming to their respective protocols. Data sources are responsible 
-    /// for fetching and providing data to the app.
+    /// This function registers data sources, each conforming to their respective protocols.
+    /// Data sources are responsible for fetching and providing data to the app.
     static func registerDataSources() {
         DependencyInjector.register(AuthDataSource() as any AuthDataSourceProtocol)
         DependencyInjector.register(UserDataSource() as any UserDataSourceProtocol)
@@ -45,8 +43,8 @@ enum DependencyRegistry {
     
     /// Registers repositories with the `DependencyInjector`.
     ///
-    /// This function registers repositories for authentication, user, and workout management, 
-    /// each conforming to their respective protocols. Repositories handle the business logic 
+    /// This function registers repositories, each conforming to their respective protocols.
+    /// Repositories handle the business logic
     /// and interact with data sources to provide data to the app.
     static func registerRepositories() {
         DependencyInjector.register(AuthRepository() as any AuthRepositoryProtocol)
@@ -56,14 +54,20 @@ enum DependencyRegistry {
     
     /// Registers use cases with the `DependencyInjector`.
     ///
-    /// This function registers use cases such as signing in, signing out, fetching user data,
-    /// and managing trial workouts. Use cases represent the app's core business logic and are
+    /// This function registers use cases.
+    /// Use cases represent the app's core business logic and are
     /// responsible for executing the app's actions based on user requests.
     static func registerUseCases() {
         DependencyInjector.register(SigninUseCase() as any SigninUseCaseProtocol)
         DependencyInjector.register(SignOutUseCase() as any SignOutUseCaseProtocol)
         DependencyInjector.register(GetUserUseCase() as any GetUserUseCaseProtocol)
         DependencyInjector.register(GetUserProfileUseCase() as any GetUserProfileUseCaseProtocol)
-        DependencyInjector.register(TrialWorkoutUseCase() as any TrialWorkoutUseCaseProtocol)
+        DependencyInjector.register(WorkoutDemoUseCase() as any WorkoutDemoUseCaseProtocol)
+        DependencyInjector.register(SaveUserProfileUseCase() as any SaveUserProfileUseCaseProtocol)
+    }
+    
+    @MainActor static func registerDataStores(modelContext: ModelContext) {
+        DependencyInjector.register(ProfileDataStore(modelContext: modelContext), key: "profileStore")
+        /// Add more stores as needed
     }
 }

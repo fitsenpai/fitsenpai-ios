@@ -41,7 +41,7 @@ struct WorkoutsMainView: View {
     
     var readyViewModel: FSInfoViewModel {
         .init(
-            iconName: "icon_sparkle",
+            iconName: "icon_sparkle_green",
             iconTint: .fsAccentForeground,
             iconBackground: .fsAccent,
             title: "Your workout plan is ready!",

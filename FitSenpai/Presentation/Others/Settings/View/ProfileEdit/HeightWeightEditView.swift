@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct HeightWeightEditView: View {
-    @Environment(\.modelContext) private var modelContext
 
     @Environment(\.dismiss) var dismiss
     @ObservedObject var viewModel: SettingsViewModel
@@ -11,21 +10,22 @@ struct HeightWeightEditView: View {
     
     init(viewModel: SettingsViewModel) {
         self.viewModel = viewModel
-        _isMetric = State(initialValue: viewModel.profile.isMetric)
-        _height = State(initialValue: viewModel.profile.height ?? 0)
-        _weight = State(initialValue: viewModel.profile.weight ?? 0)
+        let systemOfMeasurement = MeasurementType(rawValue: viewModel.profile.systemOfMeasurement?.id ?? "") ?? .imperial
+        _isMetric = State(initialValue: systemOfMeasurement == .metric)
+        _height = State(initialValue: Double(viewModel.profile.height ?? 0))
+        _weight = State(initialValue: Double(viewModel.profile.weight ?? 0))
     }
     
     var body: some View {
         BaseProfileEditView(
             title: "Height & Weight",
             onSave: {
-                Task { @MainActor in
+                let measurement: MeasurementType = isMetric ? .metric : .imperial
+                Task {
                     await viewModel.updateHeightWeight(
                         height: height,
                         weight: weight,
-                        isMetric: isMetric,
-                        modelContext: modelContext
+                        measurement: measurement
                     )
                 }
             },

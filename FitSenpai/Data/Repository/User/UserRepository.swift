@@ -13,6 +13,11 @@ final class UserRepository: UserRepositoryProtocol {
     // MARK: - Dependencies
     @Inject private var remoteDataSource: UserDataSourceProtocol
     
+    @Inject(key: "profileStore") private var profileStore: ProfileDataStore
+    
+    @AppState(\.trialStartDate) private var trialStartDate
+    
+    
     func getUser() async throws -> FSUser {
         let response = try await remoteDataSource.getUser()
         
@@ -23,8 +28,15 @@ final class UserRepository: UserRepositoryProtocol {
         return user
     }
     
-    func getUserProfile() async throws -> FitnessProfile {
+    func getUserProfile() async throws -> UserProfile {
+        if trialStartDate != nil, let profileEntity = profileStore.getCurrentProfile() {
+            return profileEntity.toDomain()
+        }
         return try await remoteDataSource.getUserProfile().toDomain()
+    }
+    
+    func saveUserProfile(_ userProfile: UserProfile) async throws -> UserProfile? {
+        return profileStore.addProfile(userProfile.toEntity())?.toDomain()
     }
     
     func deleteAccount(reason: String) async throws {

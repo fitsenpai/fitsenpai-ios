@@ -1,21 +1,20 @@
 import SwiftUI
 
 struct AgeEditView: View {
-    @Environment(\.modelContext) private var modelContext
     @ObservedObject var viewModel: SettingsViewModel
     @State private var age: Int
     
     init(viewModel: SettingsViewModel) {
         self.viewModel = viewModel
-        _age = State(initialValue: viewModel.profile.age)
+        _age = State(initialValue: Int(viewModel.profile.birthYear ?? "0") ?? 0)
     }
     
     var body: some View {
         BaseProfileEditView(
             title: "Age",
             onSave: {
-                Task { @MainActor in
-                    await viewModel.updateAge(age, modelContext: modelContext)
+                Task { 
+                    await viewModel.updateAge(age)
                 }
             }
         ) {

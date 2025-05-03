@@ -24,9 +24,9 @@ struct UserDefault<Value> {
     }
     
     public static subscript(
-        _enclosingInstance instance: UserPreferences,
-        wrapped wrappedKeyPath: ReferenceWritableKeyPath<UserPreferences, Value>,
-        storage storageKeyPath: ReferenceWritableKeyPath<UserPreferences, Self>
+        _enclosingInstance instance: AppPreferences,
+        wrapped wrappedKeyPath: ReferenceWritableKeyPath<AppPreferences, Value>,
+        storage storageKeyPath: ReferenceWritableKeyPath<AppPreferences, Self>
     ) -> Value {
         get {
             let container = instance.userDefaults

@@ -1,5 +1,5 @@
 //
-//  SignInView.swift
+//  CreateAccountView.swift
 //  FitSenpai
 //
 //  Created by Mark Daquis on 4/16/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SignInView: View {
+struct CreateAccountView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var appViewModel: AppViewModel
     
@@ -40,7 +40,7 @@ struct SignInView: View {
                         cornerRadius: 100, 
                         background: .white, 
                         borderColor: .fsPurple) {
-                    // Handle Google sign in
+                    appViewModel.loginWithGoogle()
                 }
             }
             .padding(.horizontal, 24)
@@ -53,6 +53,6 @@ struct SignInView: View {
 }
 
 #Preview {
-    SignInView()
+    CreateAccountView()
         .environmentObject(AppViewModel())
 }

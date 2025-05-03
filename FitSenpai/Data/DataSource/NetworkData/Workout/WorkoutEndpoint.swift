@@ -1,5 +1,5 @@
 //
-//  UserEndpoint.swift
+//  WorkoutEndpoint.swift
 //  FitSenpai
 //
 //  Created by Mark Daquis on 4/23/25.
@@ -8,31 +8,24 @@
 import Foundation
 import CoreKit
 
-enum UserEndpoint {
-    case getUser
-    case getUserProfile
-    case deleteAccount(reason: String)
+enum WorkoutEndpoint {
+    case getWorkoutPlan(_ params: ParameterProtocol)
+    case generateWorkoutDemo(_ params: ParameterProtocol)
 }
 
-extension UserEndpoint: NetworkEndpoint {
+extension WorkoutEndpoint: NetworkEndpoint {
     
     var path: String {
         switch self {
-        case .getUser:
-            return "/user"
-        case .getUserProfile:
-            return "/user/profile"
-        case .deleteAccount:
-            return "/user/delete-account"
+        case .getWorkoutPlan: "/workouts"
+        case .generateWorkoutDemo: "/workouts/demo"
         }
     }
     
     var method: HTTPMethod {
         switch self {
-        case .getUser, .getUserProfile:
-            return .get
-        case .deleteAccount:
-            return .delete
+        case .getWorkoutPlan: .get
+        case .generateWorkoutDemo: .post
         }
     }
     
@@ -50,8 +43,8 @@ extension UserEndpoint: NetworkEndpoint {
     
     var body: [String: Any]? {
         switch self {
-        case let .deleteAccount(reason):
-            return ["reason": reason]
+        case .generateWorkoutDemo(let params):
+            return params.toDictionary()
         default:
             return nil
         }

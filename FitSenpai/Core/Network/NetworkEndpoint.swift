@@ -8,6 +8,8 @@
 import Foundation
 import CoreKit
 
+protocol ParameterProtocol: Encodable { }
+
 extension NetworkEndpoint {
     
     var baseURL: URL? {
@@ -25,4 +27,6 @@ extension NetworkEndpoint {
     var cachePolicy: URLRequest.CachePolicy { .reloadIgnoringLocalAndRemoteCacheData }
     
     var retryLimit: Int { 3 }
+    
+    var isLoggingEnabled: Bool { false }
 }

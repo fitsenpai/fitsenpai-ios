@@ -20,7 +20,7 @@ struct ProgressMainView: View {
                             WeightUpdatePrompt(
                                 title: "Keep going!",
                                 subtitle: "Tracking your weight helps\nyou see real progress.",
-                                icon: .iconSparkle,
+                                icon: .iconSparkleGreen,
                                 buttonText: "Update weight",
                                 onButtonTap: viewModel.updateWeight
                             )
