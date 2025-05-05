@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct EnableNotifStepView: View {
-    @ObservedObject var viewModel: OnboardingMainViewModel
+    @ObservedObject var viewModel: CreateProfileViewModel
     
     var body: some View {
         VStack(spacing: 16) {

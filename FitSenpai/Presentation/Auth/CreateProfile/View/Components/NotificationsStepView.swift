@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct NotificationsStepView: View {
-    @ObservedObject var viewModel: OnboardingMainViewModel
+    @ObservedObject var viewModel: CreateProfileViewModel
     @State private var arrowOffset: CGFloat = 40
     
     private let title = "Reach your goals with notifications"

@@ -12,7 +12,7 @@ enum AuthNavDestination: CaseIterable {
     case createPlan
 }
 
-enum OnboardingSheets: CaseIterable, Identifiable {
+enum CreateProfileSheets: CaseIterable, Identifiable {
     case success
     
     var id: Int { hashValue }

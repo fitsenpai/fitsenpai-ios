@@ -34,7 +34,7 @@ struct LoginView: View {
             FSButton(title: viewModel.viewState == .loading ? "Logging in..." : "Login", fontStyle: .bodyBold16, cornerRadius: 32) {
                 Task {
                     if await viewModel.login() {
-                        appViewModel.isLoggedIn = true
+                        appViewModel.authState = .authenticated
                     }
                 }
             }
@@ -63,7 +63,7 @@ struct LoginView: View {
                 FSButton(icon: "google-logo", title: "Google", fontStyle: .bodyBold16, cornerRadius: 100, background: .white, borderColor: .fsPurple) {
                     Task {
                         if await viewModel.loginWithGoogle() {
-                            appViewModel.isLoggedIn = true
+                            appViewModel.authState = .authenticated
                         }
                     }
                 }
@@ -92,7 +92,7 @@ struct LoginView: View {
         }
         .onReceive(viewModel.$shouldLogin) { shouldLogin in
             if shouldLogin {
-                appViewModel.isLoggedIn = true
+                appViewModel.authState = .authenticated
             }
         }
     }

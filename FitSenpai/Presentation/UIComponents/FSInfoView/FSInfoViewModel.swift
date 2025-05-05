@@ -34,6 +34,6 @@ struct FSInfoViewModel {
         buttonAction: { print("Button tapped") }
     )
     
-    static let loadingConfig = FSInfoViewModel(iconName: "", iconTint: .clear, iconBackground: .clear, title: "", mainLabel: "Checking session...", buttonLabel: "", containerHeight: .infinity, showButton: false, showBorder: false, isLoading: true, buttonAction: {
+    static let checkSession = FSInfoViewModel(iconName: "", iconTint: .clear, iconBackground: .clear, title: "", mainLabel: "Checking session...", buttonLabel: "", containerHeight: .infinity, showButton: false, showBorder: false, isLoading: true, buttonAction: {
     })
 }

@@ -1,5 +1,5 @@
 //
-//  OnboardingMainViewModel.swift
+//  CreateProfileViewModel.swift
 //  FitSenpai
 //
 //  Created by Mark Daquis on 4/1/25.
@@ -16,13 +16,13 @@ enum NavigationDirection {
     case backward
 }
 
-class OnboardingMainViewModel: ObservableObject {
+class CreateProfileViewModel: ObservableObject {
     @Published var currentStepIndex = 0
     @Published var selectedOptions: [SelectionItem] = []
     @Published var isSelectionInProgress = false
     @Published var otherInputText: String = ""
     @Published var showOtherInput = false
-    @Published var onboardingSheet: OnboardingSheets? = nil
+    @Published var navSheets: CreateProfileSheets? = nil
     @Published private(set) var navigationDirection: NavigationDirection = .forward
     
     @Published var height: Double = 70
@@ -41,10 +41,6 @@ class OnboardingMainViewModel: ObservableObject {
     // Store selections for each step
     private var stepSelections: [StepID: [SelectionItem]] = [:]
     private var stepInputs: [StepID: String] = [:]
-    
-    // MARK: - UseCases
-    /// Use case for fetching the current user from a data source (e.g., Supabase).
-    @Inject private var saveUserProfileUseCase: SaveUserProfileUseCaseProtocol
     
     // IMPROVE: Input text placeholder computed property
     var inputTextPlaceHolder: String {
@@ -125,7 +121,6 @@ class OnboardingMainViewModel: ObservableObject {
         updateSelections(with: item)
     }
     
-    // IMPROVE: Input step ID handling
     func getInputStepId(for stepId: String) -> String {
         switch stepId {
         case "health_restrictions": return "health_restrictions_input"
@@ -144,7 +139,6 @@ class OnboardingMainViewModel: ObservableObject {
         return true
     }
     
-    // IMPROVE: Navigation state management
     func moveToNextStep() {
         navigationDirection = .forward
         handleStepNavigation()
@@ -153,6 +147,49 @@ class OnboardingMainViewModel: ObservableObject {
     func moveToPreviousStep() {
         navigationDirection = .backward
         handleStepNavigation()
+    }
+    
+    func showOnboardingSheet(_ sheet: CreateProfileSheets) {
+        triggerHaptics()
+        navSheets = sheet
+    }
+    
+    func getValue(for id: StepID) -> OptionItem {
+        return .init(id: stepSelections[id]?.first?.stringId)
+    }
+    
+    func getValues(for id: StepID) -> [OptionItem] {
+        let values = stepSelections[id]?
+            .compactMap({ $0.stringId })
+            .compactMap({ OptionItem(id: $0) })
+        return values ?? []
+    }
+
+    func createProfile() -> UserProfile {
+        return UserProfile(
+            createdAt: Date().formatted(date: .complete, time: .complete),
+            gender: getValue(for: .gender),
+            activityLevel: getValue(for: .activityLevel),
+            previousExperience: getValues(for: .pastTraining),
+            height: Int(height),
+            weight: Int(weight),
+            systemOfMeasurement: isMetric ? .init(id: "metric") : .init(id: "imperial"),
+            birthYear: "\(age)",
+            mainGoal: getValue(for: .mainGoal),
+            fitnessBarrier: getValue(for: .barriers),
+            fitnessGoal: getValue(for: .goals),
+            workoutExperience: getValue(for: .workoutExperience),
+            workoutLocation: getValue(for: .workoutLocation),
+            workoutDays: getValues(for: .workoutDays),
+            workoutDuration: getValue(for: .workoutDuration),
+            healthConcerns: getValues(for: .healthRestrictions),
+            otherHealthConcern: stepInputs[.healthRestrictions],
+            dietPreference: getValue(for: .diet),
+            otherDietPreference: stepInputs[.diet],
+            allergies: getValues(for: .allergies),
+            otherAllergies: stepInputs[.allergies].map { [$0] } ?? [],
+            cookingStyle: getValue(for: .cookingStyle)
+        )
     }
     
     private func handleStepNavigation() {
@@ -250,58 +287,10 @@ class OnboardingMainViewModel: ObservableObject {
     
     private func handleNotificationPermissionResponse(granted: Bool) {
         if granted {
-            onboardingSheet = .success
+            navSheets = .success
         } else {
             moveToNextStep()
         }
-    }
-    
-    func showOnboardingSheet(_ sheet: OnboardingSheets) {
-        triggerHaptics()
-        onboardingSheet = sheet
-    }
-    
-    func getValue(for id: StepID) -> OptionItem {
-        return .init(id: stepSelections[id]?.first?.stringId)
-    }
-    
-    func getValues(for id: StepID) -> [OptionItem] {
-        let values = stepSelections[id]?
-            .compactMap({ $0.stringId })
-            .compactMap({ OptionItem(id: $0) })
-        return values ?? []
-    }
-
-    // CHANGE: createProfile() method implementation
-    func createProfile() -> UserProfile {
-        return UserProfile(
-            createdAt: Date().formatted(date: .complete, time: .complete),
-            gender: getValue(for: .gender),
-            activityLevel: getValue(for: .activityLevel),
-            previousExperience: getValues(for: .pastTraining),
-            height: Int(height),
-            weight: Int(weight),
-            systemOfMeasurement: isMetric ? .init(id: "metric") : .init(id: "imperial"),
-            birthYear: "\(age)",
-            mainGoal: getValue(for: .mainGoal),
-            fitnessBarrier: getValue(for: .barriers),
-            fitnessGoal: getValue(for: .goals),
-            workoutExperience: getValue(for: .workoutExperience),
-            workoutLocation: getValue(for: .workoutLocation),
-            workoutDays: getValues(for: .workoutDays),
-            workoutDuration: getValue(for: .workoutDuration),
-            healthConcerns: getValues(for: .healthRestrictions),
-            otherHealthConcern: stepInputs[.healthRestrictions],
-            dietPreference: getValue(for: .diet),
-            otherDietPreference: stepInputs[.diet],
-            allergies: getValues(for: .allergies),
-            otherAllergies: stepInputs[.allergies].map { [$0] } ?? [],
-            cookingStyle: getValue(for: .cookingStyle)
-        )
-    }
-    
-    func saveProfile() async throws -> UserProfile? {
-        return try await saveUserProfileUseCase.execute(createProfile())
     }
 
     // ADD: Helper methods for getting stored selections
@@ -345,8 +334,10 @@ class OnboardingMainViewModel: ObservableObject {
         }
         return getSelectedTitle(for: stepID)
     }
+}
 
-    // IMPROVE: Notification handling with completion
+// MARK: - Macro Calculation
+extension CreateProfileViewModel {
     func calculateMacros() {
         let gender: MacroCalculator.Gender
         if stepSelections[.gender]?.contains(where: { $0.id == 1 }) ?? false {
@@ -404,8 +395,4 @@ class OnboardingMainViewModel: ObservableObject {
         macroFat = macros.fat
         macroCarbs = macros.carbs
     }
-}
-
-extension OnboardingMainViewModel {
-    
 }

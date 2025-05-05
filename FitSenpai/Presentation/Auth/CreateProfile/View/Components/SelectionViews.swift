@@ -11,7 +11,7 @@ struct SingleSelectionListView: View {
     let items: [SelectionItem]
     @Binding var selectedItems: [SelectionItem]
     let onSelection: (SelectionItem) -> Void
-    @ObservedObject var viewModel: OnboardingMainViewModel
+    @ObservedObject var viewModel: CreateProfileViewModel
     
     var body: some View {
         VStack(spacing: 12) {

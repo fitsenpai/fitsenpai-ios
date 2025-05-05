@@ -8,8 +8,8 @@
 import Foundation
 
 protocol WorkoutRepositoryProtocol {
-    func generateWorkouts(_ params: WorkoutDemoRequest) async throws -> DailyWorkout
-    func generateWorkoutDemo(_ params: WorkoutDemoRequest) async throws -> DailyWorkout
-    func generateMealsDemo(_ params: WorkoutDemoRequest) async throws -> DailyWorkout
-    func generateGroceriesDemo(_ params: WorkoutDemoRequest) async throws -> DailyWorkout
+    func generateWorkouts(_ params: WorkoutDemoRequest) async throws -> WorkoutDay
+    func generateWorkoutDemo(_ params: WorkoutDemoRequest) async throws -> WorkoutDay
+    func generateMealsDemo(_ params: WorkoutDemoRequest) async throws -> WorkoutDay
+    func generateGroceriesDemo(_ params: WorkoutDemoRequest) async throws -> WorkoutDay
 }

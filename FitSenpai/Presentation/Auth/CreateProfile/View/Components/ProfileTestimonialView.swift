@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct OnboardingTestimonialView: View {
+struct ProfileTestimonialView: View {
     let testimony = "I started in 2023 and have already lost 15% body fat! I didn't need to hire a trainer or spend all day figuring out what to eat."
     let author: String = "- Czarina V."
     let image: String = "testimonial_image"

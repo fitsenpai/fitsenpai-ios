@@ -20,16 +20,13 @@ class AppViewModel: NSObject, ObservableObject {
     @Published var user: FSUser?
     
     /// Indicates whether the user is currently logged in.
-    @Published var isLoggedIn: Bool = false
+    @Published var authState: AppAuthState = .checkingAuth
     
     /// Represents the current view state of the app, used for loading indicators.
     @Published var viewState: ViewState = .loading
     
     /// Determines the current navigation destination during onboarding.
     @Published var authDestination: AuthNavDestination? = nil
-    
-    /// Configuration for displaying loading indicators throughout the app.
-    @Published var loadingConfig: FSLoadingConfig = .defaultConfig
     
     /// A flag indicating whether the user should be directed to the login screen.
     @Published var shouldLogin: Bool = false
@@ -41,9 +38,6 @@ class AppViewModel: NSObject, ObservableObject {
     /// Use case for fetching the current user from a data source (e.g., Supabase).
     @Inject private var getUserUseCase: GetUserUseCaseProtocol
     
-    /// Auth repository for handling authentication logic
-    @Inject private var WorkoutDemoUseCase: WorkoutDemoUseCaseProtocol
-    
     @AppState(\.loginMethod) var loginMethod: String?
     
     /// A flag indicating whether the user should be directed to the login screen.
@@ -51,8 +45,13 @@ class AppViewModel: NSObject, ObservableObject {
         return EnvironmentManager.shared.value(for: .isProduction) ?? false
     }
     
-    private let appleSignInManager = AppleSignInManager()
+    var isLoggedIn: Bool {
+        return authState == .authenticated
+    }
     
+    private let appleSignInManager = AppleSignInManager()
+    private let superwall = SuperwallManager.shared
+
     /// Initializes the AppViewModel.
     ///
     /// This sets up dependencies and attempts to fetch the current user to determine
@@ -60,10 +59,11 @@ class AppViewModel: NSObject, ObservableObject {
     override init() {
         super.init()
         Task { @MainActor in
+            // Register as login presenter
+            self.superwall.loginPresenter = self
             await self.getCurrentUser()
         }
-        // Register as login presenter
-        SuperwallManager.shared.loginPresenter = self
+       
     }
     
 }
@@ -77,29 +77,7 @@ extension AppViewModel {
     /// - Parameter user: The user to set in the global environment.
     func updateUser(_ user: FSUser) {
         self.user = user
-        self.isLoggedIn = true
-    }
-    
-    func createLimitedWorkoutPlan(profile: UserProfile?) async {
-        guard let profile else {
-            fatalError("Profile not saved")
-        }
-        
-        self.viewState = .loading
-        defer {
-            self.viewState = .idle
-        }
-        
-        self.loadingConfig = .init(title: "Getting everything\nready for you", subtitle: "Customizing your workout plan...")
-
-        do {
-            let _ = try await self.WorkoutDemoUseCase.execute(profile.toRequestBody())
-            SuperwallManager.shared.startTrial()
-            self.loginMethod = LoginMethod.trial.rawValue
-            self.isLoggedIn = true
-        } catch {
-            FSLogger.error(error)
-        }
+        self.authState = .authenticated
     }
     
     func handleCreatePlan() {
@@ -149,6 +127,12 @@ extension AppViewModel {
             FSLogger.error("Apple sign in error: \(error)")
         }
     }
+    
+    func startTrial() {
+        self.superwall.startTrial()
+        self.loginMethod = LoginMethod.trial.rawValue
+        self.authState = .ontrial
+    }
 }
 
 
@@ -174,7 +158,7 @@ private extension AppViewModel {
             self.initGlobalEnv(user: session.user)
             print("Active session found for user: \(session.user.email ?? "unknown email")")
             
-            self.isLoggedIn = true
+            self.authState = .authenticated
             
             // Additional startup tasks, e.g., fetching weeks to generate
             let weekGenerator = WeekGenerator(client: supabaseClient)
@@ -186,17 +170,15 @@ private extension AppViewModel {
             }
         } catch {
             print("No active session found or error occurred: \(error.localizedDescription)")
-            self.isLoggedIn = true
+            self.authState = .unauthenticated
         }
     }
     
     /// Retrieves the currently authenticated user and updates the global environment.
     func getCurrentUser() async {
-        let superwall = SuperwallManager.shared
         
-        defer { self.viewState = .idle }
         guard !superwall.isFirstDayTrialActive, !superwall.isSubscrivedWithoutUserID else {
-            self.isLoggedIn = true
+            self.authState = .ontrial
             return
         }
         
@@ -205,15 +187,16 @@ private extension AppViewModel {
             updateUser(user)
             superwall.endTrial()
             superwall.switchToUser(with: user.id)
+            authState = .authenticated
         } catch {
-            // TODO: Replace with proper error logging mechanism
             NSLog("Login error: \(error.localizedDescription)")
+            authState = .unauthenticated
         }
     }
     
     /// Initializes the global environment object with the given Supabase user.
     /// - Parameter user: The Supabase user to convert and assign.
-    private func initGlobalEnv(user: User) {
+    func initGlobalEnv(user: User) {
         let fsUser = FSUser(fromSupabaseUser: user)
         globalAppEnvObject.user = fsUser
     }

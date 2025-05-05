@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct InputStepView: View {
-    @ObservedObject var viewModel: OnboardingMainViewModel
+    @ObservedObject var viewModel: CreateProfileViewModel
     
     var body: some View {
         RoundedBorderTextField(text: $viewModel.inputText, placeholder: viewModel.inputTextPlaceHolder, height: 50, cornerRadius: 12) .padding(.top, 16)
@@ -16,7 +16,7 @@ struct InputStepView: View {
 }
 
 struct AgeInputView: View {
-    @ObservedObject var viewModel: OnboardingMainViewModel
+    @ObservedObject var viewModel: CreateProfileViewModel
     
     var body: some View {
         VStack(spacing: 16) {

@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct WorkoutDTO: Decodable {
+struct WorkoutDayDTO: Decodable {
     var id: String
     let day: String
     let title: String
@@ -35,7 +35,7 @@ struct WorkoutDTO: Decodable {
         self.routines = try container.decodeIfPresent([RoutineDTO].self, forKey: .routines) ?? []
     }
     
-    func toDomain() -> DailyWorkout {
+    func toDomain() -> WorkoutDay {
         .init(id: id, routines: routines.map({ $0.toDomain() }), totalTime: totalTime, day: day, totalRoutines: totalRoutines, title: title)
     }
 }

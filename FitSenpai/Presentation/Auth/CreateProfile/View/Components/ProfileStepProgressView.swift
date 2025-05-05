@@ -1,5 +1,5 @@
 //
-//  OnboardingProgressView.swift
+//  ProfileStepProgressView.swift
 //  FitSenpai
 //
 //  Created by Mark Daquis on 4/8/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct OnboardingProgressView: View {
+struct ProfileStepProgressView: View {
     var progress: CGFloat
     var body: some View {
         GeometryReader { geometry in

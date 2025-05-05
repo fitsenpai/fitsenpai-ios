@@ -1,5 +1,5 @@
 //
-//  OnboardingHeaderView.swift
+//  CreatePlanHeaderView.swift
 //  FitSenpai
 //
 //  Created by Mark Daquis on 4/8/25.
@@ -8,7 +8,7 @@
 import SwiftUI
 
 
-struct OnboardingHeaderView: View {
+struct CreateProfileHeaderView: View {
     var progress: Double
     var hideBackButton: Bool = false
     var dismiss: () -> Void

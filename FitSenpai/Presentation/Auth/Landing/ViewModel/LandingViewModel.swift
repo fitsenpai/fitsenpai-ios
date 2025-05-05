@@ -8,7 +8,7 @@
 import SwiftUI
 import Combine
 
-final class OnboardingViewModel: ObservableObject {
+final class LandingViewModel: ObservableObject {
     
     @Published private(set) var currentPage = 0
     @Published private(set) var slideDirection: Edge = .trailing
@@ -42,7 +42,7 @@ final class OnboardingViewModel: ObservableObject {
     func moveToNextPage() {
         slideDirection = .trailing
         withAnimation(.easeInOut(duration: 0.3)) {
-            if currentPage < OnboardingSlide.slides.count - 1 {
+            if currentPage < ProfileStepSlide.slides.count - 1 {
                 currentPage += 1
             } else {
                 currentPage = 0
@@ -57,7 +57,7 @@ final class OnboardingViewModel: ObservableObject {
             if currentPage > 0 {
                 currentPage -= 1
             } else {
-                currentPage = OnboardingSlide.slides.count - 1
+                currentPage = ProfileStepSlide.slides.count - 1
             }
         }
         setupTimer()

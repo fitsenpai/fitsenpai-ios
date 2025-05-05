@@ -1,5 +1,5 @@
 //
-//  OnboardingView.swift
+//  LandingView.swift
 //  FitSenpai
 //
 //  Created by Mark Daquis on 4/1/25.
@@ -8,8 +8,10 @@
 import SwiftUI
 import Combine
 
-struct OnboardingView: View {
-    @StateObject private var viewModel = OnboardingViewModel()
+struct LandingView: View {
+    @StateObject private var viewModel = LandingViewModel()
+    @StateObject private var createProfileVM = CreateProfileViewModel()
+
     @EnvironmentObject var appState: AppViewModel
     
     var body: some View {
@@ -59,7 +61,7 @@ struct OnboardingView: View {
                 case .signin:
                     LoginView()
                 case .createPlan:
-                    OnboardingMainView()
+                    CreateProfileView(viewModel: createProfileVM)
                 }
             })
         }
@@ -67,7 +69,7 @@ struct OnboardingView: View {
     
     private var carouselImageSection: some View {
         ZStack {
-            if let currentSlide = OnboardingSlide.slides[safe: viewModel.currentPage] {
+            if let currentSlide = ProfileStepSlide.slides[safe: viewModel.currentPage] {
                 Image(currentSlide.image)
                     .resizable()
                     .scaledToFill()
@@ -86,7 +88,7 @@ struct OnboardingView: View {
     
     private var contentSection: some View {
         VStack(spacing: 24) {
-            if let currentSlide = OnboardingSlide.slides[safe: viewModel.currentPage] {
+            if let currentSlide = ProfileStepSlide.slides[safe: viewModel.currentPage] {
                 slideContent(currentSlide)
             }
             Spacer()
@@ -97,7 +99,7 @@ struct OnboardingView: View {
         .onTapGesture(perform: viewModel.moveToNextPage)
     }
     
-    private func slideContent(_ slide: OnboardingSlide) -> some View {
+    private func slideContent(_ slide: ProfileStepSlide) -> some View {
         VStack(spacing: 16) {
            
             FSTextView(slide.title, typography: .h3, alignment: .center)
@@ -114,7 +116,7 @@ struct OnboardingView: View {
     
     private var pageIndicators: some View {
         HStack(spacing: 8) {
-            ForEach(0..<OnboardingSlide.slides.count, id: \.self) { index in
+            ForEach(0..<ProfileStepSlide.slides.count, id: \.self) { index in
                 Circle()
                     .fill(viewModel.currentPage == index ? Color.black : Color.gray.opacity(0.3))
                     .frame(width: 8, height: 8)

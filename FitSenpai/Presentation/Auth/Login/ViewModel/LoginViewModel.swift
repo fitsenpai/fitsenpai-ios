@@ -21,6 +21,8 @@ class LoginViewModel: ObservableObject {
     
     @Inject private var signinUseCase: SigninUseCaseProtocol
     
+    @AppState(\.loginMethod) var loginMethod: String?
+    
     private let appleSignInManager = AppleSignInManager()
 
     func login() async -> Bool {
@@ -37,8 +39,8 @@ class LoginViewModel: ObservableObject {
         do {
             let (user, session) = try await signinUseCase.execute(email: email, password: password)
             globalAppEnvObject.user = user
-            NetworkSession.shared.setTokens(accessToken: session.accessToken,
-                                         refreshToken: session.refreshToken)
+            NetworkSession.shared.setTokens(accessToken: session.accessToken, refreshToken: session.refreshToken)
+            loginMethod = LoginMethod.email.rawValue
             return true
         } catch {
             errorMessage = error.localizedDescription
@@ -70,6 +72,7 @@ class LoginViewModel: ObservableObject {
         
         do {
             let (_, _) = try await signinUseCase.executeWithGoogle()
+            loginMethod = LoginMethod.google.rawValue
             return true
         } catch {
             errorMessage = error.localizedDescription
@@ -100,6 +103,7 @@ class LoginViewModel: ObservableObject {
 //                  } catch {
 //                      errorMessage = error.localizedDescription
 //                      print("Error during Apple login: \(error.localizedDescription)")
+//                      loginMethod
 //                  }
 //              }
           }

@@ -7,9 +7,8 @@
 
 
 import Foundation
-import ObjectMapper
 
-class DailyWorkout {
+class WorkoutDay {
     var id: String
     var routines: [Routine]
     var totalTime: String

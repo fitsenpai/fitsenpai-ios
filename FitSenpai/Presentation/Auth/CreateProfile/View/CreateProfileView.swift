@@ -1,5 +1,5 @@
 //
-//  OnboardingView.swift
+//  CreatePlanView.swift
 //  FitSenpai
 //
 //  Created by Kevin M on 3/17/25.
@@ -8,11 +8,10 @@
 import SwiftUI
 import SwiftData
 
-struct OnboardingMainView: View {
+struct CreateProfileView: View {
     @EnvironmentObject var appViewModel: AppViewModel
-    @StateObject private var viewModel = OnboardingMainViewModel()
+    @ObservedObject var viewModel: CreateProfileViewModel
     @Environment(\.dismiss) private var dismiss
-    
     
     func onDismiss() {
         withAnimation(.easeInOut(duration: 0.3)) {
@@ -26,26 +25,23 @@ struct OnboardingMainView: View {
     }
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack(spacing: 24) {
-                OnboardingHeaderView(progress: viewModel.progress) { onDismiss() }
+                CreateProfileHeaderView(progress: viewModel.progress) { onDismiss() }
                 stepContent
+            }
+            .navigationDestination(item: $viewModel.navSheets) { sheet in
+                switch sheet {
+                case .success:
+                    ProfileCompletionView(profile: viewModel.createProfile())
+                        .navigationViewStyle(StackNavigationViewStyle())
+                        .navigationBarHidden(true)
+                }
             }
         }
         .navigationViewStyle(StackNavigationViewStyle())
         .navigationBarHidden(true)
-        .fullScreenCover(item: $viewModel.onboardingSheet) { sheet in
-            switch sheet {
-            case .success:
-                OnboardingSuccessView(viewModel: viewModel) {
-                    dismiss()
-                    Task {
-                        let profile = try await viewModel.saveProfile()
-                        await appViewModel.createLimitedWorkoutPlan(profile: profile)
-                    }
-                }
-            }
-        }
+       
     }
     
     @ViewBuilder
@@ -116,7 +112,7 @@ struct OnboardingMainView: View {
                 viewModel.calculateMacros()
             }
         case .testimonial:
-            OnboardingTestimonialView()
+            ProfileTestimonialView()
         case .notification:
             NotificationsStepView(viewModel: viewModel)
         case .saveMoney:
@@ -146,8 +142,4 @@ struct OnboardingMainView: View {
         .padding(.horizontal, 24)
         .padding(.bottom, 24)
     }
-}
-
-#Preview {
-    OnboardingMainView()
 }

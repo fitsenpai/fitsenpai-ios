@@ -115,7 +115,7 @@ struct SettingsMainView: View {
                             Task {
                                 let success = await viewModel.signOut()
                                 if success {
-                                    appViewModel.isLoggedIn = false
+                                    appViewModel.authState = .unauthenticated
                                     superwall.resetUser()
                                     try? modelContext.delete(model: UserProfileEntity.self)
                                 }
@@ -485,7 +485,7 @@ struct SettingsMainView: View {
         // Clear file cache if any
         clearCache()
         
-        appViewModel.isLoggedIn = false
+        appViewModel.authState = .unauthenticated
         superwall.endTrial()
         triggerHaptics()
     }

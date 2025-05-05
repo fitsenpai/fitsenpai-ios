@@ -20,7 +20,7 @@ struct ProfileMainView: View {
                     
                     // Set isLoggedIn to false to navigate back to LoginView
                     DispatchQueue.main.async {
-                        appState.isLoggedIn = false
+                        appState.authState = .unauthenticated
                     }
                 } catch {
                     print("Error during logout: \(error.localizedDescription)")

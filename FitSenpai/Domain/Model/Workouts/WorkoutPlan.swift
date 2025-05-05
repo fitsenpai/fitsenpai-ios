@@ -21,7 +21,7 @@ class WorkoutPlan {
 class PlanDetail {
     var week: String?
     var endDate: String?
-    var days: [DailyWorkout]?
+    var days: [WorkoutDay]?
 }
 
 // MARK: - Routine Object
