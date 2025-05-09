@@ -13,7 +13,7 @@ final class UserRepository: UserRepositoryProtocol {
     // MARK: - Dependencies
     @Inject private var remoteDataSource: UserDataSourceProtocol
     
-    @Inject(key: "profileStore") private var profileStore: ProfileDataStore
+    @Inject private var profileStore: ProfileDataStore
     
     @AppState(\.trialStartDate) private var trialStartDate
     

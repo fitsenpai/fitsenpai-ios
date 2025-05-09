@@ -114,7 +114,8 @@ struct SelectionItemView: View {
             .scaleEffect(isPressed ? 0.98 : 1.0)
             .opacity(isDisabled && !isSelected ? 0.5 : 1.0)
         }
+        .buttonStyle(PlainButtonStyle())
         .buttonRepeatBehavior(.disabled)
-        .disabled(isDisabled)
+        .buttonStyle(.plain)
     }
 }

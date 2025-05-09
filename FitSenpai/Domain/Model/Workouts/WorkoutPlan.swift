@@ -11,57 +11,57 @@ import ObjectMapper
 // MARK: - WorkoutPlan Object
 
 class WorkoutPlan {
-    var id: String?
-    var plan: [PlanDetail]?
-    var startDate: String?
-}
-
-// MARK: - PlanDetail Object
-
-class PlanDetail {
-    var week: String?
-    var endDate: String?
-    var days: [WorkoutDay]?
-}
-
-// MARK: - Routine Object
-
-class Routine: Identifiable {
     var id: String
-    var name: String?
-    var muscleGroup: String?
-    var routineCount: String?
-    var duration: String?
-    var instructions: [String]?
-    var repetition: String?
-    var sets: String?
-    var load: String?
-    var gifUrl: String?
-    
-    init(id: String = UUID().uuidString, name: String? = nil, muscleGroup: String? = nil, routineCount: String? = nil, duration: String? = nil, instructions: [String]? = nil, repetition: String? = nil, sets: String? = nil, load: String? = nil, gifUrl: String? = nil) {
+    var weeks: [WorkoutWeek]
+    var createdAt: String
+    var updatedAt: String
+    var userId: String
+    var profileId: String?
+
+    init(id: String, weeks: [WorkoutWeek], createdAt: String, updatedAt: String, userId: String, profileId: String?) {
         self.id = id
-        self.name = name
-        self.muscleGroup = muscleGroup
-        self.routineCount = routineCount
-        self.duration = duration
-        self.instructions = instructions
-        self.repetition = repetition
-        self.sets = sets
-        self.load = load
-        self.gifUrl = gifUrl
+        self.weeks = weeks
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
+        self.userId = userId
+        self.profileId = profileId
     }
-    
-    static func initTest() -> Routine {
-        let routine = Routine()
-        routine.load = "10"
-        routine.repetition = "10"
-        routine.sets = "3"
-        routine.muscleGroup = "chest"
-        routine.instructions = ["Stand with feet shoulder-width apart.",
-                                "Bend forward slightly while keeping your back straight.",
-                                "Hold the stretch for the duration."]
-        routine.gifUrl = "https://txvhbjocxiodvtqreskj.supabase.co/storage/v1/object/public/workouts/abdominals/decline_bench_oblique_crunches_bodyweight.mp4?"
-        routine.name = "Bench Press"
-        return routine
+}
+
+class WorkoutWeek {
+    var week: Int
+    var startDate: String
+    var endDate: String
+    var days: [WorkoutDay]
+
+    init(week: Int, startDate: String, endDate: String, days: [WorkoutDay]) {
+        self.week = week
+        self.startDate = startDate
+        self.endDate = endDate
+        self.days = days
+    }
+}
+
+extension WorkoutPlan {
+    func toEntity() -> WorkoutPlanEntity {
+        return WorkoutPlanEntity(
+            id: id,
+            weeks: weeks.map { $0.toEntity() },
+            createdAt: createdAt,
+            updatedAt: updatedAt,
+            userId: userId,
+            profileId: profileId
+        )
+    }
+}
+
+extension WorkoutWeek {
+    func toEntity() -> WorkoutWeekEntity {
+        return WorkoutWeekEntity(
+            week: week,
+            startDate: startDate,
+            endDate: endDate,
+            days: days.map { $0.toEntity() }
+        )
     }
 }

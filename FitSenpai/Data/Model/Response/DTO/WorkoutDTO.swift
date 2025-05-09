@@ -8,6 +8,38 @@
 
 import Foundation
 
+struct WorkoutPlanDTO: Decodable {
+    let id: String
+    let plan: [WorkoutWeekDTO]
+    let createdAt: String
+    let updatedAt: String
+    let userId: String
+    let profileId: String?
+
+    enum CodingKeys: String, CodingKey {
+        case id, plan
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+        case userId = "user_id"
+        case profileId = "profile_id"
+    }
+    
+    func toDomain() -> WorkoutPlan {
+        return WorkoutPlan(id: id, weeks: plan.map { $0.toDomain() }, createdAt: createdAt, updatedAt: updatedAt, userId: userId, profileId: profileId)
+    }
+}
+
+struct WorkoutWeekDTO: Decodable {
+    let week: Int
+    let startDate: String
+    let endDate: String
+    let days: [WorkoutDayDTO]
+    
+    func toDomain() -> WorkoutWeek {
+        return WorkoutWeek(week: week, startDate: startDate, endDate: endDate, days: days.map { $0.toDomain() })
+    }
+}
+
 struct WorkoutDayDTO: Decodable {
     var id: String
     let day: String

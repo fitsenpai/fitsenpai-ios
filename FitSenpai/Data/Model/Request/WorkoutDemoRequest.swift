@@ -23,4 +23,10 @@ struct WorkoutDemoRequest: ParameterProtocol {
     let workoutDuration: String?
     let healthConcerns: [String]?
     let otherHealthConcern: String?
+    let cookingStyle: String?
+    let workoutDays: [String]?
+    let dietPreference: String?
+    let otherDietPreference: String?
+    let allergies: [String]?
+    let otherAllergies: [String]?
 }

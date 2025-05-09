@@ -12,45 +12,54 @@ import CoreKit
 class ProfileCompletionViewModel: ObservableObject {
     
     // MARK: - UseCases
-    /// Use case for fetching the current user from a data source (e.g., Supabase).
+
     @Inject private var saveUserProfileUseCase: SaveUserProfileUseCaseProtocol
-    
-    /// Auth repository for handling authentication logic
     @Inject private var workoutDemoUseCase: WorkoutDemoUseCaseProtocol
+    @Inject private var mealPlanDemoUseCase: MealPlanDemoUseCaseProtocol
     
     @Published var showLoading = false
     
-    /// Configuration for displaying loading indicators throughout the app.
     @Published var progress: Double = 0
     
     @Published var loadingConfiguration: FSLoadingConfig = GenerateLoadingState.generatingWorkout.loadingConfig
     
-
     func createLimitedWorkoutPlan(profile: UserProfile) async throws {
-        showLoading.toggle()
-        await withThrowingTaskGroup(of: Void.self) { group in
-            group.addTask {
-                try await self.createWorkoutPlan(profile: profile)
-                await MainActor.run { self.progress += 0.33 }
-            }
-            group.addTask {
-                try await self.createMealPlan(profile: profile)
-                await MainActor.run { self.progress += 0.33 }
-            }
+        showLoading = true
+        progress = 0.25
+        defer {
+            showLoading = false
+            progress = 0
         }
         
-        try await self.createGroceryList(profile: profile)
-        await MainActor.run { progress += 0.33 }
+        FSLogger.debug(profile)
+
+        do {
+            async let workout: () = createWorkoutPlan(profile: profile)
+            async let meal: () = createMealPlan(profile: profile)
+
+            try await workout
+            await MainActor.run { self.progress += 0.25 }
+
+            try await meal
+            await MainActor.run { self.progress += 0.25 }
+
+            try await self.createGroceryList(profile: profile)
+            await MainActor.run { self.progress += 0.20 }
+
+            let _ = try await saveUserProfileUseCase.execute(profile)
+        } catch {
+            print("Failed to create full limited plan: \(error)")
+            throw error
+        }
     }
     
     
     func createWorkoutPlan(profile: UserProfile) async throws {
         let _ = try await self.workoutDemoUseCase.execute(profile.toRequestBody())
-        let _ = try await saveUserProfileUseCase.execute(profile)
     }
     
-    func createMealPlan(profile: UserProfile?) async throws {
-        try await Task.sleep(for: .seconds(5))
+    func createMealPlan(profile: UserProfile) async throws {
+        let _ = try await self.mealPlanDemoUseCase.execute(profile.toRequestBody())
     }
     
     func createGroceryList(profile: UserProfile?) async throws {

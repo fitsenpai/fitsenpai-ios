@@ -74,9 +74,9 @@ struct ProfileCompletionView: View {
                 FSLoading(config: $viewModel.loadingConfiguration)
                     .background(.white)
                     .onReceive(viewModel.$progress) {  value in
-                        if value > 0.6 {
+                        if value >= 0.5 {
                             viewModel.loadingConfiguration = GenerateLoadingState.generatingGroceries.loadingConfig
-                        } else if value > 0.3 {
+                        } else if value >= 0.25 {
                             viewModel.loadingConfiguration = GenerateLoadingState.generatingMeals.loadingConfig
                         } else if value >= 0 {
                             viewModel.loadingConfiguration = GenerateLoadingState.generatingWorkout.loadingConfig

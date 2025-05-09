@@ -7,36 +7,79 @@
 
 import Foundation
 import Combine
+import CoreKit
+import SwiftUI
 
 @MainActor
-class WorkoutsMainViewModel: ObservableObject {
-    private let workoutUseCase: WorkoutUseCase
-    private var cancellables: Set<AnyCancellable> = []
+class WorkoutsViewModel: ObservableObject {
+
+    @Published var activeSheet: WorkoutSheet?
+    @Published var viewState: ViewState = .loading
+    @Published var workoutWeeks: [WorkoutWeek] = []
+    @Published var workoutWeek: WorkoutWeek?
+    @Published var workoutDays: [WorkoutDay]?
+    @Published var workoutDay: WorkoutDay?
+    @Published var selectedRoutine: Routine?
+    @Published var showingDetail = false
+    @Published var showRateApp = false
+
+    @Inject private var workoutPlanUseCase: WorkoutPlanUseCaseProtocol
     
+    // MARK: - DEPRECATED
+    @Published var isWorkoutLoading: Bool = false
     @Published var workouts: [Workout] = []
     @Published var workoutPlans: [DailyWorkoutPlan] = []
     @Published var selectedWorkout: DailyWorkoutPlan?
-    @Published var selectedTargetGroup: String = "Upper Body" // example
-    @Published var isWorkoutLoading: Bool = false
     @Published var weeklyPlan: WeeklyPlan?
     @Published var upNextWeekNumber: Int?
     @Published var isWeeklyPlanLoading: Bool = false
     @Published var showGeneratePlan: Bool = false
-    @Published var showingDetail = false
-    @Published var showRateApp = false
-    @Published var activeSheet: WorkoutSheet?
-    
+    private let workoutUseCase: WorkoutUseCase
+    private var cancellables: Set<AnyCancellable> = []
     // Cache for workout plans by date
     private var workoutPlanCache: [String: [DailyWorkoutPlan]] = [:]
     private var weeklyPlanCache: [String: WeeklyPlan] = [:]
     private var fetchAttempted: Set<String> = [] // Tracks keys for which a fetch was attempted
-    
     private var workoutCache: [String: [Workout]?] = [:] // Cache for workouts
     private var fetchWorkoutsAttempted = false // Tracks if fetchWorkouts was attempted
     
     init(workoutUseCase: WorkoutUseCase) {
         self.workoutUseCase = workoutUseCase
     }
+    
+    var animatedDailyProgress: Double  = 0
+    
+    var dailyProgress: Double {
+        guard let routines = workoutDay?.routines else { return 0 }
+        
+        let completedCount = routines.filter({ $0.isCompleted }).count
+        let progress = Double(completedCount) / Double(routines.count)
+        withAnimation {
+            self.animatedDailyProgress = progress
+        }
+        return progress
+    }
+    
+}
+
+// MARK: - Workout Data Handling
+extension WorkoutsViewModel {
+    func getWorkoutPlan() async  {
+        defer { viewState = .idle }
+        do {
+            let workoutPlan = try await workoutPlanUseCase.execute()
+            self.workoutWeeks = workoutPlan?.weeks ?? []
+            self.workoutWeek = self.workoutWeeks.first
+            self.workoutDays = self.workoutWeek?.days
+            self.workoutDay = self.workoutDays?.first
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+}
+
+// MARK: - DEPRECATED
+extension WorkoutsViewModel {
     
     func generateWorkoutPlan() async -> ([Date: Double], Set<Int>) {
         isWorkoutLoading.toggle()
@@ -97,7 +140,6 @@ class WorkoutsMainViewModel: ObservableObject {
     
     func fetchWorkouts() {
         let cacheKey = "allWorkouts"
-        
         // Check cache
         if let cachedWorkouts = workoutCache[cacheKey] {
             // Use cached data (even if it's nil)

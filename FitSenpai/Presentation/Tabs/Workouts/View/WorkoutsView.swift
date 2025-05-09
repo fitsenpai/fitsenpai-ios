@@ -7,18 +7,19 @@
 
 import SwiftUI
 import BottomSheet
+import CoreKit
 
-struct WorkoutsMainView: View {
+struct WorkoutsView: View {
     @EnvironmentObject private var superwall: SuperwallManager
     @EnvironmentObject var mainViewModel: MainViewModel
-    @StateObject private var viewModel: WorkoutsMainViewModel
+    @StateObject private var viewModel: WorkoutsViewModel
     
     @State private var isLoaded: Bool = false
 
     init() {
         let repo = WorkoutRepoImpl(client: FSClient.shared!)
         let useCase = WorkoutUseCase(workoutRepo: repo)
-        let viewModel = WorkoutsMainViewModel(workoutUseCase: useCase)
+        let viewModel = WorkoutsViewModel(workoutUseCase: useCase)
         self._viewModel = StateObject(wrappedValue: viewModel)
     }
     
@@ -65,10 +66,10 @@ struct WorkoutsMainView: View {
                     FSInfoView(viewModel: generatingViewModel)
                     .padding(.vertical, 12)
                 } else {
-                    if viewModel.showGeneratePlan {
-                        FSInfoView(viewModel: readyViewModel)
+                    if let workoutDay = viewModel.workoutDay, !workoutDay.routines.isEmpty {
+                        WorkoutDaysView(viewModel: viewModel)
                     } else {
-                        WorkoutListSection(viewModel: viewModel)
+                        FSInfoView(viewModel: readyViewModel)
                     }
                 }
                 Spacer()
@@ -95,14 +96,18 @@ struct WorkoutsMainView: View {
     private func fetchInitialData() {
         guard !isLoaded else { return }
         isLoaded = true
-        if superwall.isFirstDayTrialActive {
-            Task {
-                let (progressData, days) = await viewModel.getLimitedWorkoutPlan()
-                mainViewModel.progressData = progressData
-                mainViewModel.highlightedDays = days
-            }
-        } else {
-            viewModel.showGeneratePlan = true
+//        if superwall.isFirstDayTrialActive {
+//            Task {
+//                let (progressData, days) = await viewModel.getLimitedWorkoutPlan()
+//                mainViewModel.progressData = progressData
+//                mainViewModel.highlightedDays = days
+//            }
+//        } else {
+//            viewModel.showGeneratePlan = true
+//        }
+        
+        Task {
+            await viewModel.getWorkoutPlan()
         }
     }
     

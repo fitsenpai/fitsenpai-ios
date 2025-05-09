@@ -9,14 +9,14 @@ import Foundation
 import CoreKit
 
 protocol WorkoutDemoUseCaseProtocol {
-    func execute(_ parameter: WorkoutDemoRequest) async throws -> WorkoutDay
+    func execute(_ parameter: WorkoutDemoRequest) async throws -> WorkoutPlan
 }
 
 final class WorkoutDemoUseCase: WorkoutDemoUseCaseProtocol {
     // MARK: - Dependencies
     @Inject private var repository: WorkoutRepositoryProtocol
     
-    func execute(_ parameter: WorkoutDemoRequest) async throws -> WorkoutDay {
+    func execute(_ parameter: WorkoutDemoRequest) async throws -> WorkoutPlan {
         return try await repository.generateWorkoutDemo(parameter)
     }
 }

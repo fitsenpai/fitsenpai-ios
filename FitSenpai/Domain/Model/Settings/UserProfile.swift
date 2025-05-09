@@ -117,9 +117,10 @@ struct UserProfile {
     }
     
     func toRequestBody() -> WorkoutDemoRequest {
+        
         return WorkoutDemoRequest(
             gender: gender?.id,
-            genderOther: nil, // Add logic if you support "Other" selection
+            genderOther: gender?.id == "other" ? "other": nil,
             activityLevel: activityLevel?.id,
             previousExperience: previousExperience.map { $0.id },
             height: Double(height ?? 0),
@@ -133,7 +134,13 @@ struct UserProfile {
             workoutLocation: workoutLocation?.id,
             workoutDuration: workoutDuration?.id,
             healthConcerns: healthConcerns.map { $0.id },
-            otherHealthConcern: otherHealthConcern
+            otherHealthConcern: otherHealthConcern,
+            cookingStyle: cookingStyle?.id,
+            workoutDays: workoutDays.map { $0.id },
+            dietPreference: dietPreference?.id,
+            otherDietPreference: otherDietPreference,
+            allergies: allergies.map { $0.id },
+            otherAllergies: otherAllergies
         )
     }
 }

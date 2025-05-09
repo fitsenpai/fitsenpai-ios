@@ -107,11 +107,16 @@ class CreateProfileViewModel: ObservableObject {
         stepSelections[currentStep.id] = selectedOptions
         triggerHaptics()
         
+        // adds animation after selection before going to next step
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            withAnimation(.easeInOut(duration: 0.3)) {
-                self.isSelectionInProgress = false
+            withAnimation(.easeInOut(duration: 0.2)) {
                 self.moveToNextStep()
             }
+        }
+        
+        // adds delay to prevent multiple clicks
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+               self.isSelectionInProgress = false
         }
     }
     

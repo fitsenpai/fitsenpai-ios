@@ -347,7 +347,7 @@ struct OnboardingStep {
             options: [
                 .init(id: 1, stringId: "none", title: "None", icon: .iconX, isNone: true),
                 .init(id: 2, stringId: "nuts", title: "Nuts", icon: .iconNuts),
-                .init(id: 3, stringId: "milk_and_dairy", title: "Milk and dairy", icon: .iconCheese),
+                .init(id: 3, stringId: "dairy", title: "Milk and dairy", icon: .iconCheese),
                 .init(id: 4, stringId: "shellfish", title: "Shellfish", icon: .iconShrimp),
                 .init(id: 5, stringId: "other", title: "Other", icon: .iconDots, isOthers: true)
             ],

@@ -14,6 +14,7 @@ struct FSCompletionBarView: View {
         VStack(spacing: 8) {
             ProgressView(value: progress)
                 .accentColor(.fsPrimary)
+                .animation(.easeInOut(duration: 0.5), value: progress)
             HStack {
                 FSText(text: titleText, fontStyle: .body14, color: .fsMutedForeground)
                 Spacer()

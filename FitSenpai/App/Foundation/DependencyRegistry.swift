@@ -29,6 +29,7 @@ enum DependencyRegistry {
         DependencyInjector.register(NetworkService<AuthEndpoint>(), key: "auth")
         DependencyInjector.register(NetworkService<UserEndpoint>(), key: "user")
         DependencyInjector.register(NetworkService<WorkoutEndpoint>(), key: "workout")
+        DependencyInjector.register(NetworkService<MealsEndpoint>(), key: "meals")
     }
     
     /// Registers data sources with the `DependencyInjector`.
@@ -39,6 +40,7 @@ enum DependencyRegistry {
         DependencyInjector.register(AuthDataSource() as any AuthDataSourceProtocol)
         DependencyInjector.register(UserDataSource() as any UserDataSourceProtocol)
         DependencyInjector.register(WorkoutDataSource() as any WorkoutDataSourceProtocol)
+        DependencyInjector.register(MealsDataSource() as any MealsDataSourceProtocol)
     }
     
     /// Registers repositories with the `DependencyInjector`.
@@ -50,6 +52,7 @@ enum DependencyRegistry {
         DependencyInjector.register(AuthRepository() as any AuthRepositoryProtocol)
         DependencyInjector.register(UserRepository() as any UserRepositoryProtocol)
         DependencyInjector.register(WorkoutRepository() as any WorkoutRepositoryProtocol)
+        DependencyInjector.register(MealsRepository() as any MealsRepositoryProtocol)
     }
     
     /// Registers use cases with the `DependencyInjector`.
@@ -63,11 +66,16 @@ enum DependencyRegistry {
         DependencyInjector.register(GetUserUseCase() as any GetUserUseCaseProtocol)
         DependencyInjector.register(GetUserProfileUseCase() as any GetUserProfileUseCaseProtocol)
         DependencyInjector.register(WorkoutDemoUseCase() as any WorkoutDemoUseCaseProtocol)
+        DependencyInjector.register(WorkoutPlanUseCase() as any WorkoutPlanUseCaseProtocol)
+        DependencyInjector.register(MealPlanDemoUseCase() as any MealPlanDemoUseCaseProtocol)
         DependencyInjector.register(SaveUserProfileUseCase() as any SaveUserProfileUseCaseProtocol)
     }
     
     @MainActor static func registerDataStores(modelContext: ModelContext) {
-        DependencyInjector.register(ProfileDataStore(modelContext: modelContext), key: "profileStore")
+        DependencyInjector.register(ProfileDataStore(modelContext: modelContext))
+        DependencyInjector.register(WorkoutDataStore(modelContext: modelContext))
+        DependencyInjector.register(MealsDataStore(modelContext: modelContext))
+        DependencyInjector.register(GroceriesDataStore(modelContext: modelContext))
         /// Add more stores as needed
     }
 }

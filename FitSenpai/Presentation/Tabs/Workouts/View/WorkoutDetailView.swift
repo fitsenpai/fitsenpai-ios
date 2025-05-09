@@ -11,9 +11,15 @@ import AVKit
 struct WorkoutDetailView: View {
     @EnvironmentObject private var superwall: SuperwallManager
     @Environment(\.dismiss) private var dismiss
-    @ObservedObject var viewModel: WorkoutDetailViewModel
     
-    @State private var player = AVPlayer(url: URL(string: UserDefaults.standard.string(forKey: "videoURL") ?? "https://txvhbjocxiodvtqreskj.supabase.co/storage/v1/object/public/workouts/abdominals/seated_floor_crunches.mp4?")!)
+    @State private var player: AVPlayer
+    
+    var routine: Routine
+    
+    init(routine: Routine) {
+        self._player = State(initialValue: AVPlayer(url: routine.videoURL))
+        self.routine = routine
+    }
        
     var body: some View {
         VStack(spacing: 12) {
@@ -34,11 +40,12 @@ struct WorkoutDetailView: View {
                             .cornerRadius(12)
                             .ignoresSafeArea()
                         
-                        GenericTextListView(title: "How to perform this exercise:", instructions: viewModel.workoutSteps, isNumbered: true)
+                        GenericTextListView(title: "How to perform this exercise:", instructions: routine.instructions, isNumbered: true)
                     }
                 }
             }
             .scrollIndicators(.hidden)
+            .padding(.bottom, 24)
             
             if superwall.isFirstDayTrialActive {
                 FSButton(title: "Unlock full week", fontStyle: .bodyBold16, cornerRadius: 32, tapAction: {
@@ -67,7 +74,7 @@ struct WorkoutDetailView: View {
     
     var headerSection: some View {
         HStack {
-            FSTextView(viewModel.title, typography: .h4)
+            FSTextView(routine.name, typography: .h4)
             Spacer()
             Image(.iconBookmark)
                 .resizable()
@@ -81,32 +88,29 @@ struct WorkoutDetailView: View {
                 }
         }
     }
-    
-    var targetGroupHorizontalList: some View {
-        WrappedHStack(viewModel.muscleGroups, horizontalSpacing: 4, verticalSpacing: 4) { muscleGroup in
-            GrayPillView(text: muscleGroup, fontStyle: .body14, cornerRadius: 24)
-        }
-    }
-    
-    var workoutInfoHorizontalView: some View {
-        HStack(spacing: 8) {
-            WorkoutPillView(image: "icon_chart_orange", value: 4, label: "sets")
-            WorkoutPillView(image: "icon_repeat_purple", value: 12, label: "reps")
-            WorkoutPillView(image: "icon_clock_green", value: 15, label: "mins")
-        }
-    }
-    
+  
     var workoutSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            targetGroupHorizontalList
-            workoutInfoHorizontalView
+            WrappedHStack(routine.muscleGroups, horizontalSpacing: 4, verticalSpacing: 4) { muscleGroup in
+                GrayPillView(text: muscleGroup, fontStyle: .body14, cornerRadius: 24)
+            }
+            
+            HStack(spacing: 8) {
+                
+                if let sets = routine.intSets {
+                    WorkoutPillView(image: "icon_chart_orange", value: sets, label: "sets")
+                }
+                
+                if let reps = routine.intReps {
+                   
+                    WorkoutPillView(image: "icon_repeat_purple", value: reps, label: "reps")
+                }
+                
+                if let duration = routine.intDuration {
+                    WorkoutPillView(image: "icon_clock_green", value: duration, label: "mins")
+                        .frame(maxWidth: routine.timerOnly ? 100 : .infinity)
+                }
+            }
         }
-    }
-}
-
-struct WorkoutsDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        let viewModel = WorkoutDetailViewModel(routine: Routine.initTest())
-        WorkoutDetailView(viewModel: viewModel)
     }
 }

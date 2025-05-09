@@ -16,7 +16,7 @@ struct MainTabView: View {
         NavigationStack {
             TabView(selection: $selectedTab) {
                 Group {
-                    WorkoutsMainView()
+                    WorkoutsView()
                         .tabItem {
                             Label(FSTabs.workouts.title, image: FSTabs.workouts.icon)
                         }

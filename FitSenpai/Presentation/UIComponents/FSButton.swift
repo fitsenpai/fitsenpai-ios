@@ -10,6 +10,7 @@ import SwiftUI
 typealias FSAction = () -> ()
 
 struct FSButton: View {
+    @State private var isDisabled = false
     var icon: String?
     var title: String
     var fontStyle: Font = .body16
@@ -23,8 +24,13 @@ struct FSButton: View {
     
     var body: some View {
         Button {
+            guard !isDisabled else { return }
+            isDisabled = true
             triggerHaptics()
             tapAction()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                isDisabled = false
+            }
         } label: {
             HStack {
                 if let icon {
@@ -43,6 +49,7 @@ struct FSButton: View {
                     .stroke(borderColor, lineWidth: 1)
             )
         }
+        .buttonRepeatBehavior(.disabled)
     }
     
     enum FSButtonSize {

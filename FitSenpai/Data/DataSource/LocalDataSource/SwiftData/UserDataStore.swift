@@ -5,8 +5,6 @@
 //  Created by Mark Daquis on 5/2/25.
 //
 
-
-
 import SwiftUI
 import SwiftData
 import OSLog

@@ -1,5 +1,5 @@
 //
-//  WorkoutView.swift
+//  WorkoutItemView.swift
 //  FitSenpai
 //
 //  Created by Kevin Andrew Maloles on 11/23/24.
@@ -7,21 +7,25 @@
 
 import SwiftUI
 
-struct WorkoutView: View {
-    var image: String
-    var title: String
-    var videoURL: URL?
-    var showInfo: Bool // Whether to show the info
-    @State var isSelected: Bool
-    @State private var isLoading = true // Track loading state
+struct WorkoutRoutineItemView: View {
+    @Binding var routine: Routine
+    @State private var isLoading = true
+    var onUpdate: (() -> Void)
     
     var horizontalInfoView: some View  {
         HStack(spacing: 10) {
-            IconLabelView(fsMetric: .WorkoutSet, value: 4, typography: .custom(size: 12), fontColor: .fsMutedForeground, iconSize: 12)
             
-            IconLabelView(fsMetric: .WorkoutRep, value: 12, typography: .custom(size: 12), fontColor: .fsMutedForeground, iconSize: 12)
+            if let sets = routine.intSets {
+                IconLabelView(fsMetric: .WorkoutSet, value: sets, typography: .custom(size: 12), fontColor: .fsMutedForeground, iconSize: 12)
+            }
             
-            IconLabelView(fsMetric: .WorkoutTime, value: 10, typography: .custom(size: 12), fontColor: .fsMutedForeground, iconSize: 12)
+            if let reps = routine.intReps {
+                IconLabelView(fsMetric: .WorkoutRep, value: reps, typography: .custom(size: 12), fontColor: .fsMutedForeground, iconSize: 12)
+            }
+            
+            if let duration = routine.intDuration {
+                IconLabelView(fsMetric: .WorkoutTime, value: duration, typography: .custom(size: 12), fontColor: .fsMutedForeground, iconSize: 12)
+            }
         }
     }
     
@@ -30,10 +34,8 @@ struct WorkoutView: View {
             videoPreview
             HStack(spacing: 0) {
                 VStack(alignment: .leading, spacing: 10) {
-                    FSTextView(title, typography: .p_ui_medium, lineLimit: 1)
-                    if showInfo {
-                        horizontalInfoView
-                    }
+                    FSTextView(routine.name, typography: .p_ui_medium, lineLimit: 1)
+                    horizontalInfoView
                 }
                 Spacer()
                 checkBoxButton
@@ -50,7 +52,7 @@ struct WorkoutView: View {
     
     var videoPreview: some View {
         ZStack {
-            if let videoURL = videoURL {
+            if let videoURL = URL(string: routine.gifUrl ?? "") {
                 VideoPreviewView(videoURL: videoURL, isLoading: $isLoading) // Pass loading state to VideoPreviewView
             }
         }
@@ -60,23 +62,20 @@ struct WorkoutView: View {
     
     var checkBoxButton: some View {
         Button(action: {
-            isSelected.toggle()
+            routine.isCompleted.toggle()
             triggerHaptics()
+            onUpdate()
         }, label: {
-            if isSelected {
-                Image("ic_checkbox_selected")
+            if routine.isCompleted {
+                Image(.icCheckboxSelected)
                     .resizable()
                     .frame(width: 29, height: 29)
             } else {
-                Image("ic_checkbox_unselected")
+                Image(.icCheckboxUnselected)
                     .resizable()
                     .frame(width: 26, height: 26)
             }
         })
     }
     
-}
-
-#Preview {
-    WorkoutView(image: "ic_workout", title: "Bench press", showInfo: true, isSelected: false)
 }
