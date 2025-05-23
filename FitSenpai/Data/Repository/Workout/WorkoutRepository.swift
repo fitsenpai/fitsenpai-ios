@@ -17,27 +17,26 @@ final class WorkoutRepository: WorkoutRepositoryProtocol {
 
     @AppState(\.trialStartDate) private var trialStartDate
 
-    func generateWorkouts(_ params: WorkoutDemoRequest) async throws -> WorkoutPlan {
-        try await remoteDataSource.getWorkoutPlan(params).toDomain()
+    func generateWorkouts(_ params: WorkoutDemoRequest) async throws -> [WeekPlan<WorkoutDay>] {
+        let response = try await remoteDataSource.getWorkoutPlan(params)
+        return response.plan.map({ $0.toDomain() })
     }
     
-    func generateWorkoutDemo(_ params: WorkoutDemoRequest) async throws -> WorkoutPlan {
+    func generateWorkoutDemo(_ params: WorkoutDemoRequest) async throws -> [WeekPlan<WorkoutDay>] {
         let workoutDay = try await remoteDataSource.generateWorkoutDemo(params).toDomain()
-        let workoutWeek = WorkoutWeek(week: 1, startDate: Date().formatted(), endDate: Date().formatted(), days: [workoutDay])
-        let workoutPlan = WorkoutPlan(
-            id: UUID().uuidString,
-            weeks: [workoutWeek],
-            createdAt: Date().formatted(),
-            updatedAt: Date().formatted(),
-            userId: UUID().uuidString, profileId: UUID().uuidString
-        )
+        let workoutWeek = WeekPlan<WorkoutDay>.init(week: 1, startDate: Date().formatted(), endDate: Date().formatted(), days: [workoutDay])
+        
         workoutDataStore.deleteAll()
-        workoutDataStore.add(workoutPlan.toEntity())
-        return workoutPlan
+        workoutDataStore.add(workoutWeek.toEntity())
+        return [workoutWeek]
     }
     
-    func getWorkoutPlan() async throws -> WorkoutPlan? {
-        return workoutDataStore.items.first?.toDomain()
+    func getWorkoutPlan() async throws -> [WeekPlan<WorkoutDay>] {
+        return workoutDataStore.items.map({ $0.toDomain() })
+    }
+    
+    func updateRoutine(week: Int, days: [WorkoutDayEntity]) async throws {
+        workoutDataStore.updateSelectedItem(week: week, days: days)
     }
     
 }

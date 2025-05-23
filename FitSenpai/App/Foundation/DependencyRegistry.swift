@@ -30,6 +30,7 @@ enum DependencyRegistry {
         DependencyInjector.register(NetworkService<UserEndpoint>(), key: "user")
         DependencyInjector.register(NetworkService<WorkoutEndpoint>(), key: "workout")
         DependencyInjector.register(NetworkService<MealsEndpoint>(), key: "meals")
+        DependencyInjector.register(NetworkService<GroceryEndpoint>(), key: "grocery")
     }
     
     /// Registers data sources with the `DependencyInjector`.
@@ -41,6 +42,7 @@ enum DependencyRegistry {
         DependencyInjector.register(UserDataSource() as any UserDataSourceProtocol)
         DependencyInjector.register(WorkoutDataSource() as any WorkoutDataSourceProtocol)
         DependencyInjector.register(MealsDataSource() as any MealsDataSourceProtocol)
+        DependencyInjector.register(GroceryDataSource() as any GroceryDataSourceProtocol)
     }
     
     /// Registers repositories with the `DependencyInjector`.
@@ -53,6 +55,7 @@ enum DependencyRegistry {
         DependencyInjector.register(UserRepository() as any UserRepositoryProtocol)
         DependencyInjector.register(WorkoutRepository() as any WorkoutRepositoryProtocol)
         DependencyInjector.register(MealsRepository() as any MealsRepositoryProtocol)
+        DependencyInjector.register(GroceryRepository() as any GroceryRepositoryProtocol)
     }
     
     /// Registers use cases with the `DependencyInjector`.
@@ -69,6 +72,11 @@ enum DependencyRegistry {
         DependencyInjector.register(WorkoutPlanUseCase() as any WorkoutPlanUseCaseProtocol)
         DependencyInjector.register(MealPlanDemoUseCase() as any MealPlanDemoUseCaseProtocol)
         DependencyInjector.register(SaveUserProfileUseCase() as any SaveUserProfileUseCaseProtocol)
+        DependencyInjector.register(MealsPlanUseCase() as any MealsPlanUseCaseProtocol)
+        DependencyInjector.register(MealsPlanUseCase() as any MealsPlanUseCaseProtocol)
+        DependencyInjector.register(GroceryPlanUseCase() as any GroceryPlanUseCaseProtocol)
+        DependencyInjector.register(UpdateGroceryUseCase() as any UpdateGroceryUseCaseProtocol)
+        DependencyInjector.register(UpdateRoutineUseCase() as any UpdateRoutineUseCaseProtocol)
     }
     
     @MainActor static func registerDataStores(modelContext: ModelContext) {

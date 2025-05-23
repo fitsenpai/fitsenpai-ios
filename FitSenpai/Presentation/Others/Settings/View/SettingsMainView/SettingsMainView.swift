@@ -118,6 +118,9 @@ struct SettingsMainView: View {
                                     appViewModel.authState = .unauthenticated
                                     superwall.resetUser()
                                     try? modelContext.delete(model: UserProfileEntity.self)
+                                    try? modelContext.delete(model: WorkoutWeekEntity.self)
+                                    try? modelContext.delete(model: MealsWeekEntity.self)
+                                    try? modelContext.delete(model: GroceryWeekEntity.self)
                                 }
                             }
                         }

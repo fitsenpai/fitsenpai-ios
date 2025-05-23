@@ -33,116 +33,149 @@ class VideoThumbnailGenerator {
 
 struct VideoPreviewView: View {
     let videoURL: URL
-    @Binding var isLoading: Bool
-    @State private var thumbnailURL: URL? = nil
-    @State private var onRefresh: Bool = true
-    
+    @Binding var isLoading: Bool 
+    @State private var thumbnailImageURL: URL? = nil 
+    @State private var didAttemptLoad: Bool = false
+
     var body: some View {
         VStack {
-            if isLoading {
+            if isLoading || thumbnailImageURL == nil && !didAttemptLoad {
                 ShimmerView(cornerRadius: 8)
                     .frame(width: 80, height: 80)
+            } else if let finalThumbnailURL = thumbnailImageURL {
+                ZStack {
+                    KFImage(finalThumbnailURL)
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 80, height: 80)
+                        .clipped()
+                        .cornerRadius(4)
+
+                    Color.black.opacity(0.1)
+                        .cornerRadius(4)
+
+                    Image("ic_play")
+                        .resizable()
+                        .frame(width: 12, height: 12)
+                        .foregroundColor(.white)
+                }
+                .frame(width: 80, height: 80)
             } else {
                 ZStack {
-                    if let thumbnailURL, onRefresh {
-                        KFImage(thumbnailURL)
+                    Color.gray.opacity(0.1)
+                        .cornerRadius(4)
+                    
+                    Button {
+                        performInitialLoad()
+                    } label: {
+                        Image(systemName: "arrow.clockwise")
+                            .renderingMode(.template)
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 200, height: 200)
-                            .clipShape(.rect(cornerRadius: 10))
-                            .shadow(radius: 10)
-                        
-                        Color.black.opacity(0.1)
-                            .clipShape(RoundedRectangle(cornerRadius: 4))
-                        
-                        // When not loading, show the play icon
-                        Image("ic_play")
-                            .resizable()
                             .frame(width: 12, height: 12)
-                        
-                    } else {
-                        Color.gray.opacity(0.1)
-                            .clipShape(RoundedRectangle(cornerRadius: 4))
-                        
-                        Button {
-                            isLoading = true
-                            generateThumbnailAndCache(from: videoURL)
-                        } label: {
-                            Image(.icArrows)
-                                .renderingMode(.template)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 12, height: 12)
-                                .foregroundStyle(.white)
-                        }
-                    }
-                    
-                    if isLoading {
-                        ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                            .frame(width: 24, height: 24)
+                            .foregroundStyle(.white)
                     }
                 }
+                .frame(width: 80, height: 80)
             }
         }
         .onAppear {
-            // Generate and cache thumbnail from the video URL
-            generateThumbnailAndCache(from: videoURL)
+            performInitialLoad()
+        }
+        .onChange(of: videoURL) { _, newURL in
+            thumbnailImageURL = nil 
+            performInitialLoad()
         }
     }
+    
+    private func performInitialLoad() {
+        if let existingThumbnail = thumbnailImageURL, videoURL == self.videoURL {
+             if self.isLoading { 
+                 DispatchQueue.main.async { self.isLoading = false }
+             }
+             self.didAttemptLoad = true
+             return
+        }
 
-    // Function to generate and cache the thumbnail image
-    private func generateThumbnailAndCache(from videoURL: URL) {
-        // First, check if the thumbnail already exists in the cache
-        if let cachedThumbnailURL = getCachedThumbnailURL(for: videoURL) {
-            // If thumbnail is cached, use that
-            self.thumbnailURL = cachedThumbnailURL
-            self.isLoading = false
+        if !self.isLoading {
+            DispatchQueue.main.async { self.isLoading = true }
+        }
+        self.didAttemptLoad = false 
+        generateThumbnailAndCache(from: self.videoURL) 
+    }
+
+    private func generateThumbnailAndCache(from url: URL) {
+        FSLogger.debug("VideoPreviewView: generateThumbnailAndCache for \(url)")
+        if let cachedThumbnailURL = getCachedThumbnailURL(for: url) {
+            FSLogger.debug("VideoPreviewView: Found cached thumbnail for \(url) at \(cachedThumbnailURL)")
+            self.thumbnailImageURL = cachedThumbnailURL
+            DispatchQueue.main.async {
+                self.isLoading = false // Update binding
+                self.didAttemptLoad = true
+            }
         } else {
-            // Otherwise, generate a new thumbnail and cache it
-            VideoThumbnailGenerator.generateThumbnail(from: videoURL) { thumbnail in
+            FSLogger.debug("VideoPreviewView: No cache, generating thumbnail for \(url)")
+            VideoThumbnailGenerator.generateThumbnail(from: url) { thumbnail in 
                 if let thumbnail = thumbnail {
-                    // Save the thumbnail using Kingfisher and update the state
-                    let cachedImageURL = saveThumbnailToCache(thumbnail)
-                    self.thumbnailURL = cachedImageURL
-                    self.isLoading = false
+                    FSLogger.debug("VideoPreviewView: Thumbnail generated for \(url)")
+                    if let cachedImageURL = self.saveThumbnailToCache(thumbnail, for: url) {
+                        FSLogger.debug("VideoPreviewView: Thumbnail cached for \(url) at \(cachedImageURL)")
+                        self.thumbnailImageURL = cachedImageURL
+                    } else {
+                        FSLogger.error("VideoPreviewView: Failed to save thumbnail to cache for \(url)")
+                    }
                 } else {
-                    self.isLoading = false
+                    FSLogger.error("VideoPreviewView: Thumbnail generation failed for \(url)")
+                }
+                DispatchQueue.main.async {
+                    self.isLoading = false // Update binding
+                    self.didAttemptLoad = true
                 }
             }
         }
     }
 
-    // Function to save the thumbnail image to a local file and return its URL for caching
-    private func saveThumbnailToCache(_ image: UIImage) -> URL? {
-        // Create a unique filename for the thumbnail
+    private func saveThumbnailToCache(_ image: UIImage, for videoURL: URL) -> URL? { 
         let fileManager = FileManager.default
-        let cacheDirectory = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first!
-        let thumbnailURL = cacheDirectory.appendingPathComponent(UUID().uuidString + ".jpg")
+        guard let cacheDirectory = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first else { return nil }
+        let videoHash = videoURL.absoluteString.data(using: .utf8)?.md5().hexString() ?? UUID().uuidString
+        let thumbnailFilename = "\(videoHash).jpg"
+        let finalThumbnailURL = cacheDirectory.appendingPathComponent(thumbnailFilename)
         
         if let data = image.jpegData(compressionQuality: 0.8) {
             do {
-                try data.write(to: thumbnailURL)
-                return thumbnailURL
+                try data.write(to: finalThumbnailURL)
+                return finalThumbnailURL
             } catch {
-                print("Failed to save image to cache: \(error)")
             }
         }
         return nil
     }
 
-    // Function to get the cached thumbnail URL based on the video URL
     private func getCachedThumbnailURL(for videoURL: URL) -> URL? {
         let fileManager = FileManager.default
-        let cacheDirectory = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first!
-        
-        // We can base the cache on a hash of the video URL or its unique identifier
-        let videoHash = videoURL.absoluteString.hash
-        let thumbnailCacheURL = cacheDirectory.appendingPathComponent("\(videoHash).jpg")
+        guard let cacheDirectory = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first else { return nil }
+        let videoHash = videoURL.absoluteString.data(using: .utf8)?.md5().hexString() ?? UUID().uuidString
+        let thumbnailFilename = "\(videoHash).jpg"
+        let thumbnailCacheURL = cacheDirectory.appendingPathComponent(thumbnailFilename)
         
         if fileManager.fileExists(atPath: thumbnailCacheURL.path) {
             return thumbnailCacheURL
         }
         return nil
+    }
+}
+
+import CryptoKit
+
+extension Data {
+    func md5() -> Insecure.MD5.Digest {
+        return Insecure.MD5.hash(data: self)
+    }
+}
+
+extension Insecure.MD5.Digest {
+    func hexString() -> String {
+        return map { String(format: "%02hhx", $0) }.joined()
     }
 }

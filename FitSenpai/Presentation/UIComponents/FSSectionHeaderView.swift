@@ -67,19 +67,16 @@ struct FSSectionHeaderView: View {
                 feedbackType = .negative
                 triggerHaptics()
             } label: {
-                Image("ic_thumbs_down")
+                Image(.icThumbsUp)
                     .resizable()
                     .frame(width: 20, height: 20)
             }
             
             Button {
-//                withoutAnimation {
-//                    showRateApp.toggle()
-//                }
                 requestReview()
                 triggerHaptics()
             } label: {
-                Image("ic_thumbs_up")
+                Image(.icThumbsUp)
                     .resizable()
                     .frame(width: 20, height: 20)
             }
@@ -90,7 +87,7 @@ struct FSSectionHeaderView: View {
         Button {
             regenerateAction()
         } label: {
-            Image("ic_regenerate")
+            Image(.icRegenerate)
                 .resizable()
                 .frame(width: 20, height: 20)
         }

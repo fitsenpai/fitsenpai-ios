@@ -7,10 +7,21 @@
 
 import Foundation
 
-struct ShoppingCategory {
+struct ShoppingCategory: Identifiable {
+    var id: String { category } // Computed property for ID
     let category: String
-    let items: [GroceryItem]
+    var items: [GroceryItem]
     let totalEstimatedPrice: String
+
+    // or ensure memberwise initializer still works as expected.
+    // Swift should synthesize a memberwise init for category, items, totalEstimatedPrice.
+    // If you had a custom init before, ensure it's still valid.
+    // For example, if you need to initialize items as empty:
+    // init(category: String, items: [GroceryItem] = [], totalEstimatedPrice: String) {
+    //     self.category = category
+    //     self.items = items
+    //     self.totalEstimatedPrice = totalEstimatedPrice
+    // }
 
     func toEntity() -> ShoppingCategoryEntity {
         return ShoppingCategoryEntity(

@@ -15,17 +15,27 @@ final class MealsRepository: MealsRepositoryProtocol {
     @Inject private var remoteDataSource: MealsDataSourceProtocol
     @Inject private var mealsDataStore: MealsDataStore
     @Inject private var groceriesDataStore: GroceriesDataStore
+    
+    @AppState(\.trialStartDate) private var trialStartDate
 
-    func generateMealPlanDemo(_ params: WorkoutDemoRequest) async throws -> (DailyMealPlan, GroceryPlan) {
+    func generateMealPlanDemo(_ params: WorkoutDemoRequest) async throws -> ([WeekPlan<MealsDay>], GroceryWeek) {
         let response = try await remoteDataSource.generateMealPlanDemo(params)
-        let mealPlan = response.meal.toDomain()
-        let groceryPlan = response.grocery.toDomain()
-        await mealsDataStore.deleteAll()
-        await mealsDataStore.add(mealPlan.toEntity())
-        await groceriesDataStore.deleteAll()
-        await groceriesDataStore.add(groceryPlan.toEntity())
+    
+        let mealsDay = response.meal.toDomain()
+        let mealsWeek = WeekPlan<MealsDay>.init(week: 1, startDate: Date().formatted(), endDate: Date().formatted(), days: [mealsDay])
         
-        return (mealPlan, groceryPlan)
+        mealsDataStore.deleteAll()
+        mealsDataStore.add(mealsWeek.toEntity())
+        
+        let groceryPlan = response.grocery.toDomain()
+        groceriesDataStore.deleteAll()
+        groceriesDataStore.add(groceryPlan.toEntity())
+        
+        return ([mealsWeek], groceryPlan)
+    }
+    
+    func getMealPlan() async throws -> [WeekPlan<MealsDay>] {
+        mealsDataStore.items.map({ $0.toDomain() })
     }
     
 }

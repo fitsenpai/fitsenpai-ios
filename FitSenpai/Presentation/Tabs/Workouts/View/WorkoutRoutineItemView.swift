@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct WorkoutRoutineItemView: View {
-    @Binding var routine: Routine
-    @State private var isLoading = true
+    @Binding var routine: WorkoutRoutine
+    @State private var isLoading: Bool = false
     var onUpdate: (() -> Void)
     
     var horizontalInfoView: some View  {

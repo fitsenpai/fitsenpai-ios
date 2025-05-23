@@ -5,7 +5,7 @@
 //  Created by Kevin Andrew Maloles on 12/12/24.
 //
 
-import Foundation
+import SwiftUI
 
 enum FoodCategory: String, CaseIterable {
     case proteins
@@ -15,29 +15,41 @@ enum FoodCategory: String, CaseIterable {
     case fruits
     case bakingEssentials
     case miscellaneous
+    
+    init(rawValue: String) {
+        switch rawValue {
+        case "Proteins": self = .proteins
+        case "Dairy and Alternatives": self = .dairyAndAlternatives
+        case "Vegetables": self = .vegetables
+        case "Baking Essentials": self = .bakingEssentials
+        case "Oils and Dressings": self = .oilsAndDressings
+        case "Fruits": self = .fruits
+        default: self = .miscellaneous
+        }
+    }
 
     // Method to return the associated image name
-    func imageName() -> String {
+    var icon: ImageResource {
         switch self {
         case .proteins:
-            return "icon_egg"
+            return .iconEgg
         case .dairyAndAlternatives:
-            return "icon_cheese"
+            return .iconCheese
         case .vegetables:
-            return "icon_carrot"
+            return .iconCarrot
         case .oilsAndDressings:
-            return "icon_drop"
+            return .iconDrop
         case .fruits:
-            return "icon_orange"
+            return .iconOrange
         case .bakingEssentials:
-            return "icon_bread"
+            return .iconBread
         case .miscellaneous:
-            return "icon_bag"
+            return .icGroceries
         }
     }
 
     // Method to return the title for each category
-    func title() -> String {
+    var title: String {
         switch self {
         case .proteins:
             return "Proteins"

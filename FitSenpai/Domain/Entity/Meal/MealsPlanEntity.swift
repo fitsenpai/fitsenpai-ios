@@ -1,5 +1,5 @@
 //
-//  Meals.swift
+//  MealsPlanEntity.swift
 //  FitSenpai
 //
 //  Created by Mark Daquis on 5/7/25.
@@ -22,8 +22,8 @@ import SwiftData
         self.postWorkout = postWorkout
     }
 
-    func toDomain() -> Mealsplan {
-        return Mealsplan(
+    func toDomain() -> MealsPlan {
+        return MealsPlan(
             breakfast: breakfast.toDomain(),
             lunch: lunch.toDomain(),
             dinner: dinner.toDomain(),

@@ -19,9 +19,15 @@ import SwiftData
     }
 
     func toDomain() -> ShoppingCategory {
+        // Map to domain models first
+        let domainItems = items.map { $0.toDomain() } // Results in [GroceryItem]
+        
+        // Then sort the array of domain models
+        let sortedDomainItems = domainItems.sorted { $0.name.lowercased() < $1.name.lowercased() }
+        
         return ShoppingCategory(
             category: category,
-            items: items.map { $0.toDomain() },
+            items: sortedDomainItems, // Pass the sorted array
             totalEstimatedPrice: totalEstimatedPrice
         )
     }

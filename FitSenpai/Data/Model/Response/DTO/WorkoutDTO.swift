@@ -1,5 +1,5 @@
 //
-//  GeneratedWorkoutDTO.swift
+//  WorkoutPlanResponse.swift
 //  FitSenpai
 //
 //  Created by Mark Daquis on 4/24/25.
@@ -8,24 +8,20 @@
 
 import Foundation
 
-struct WorkoutPlanDTO: Decodable {
+struct WorkoutPlanResponse: Decodable {
     let id: String
     let plan: [WorkoutWeekDTO]
     let createdAt: String
     let updatedAt: String
     let userId: String
     let profileId: String?
-
+    
     enum CodingKeys: String, CodingKey {
         case id, plan
         case createdAt = "created_at"
         case updatedAt = "updated_at"
         case userId = "user_id"
         case profileId = "profile_id"
-    }
-    
-    func toDomain() -> WorkoutPlan {
-        return WorkoutPlan(id: id, weeks: plan.map { $0.toDomain() }, createdAt: createdAt, updatedAt: updatedAt, userId: userId, profileId: profileId)
     }
 }
 
@@ -35,8 +31,34 @@ struct WorkoutWeekDTO: Decodable {
     let endDate: String
     let days: [WorkoutDayDTO]
     
-    func toDomain() -> WorkoutWeek {
-        return WorkoutWeek(week: week, startDate: startDate, endDate: endDate, days: days.map { $0.toDomain() })
+    enum CodingKeys: String, CodingKey {
+        case week, startDate, endDate, days
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        // Decode week flexibly (String or Int)
+        if let intWeek = try? container.decode(Int.self, forKey: .week) {
+            self.week = intWeek
+        } else if let stringWeek = try? container.decode(String.self, forKey: .week), let intFromString = Int(stringWeek) {
+            self.week = intFromString
+        } else {
+            self.week = 0
+        }
+
+        self.startDate = try container.decode(String.self, forKey: .startDate)
+        self.endDate = try container.decode(String.self, forKey: .endDate)
+        self.days = try container.decode([WorkoutDayDTO].self, forKey: .days)
+    }
+
+    func toDomain() -> WeekPlan<WorkoutDay> {
+        return WeekPlan<WorkoutDay>(
+            week: week,
+            startDate: startDate,
+            endDate: endDate,
+            days: days.map { $0.toDomain() }
+        )
     }
 }
 
@@ -68,6 +90,12 @@ struct WorkoutDayDTO: Decodable {
     }
     
     func toDomain() -> WorkoutDay {
-        .init(id: id, routines: routines.map({ $0.toDomain() }), totalTime: totalTime, day: day, totalRoutines: totalRoutines, title: title)
+        let routines = routines.enumerated()
+            .map({ (index, data) in
+                let domain = data.toDomain()
+                domain.sortIndex = index
+                return domain
+            })
+        return .init(id: id, routines: routines, totalTime: totalTime, day: day, totalRoutines: totalRoutines, title: title)
     }
 }

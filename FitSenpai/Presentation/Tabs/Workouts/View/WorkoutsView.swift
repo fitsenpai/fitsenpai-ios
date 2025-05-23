@@ -12,16 +12,9 @@ import CoreKit
 struct WorkoutsView: View {
     @EnvironmentObject private var superwall: SuperwallManager
     @EnvironmentObject var mainViewModel: MainViewModel
-    @StateObject private var viewModel: WorkoutsViewModel
+    @StateObject private var viewModel: WorkoutsViewModel = .init()
     
-    @State private var isLoaded: Bool = false
-
-    init() {
-        let repo = WorkoutRepoImpl(client: FSClient.shared!)
-        let useCase = WorkoutUseCase(workoutRepo: repo)
-        let viewModel = WorkoutsViewModel(workoutUseCase: useCase)
-        self._viewModel = StateObject(wrappedValue: viewModel)
-    }
+    // @State private var isLoaded: Bool = false
     
     var generatingViewModel: FSInfoViewModel {
         .init(
@@ -50,9 +43,31 @@ struct WorkoutsView: View {
             buttonLabel: "Generate workouts",
             buttonAction: {
                 Task {
-                    let (progressData, days) = await viewModel.generateWorkoutPlan()
-                    mainViewModel.progressData = progressData
-                    mainViewModel.highlightedDays = days
+                    await viewModel.getWorkoutPlan()
+                    // The mainViewModel.progressData and highlightedDays logic might need reconsideration
+                    // as getWorkoutPlan now populates the ViewModel directly from the store.
+                    // If this was for calendar highlighting, it needs a new source or to be removed.
+                    // For now, I'll comment it out as its source data (generateWorkoutPlan) is gone.
+                    // let (progressData, days) = await viewModel.generateWorkoutPlan()
+                    // mainViewModel.progressData = progressData
+                    // mainViewModel.highlightedDays = days
+                }
+                triggerHaptics()
+            }
+        )
+    }
+
+    func errorViewModel(error: Error) -> FSInfoViewModel {
+        .init(
+            iconName: "exclamationmark.triangle.fill", // Or some other error icon
+            iconTint: .red,
+            iconBackground: .gray.opacity(0.2),
+            title: "An Error Occurred",
+            mainLabel: error.localizedDescription,
+            buttonLabel: "Retry",
+            buttonAction: {
+                Task {
+                    await viewModel.getWorkoutPlan()
                 }
                 triggerHaptics()
             }
@@ -62,24 +77,32 @@ struct WorkoutsView: View {
     var body: some View {
         MainContainerView {
             VStack(alignment: .leading) {
-                if viewModel.isWorkoutLoading {
+                switch viewModel.viewState {
+                case .loading, .fetching, .updating: // Consider .fetching and .updating as loading too
                     FSInfoView(viewModel: generatingViewModel)
-                    .padding(.vertical, 12)
-                } else {
+                        .padding(.vertical, 12)
+                case .idle:
                     if let workoutDay = viewModel.workoutDay, !workoutDay.routines.isEmpty {
                         WorkoutDaysView(viewModel: viewModel)
                     } else {
+                        // This implies no workout data, show the "ready to generate" view
                         FSInfoView(viewModel: readyViewModel)
                     }
+                case .error(let error):
+                    FSInfoView(viewModel: errorViewModel(error: error))
+                        .padding(.vertical, 12)
+                default: // Handle other states like .uploading if necessary, or fallback
+                    Text("Unhandled view state.")
                 }
                 Spacer()
             }
-            .onAppear(perform: fetchInitialData)
             .onChange(of: mainViewModel.selectedDate) { _, newValue in
-                fetchWorkoutPlans(for: newValue)
+                // MARK: TODO - Implement logic for date change if needed
+                // This might involve telling the viewModel to select a different day/week
             }
             .onChange(of: mainViewModel.currentWeekStartDate) { _, newValue in
-                fetchWeeklyPlan(for: newValue)
+                // MARK: TODO - Implement logic for week change if needed
+                // This might involve telling the viewModel to fetch data for the new week
             }
             .sheet(item: $viewModel.activeSheet, content: { type in
                 switch type {
@@ -93,33 +116,9 @@ struct WorkoutsView: View {
         }
     }
     
-    private func fetchInitialData() {
-        guard !isLoaded else { return }
-        isLoaded = true
-//        if superwall.isFirstDayTrialActive {
-//            Task {
-//                let (progressData, days) = await viewModel.getLimitedWorkoutPlan()
-//                mainViewModel.progressData = progressData
-//                mainViewModel.highlightedDays = days
-//            }
-//        } else {
-//            viewModel.showGeneratePlan = true
-//        }
-        
-        Task {
-            await viewModel.getWorkoutPlan()
-        }
-    }
-    
-    private func fetchWorkoutPlans(for date: Date) {
-        if let uuid = globalAppEnvObject.user?.id {
-            viewModel.fetchWorkoutPlans(forUser: uuid, date: date)
-        }
-    }
-    
-    private func fetchWeeklyPlan(for date: Date) {
-        if let uuid = globalAppEnvObject.user?.id {
-            viewModel.fetchWeeklyPlan(forUser: uuid, date: date)
-        }
-    }
+    // private func fetchInitialData() {
+    //     Task {
+    //         await viewModel.getWorkoutPlan()
+    //     }
+    // }
 }

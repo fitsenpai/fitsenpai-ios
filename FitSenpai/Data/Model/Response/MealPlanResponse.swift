@@ -18,11 +18,11 @@ struct DailyMealPlanDTO: Decodable {
     let meals: MealsDTO?
     let totalDailyMacros: MacrosDTO?
 
-    func toDomain() -> DailyMealPlan {
-        return DailyMealPlan(
+    func toDomain() -> MealsDay {
+        return MealsDay(
             day: day ?? "",
             date: date ?? "",
-            meals: meals?.toDomain() ?? Mealsplan(
+            meals: meals?.toDomain() ?? MealsPlan(
                 breakfast: Meal(name: "", ingredients: [], imageUrl: "", recipe: [], macros: Macros(calories: 0, protein: 0, carbs: 0, fat: 0)),
                 lunch: Meal(name: "", ingredients: [], imageUrl: "", recipe: [], macros: Macros(calories: 0, protein: 0, carbs: 0, fat: 0)),
                 dinner: Meal(name: "", ingredients: [], imageUrl: "", recipe: [], macros: Macros(calories: 0, protein: 0, carbs: 0, fat: 0)),
@@ -41,8 +41,8 @@ struct MealsDTO: Decodable {
     let snack: MealDTO?
     let postWorkout: MealDTO?
     
-    func toDomain() -> Mealsplan {
-        return Mealsplan (
+    func toDomain() -> MealsPlan {
+        return MealsPlan (
             breakfast: breakfast?.toDomain() ?? Meal(name: "", ingredients: [], imageUrl: "", recipe: [], macros: Macros(calories: 0, protein: 0, carbs: 0, fat: 0)),
             lunch: lunch?.toDomain() ?? Meal(name: "", ingredients: [], imageUrl: "", recipe: [], macros: Macros(calories: 0, protein: 0, carbs: 0, fat: 0)),
             dinner: dinner?.toDomain() ?? Meal(name: "", ingredients: [], imageUrl: "", recipe: [], macros: Macros(calories: 0, protein: 0, carbs: 0, fat: 0)),
@@ -76,6 +76,28 @@ struct MacrosDTO: Decodable {
     let carbs: Int?
     let fat: Int?
 
+    enum CodingKeys: String, CodingKey {
+        case calories, protein, carbs, fat
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        func decodeIntOrString(forKey key: CodingKeys) throws -> Int? {
+            if let intValue = try? container.decodeIfPresent(Int.self, forKey: key) {
+                return intValue
+            } else if let stringValue = try? container.decodeIfPresent(String.self, forKey: key) {
+                return Int(stringValue)
+            }
+            return nil 
+        }
+        
+        self.calories = try decodeIntOrString(forKey: .calories)
+        self.protein = try decodeIntOrString(forKey: .protein)
+        self.carbs = try decodeIntOrString(forKey: .carbs)
+        self.fat = try decodeIntOrString(forKey: .fat)
+    }
+
     func toDomain() -> Macros {
         return Macros(
             calories: calories ?? 0,
@@ -87,15 +109,41 @@ struct MacrosDTO: Decodable {
 }
 
 struct GroceryListDTO: Decodable {
-    let week: String?
+    let week: Int?
     let startDate: String?
     let endDate: String?
     let shopping: [ShoppingCategoryDTO]?
     let totalEstimatedPrice: String?
 
-    func toDomain() -> GroceryPlan {
-        return GroceryPlan(
-            week: week ?? "",
+    enum CodingKeys: String, CodingKey {
+        case week
+        case startDate
+        case endDate
+        case shopping
+        case totalEstimatedPrice
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        if let intWeek = try? container.decode(Int.self, forKey: .week) {
+            self.week = intWeek
+        } else if let stringWeek = try? container.decode(String.self, forKey: .week),
+                  let intFromString = Int(stringWeek) {
+            self.week = intFromString
+        } else {
+            self.week = nil
+        }
+        
+        self.startDate = try container.decodeIfPresent(String.self, forKey: .startDate)
+        self.endDate = try container.decodeIfPresent(String.self, forKey: .endDate)
+        self.shopping = try container.decodeIfPresent([ShoppingCategoryDTO].self, forKey: .shopping)
+        self.totalEstimatedPrice = try container.decodeIfPresent(String.self, forKey: .totalEstimatedPrice)
+    }
+
+    func toDomain() -> GroceryWeek {
+        return GroceryWeek(
+            week: week.map { String($0) } ?? "",
             startDate: startDate ?? "",
             endDate: endDate ?? "",
             shopping: shopping?.map { $0.toDomain() } ?? [],
@@ -131,4 +179,3 @@ struct GroceryItemDTO: Decodable {
         )
     }
 }
-

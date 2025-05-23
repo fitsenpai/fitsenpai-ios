@@ -11,6 +11,12 @@ extension String {
     func toDate() -> Date? {
         return DateFormatter.iso8601.date(from: self)
     }
+    
+    func toDate(format: String) -> Date? {
+        let dateFormater = DateFormatter()
+        dateFormater.dateFormat = format
+        return dateFormater.date(from: self)
+    }
 }
 
 // MARK: - DateFormatter Extension

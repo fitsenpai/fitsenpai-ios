@@ -19,8 +19,10 @@ class RoutineEntity: Identifiable {
     var sets: String?
     var load: String?
     var gifUrl: String?
+    var sortIndex: Int
+    var isCompleted: Bool
     
-    init(id: String, name: String? = nil, muscleGroup: String? = nil, routineCount: String? = nil, duration: String? = nil, instructions: [String]? = nil, repetition: String? = nil, sets: String? = nil, load: String? = nil, gifUrl: String? = nil) {
+    init(id: String, name: String? = nil, muscleGroup: String? = nil, routineCount: String? = nil, duration: String? = nil, instructions: [String]? = nil, repetition: String? = nil, sets: String? = nil, load: String? = nil, gifUrl: String? = nil, sortIndex: Int = 0, isCompleted: Bool) {
         self.id = id
         self.name = name
         self.muscleGroup = muscleGroup
@@ -31,11 +33,12 @@ class RoutineEntity: Identifiable {
         self.sets = sets
         self.load = load
         self.gifUrl = gifUrl
+        self.sortIndex = sortIndex
+        self.isCompleted = isCompleted
     }
     
-    func toDomain() -> Routine {
-        return Routine(
-            id: id,
+    func toDomain() -> WorkoutRoutine {
+        return WorkoutRoutine(
             name: name,
             muscleGroup: muscleGroup,
             routineCount: routineCount,
@@ -44,7 +47,9 @@ class RoutineEntity: Identifiable {
             repetition: repetition,
             sets: sets,
             load: load,
-            gifUrl: gifUrl
+            gifUrl: gifUrl,
+            sortIndex: sortIndex,
+            isCompleted: isCompleted
         )
     }
 }

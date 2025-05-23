@@ -1,5 +1,5 @@
 //
-//  DailyMealPlanEntity.swift
+//  MealDayEntity.swift
 //  FitSenpai
 //
 //  Created by Mark Daquis on 5/7/25.
@@ -7,7 +7,7 @@
 
 import SwiftData
 
-@Model class DailyMealPlanEntity {
+@Model class MealDayEntity {
     var day: String
     var date: String
     var meals: MealsPlanEntity
@@ -20,8 +20,8 @@ import SwiftData
         self.totalDailyMacros = totalDailyMacros
     }
 
-    func toDomain() -> DailyMealPlan {
-        return DailyMealPlan(
+    func toDomain() -> MealsDay {
+        return MealsDay(
             day: day,
             date: date,
             meals: meals.toDomain(),

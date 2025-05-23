@@ -5,31 +5,16 @@
 //  Created by Mark Daquis on 5/5/25.
 //
 
+import Foundation
 
-struct Mealsplan {
-    let breakfast: Meal
-    let lunch: Meal
-    let dinner: Meal
-    let snack: Meal
-    let postWorkout: Meal
-
-    func toEntity() -> MealsPlanEntity {
-        return MealsPlanEntity(
-            breakfast: breakfast.toEntity(),
-            lunch: lunch.toEntity(),
-            dinner: dinner.toEntity(),
-            snack: snack.toEntity(),
-            postWorkout: postWorkout.toEntity()
-        )
-    }
-}
-
-struct Meal {
+struct Meal: Identifiable {
+    let id: String = UUID().uuidString
     let name: String
     let ingredients: [String]
     let imageUrl: String
     let recipe: [String]
     let macros: Macros
+    var type: MealType = .breakfast
 
     func toEntity() -> MealEntity {
         return MealEntity(

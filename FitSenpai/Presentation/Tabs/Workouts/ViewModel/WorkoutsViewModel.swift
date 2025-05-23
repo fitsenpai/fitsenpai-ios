@@ -12,43 +12,23 @@ import SwiftUI
 
 @MainActor
 class WorkoutsViewModel: ObservableObject {
-
     @Published var activeSheet: WorkoutSheet?
     @Published var viewState: ViewState = .loading
-    @Published var workoutWeeks: [WorkoutWeek] = []
-    @Published var workoutWeek: WorkoutWeek?
-    @Published var workoutDays: [WorkoutDay]?
+    @Published var workoutWeeks: [WeekPlan<WorkoutDay>] = []
+    @Published var workoutWeek: WeekPlan<WorkoutDay>?
+    @Published var workoutDays: [WorkoutDay] = []
     @Published var workoutDay: WorkoutDay?
-    @Published var selectedRoutine: Routine?
+    @Published var selectedRoutine: WorkoutRoutine?
     @Published var showingDetail = false
     @Published var showRateApp = false
 
     @Inject private var workoutPlanUseCase: WorkoutPlanUseCaseProtocol
+    @Inject private var updateRoutineUseCase: UpdateRoutineUseCaseProtocol
+    @Inject private var workoutDataStore: WorkoutDataStore
     
-    // MARK: - DEPRECATED
-    @Published var isWorkoutLoading: Bool = false
-    @Published var workouts: [Workout] = []
-    @Published var workoutPlans: [DailyWorkoutPlan] = []
-    @Published var selectedWorkout: DailyWorkoutPlan?
-    @Published var weeklyPlan: WeeklyPlan?
-    @Published var upNextWeekNumber: Int?
-    @Published var isWeeklyPlanLoading: Bool = false
-    @Published var showGeneratePlan: Bool = false
-    private let workoutUseCase: WorkoutUseCase
-    private var cancellables: Set<AnyCancellable> = []
-    // Cache for workout plans by date
-    private var workoutPlanCache: [String: [DailyWorkoutPlan]] = [:]
-    private var weeklyPlanCache: [String: WeeklyPlan] = [:]
-    private var fetchAttempted: Set<String> = [] // Tracks keys for which a fetch was attempted
-    private var workoutCache: [String: [Workout]?] = [:] // Cache for workouts
-    private var fetchWorkoutsAttempted = false // Tracks if fetchWorkouts was attempted
-    
-    init(workoutUseCase: WorkoutUseCase) {
-        self.workoutUseCase = workoutUseCase
-    }
+    private var cancellables = Set<AnyCancellable>()
     
     var animatedDailyProgress: Double  = 0
-    
     var dailyProgress: Double {
         guard let routines = workoutDay?.routines else { return 0 }
         
@@ -59,231 +39,81 @@ class WorkoutsViewModel: ObservableObject {
         }
         return progress
     }
+
+    init() {
+        observeWorkoutData()
+        Task {
+            await getWorkoutPlan()
+        }
+    }
     
 }
 
 // MARK: - Workout Data Handling
 extension WorkoutsViewModel {
-    func getWorkoutPlan() async  {
-        defer { viewState = .idle }
-        do {
-            let workoutPlan = try await workoutPlanUseCase.execute()
-            self.workoutWeeks = workoutPlan?.weeks ?? []
-            self.workoutWeek = self.workoutWeeks.first
-            self.workoutDays = self.workoutWeek?.days
-            self.workoutDay = self.workoutDays?.first
-        } catch {
-            print(error.localizedDescription)
-        }
-    }
-}
+    private func observeWorkoutData() {
+        workoutDataStore.$items
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] workoutWeekEntities in
+                guard let self else { return }
+                
+                self.workoutWeeks = workoutWeekEntities.map { $0.toDomain() }
+                self.workoutWeek = self.workoutWeeks.first
+                self.workoutDays = self.workoutWeek?.days ?? []
+                
+                if var firstDay = self.workoutDays.first {
+                    firstDay.routines = firstDay.routines.sorted(by: { $0.sortIndex < $1.sortIndex })
+                    self.workoutDay = firstDay
+                } else {
+                    self.workoutDay = nil
+                }
 
-// MARK: - DEPRECATED
-extension WorkoutsViewModel {
-    
-    func generateWorkoutPlan() async -> ([Date: Double], Set<Int>) {
-        isWorkoutLoading.toggle()
-        try? await Task.sleep(nanoseconds: 2_000_000_000)
-        isWorkoutLoading.toggle()
-        showGeneratePlan = false
-        let progressDate = [
-            // Today with 50% progress
-            Date(): 0.5,
-            
-            // Tomorrow with 30% progress
-            Calendar.current.date(byAdding: .day, value: 2, to: Date())!: 0.3,
-            
-            // Day after tomorrow with 80% progress
-            Calendar.current.date(byAdding: .day, value: 4, to: Date())!: 0.8,
-            Calendar.current.date(byAdding: .day, value: 5, to: Date())!: 0.1,
-            
-            // Tomorrow with 30% progress
-            Calendar.current.date(byAdding: .day, value: 6, to: Date())!: 0.3,
-            Calendar.current.date(byAdding: .day, value: 7, to: Date())!: 0.7,
-            
-            // Day after tomorrow with 80% progress
-            Calendar.current.date(byAdding: .day, value: 8, to: Date())!: 0.9
-        ]
-        let highlightedDays: Set<Int> = [1,2,4,6]
-        let plan1 = DailyWorkoutPlan.mock()
-        let plan2 = DailyWorkoutPlan.mock()
-        self.workoutPlans = [plan1, plan2]
-        return (progressDate, highlightedDays)
-    }
-    
-    func getLimitedWorkoutPlan() async -> ([Date: Double], Set<Int>) {
-        showGeneratePlan = false
-        let progressDate = [
-            // Today with 50% progress
-            Date(): 0.5,
-            
-            // Tomorrow with 30% progress
-            Calendar.current.date(byAdding: .day, value: 2, to: Date())!: 0.3,
-            
-            // Day after tomorrow with 80% progress
-            Calendar.current.date(byAdding: .day, value: 4, to: Date())!: 0.8,
-            Calendar.current.date(byAdding: .day, value: 5, to: Date())!: 0.1,
-            
-            // Tomorrow with 30% progress
-            Calendar.current.date(byAdding: .day, value: 6, to: Date())!: 0.3,
-            Calendar.current.date(byAdding: .day, value: 7, to: Date())!: 0.7,
-            
-            // Day after tomorrow with 80% progress
-            Calendar.current.date(byAdding: .day, value: 8, to: Date())!: 0.9
-        ]
-        let highlightedDays: Set<Int> = [1,2,4,6]
-        let plan1 = DailyWorkoutPlan.mock()
-        let plan2 = DailyWorkoutPlan.mock()
-        self.workoutPlans = [plan1, plan2]
-        return (progressDate, highlightedDays)
-    }
-    
-    func fetchWorkouts() {
-        let cacheKey = "allWorkouts"
-        // Check cache
-        if let cachedWorkouts = workoutCache[cacheKey] {
-            // Use cached data (even if it's nil)
-            workouts = cachedWorkouts ?? []
-            return
-        }
-        
-        // Check if fetching was already attempted
-        if fetchWorkoutsAttempted {
-            print("Fetch already attempted for key: \(cacheKey)")
-            return
-        }
-        
-        isWorkoutLoading = true
-        fetchWorkoutsAttempted = true // Mark fetch as attempted
-        
-        Task {
-            do {
-                let fetchedWorkouts = try await workoutUseCase.fetchAllWorkouts()
-                
-                DispatchQueue.main.async { [weak self] in
-                    self?.workouts = fetchedWorkouts
-                    self?.workoutCache[cacheKey] = fetchedWorkouts // Cache the fetched data
-                    self?.isWorkoutLoading = false
-                }
-            } catch {
-                print("Error fetching workouts: \(error)")
-                DispatchQueue.main.async {
-                    self.isWorkoutLoading = false
-                }
-            }
-        }
-    }
-    
-    // Fetch workout plans for the user
-    func fetchWorkoutPlans(forUser userId: UUID, date: Date) {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        let formattedDate = dateFormatter.string(from: date)
-        
-        // Check cache first
-        if let cachedPlans = workoutPlanCache[formattedDate], !cachedPlans.isEmpty {
-            // If cached data exists, use it directly
-            DispatchQueue.main.async {
-                self.workoutPlans = cachedPlans
-            }
-            return
-        }
-        Task {
-            do {
-                // Make sure updates to the @Published property are dispatched on the main thread
-                let fetchedWorkoutPlans = try await workoutUseCase.fetchWorkoutPlans(forUser: userId, date: date)
-                
-                // Ensure the update happens on the main thread
-                DispatchQueue.main.async {
-                    let plan1 = DailyWorkoutPlan.mock()
-                    let plan2 = DailyWorkoutPlan.mock()
-//                    self.workoutPlans = fetchedWorkoutPlans
-                    self.workoutPlans = [plan1, plan2]
-                    self.workoutPlanCache[formattedDate] = fetchedWorkoutPlans
-                }
-            } catch {
-                print("Error fetching workout plans: \(error)")
-            }
-            
-        }
-    }
-    
-    // Fetch the weekly plan for the user
-    func fetchWeeklyPlan(forUser userId: UUID, date: Date) {
-        let cacheKey = generateCacheKey(forUser: userId, date: date)
-        
-        if let cachedPlan = weeklyPlanCache[cacheKey] {
-            // Use cached data for immediate UI update
-            weeklyPlan = cachedPlan
-            return
-        } else {
-            upNextWeekNumber = nil // Optionally handle "no data" states
-        }
-        
-        // Check if fetching was already attempted
-        if fetchAttempted.contains(cacheKey) {
-            print("Fetch already attempted for key: \(cacheKey)")
-            return
-        }
-        
-        isWeeklyPlanLoading = true
-        upNextWeekNumber = nil
-        fetchAttempted.insert(cacheKey) // Mark fetch as attempted
-        
-        Task {
-            do {
-                let fetchedWeeklyPlan = try await workoutUseCase.fetchWeeklyPlan(forUser: userId, date: date)
-                
-                guard !fetchedWeeklyPlan.isEmpty else {
-                    self.fetchWeekToGenerate(forUser: userId)
-                    return
-                }
-                
-                DispatchQueue.main.async {
-                    if let firstPlan = fetchedWeeklyPlan.first {
-                        self.weeklyPlan = firstPlan
-                        self.weeklyPlanCache[cacheKey] = firstPlan // Cache the fetched data
+                if self.viewState == .loading || self.viewState == .fetching || self.viewState == .updating {
+                    if workoutWeekEntities.isEmpty {
+                        self.viewState = .idle
+                    } else {
+                        self.viewState = .idle
                     }
-                    self.isWeeklyPlanLoading = false
-                }
-            } catch {
-                print("Error fetching weekly plan: \(error)")
-                DispatchQueue.main.async {
-                    self.isWeeklyPlanLoading = false
+                } else if workoutWeekEntities.isEmpty && self.workoutDay == nil {
+                    self.viewState = .idle
                 }
             }
+            .store(in: &cancellables)
+    }
+
+    func getWorkoutPlan() async  {
+        switch viewState {
+            case .loading, .fetching, .updating:
+                return
+            default:
+                break
+        }
+
+        viewState = .loading
+        
+        do {
+            _ = try await workoutPlanUseCase.execute()
+            
+            if viewState == .loading {
+                viewState = .idle
+            }
+        } catch {
+            FSLogger.error("Failed to get workout plan: \(error.localizedDescription)")
+            viewState = .error(error)
         }
     }
     
-    private func generateCacheKey(forUser userId: UUID, date: Date) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        let formattedDate = dateFormatter.string(from: date)
-        return "\(userId.uuidString)_\(formattedDate)"
-    }
-    
-    func clearCache() {
-        weeklyPlanCache.removeAll()
-        fetchAttempted.removeAll()
-    }
-    
-    func fetchWeekToGenerate(forUser userId: UUID) {
-        if let weekToGenerate = globalAppEnvObject.weekToGenerate {
-            DispatchQueue.main.async {
-                self.upNextWeekNumber = weekToGenerate + 1
-                self.isWeeklyPlanLoading = false
-            }
-        }else{
-            DispatchQueue.main.async {
-                self.isWeeklyPlanLoading = false
-            }
+    func saveWorkoutRoutine() async {
+        guard let workoutWeek = workoutWeek, let workoutDay else { return }
+
+        if let index = workoutDays.firstIndex(where: { $0.id == workoutDay.id }) {
+            workoutDays[index] = workoutDay
         }
-    }
-    
-    // Handle selection of a workout
-    func selectWorkout(workout: DailyWorkoutPlan) {
-        DispatchQueue.main.async {
-            self.selectedWorkout = workout
+        
+        do {
+            try await updateRoutineUseCase.execute(week: workoutWeek.week, days: workoutDays.map({ $0.toEntity() }))
+        } catch {
+            FSLogger.error("Failed to save workout routine: \(error.localizedDescription)")
         }
     }
 }

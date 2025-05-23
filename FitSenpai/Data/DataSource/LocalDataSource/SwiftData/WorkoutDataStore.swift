@@ -7,7 +7,14 @@
 
 import Foundation
 
-final class WorkoutDataStore: SwiftDataStore<WorkoutPlanEntity> {
+final class WorkoutDataStore: SwiftDataStore<WorkoutWeekEntity> {
+    
+    func updateSelectedItem(week: Int, days: [WorkoutDayEntity]) {
+        guard let entity = items.first(where: { $0.week == week }) else { return }
+        
+        entity.days = days
+        update(entity)
+    }
     
     func delete(at offsets: IndexSet) {
         offsets.forEach { index in
@@ -16,9 +23,9 @@ final class WorkoutDataStore: SwiftDataStore<WorkoutPlanEntity> {
         }
     }
     
-    func delete(by id: String) {
-        guard let entity = items.first(where: { $0.id == id }) else {
-            FSLogger.error("Profile with id \(id) not found")
+    func delete(by week: Int) {
+        guard let entity = items.first(where: { $0.week == week }) else {
+            FSLogger.error("\(week) not found")
             return
         }
         delete(entity)

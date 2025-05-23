@@ -9,7 +9,7 @@
 import Foundation
 import SwiftData
 
-@Model class GroceryPlanEntity {
+@Model class GroceryWeekEntity {
     var week: String
     var startDate: String
     var endDate: String
@@ -24,8 +24,8 @@ import SwiftData
         self.totalEstimatedPrice = totalEstimatedPrice
     }
 
-    func toDomain() -> GroceryPlan {
-        return GroceryPlan(
+    func toDomain() -> GroceryWeek {
+        return GroceryWeek(
             week: week,
             startDate: startDate,
             endDate: endDate,
@@ -39,18 +39,21 @@ import SwiftData
     var name: String
     var qty: String
     var estimatedPrice: String
+    var isSelected: Bool = false
     
-    init(name: String, qty: String, estimatedPrice: String) {
+    init(name: String, qty: String, estimatedPrice: String, isSelected: Bool) {
         self.name = name
         self.qty = qty
         self.estimatedPrice = estimatedPrice
+        self.isSelected = isSelected
     }
 
     func toDomain() -> GroceryItem {
         return GroceryItem(
             name: name,
             qty: qty,
-            estimatedPrice: estimatedPrice
+            estimatedPrice: estimatedPrice,
+            isSelected: isSelected
         )
     }
 }

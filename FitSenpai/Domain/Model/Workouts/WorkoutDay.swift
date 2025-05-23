@@ -8,15 +8,15 @@
 
 import Foundation
 
-class WorkoutDay {
+class WorkoutDay: DomainProtocol {
     var id: String
-    var routines: [Routine]
+    var routines: [WorkoutRoutine]
     var totalTime: String
     var day: String
     var totalRoutines: String
     var title: String
     
-    init(id: String, routines: [Routine], totalTime: String, day: String, totalRoutines: String, title: String) {
+    init(id: String, routines: [WorkoutRoutine], totalTime: String, day: String, totalRoutines: String, title: String) {
         self.id = id
         self.routines = routines
         self.totalTime = totalTime
@@ -28,7 +28,7 @@ class WorkoutDay {
     func toEntity() -> WorkoutDayEntity {
         return WorkoutDayEntity(
             id: id,
-            routines: routines.map { $0.toEntity() },
+            routines: routines.sorted(by: { $0.sortIndex < $1.sortIndex }).map { $0.toEntity() },
             totalTime: totalTime,
             day: day,
             totalRoutines: totalRoutines,
@@ -37,7 +37,7 @@ class WorkoutDay {
     }
 }
 
-class Routine: Identifiable {
+class WorkoutRoutine: Identifiable {
     var id: String
     var name: String
     var muscleGroup: String?
@@ -48,9 +48,10 @@ class Routine: Identifiable {
     var sets: String?
     var load: String?
     var gifUrl: String?
-    var isCompleted: Bool = false
+    var sortIndex: Int
+    var isCompleted: Bool
     
-    init(id: String = UUID().uuidString, name: String? = nil, muscleGroup: String? = nil, routineCount: String? = nil, duration: String? = nil, instructions: [String]? = nil, repetition: String? = nil, sets: String? = nil, load: String? = nil, gifUrl: String? = nil) {
+    init(id: String = UUID().uuidString, name: String? = nil, muscleGroup: String? = nil, routineCount: String? = nil, duration: String? = nil, instructions: [String]? = nil, repetition: String? = nil, sets: String? = nil, load: String? = nil, gifUrl: String? = nil, sortIndex: Int = 0, isCompleted: Bool) {
         self.id = id
         self.name = name ?? ""
         self.muscleGroup = muscleGroup
@@ -61,6 +62,8 @@ class Routine: Identifiable {
         self.sets = sets
         self.load = load
         self.gifUrl = gifUrl
+        self.sortIndex = sortIndex
+        self.isCompleted = isCompleted
     }
     
     func toEntity() -> RoutineEntity {
@@ -74,12 +77,14 @@ class Routine: Identifiable {
             repetition: repetition,
             sets: sets,
             load: load,
-            gifUrl: gifUrl
+            gifUrl: gifUrl,
+            sortIndex: sortIndex,
+            isCompleted: isCompleted
         )
     }
 }
 
-extension Routine {
+extension WorkoutRoutine {
     var intReps: Int? {
         Int(self.repetition ?? "")
     }

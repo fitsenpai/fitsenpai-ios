@@ -9,15 +9,17 @@ import SwiftUI
 
 struct MealDetailView: View {
     @EnvironmentObject private var superwall: SuperwallManager
-    @ObservedObject var viewModel: MealDetailViewModel
     @Environment(\.dismiss) private var dismiss
+    
+    var meal: Meal
+    var type: MealType
     
     var body: some View {
         VStack(spacing: 12) {
             headerSection
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    GrayPillView(text: viewModel.schedule, fontStyle: .body14, cornerRadius: 24)
+                    GrayPillView(text: type.name, fontStyle: .body14, cornerRadius: 24)
                     mealInfoHorizontalView
                     
                     /// NOTE: Hiding image for now
@@ -25,9 +27,9 @@ struct MealDetailView: View {
                     //    .resizable()
                     //    .frame(height: 200)
                     
-                    GenericTextListView(title: "Ingredients", instructions: viewModel.ingredients, isNumbered: false)
+                    GenericTextListView(title: "Ingredients", instructions: meal.ingredients, isNumbered: false)
                     
-                    GenericTextListView(title: "Recipe", instructions: viewModel.recipe, isNumbered: true)
+                    GenericTextListView(title: "Recipe", instructions: meal.recipe, isNumbered: true)
                 }
                 .padding(.horizontal, 1)
             }
@@ -52,7 +54,7 @@ struct MealDetailView: View {
     
     var headerSection: some View {
         HStack {
-            FSTextView("Protein Pancakse", typography: .h4)
+            FSTextView(meal.name, typography: .h4)
             Spacer()
             Image(.iconBookmark)
                 .resizable()
@@ -68,19 +70,13 @@ struct MealDetailView: View {
     }
     
     var mealInfoHorizontalView: some View {
-        HStack(spacing: 2) {
-            MetricsPillView(image: "icon_fire_green", value: 200, label: "kcal")
-            MetricsPillView(image: "icon_bone_orange", value: 30, label: "g")
-            MetricsPillView(image: "icon_bread_blue", value: 400, label: "g")
-            MetricsPillView(image: "icon_avocado_purple", value: 20, label: "g")
+        HStack(spacing: 4) {
+            MetricsPillView(image: "icon_fire_green", value: meal.macros.calories, label: "kcal")
+            MetricsPillView(image: "icon_bone_orange", value: meal.macros.protein, label: "g")
+            MetricsPillView(image: "icon_bread_blue", value: meal.macros.carbs, label: "g")
+            MetricsPillView(image: "icon_avocado_purple", value: meal.macros.fat, label: "g")
         }
         .frame(maxWidth: .infinity)
     }
 }
 
-struct MealDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        let viewModel = MealDetailViewModel()
-        MealDetailView(viewModel: viewModel)
-    }
-}

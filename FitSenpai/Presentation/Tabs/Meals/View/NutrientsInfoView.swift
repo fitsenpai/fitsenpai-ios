@@ -14,14 +14,14 @@ struct NutrientsInfoView: View {
     var fatAmount: Int
     
     var body: some View {
-        HStack(spacing: 8) {
-            IconLabelView(fsMetric: .Calories, value: calorieAmount, typography: .custom(size: 12), fontColor: .fsMutedForeground, iconSize: 12)
+        HStack(spacing: 12) {
+            IconLabelView(fsMetric: .Calories, value: calorieAmount, typography: .custom(size: 12, weight: .medium), fontColor: .fsMutedForeground, iconSize: 14)
             
-            IconLabelView(fsMetric: .Protein, value: proteinAmount, typography: .custom(size: 12), fontColor: .fsMutedForeground, iconSize: 12)
+            IconLabelView(fsMetric: .Protein, value: proteinAmount, typography: .custom(size: 12, weight: .medium), fontColor: .fsMutedForeground, iconSize: 14)
             
-            IconLabelView(fsMetric: .Carbs, value: carbsAmount, typography: .custom(size: 12), fontColor: .fsMutedForeground, iconSize: 12)
+            IconLabelView(fsMetric: .Carbs, value: carbsAmount, typography: .custom(size: 12, weight: .medium), fontColor: .fsMutedForeground, iconSize: 14)
             
-            IconLabelView(fsMetric: .Fat, value: fatAmount, typography: .custom(size: 12), fontColor: .fsMutedForeground, iconSize: 12)
+            IconLabelView(fsMetric: .Fat, value: fatAmount, typography: .custom(size: 12, weight: .medium), fontColor: .fsMutedForeground, iconSize: 14)
         }
     }
 }

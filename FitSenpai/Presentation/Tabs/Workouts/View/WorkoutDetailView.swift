@@ -14,9 +14,9 @@ struct WorkoutDetailView: View {
     
     @State private var player: AVPlayer
     
-    var routine: Routine
+    var routine: WorkoutRoutine
     
-    init(routine: Routine) {
+    init(routine: WorkoutRoutine) {
         self._player = State(initialValue: AVPlayer(url: routine.videoURL))
         self.routine = routine
     }

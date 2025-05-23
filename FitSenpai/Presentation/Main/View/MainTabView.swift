@@ -22,13 +22,13 @@ struct MainTabView: View {
                         }
                         .tag(FSTabs.workouts)
                     
-                    MealsMainView()
+                    MealsView()
                         .tabItem {
                             Label(FSTabs.meals.title, image: FSTabs.meals.icon)
                         }
                         .tag(FSTabs.meals)
                     
-                    GroceriesMainView()
+                    GroceriesView()
                         .tabItem {
                             Label(FSTabs.groceries.title, image: FSTabs.groceries.icon)
                         }

@@ -22,7 +22,7 @@ extension NetworkEndpoint {
     
     var body: [String: Any]? { nil }
     
-    var timeoutInterval: TimeInterval { 60.0 }
+    var timeoutInterval: TimeInterval { 180.0 }
     
     var cachePolicy: URLRequest.CachePolicy { .reloadIgnoringLocalAndRemoteCacheData }
     

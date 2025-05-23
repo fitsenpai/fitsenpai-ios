@@ -42,8 +42,13 @@ struct CheckboxLabelView: View {
             
             Spacer()
             
-            FSTextView(detailInfo, typography: .body, color: .fsMutedForeground.opacity(0.8))
+            /// Change to dots temporarily
+            /// FSTextView(detailInfo, typography: .body, color: .fsMutedForeground.opacity(0.8))
             
+            Image(.iconDots)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 20, height: 20)
         }
     }
 }

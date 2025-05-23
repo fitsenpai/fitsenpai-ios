@@ -30,7 +30,7 @@ enum FSTypography {
     case detail
     case detail_semi
     case blockquote
-    case custom(size: CGFloat)
+    case custom(size: CGFloat, weight: Font.Weight = .regular)
     
     var fontSize: CGFloat {
         switch self {
@@ -52,7 +52,7 @@ enum FSTypography {
             12
         case .detail:
             10
-        case .custom(let size):
+        case .custom(let size, _):
             size
         }
     }
@@ -67,6 +67,19 @@ enum FSTypography {
             return FSFont.semibold.name
         case .suble_medium, .p_ui_medium, .body_medium, .detail:
             return FSFont.medium.name
+        case .custom(_, let weight):
+            switch weight {
+            case .heavy:
+                return FSFont.heavy.name
+            case .bold:
+                return FSFont.bold.name
+            case .semibold:
+                return FSFont.semibold.name
+            case .medium:
+                return FSFont.medium.name
+            default:
+                return FSFont.regular.name
+            }
         default:
             return FSFont.regular.name
         }

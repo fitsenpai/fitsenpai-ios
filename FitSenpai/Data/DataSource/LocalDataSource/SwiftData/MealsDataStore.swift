@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class MealsDataStore: SwiftDataStore<DailyMealPlanEntity> {
+final class MealsDataStore: SwiftDataStore<MealsWeekEntity> {
     
     func delete(at offsets: IndexSet) {
         offsets.forEach { index in

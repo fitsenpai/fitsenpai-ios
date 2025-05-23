@@ -31,6 +31,7 @@ import Combine
 import UIKit
 import AdSupport
 import OSLog
+import CoreKit
 
 private let logger = Logger(
     subsystem: Bundle.main.bundleIdentifier ?? "SuperwallManager",
@@ -84,6 +85,10 @@ final class SuperwallManager: ObservableObject, SuperwallDelegate {
     @AppState(\.userID) private var userID: String?
     @AppState(\.trialStartDate) private var trialStartDate: Date?
     @AppState(\.didSubscribedWithoutUserID) private var didSubscribedWithoutUserID: Bool
+    
+    @Inject private var workoutDataStore: WorkoutDataStore
+    @Inject private var mealsDataStore: MealsDataStore
+    @Inject private var groceryDataDataStore: GroceriesDataStore
     
     // MARK: - Private Properties
     
@@ -180,6 +185,10 @@ final class SuperwallManager: ObservableObject, SuperwallDelegate {
                 if self.userID == nil {
                     self.loginPresenter?.presentLogin()
                 }
+                
+                workoutDataStore.deleteAll()
+                mealsDataStore.deleteAll()
+                groceryDataDataStore.deleteAll()
             }
         }
     }
@@ -187,7 +196,6 @@ final class SuperwallManager: ObservableObject, SuperwallDelegate {
     // MARK: - Subscription Management
     
     /// Updates subscription state when a purchase is successful
-    @MainActor
     private func handleSubscriptionUpdate() {
         self.didSubscribedWithoutUserID = true
         self.endTrial()

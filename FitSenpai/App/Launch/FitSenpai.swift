@@ -62,15 +62,15 @@ struct FitSenpai: App {
         // Creating a model container for app's persistent entities.
         let container = try ModelContainer(
             for: UserProfileEntity.self,
-            WorkoutPlanEntity.self,
             WorkoutWeekEntity.self,
             WorkoutDayEntity.self,
             RoutineEntity.self,
-            DailyMealPlanEntity.self,
+            MealDayEntity.self,
+            MealsWeekEntity.self,
             MealsPlanEntity.self,
             MealEntity.self,
             MacrosEntity.self,
-            GroceryPlanEntity.self,
+            GroceryWeekEntity.self,
             GroceryItemEntity.self,
             ShoppingCategoryEntity.self
         )

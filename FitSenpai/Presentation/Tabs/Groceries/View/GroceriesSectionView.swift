@@ -8,12 +8,14 @@
 import SwiftUI
 
 struct GroceriesSectionView: View {
-    @State var selectedItems: [FoodItem]
-    @State var foodCategory: FoodCategory
-    @State var foodItems: [FoodItem]
-    @State var isShowingDetails: Bool
+    @Binding var shoppingCategory: ShoppingCategory
+    @State private var isShowingDetails: Bool = false
 
-   
+    var category: FoodCategory {
+        let category = FoodCategory(rawValue: shoppingCategory.category)
+        return category
+    }
+    
     var body: some View {
         ZStack(alignment: .topTrailing) {
             VStack(alignment: .leading, spacing: 12) {
@@ -28,12 +30,12 @@ struct GroceriesSectionView: View {
                             RoundedCornerShape(corners: .allCorners, radius: 6)
                                 .frame(width: 28, height: 28)
                                 .foregroundColor(Color.gray246)
-                            Image(foodCategory.imageName())
+                            Image(category.icon)
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 16, height: 16)
                         }
-                        FSTextView("\(foodCategory.title()) (\(foodItems.count))", typography: .body_medium)
+                        FSTextView("\(category.title) (\(shoppingCategory.items.count))", typography: .body_medium)
 
                         Spacer()
                         Button(action: {
@@ -41,7 +43,7 @@ struct GroceriesSectionView: View {
                                 isShowingDetails.toggle()
                             }
                         }, label: {
-                            Image("ic_chevron_right")
+                            Image(.icChevronRight)
                                 .resizable()
                                 .frame(width: 20, height: 20)
                                 .rotationEffect(.degrees(isShowingDetails ? 90 : 0))
@@ -54,18 +56,18 @@ struct GroceriesSectionView: View {
                 // Animated details section
                 if isShowingDetails {
                     VStack(alignment: .leading, spacing: 8) {
-                        ForEach(foodItems, id: \.self) { item in
+                        ForEach($shoppingCategory.items) { $item in
                             CheckboxLabelView(
                                 title: item.name,
-                                detailInfo: item.amount,
-                                isChecked: selectedItems.contains { $0.name == item.name },
+                                detailInfo: item.estimatedPrice,
+                                isChecked: item.isSelected,
                                 onItemSelected: {
-                                    selectedItems.append(item)
                                     triggerHaptics()
+                                    item.isSelected = true
                                 },
                                 onItemDeselected: {
-                                    selectedItems.removeAll { $0.name == item.name }
                                     triggerHaptics()
+                                    item.isSelected = false
                                 }
                             )
                         }
@@ -84,8 +86,4 @@ struct GroceriesSectionView: View {
             .zIndex(1)
         }
     }
-}
-
-#Preview {
-    GroceriesSectionView(selectedItems: [], foodCategory: .proteins, foodItems: [FoodItem(name: "Grilled chicken", amount: "750g"), FoodItem(name: "Salmon", amount: "750g"), FoodItem(name: "Whey protein", amount: "300g")], isShowingDetails: false)
 }
