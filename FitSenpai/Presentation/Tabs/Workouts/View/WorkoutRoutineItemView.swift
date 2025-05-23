@@ -9,7 +9,6 @@ import SwiftUI
 
 struct WorkoutRoutineItemView: View {
     @Binding var routine: WorkoutRoutine
-    @State private var isLoading: Bool = false
     var onUpdate: (() -> Void)
     
     var horizontalInfoView: some View  {
@@ -53,7 +52,7 @@ struct WorkoutRoutineItemView: View {
     var videoPreview: some View {
         ZStack {
             if let videoURL = URL(string: routine.gifUrl ?? "") {
-                VideoPreviewView(videoURL: videoURL, isLoading: $isLoading) // Pass loading state to VideoPreviewView
+                VideoPreviewView(videoURL: videoURL)
             }
         }
         .frame(width: 80, height: 80)

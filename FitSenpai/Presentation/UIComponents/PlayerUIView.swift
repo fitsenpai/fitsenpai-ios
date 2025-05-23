@@ -74,6 +74,3 @@ struct PlayerView: UIViewRepresentable {
         uiView.playerLayer.player = player
     }
 }
-
-
-

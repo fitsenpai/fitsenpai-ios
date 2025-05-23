@@ -73,5 +73,5 @@ extension Color {
     static let fsSky400 =  Color(uiColor: FSColor.sky400)
     static let fatPurple = Color(red:167/255, green:139/255, blue:250/255)
     static let fatPurpleBG = Color(red:245/255, green:243/255, blue:255/255)
-    static let workoutBackgroundColor = Color(red:252/255, green:252/255, blue:252/255, opacity: 255)
+    static let workoutBackgroundColor = Color(red:252/255, green:252/255, blue:252/255, opacity: 1.0)
 }

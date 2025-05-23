@@ -12,12 +12,13 @@ struct WorkoutDetailView: View {
     @EnvironmentObject private var superwall: SuperwallManager
     @Environment(\.dismiss) private var dismiss
     
-    @State private var player: AVPlayer
+    private var player: AVPlayer
     
     var routine: WorkoutRoutine
     
     init(routine: WorkoutRoutine) {
-        self._player = State(initialValue: AVPlayer(url: routine.videoURL))
+        let playerInstance = AVPlayer(url: routine.videoURL)
+        self.player = playerInstance
         self.routine = routine
     }
        
@@ -28,17 +29,17 @@ struct WorkoutDetailView: View {
                 VStack(spacing: 20) {
                     workoutSection
                     VStack(spacing: 16) {
-                        PlayerView(player: $player)
+                        PlayerView(player: .constant(player))
                             .frame(height: 345)
-                            .onAppear() {
-                                player.play()
-                            }
                             .overlay(
                                 RoundedRectangle(cornerRadius: 12)
                                     .stroke(Color.gray230, lineWidth: 1)
                             )
                             .cornerRadius(12)
-                            .ignoresSafeArea()
+                            .ignoresSafeArea(.all, edges: .horizontal)
+                            .onAppear {
+                                player.play()
+                            }
                         
                         GenericTextListView(title: "How to perform this exercise:", instructions: routine.instructions, isNumbered: true)
                     }
@@ -60,7 +61,6 @@ struct WorkoutDetailView: View {
             }
             
         }
-      
         .padding(24)
         .background {
             Color.workoutBackgroundColor.ignoresSafeArea()
@@ -69,7 +69,9 @@ struct WorkoutDetailView: View {
             SheetIndicator()
                 .padding(12)
         }
-        
+        .onDisappear {
+            player.pause()
+        }
     }
     
     var headerSection: some View {

@@ -22,7 +22,7 @@ struct ProfileCompletionView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 16) {
-                CreateProfileHeaderView(progress: Double(viewModel.progress), hideBackButton: true) { }
+                CreateProfileHeaderView(progress: viewModel.overallProgress, hideBackButton: true) { }
                 contentView
             }
         }
@@ -73,15 +73,6 @@ struct ProfileCompletionView: View {
             if viewModel.showLoading {
                 FSLoading(config: $viewModel.loadingConfiguration)
                     .background(.white)
-                    .onReceive(viewModel.$progress) {  value in
-                        if value >= 0.5 {
-                            viewModel.loadingConfiguration = GenerateLoadingState.generatingGroceries.loadingConfig
-                        } else if value >= 0.25 {
-                            viewModel.loadingConfiguration = GenerateLoadingState.generatingMeals.loadingConfig
-                        } else if value >= 0 {
-                            viewModel.loadingConfiguration = GenerateLoadingState.generatingWorkout.loadingConfig
-                        }
-                    }
                 
             }
         })
