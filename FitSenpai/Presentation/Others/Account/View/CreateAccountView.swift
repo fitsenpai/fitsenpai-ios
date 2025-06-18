@@ -25,20 +25,20 @@ struct CreateAccountView: View {
             Spacer()
             
             VStack(spacing: 16) {
-                FSButton(icon: "apple-logo", 
+                FSButton(icon: "apple-logo",
                         title: "Sign in with Apple", 
-                        fontStyle: .bodyBold16, 
-                        foregroundColor: .white, 
-                        cornerRadius: 100, 
+                        fontStyle: .bodyBold16,
+                        foregroundColor: .white,
+                        cornerRadius: 100,
                         background: .black) {
                     appViewModel.loginWithApple()
                 }
                 
-                FSButton(icon: "google-logo", 
-                        title: "Sign in with Google", 
-                        fontStyle: .bodyBold16, 
-                        cornerRadius: 100, 
-                        background: .white, 
+                FSButton(icon: "google-logo",
+                        title: "Sign in with Google",
+                        fontStyle: .bodyBold16,
+                        cornerRadius: 100,
+                        background: .white,
                         borderColor: .fsPurple) {
                     appViewModel.loginWithGoogle()
                 }

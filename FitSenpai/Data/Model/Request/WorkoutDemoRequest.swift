@@ -28,5 +28,5 @@ struct WorkoutDemoRequest: ParameterProtocol {
     let dietPreference: String?
     let otherDietPreference: String?
     let allergies: [String]?
-    let otherAllergies: [String]?
+    let otherAllergies: String?
 }

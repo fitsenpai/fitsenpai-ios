@@ -9,6 +9,8 @@ import Foundation
 import Supabase
 import AuthenticationServices
 import CoreKit
+import SafariServices
+import UIKit
 
 /// A view model responsible for managing the global app state,
 /// including user authentication and initialization logic.
@@ -28,7 +30,7 @@ class AppViewModel: NSObject, ObservableObject {
     /// Determines the current navigation destination during onboarding.
     @Published var authDestination: AuthNavDestination? = nil
     
-    /// A flag indicating whether the user should be directed to the login screen.
+    /// A flag indicating whether the user should be directed to the login screen.-
     @Published var shouldLogin: Bool = false
     
     /// A flag indicating whether the user should be directed to the sign in screen.
@@ -89,7 +91,20 @@ extension AppViewModel {
     }
     
     func loginWithGoogle() {
-        self.loginMethod = LoginMethod.apple.rawValue
+        self.loginMethod = LoginMethod.google.rawValue
+        guard let url = URL(string: "https://fitsenpai-web-git-docs-doument-auth-endpoints-c35204-royallabs.vercel.app/api/user/signInWithGoogle") else {
+            FSLogger.error("Invalid URL for Google Sign In")
+            return
+        }
+
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let rootViewController = windowScene.windows.first?.rootViewController else {
+            FSLogger.error("Could not get root view controller to present SafariViewController")
+            return
+        }
+
+        let safariVC = SFSafariViewController(url: url)
+        rootViewController.present(safariVC, animated: true, completion: nil)
     }
     
     func loginWithApple() {
@@ -101,7 +116,6 @@ extension AppViewModel {
         }
     }
     
-    // ADD: Apple sign in handler
     func handleAppleSignIn(result: Result<ASAuthorization, Error>) {
         viewState = .loading
         defer { viewState = .idle }

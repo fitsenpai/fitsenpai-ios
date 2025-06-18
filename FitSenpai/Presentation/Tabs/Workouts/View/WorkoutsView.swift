@@ -11,16 +11,13 @@ import CoreKit
 
 struct WorkoutsView: View {
     @EnvironmentObject private var superwall: SuperwallManager
-    @EnvironmentObject var mainViewModel: MainViewModel
+    // @EnvironmentObject var mainViewModel: MainViewModel
     @StateObject private var viewModel: WorkoutsViewModel = .init()
-    
-    // @State private var isLoaded: Bool = false
+    @StateObject private var calendarManager = CalendarDataManager.shared
     
     var generatingViewModel: FSInfoViewModel {
         .init(
-            iconName: "",
-            iconTint: .fsAccentForeground,
-            iconBackground: .fsAccent,
+            iconName: nil,
             title: "Generating workouts...",
             mainLabel: "This won’t take long. Please don’t exit.",
             buttonLabel: "",
@@ -32,44 +29,33 @@ struct WorkoutsView: View {
             }
         )
     }
-    
-    var readyViewModel: FSInfoViewModel {
-        .init(
-            iconName: "icon_sparkle_green",
-            iconTint: .fsAccentForeground,
-            iconBackground: .fsAccent,
-            title: "Your workout plan is ready!",
-            mainLabel: "Tap below to generate your new workouts\nfor the week",
-            buttonLabel: "Generate workouts",
-            buttonAction: {
-                Task {
-                    await viewModel.getWorkoutPlan()
-                    // The mainViewModel.progressData and highlightedDays logic might need reconsideration
-                    // as getWorkoutPlan now populates the ViewModel directly from the store.
-                    // If this was for calendar highlighting, it needs a new source or to be removed.
-                    // For now, I'll comment it out as its source data (generateWorkoutPlan) is gone.
-                    // let (progressData, days) = await viewModel.generateWorkoutPlan()
-                    // mainViewModel.progressData = progressData
-                    // mainViewModel.highlightedDays = days
-                }
-                triggerHaptics()
-            }
-        )
-    }
 
     func errorViewModel(error: Error) -> FSInfoViewModel {
         .init(
-            iconName: "exclamationmark.triangle.fill", // Or some other error icon
-            iconTint: .red,
-            iconBackground: .gray.opacity(0.2),
+            iconName: .iconBoxWarning,
             title: "An Error Occurred",
             mainLabel: error.localizedDescription,
             buttonLabel: "Retry",
             buttonAction: {
                 Task {
                     await viewModel.getWorkoutPlan()
+                    viewModel.updateSelectedWorkoutData(for: calendarManager.selectedDate)
                 }
                 triggerHaptics()
+            }
+        )
+    }
+    
+    var planUnavailable: FSInfoViewModel {
+        .init(
+            iconName: .iconBoxWarning,
+            title: "Plan unavailable for this week",
+            mainLabel: "You have no active subscription\nduring this time.",
+            buttonLabel: "",
+            showButton: false,
+            isLoading: false,
+            buttonAction: {
+                
             }
         )
     }
@@ -78,32 +64,33 @@ struct WorkoutsView: View {
         MainContainerView {
             VStack(alignment: .leading) {
                 switch viewModel.viewState {
-                case .loading, .fetching, .updating: // Consider .fetching and .updating as loading too
+                case .loading:
+                    ShimmerWorkoutWeekView()
+                case .updating:
                     FSInfoView(viewModel: generatingViewModel)
                         .padding(.vertical, 12)
                 case .idle:
-                    if let workoutDay = viewModel.workoutDay, !workoutDay.routines.isEmpty {
-                        WorkoutDaysView(viewModel: viewModel)
+                    if let selectedWeek = viewModel.selectedWorkoutWeek {
+                        WorkoutWeekView(workoutWeek: selectedWeek)
+                            .environmentObject(viewModel)
                     } else {
-                        // This implies no workout data, show the "ready to generate" view
-                        FSInfoView(viewModel: readyViewModel)
+                        FSInfoView(viewModel: planUnavailable)
+                            .padding(.vertical, 12)
                     }
                 case .error(let error):
                     FSInfoView(viewModel: errorViewModel(error: error))
                         .padding(.vertical, 12)
-                default: // Handle other states like .uploading if necessary, or fallback
+                default:
                     Text("Unhandled view state.")
                 }
                 Spacer()
             }
-            .onChange(of: mainViewModel.selectedDate) { _, newValue in
-                // MARK: TODO - Implement logic for date change if needed
-                // This might involve telling the viewModel to select a different day/week
-            }
-            .onChange(of: mainViewModel.currentWeekStartDate) { _, newValue in
-                // MARK: TODO - Implement logic for week change if needed
-                // This might involve telling the viewModel to fetch data for the new week
-            }
+            .onReceive(calendarManager.$selectedDate, perform: { date in
+                viewModel.updateSelectedWorkoutData(for: date)
+            })
+            .onReceive(viewModel.$workoutWeeks, perform: { weeks in
+                configureCalendar(with: weeks)
+            })
             .sheet(item: $viewModel.activeSheet, content: { type in
                 switch type {
                 case .changeWorkout:
@@ -113,12 +100,33 @@ struct WorkoutsView: View {
                         .presentationCornerRadius(32)
                 }
             })
+            // This helps if the view appears after the initial data load.
+            .onAppear {
+                if !viewModel.workoutWeeks.isEmpty {
+                     viewModel.updateSelectedWorkoutData(for: calendarManager.selectedDate)
+                }
+            }
         }
     }
     
-    // private func fetchInitialData() {
-    //     Task {
-    //         await viewModel.getWorkoutPlan()
-    //     }
-    // }
+    private func configureCalendar(with weeks: [WeekPlan<WorkoutDay>]) {
+        if !weeks.isEmpty,
+           let firstWeekStartDateString = weeks.min(by: { $0.week < $1.week })?.startDate,
+           let overallStartDate = firstWeekStartDateString.toDate(format: "yyyy-MM-dd") {
+
+            let overallEndDate = weeks.max(by: {
+                $0.endDate.toDate(format: "yyyy-MM-dd") ?? Date.distantPast <
+                $1.endDate.toDate(format: "yyyy-MM-dd") ?? Date.distantPast
+            })?.endDate.toDate(format: "yyyy-MM-dd") ?? Date()
+
+            let currentDateToMaintain = calendarManager.selectedDate
+            calendarManager.configure(startDate: overallStartDate, endDate: max(overallEndDate, Date()))
+            calendarManager.selectedDate = currentDateToMaintain
+
+        } else {
+            calendarManager.configure(startDate: Date(), endDate: Date())
+        }
+
+        viewModel.updateSelectedWorkoutData(for: calendarManager.selectedDate)
+    }
 }

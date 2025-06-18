@@ -89,7 +89,7 @@ struct VideoPreviewView: View {
     }
     
     private func performInitialLoad() {
-        if let existingThumbnail = thumbnailImageURL, videoURL == self.videoURL {
+        if let _ = thumbnailImageURL, videoURL == self.videoURL {
              if self.internalIsLoading {
                  self.internalIsLoading = false
              }

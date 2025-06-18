@@ -13,9 +13,7 @@ struct GroceriesView: View {
     
     var generatingViewModel: FSInfoViewModel {
         .init(
-            iconName: "",
-            iconTint: .fsAccentForeground,
-            iconBackground: .fsAccent,
+            iconName: nil,
             title: "Generating grocery list...",
             mainLabel: "This won’t take long. Please don’t exit.",
             buttonLabel: "",
@@ -30,9 +28,7 @@ struct GroceriesView: View {
     
     var readyViewModel: FSInfoViewModel {
         .init(
-            iconName: "icon_sparkle_green",
-            iconTint: .fsAccentForeground,
-            iconBackground: .fsAccent,
+            iconName: .iconBoxSparcle,
             title: "Your grocery list is ready!",
             mainLabel: "Tap below to generate your grocery list\nfor the week",
             buttonLabel: "Generate list",
@@ -72,9 +68,7 @@ struct GroceriesView: View {
     
     func errorInfoViewModel(error: Error) -> FSInfoViewModel {
         .init(
-            iconName: "exclamationmark.triangle.fill",
-            iconTint: .red,
-            iconBackground: .gray.opacity(0.2),
+            iconName: .iconBoxWarning,
             title: "Error Generating List",
             mainLabel: error.localizedDescription,
             buttonLabel: "Retry",

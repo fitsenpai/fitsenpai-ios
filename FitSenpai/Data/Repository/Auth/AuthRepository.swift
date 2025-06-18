@@ -77,17 +77,14 @@ final class AuthRepository: AuthRepositoryProtocol {
         return (user, session)
     }
     
-    func signInWithGoogle() async throws -> (FSUser, FSSession) {
+    func signInWithGoogle() async throws -> String {
         let response = try await remoteDataSource.signInWithGoogle()
-        guard let user = response.user?.toDomain() else {
-            throw AuthRepositoryError.missingUser
-        }
-        
-        guard let session = response.session?.toDomain() else {
-            throw AuthRepositoryError.invalidSession
-        }
-        
-        return (user, session)}
+        return response.url
+    }
+    
+    func getLoginCallback(code: String) async throws -> AuthCallbackResponse {
+        try await remoteDataSource.getLoginCallback(code: code)
+    }
     
     func signOut() async throws {
         try await remoteDataSource.signOut()

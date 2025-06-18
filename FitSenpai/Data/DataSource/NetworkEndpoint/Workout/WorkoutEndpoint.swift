@@ -9,7 +9,7 @@ import Foundation
 import CoreKit
 
 enum WorkoutEndpoint {
-    case getWorkoutPlan(_ params: ParameterProtocol)
+    case getWorkoutPlan
     case generateWorkoutDemo(_ params: ParameterProtocol)
 }
 

@@ -5,15 +5,14 @@
 //  Created by Mark Daquis on 4/24/25.
 //
 
-
 import Foundation
 
 struct WorkoutPlanResponse: Decodable {
     let id: String
     let plan: [WorkoutWeekDTO]
-    let createdAt: String
-    let updatedAt: String
-    let userId: String
+    let createdAt: String?
+    let updatedAt: String?
+    let userId: String?
     let profileId: String?
     
     enum CodingKeys: String, CodingKey {
@@ -38,7 +37,6 @@ struct WorkoutWeekDTO: Decodable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
-        // Decode week flexibly (String or Int)
         if let intWeek = try? container.decode(Int.self, forKey: .week) {
             self.week = intWeek
         } else if let stringWeek = try? container.decode(String.self, forKey: .week), let intFromString = Int(stringWeek) {
@@ -69,6 +67,7 @@ struct WorkoutDayDTO: Decodable {
     let totalTime: String
     let totalRoutines: String
     let routines: [RoutineDTO]
+    let pendingGeneration: Bool
     
     enum CodingKeys: CodingKey {
         case id
@@ -77,6 +76,7 @@ struct WorkoutDayDTO: Decodable {
         case totalTime
         case totalRoutines
         case routines
+        case pendingGeneration
     }
     
     init(from decoder: any Decoder) throws {
@@ -87,6 +87,7 @@ struct WorkoutDayDTO: Decodable {
         self.totalTime = try container.decodeIfPresent(String.self, forKey: .totalTime) ?? ""
         self.totalRoutines = try container.decodeIfPresent(String.self, forKey: .totalRoutines) ?? ""
         self.routines = try container.decodeIfPresent([RoutineDTO].self, forKey: .routines) ?? []
+        self.pendingGeneration = try container.decodeIfPresent(Bool.self, forKey: .pendingGeneration) ?? false
     }
     
     func toDomain() -> WorkoutDay {
@@ -96,6 +97,6 @@ struct WorkoutDayDTO: Decodable {
                 domain.sortIndex = index
                 return domain
             })
-        return .init(id: id, routines: routines, totalTime: totalTime, day: day, totalRoutines: totalRoutines, title: title)
+        return .init(id: id, routines: routines, totalTime: totalTime, day: day, totalRoutines: totalRoutines, title: title, pendingGeneration: pendingGeneration)
     }
 }

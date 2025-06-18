@@ -15,6 +15,13 @@ extension View {
         modifier(LoadingListenerModifier(viewState: state))
     }
     
+    /// Adds a reduced white loading indicator overlay based on the provided loading state.
+    /// - Parameter state: A binding to ViewState that determines whether the loading indicator is shown.
+    /// - Returns: A view with the reduced white loading overlay applied.
+    func reducedWhiteLoadingOverlay(state: Binding<ViewState>) -> some View {
+        modifier(LoadingListenerModifier(viewState: state, loadingStyle: .reduced))
+    }
+    
     func flexibleSheet() -> some View {
         modifier(FlexibleSheetModifier())
     }

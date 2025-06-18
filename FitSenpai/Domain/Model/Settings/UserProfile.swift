@@ -140,7 +140,7 @@ struct UserProfile {
             dietPreference: dietPreference?.id,
             otherDietPreference: otherDietPreference,
             allergies: allergies.map { $0.id },
-            otherAllergies: otherAllergies
+            otherAllergies: otherAllergies.joined(separator: ",")
         )
     }
 }

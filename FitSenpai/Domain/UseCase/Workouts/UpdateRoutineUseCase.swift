@@ -10,7 +10,7 @@ import Foundation
 import CoreKit
 
 protocol UpdateRoutineUseCaseProtocol {
-    func execute(week: Int, days: [WorkoutDayEntity]) async throws
+    func execute(_ id: String) async throws
 }
 
 final class UpdateRoutineUseCase: UpdateRoutineUseCaseProtocol {
@@ -18,7 +18,7 @@ final class UpdateRoutineUseCase: UpdateRoutineUseCaseProtocol {
     // MARK: - Dependencies
     @Inject private var repository: WorkoutRepositoryProtocol
     
-    func execute(week: Int, days: [WorkoutDayEntity]) async throws {
-        return try await repository.updateRoutine(week: week, days: days)
+    func execute(_ id: String) async throws {
+        return try await repository.updateRoutine(id)
     }
 }

@@ -46,7 +46,7 @@ struct MainContainerView<Content: View>: View {
     var headerView: some View {
         VStack(alignment: .leading) {
             FSNavBarView()
-            SwipeableCalendarView(currentWeekOffset: $viewModel.currentWeekOffset, selectedDate: $viewModel.selectedDate, currentWeekStartDate: $viewModel.currentWeekStartDate, progressData: $viewModel.progressData, highlightedDays: $viewModel.highlightedDays)
+            SwipeableCalendarView()
                 .blur(radius: superwall.isFirstDayTrialActive ? 4 : 0)
                 .disabled(superwall.isFirstDayTrialActive)
         }

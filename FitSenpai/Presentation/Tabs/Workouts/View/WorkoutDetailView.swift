@@ -9,17 +9,18 @@ import SwiftUI
 import AVKit
 
 struct WorkoutDetailView: View {
+    @EnvironmentObject private var viewModel: WorkoutsViewModel
     @EnvironmentObject private var superwall: SuperwallManager
     @Environment(\.dismiss) private var dismiss
     
     private var player: AVPlayer
     
-    var routine: WorkoutRoutine
+    @Binding var routine: WorkoutRoutine
     
-    init(routine: WorkoutRoutine) {
-        let playerInstance = AVPlayer(url: routine.videoURL)
+    init(routine: Binding<WorkoutRoutine>) {
+        self._routine = routine
+        let playerInstance = AVPlayer(url: routine.wrappedValue.videoURL)
         self.player = playerInstance
-        self.routine = routine
     }
        
     var body: some View {
@@ -53,8 +54,11 @@ struct WorkoutDetailView: View {
                     triggerHaptics()
                     superwall.presentPaywall(for: .proContent)
                 })
-            } else {
+            } else if !routine.isCompleted {
                 FSButton(title: "Complete", fontStyle: .bodyBold16, cornerRadius: 32, tapAction: {
+                    routine.isCompleted = true
+                    viewModel.updateDailyProgress()
+                    viewModel.objectWillChange.send()
                     dismiss()
                     triggerHaptics()
                 })

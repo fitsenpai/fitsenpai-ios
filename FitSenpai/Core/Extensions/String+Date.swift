@@ -17,6 +17,17 @@ extension String {
         dateFormater.dateFormat = format
         return dateFormater.date(from: self)
     }
+    
+    func toDate(format: String? = nil) -> Date? {
+        if let format = format {
+            let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: "en_US_POSIX")
+            formatter.dateFormat = format
+            return formatter.date(from: self)
+        } else {
+            return DateFormatter.parseFlexibleDate(from: self)
+        }
+    }
 }
 
 // MARK: - DateFormatter Extension

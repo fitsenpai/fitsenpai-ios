@@ -84,6 +84,7 @@ enum DependencyRegistry {
         DependencyInjector.register(WorkoutDataStore(modelContext: modelContext))
         DependencyInjector.register(MealsDataStore(modelContext: modelContext))
         DependencyInjector.register(GroceriesDataStore(modelContext: modelContext))
+        DependencyInjector.register(RoutineDataStore(modelContext: modelContext))
         /// Add more stores as needed
     }
 }

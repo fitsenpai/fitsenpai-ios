@@ -9,7 +9,7 @@ import SwiftData
 
 @Model
 class RoutineEntity: Identifiable {
-    var id: String
+    @Attribute(.unique) var id: String
     var name: String?
     var muscleGroup: String?
     var routineCount: String?
@@ -21,8 +21,9 @@ class RoutineEntity: Identifiable {
     var gifUrl: String?
     var sortIndex: Int
     var isCompleted: Bool
-    
-    init(id: String, name: String? = nil, muscleGroup: String? = nil, routineCount: String? = nil, duration: String? = nil, instructions: [String]? = nil, repetition: String? = nil, sets: String? = nil, load: String? = nil, gifUrl: String? = nil, sortIndex: Int = 0, isCompleted: Bool) {
+    var workoutDay: WorkoutDayEntity?
+
+    init(id: String, name: String? = nil, muscleGroup: String? = nil, routineCount: String? = nil, duration: String? = nil, instructions: [String]? = nil, repetition: String? = nil, sets: String? = nil, load: String? = nil, gifUrl: String? = nil, sortIndex: Int = 0, isCompleted: Bool = false, workoutDay: WorkoutDayEntity? = nil) {
         self.id = id
         self.name = name
         self.muscleGroup = muscleGroup
@@ -35,10 +36,12 @@ class RoutineEntity: Identifiable {
         self.gifUrl = gifUrl
         self.sortIndex = sortIndex
         self.isCompleted = isCompleted
+        self.workoutDay = workoutDay
     }
-    
+
     func toDomain() -> WorkoutRoutine {
         return WorkoutRoutine(
+            id: id,
             name: name,
             muscleGroup: muscleGroup,
             routineCount: routineCount,

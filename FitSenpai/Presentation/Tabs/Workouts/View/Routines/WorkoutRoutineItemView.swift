@@ -8,8 +8,12 @@
 import SwiftUI
 
 struct WorkoutRoutineItemView: View {
+    @EnvironmentObject private var viewModel: WorkoutsViewModel
     @Binding var routine: WorkoutRoutine
-    var onUpdate: (() -> Void)
+    
+    init(routine: Binding<WorkoutRoutine>) {
+        self._routine = routine
+    }
     
     var horizontalInfoView: some View  {
         HStack(spacing: 10) {
@@ -61,9 +65,10 @@ struct WorkoutRoutineItemView: View {
     
     var checkBoxButton: some View {
         Button(action: {
-            routine.isCompleted.toggle()
-            triggerHaptics()
-            onUpdate()
+            Task { @MainActor in
+                routine.isCompleted.toggle()
+                await viewModel.onToggleCompleted(id: routine.id)
+            }
         }, label: {
             if routine.isCompleted {
                 Image(.icCheckboxSelected)

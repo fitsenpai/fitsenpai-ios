@@ -5,10 +5,19 @@
 //  Created by Mark Daquis on 5/20/25.
 //
 
-
 import Foundation
 
 extension Date {
+    
+    var dayName: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEEE" // Full day name, e.g. Monday
+        return formatter.string(from: self)
+    }
+    
+    var startOfDay: Date {
+        Calendar.current.startOfDay(for: self)
+    }
     
     private var shortFormatter: DateFormatter {
         let formatter = DateFormatter()
@@ -119,6 +128,7 @@ extension Date {
             return self.toString(WithFormat: "EEEE, MMM dd yyyy")
         }
     }
+    
 }
 
 extension Array {

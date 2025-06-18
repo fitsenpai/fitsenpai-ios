@@ -9,9 +9,12 @@ import Foundation
 import SwiftUI
 import AuthenticationServices
 import CoreKit
+import SafariServices
+import UIKit
+import Supabase
 
 @MainActor
-class LoginViewModel: ObservableObject {
+class LoginViewModel: NSObject, ObservableObject, ASWebAuthenticationPresentationContextProviding {
     @Published var email: String = "obi+3@gmail.com"
     @Published var password: String = "test12345"
     @Published var viewState: ViewState = .idle
@@ -19,12 +22,17 @@ class LoginViewModel: ObservableObject {
     @Published var showForgotPassword: Bool = false
     @Published var shouldLogin: Bool = false
     
+    /// Use case for fetching the current user from a data source (e.g., Supabase).
+    @Inject private var getUserUseCase: GetUserUseCaseProtocol
     @Inject private var signinUseCase: SigninUseCaseProtocol
+    @Inject private var getUserProfileUseCase: GetUserProfileUseCaseProtocol
     
     @AppState(\.loginMethod) var loginMethod: String?
     
     private let appleSignInManager = AppleSignInManager()
-
+    private var authSession: ASWebAuthenticationSession?
+    private var networkSession = NetworkSession.shared
+    
     func login() async -> Bool {
         guard !email.isEmpty, !password.isEmpty else {
             errorMessage = "Email and password cannot be empty."
@@ -39,12 +47,12 @@ class LoginViewModel: ObservableObject {
         do {
             let (user, session) = try await signinUseCase.execute(email: email, password: password)
             globalAppEnvObject.user = user
-            NetworkSession.shared.setTokens(accessToken: session.accessToken, refreshToken: session.refreshToken)
+            networkSession.setTokens(accessToken: session.accessToken, refreshToken: session.refreshToken)
             loginMethod = LoginMethod.email.rawValue
             return true
         } catch {
             errorMessage = error.localizedDescription
-            print("Error during login: \(error.localizedDescription)")
+            FSLogger.log("Error during login: \(error.localizedDescription)")
             return false
         }
     }
@@ -64,52 +72,132 @@ class LoginViewModel: ObservableObject {
         }
     }
     
-    func loginWithGoogle() async -> Bool {
+    private func handleSuccessfulLogin(with authorization: ASAuthorization) {
+        if let userCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
+            FSLogger.log("Apple User ID: \(userCredential.user)")
+              
+            if userCredential.authorizedScopes.contains(.fullName) {
+                FSLogger.log("Apple User Full Name: \(userCredential.fullName?.givenName ?? "No given name")")
+            }
+              
+            if userCredential.authorizedScopes.contains(.email) {
+                FSLogger.log("Apple User Email: \(userCredential.email ?? "No email")")
+            }
+            
+            Task { @MainActor in
+                do {
+                    let (user, _) = try await signinUseCase.executeWithApple(
+                        user: userCredential.user
+                    )
+                    globalAppEnvObject.user = user
+                    
+                    loginMethod = LoginMethod.apple.rawValue
+                    shouldLogin = true
+                } catch {
+                    errorMessage = error.localizedDescription
+                    FSLogger
+                        .log(
+                            "Error during Apple login: \(error.localizedDescription)"
+                        )
+                }
+            }
+        }
+    }
+      
+    private func handleLoginError(with error: Error) {
+        FSLogger
+            .log(
+                "Could not authenticate with Apple: \(error.localizedDescription)"
+            )
+    }
+    
+    func loginWithGoogle() async {
         viewState = .loading
         errorMessage = nil
         
         defer { viewState = .idle }
         
         do {
-            let (_, _) = try await signinUseCase.executeWithGoogle()
+            let urlString = try await signinUseCase.executeWithGoogle()
             loginMethod = LoginMethod.google.rawValue
-            return true
+            
+            guard let authURL = URL(string: urlString) else {
+                return
+            }
+            
+            let callbackScheme = "fitsenpai"
+
+            authSession = ASWebAuthenticationSession(
+                url: authURL,
+                callbackURLScheme: callbackScheme,
+                completionHandler: { [weak self] callbackURL, error in
+                    guard let self = self else { return }
+                    
+                    if let error = error {
+                        self.errorMessage = "Google Sign-In failed: \(error.localizedDescription)"
+                        FSLogger
+                            .log(self.errorMessage ?? "Google Sign-In error")
+                        self.viewState = .idle
+                        return
+                    }
+                    
+                    guard let callbackURL = callbackURL else {
+                        self.errorMessage = "Google Sign-In failed: No callback URL received."
+                        FSLogger.log(self.errorMessage ?? "No callback URL")
+                        self.viewState = .idle
+                        return
+                    }
+                    
+                    self.handleGoogleAuthCallback(callbackURL)
+                })
+
+            authSession?.presentationContextProvider = self
+            authSession?.start()
+            viewState = .loading
+            loginMethod = LoginMethod.google.rawValue
+            
         } catch {
             errorMessage = error.localizedDescription
             print("Error during Google login: \(error.localizedDescription)")
-            return false
+        }
+
+    }
+    
+    private func handleGoogleAuthCallback(_ url: URL) {
+        guard let queryItems = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems, let code = queryItems.first(where: { $0.name == "code" })?.value else {
+            FSLogger.log("Google Auth Callback: Code not found in query parameters. URL: \(url.absoluteString)")
+            return
+        }
+        
+        Task { @MainActor in
+            do {
+                let session = try await signinUseCase.executeWithGoogleCallback(code: code)
+                networkSession.setTokens(accessToken: session.token, refreshToken: session.refreshToken)
+                loginMethod = LoginMethod.google.rawValue
+                await getCurrentUser()
+            }
         }
     }
     
-    private func handleSuccessfulLogin(with authorization: ASAuthorization) {
-          if let userCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
-              print(userCredential.user)
-              
-              if userCredential.authorizedScopes.contains(.fullName) {
-                  print(userCredential.fullName?.givenName ?? "No given name")
-              }
-              
-              if userCredential.authorizedScopes.contains(.email) {
-                  print(userCredential.email ?? "No email")
-              }
-              shouldLogin = true
-
-              // MARK: TODO
-//              Task { @MainActor in
-//                  do {
-//                    
-//                      let (_, _) = try await signinUseCase.executeWithApple(user: userCredential.user)
-//                      shouldLogin = true
-//                  } catch {
-//                      errorMessage = error.localizedDescription
-//                      print("Error during Apple login: \(error.localizedDescription)")
-//                      loginMethod
-//                  }
-//              }
-          }
-      }
-      
-      private func handleLoginError(with error: Error) {
-          print("Could not authenticate: \(error.localizedDescription)")
-      }
+    func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let window = windowScene.windows.first(where: { $0.isKeyWindow }) else {
+            FSLogger.log("Could not find key window for ASWebAuthenticationSession. Returning a new UIWindow().")
+            return UIWindow()
+        }
+        return window
+    }
+    
+    /// Retrieves the currently authenticated user and updates the global environment.
+    func getCurrentUser() async {
+        do {
+            _ = try await self.getUserProfileUseCase.execute()
+            loginMethod = LoginMethod.google.rawValue
+            shouldLogin = true
+        } catch {
+            networkSession.setTokens(accessToken: "", refreshToken: "")
+            FSLogger.log("Login error: \(error.localizedDescription)")
+            self.errorMessage = "Google Sign-In failed: No profile found."
+        }
+    }
 }

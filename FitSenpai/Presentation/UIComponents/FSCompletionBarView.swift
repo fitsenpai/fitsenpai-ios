@@ -18,7 +18,7 @@ struct FSCompletionBarView: View {
             HStack {
                 FSText(text: titleText, fontStyle: .body14, color: .fsMutedForeground)
                 Spacer()
-                FSText(text: "\(Int(progress * 100))%", fontStyle: .body14, color: .fsMutedForeground)
+                FSText(text: progress.isFinite && !progress.isNaN ? "\(Int(progress * 100))%" : "0%", fontStyle: .body14, color: .fsMutedForeground)
             }
         }
     }

@@ -12,24 +12,14 @@ struct FSInfoView: View {
     let viewModel: FSInfoViewModel
     @State private var isAnimating: Bool = false
     
-    // MARK: - Icon View
-    private var icon: some View {
-        Image(viewModel.iconName)
-            .resizable()
-            .foregroundColor(viewModel.iconTint)
-            .frame(width: 20, height: 20)
-            .background {
-                RoundedRectangle(cornerRadius: 6)
-                    .fill(viewModel.iconBackground)
-                    .frame(width: 32, height: 32)
-            }
-    }
     
     // MARK: - Body
     var body: some View {
         VStack(alignment: .center, spacing: 24) {
-            if !viewModel.isLoading {
-                icon
+            if !viewModel.isLoading, let iconName = viewModel.iconName {
+                Image(iconName)
+                    .resizable()
+                    .frame(width: 32, height: 32)
             }
             
             FSText(

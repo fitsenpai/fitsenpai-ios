@@ -62,9 +62,7 @@ struct LoginView: View {
                 
                 FSButton(icon: "google-logo", title: "Google", fontStyle: .bodyBold16, cornerRadius: 100, background: .white, borderColor: .fsPurple) {
                     Task {
-                        if await viewModel.loginWithGoogle() {
-                            appViewModel.authState = .authenticated
-                        }
+                        await viewModel.loginWithGoogle()
                     }
                 }
             }

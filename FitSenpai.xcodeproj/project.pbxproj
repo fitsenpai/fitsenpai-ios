@@ -10,6 +10,8 @@
 		934465572DBBC738000073D9 /* CoreKit in Frameworks */ = {isa = PBXBuildFile; productRef = 934465562DBBC738000073D9 /* CoreKit */; };
 		938DBF752DA918B0005A0D5C /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 938DBF742DA918B0005A0D5C /* Lottie */; };
 		938DBF782DAA1EFD005A0D5C /* SuperwallKit in Frameworks */ = {isa = PBXBuildFile; productRef = 938DBF772DAA1EFD005A0D5C /* SuperwallKit */; };
+		93CDC6792DF1C99500EC011C /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 93CDC6782DF1C99500EC011C /* GoogleSignIn */; };
+		93CDC67B2DF1C99500EC011C /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 93CDC67A2DF1C99500EC011C /* GoogleSignInSwift */; };
 		F2802BE02CF721CA00617942 /* ObjectMapper in Frameworks */ = {isa = PBXBuildFile; productRef = F2802BDF2CF721CA00617942 /* ObjectMapper */; };
 		F2CF8CE62CF62FDF00461D0D /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = F2CF8CE52CF62FDF00461D0D /* Auth */; };
 		F2CF8CE82CF62FDF00461D0D /* Functions in Frameworks */ = {isa = PBXBuildFile; productRef = F2CF8CE72CF62FDF00461D0D /* Functions */; };
@@ -58,11 +60,13 @@
 				934465572DBBC738000073D9 /* CoreKit in Frameworks */,
 				F2802BE02CF721CA00617942 /* ObjectMapper in Frameworks */,
 				F2F8CA322D06F5B100E3DCF3 /* BottomSheet in Frameworks */,
+				93CDC6792DF1C99500EC011C /* GoogleSignIn in Frameworks */,
 				F2CF8CEA2CF62FDF00461D0D /* PostgREST in Frameworks */,
 				F2CF8CE82CF62FDF00461D0D /* Functions in Frameworks */,
 				F2CF8CF32CF630F700461D0D /* Kingfisher in Frameworks */,
 				938DBF782DAA1EFD005A0D5C /* SuperwallKit in Frameworks */,
 				938DBF752DA918B0005A0D5C /* Lottie in Frameworks */,
+				93CDC67B2DF1C99500EC011C /* GoogleSignInSwift in Frameworks */,
 				F2CF8CF02CF62FDF00461D0D /* Supabase in Frameworks */,
 				F2CF8CE62CF62FDF00461D0D /* Auth in Frameworks */,
 				F2CF8CEE2CF62FDF00461D0D /* Storage in Frameworks */,
@@ -121,6 +125,8 @@
 				938DBF742DA918B0005A0D5C /* Lottie */,
 				938DBF772DAA1EFD005A0D5C /* SuperwallKit */,
 				934465562DBBC738000073D9 /* CoreKit */,
+				93CDC6782DF1C99500EC011C /* GoogleSignIn */,
+				93CDC67A2DF1C99500EC011C /* GoogleSignInSwift */,
 			);
 			productName = FitSenpai;
 			productReference = F2802BC62CF6395300617942 /* FitSenpai.app */;
@@ -158,6 +164,7 @@
 				938DBF732DA918B0005A0D5C /* XCRemoteSwiftPackageReference "lottie-ios" */,
 				938DBF762DAA1EFD005A0D5C /* XCRemoteSwiftPackageReference "Superwall-iOS" */,
 				934465552DBBC738000073D9 /* XCRemoteSwiftPackageReference "core-kit" */,
+				93CDC6772DF1C99500EC011C /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 			);
 			preferredProjectObjectVersion = 56;
 			productRefGroup = F24B334E2CEDB421004AD370;
@@ -440,6 +447,14 @@
 				minimumVersion = 4.0.6;
 			};
 		};
+		93CDC6772DF1C99500EC011C /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
 		F2802BDE2CF721CA00617942 /* XCRemoteSwiftPackageReference "ObjectMapper" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/tristanhimmelman/ObjectMapper.git";
@@ -489,6 +504,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 938DBF762DAA1EFD005A0D5C /* XCRemoteSwiftPackageReference "Superwall-iOS" */;
 			productName = SuperwallKit;
+		};
+		93CDC6782DF1C99500EC011C /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 93CDC6772DF1C99500EC011C /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		93CDC67A2DF1C99500EC011C /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 93CDC6772DF1C99500EC011C /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
 		};
 		F2802BDF2CF721CA00617942 /* ObjectMapper */ = {
 			isa = XCSwiftPackageProductDependency;

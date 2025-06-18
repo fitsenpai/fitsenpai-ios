@@ -33,5 +33,16 @@
 		<string>PlusJakartaSans-SemiBoldItalic.ttf</string>
 		<string>PlusJakartaSans-Regular.ttf</string>
 	</array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fitsenpai</string>
+			</array>
+			<key>CFBundleURLName</key>
+			<string>com.fitsenpai.app</string>
+		</dict>
+	</array>
 </dict>
 </plist>

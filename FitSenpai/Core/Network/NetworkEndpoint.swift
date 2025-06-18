@@ -28,5 +28,5 @@ extension NetworkEndpoint {
     
     var retryLimit: Int { 3 }
     
-    var isLoggingEnabled: Bool { false }
+    var isLoggingEnabled: Bool { true }
 }

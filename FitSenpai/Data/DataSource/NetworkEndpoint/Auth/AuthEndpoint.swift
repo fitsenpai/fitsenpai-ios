@@ -17,6 +17,7 @@ enum AuthEndpoint {
     case changePassword(currentPassword: String, newPassword: String)
     case signInWithApple(user: String)
     case signInWithGoogle
+    case getLoginCallback(code: String)
 }
 
 extension AuthEndpoint: NetworkEndpoint {
@@ -29,27 +30,28 @@ extension AuthEndpoint: NetworkEndpoint {
             return "/auth/register"
         case .signOut:
             return "/auth/logout"
+        case .signInWithApple:
+            return "/auth/mobile/apple"
+        case .getLoginCallback:
+            return "/auth/mobile/callback"
+        case .signInWithGoogle:
+            return "/auth/mobile/google"
         case .resetPassword:
             return "/user/reset-password"
         case .changePassword:
             return "/user/change-password"
-        case .signInWithApple:
-            return "/user/signInWithApple"
-        case .signInWithGoogle:
-            return "/user/signInWithGoogle"
+            
         }
     }
     
     var method: HTTPMethod {
         switch self {
-        case .signIn, .signUp, .signInWithGoogle, .signInWithApple:
-            return .post
-        case .signOut:
-            return .post
-        case .resetPassword:
+        case .signIn, .signUp, .signOut, .resetPassword:
             return .post
         case .changePassword:
             return .put
+        case .signInWithGoogle, .signInWithApple, .getLoginCallback:
+            return .get
         }
     }
     
@@ -91,6 +93,11 @@ extension AuthEndpoint: NetworkEndpoint {
     }
     
     var queryItems: [URLQueryItem]? {
-        nil // No query parameters needed for auth endpoints
+        switch self {
+        case .getLoginCallback(let code):
+            return [URLQueryItem(name: "code", value: code)]
+        default:
+            return nil
+        }
     }
 }

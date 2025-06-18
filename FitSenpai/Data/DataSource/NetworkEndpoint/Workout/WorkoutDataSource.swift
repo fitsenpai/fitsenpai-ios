@@ -10,7 +10,7 @@ import Foundation
 import CoreKit
 
 protocol WorkoutDataSourceProtocol {
-    func getWorkoutPlan(_ params: WorkoutDemoRequest) async throws -> WorkoutPlanResponse
+    func getWorkoutPlan() async throws -> WorkoutPlanResponse
     func generateWorkoutDemo(_ params: WorkoutDemoRequest) async throws -> WorkoutDayDTO
 }
 
@@ -22,8 +22,8 @@ final class WorkoutDataSource: WorkoutDataSourceProtocol {
     
     // MARK: - API Calls
     
-    func getWorkoutPlan(_ params: WorkoutDemoRequest) async throws -> WorkoutPlanResponse {
-        try await networkService.request(.getWorkoutPlan(params))
+    func getWorkoutPlan() async throws -> WorkoutPlanResponse {
+        try await networkService.request(.getWorkoutPlan)
     }
     
     func generateWorkoutDemo(_ params: WorkoutDemoRequest) async throws -> WorkoutDayDTO {

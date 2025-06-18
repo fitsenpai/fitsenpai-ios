@@ -11,5 +11,5 @@ protocol WorkoutRepositoryProtocol {
     func generateWorkouts(_ params: WorkoutDemoRequest) async throws -> [WeekPlan<WorkoutDay>]
     func generateWorkoutDemo(_ params: WorkoutDemoRequest) async throws -> [WeekPlan<WorkoutDay>]
     func getWorkoutPlan() async throws -> [WeekPlan<WorkoutDay>]
-    func updateRoutine(week: Int, days: [WorkoutDayEntity]) async throws
+    func updateRoutine(_ id: String) async throws
 }

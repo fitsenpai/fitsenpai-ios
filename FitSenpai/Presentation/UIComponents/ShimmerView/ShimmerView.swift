@@ -15,14 +15,30 @@ struct ShimmerView: View {
     
     var body: some View {
         RoundedRectangle(cornerRadius: cornerRadius)
-            .fill(Color.gray.opacity(0.3))
+            .fill(Color.gray.opacity(0.1))
             .overlay(
-                LinearGradient(gradient: Gradient(colors: [Color.white.opacity(0.2), Color.white.opacity(0.4), Color.white.opacity(0.2)]), startPoint: .leading, endPoint: .trailing)
-                    .offset(x: move ? 300 : -300) // Animate the shimmer across the view
-                    .animation(Animation.linear(duration: 1.5).repeatForever(autoreverses: false), value: move)
+                LinearGradient(
+                    gradient: Gradient(colors: [
+                        Color.clear,
+                        Color.white.opacity(0.2),
+                        Color.white.opacity(0.4),
+                        Color.white.opacity(0.2),
+                        Color.clear
+                    ]),
+                    startPoint: .leading,
+                    endPoint: .trailing
+                )
+                .rotationEffect(.degrees(15))
+                .offset(x: move ? 400 : -400)
+                .animation(
+                    Animation.easeInOut(duration: 2.0)
+                        .repeatForever(autoreverses: false),
+                    value: move
+                )
             )
+            .clipped()
             .onAppear {
-                move.toggle() // Start the shimmer animation
+                move.toggle()
             }
     }
 }

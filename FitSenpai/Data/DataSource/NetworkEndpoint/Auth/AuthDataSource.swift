@@ -11,11 +11,12 @@ import CoreKit
 protocol AuthDataSourceProtocol {
     func signIn(email: String, password: String) async throws -> LoginResponse
     func signInWithApple(user: String) async throws -> LoginResponse
-    func signInWithGoogle() async throws -> LoginResponse
+    func signInWithGoogle() async throws -> SignInResponse
     func signUp(name: String, email: String, password: String) async throws -> LoginResponse
     func signOut() async throws
     func sendPasswordResetEmail(to email: String) async throws
     func changePassword(currentPassword: String, newPassword: String) async throws
+    func getLoginCallback(code: String) async throws -> AuthCallbackResponse
 }
 
 final class AuthDataSource: AuthDataSourceProtocol {
@@ -34,8 +35,12 @@ final class AuthDataSource: AuthDataSourceProtocol {
         return try await networkService.request(.signInWithApple(user: user))
     }
     
-    func signInWithGoogle() async throws -> LoginResponse {
+    func signInWithGoogle() async throws -> SignInResponse {
         return try await networkService.request(.signInWithGoogle)
+    }
+    
+    func getLoginCallback(code: String) async throws -> AuthCallbackResponse {
+        return try await networkService.request(.getLoginCallback(code: code))
     }
     
     func signUp(name: String, email: String, password: String) async throws -> LoginResponse {

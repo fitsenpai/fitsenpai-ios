@@ -15,14 +15,16 @@ class WorkoutDay: DomainProtocol {
     var day: String
     var totalRoutines: String
     var title: String
+    var pendingGeneration: Bool
     
-    init(id: String, routines: [WorkoutRoutine], totalTime: String, day: String, totalRoutines: String, title: String) {
+    init(id: String, routines: [WorkoutRoutine], totalTime: String, day: String, totalRoutines: String, title: String, pendingGeneration: Bool) {
         self.id = id
         self.routines = routines
         self.totalTime = totalTime
         self.day = day
         self.totalRoutines = totalRoutines
         self.title = title
+        self.pendingGeneration = pendingGeneration
     }
     
     func toEntity() -> WorkoutDayEntity {
@@ -32,7 +34,8 @@ class WorkoutDay: DomainProtocol {
             totalTime: totalTime,
             day: day,
             totalRoutines: totalRoutines,
-            title: title
+            title: title,
+            pendingGeneration: pendingGeneration
         )
     }
 }

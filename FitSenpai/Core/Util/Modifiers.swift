@@ -10,15 +10,31 @@ import SwiftUI
 struct LoadingListenerModifier: ViewModifier {
     
     @Binding var viewState: ViewState
+    var loadingStyle: LoadingStyle = .default
     
     func body(content: Content) -> some View {
         ZStack {
             content
             if viewState == .loading {
-                LoadingView()
+                switch loadingStyle {
+                case .default:
+                    LoadingView()
+                case .reduced:
+                    LoadingView(
+                        opacity: 0.1,
+                        backgroundColor: .white,
+                        tint: .black,
+                        controllSize: .regular
+                    )
+                }
             }
         }
     }
+}
+
+enum LoadingStyle {
+    case `default`
+    case reduced
 }
 
 struct FlexibleSheetModifier: ViewModifier {

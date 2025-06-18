@@ -9,6 +9,7 @@ class SettingsViewModel: ObservableObject {
     // MARK: - Published Properties
     @Published var firstName: String = "Bella"
     @Published var lastName: String = "Oakley"
+    @Published var user: FSUser?
     @Published var profile = UserProfile()
     @Published var viewState: ViewState = .idle
     @Published var activeSheet: FeedbackType?
@@ -21,6 +22,7 @@ class SettingsViewModel: ObservableObject {
     // MARK: - Use Cases
     @Inject private var singoutUseCase: SignOutUseCaseProtocol
     @Inject private var getUserProfileUseCase: GetUserProfileUseCaseProtocol
+    @Inject private var getUserUseCase: GetUserUseCaseProtocol
     @Inject private var saveUserProfileUseCase: SaveUserProfileUseCaseProtocol
 
     // MARK: - Init
@@ -105,13 +107,24 @@ extension SettingsViewModel {
     
     func initializeData() {
         Task { @MainActor in
+            viewState = .loading
+            defer { viewState = .idle }
             await getUserProfile()
+            await getUserData()
         }
     }
     
     func getUserProfile() async {
         do {
             self.profile = try await self.getUserProfileUseCase.execute()
+        } catch {
+            print(error)
+        }
+    }
+    
+    func getUserData() async {
+        do {
+            self.user = try await self.getUserUseCase.execute()
         } catch {
             print(error)
         }

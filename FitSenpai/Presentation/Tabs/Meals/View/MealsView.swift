@@ -18,9 +18,7 @@ struct MealsView: View {
     
     var generatingViewModel: FSInfoViewModel {
         .init(
-            iconName: "",
-            iconTint: .fsAccentForeground,
-            iconBackground: .fsAccent,
+            iconName: nil,
             title: "Generating meals...",
             mainLabel: "This won’t take long. Please don’t exit.",
             buttonLabel: "",
@@ -35,9 +33,7 @@ struct MealsView: View {
     
     var readyViewModel: FSInfoViewModel {
         .init(
-            iconName: "icon_sparkle_green",
-            iconTint: .fsAccentForeground,
-            iconBackground: .fsAccent,
+            iconName: .iconBoxSparcle,
             title: "Your meal plan is ready!",
             mainLabel: "Tap below to generate meals for \nthe week",
             buttonLabel: "Generate meals",
@@ -52,9 +48,7 @@ struct MealsView: View {
 
     func errorInfoViewModel(error: Error) -> FSInfoViewModel {
         .init(
-            iconName: "exclamationmark.triangle.fill",
-            iconTint: .red,
-            iconBackground: .gray.opacity(0.2),
+            iconName: .iconBoxWarning,
             title: "Error Generating Meals",
             mainLabel: error.localizedDescription,
             buttonLabel: "Retry",

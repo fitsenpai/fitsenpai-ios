@@ -28,7 +28,6 @@ struct FSSectionHeaderView: View {
             }
             .frame(height: 16)
         }
-        
         .fullScreenCover(isPresented: $showRateApp) {
             ZStack {
                 Color.black.opacity(0.1)

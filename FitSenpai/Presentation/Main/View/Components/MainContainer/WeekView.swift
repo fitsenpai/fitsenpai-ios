@@ -10,28 +10,16 @@ import SwiftUI
 /// A view that displays a week calendar with progress indicators for specific days
 struct WeekView: View {
     // MARK: - Properties
+    @StateObject private var calendarManager = CalendarDataManager.shared
     let weekOffset: Int
-    @Binding var selectedDate: Date
-    var progressByDate: [Date: Double]
-    var highlightedDays: Set<Int> = []
     
     private var calendar: Calendar {
         Calendar.current
     }
     
     // MARK: - Initialization
-    init(weekOffset: Int,
-         selectedDate: Binding<Date>,
-         progressByDate: [Date: Double],
-         highlightedDays: Set<Int>) {
+    init(weekOffset: Int) {
         self.weekOffset = weekOffset
-        self._selectedDate = selectedDate
-        self.highlightedDays = highlightedDays
-        self.progressByDate = progressByDate
-        let today = Calendar.current.startOfDay(for: Date())
-        if selectedDate.wrappedValue == Date.distantPast {
-            selectedDate.wrappedValue = today
-        }
     }
     
     // MARK: - Body
@@ -65,7 +53,7 @@ struct WeekView: View {
         }
         .onTapGesture {
             withAnimation {
-                selectedDate = date
+                calendarManager.selectedDate = date
             }
         }
     }
@@ -105,15 +93,15 @@ struct WeekView: View {
     }
     
     private func dayNumberLabel(for date: Date) -> some View {
-        FSText(
+        return FSText(
             text: "\(dayNumber(for: date))",
-            fontStyle: selectedDate == date ? .bodyBold12 : .body12,
-            color: selectedDate == date ? .fsTitle : .gray
+            fontStyle: calendar.isDate(calendarManager.selectedDate, inSameDayAs: date) ? .bodyBold12 : .body12,
+            color: calendar.isDate(calendarManager.selectedDate, inSameDayAs: date) ? .fsTitle : .gray
         )
         .overlay(alignment: .bottom) {
             if isToday(date) {
                 Rectangle()
-                    .fill(selectedDate == date ? Color.fsTitle : .gray)
+                    .fill(calendar.isDate(calendarManager.selectedDate, inSameDayAs: date) ? Color.fsTitle : .gray)
                     .frame(height: 1)
                     .frame(maxWidth: .infinity)
             }
@@ -123,7 +111,7 @@ struct WeekView: View {
     // MARK: - Helper Methods
     private func shouldHighlight(_ date: Date) -> Bool {
         let weekday = calendar.component(.weekday, from: date)
-        return highlightedDays.contains(weekday)
+        return calendarManager.highlightedDays.contains(weekday)
     }
     
     private func isToday(_ date: Date) -> Bool {
@@ -131,29 +119,13 @@ struct WeekView: View {
     }
     
     private func getProgress(for targetDate: Date) -> Double? {
-        progressByDate.first { entry in
+        calendarManager.progressData.first { entry in
             calendar.isDate(entry.key, inSameDayAs: targetDate)
         }?.value
     }
     
     private func daysInWeek() -> [Date] {
-        guard let startOfWeek = calendar.date(
-            byAdding: .day,
-            value: weekOffset * 7,
-            to: startOfCurrentWeek()
-        ) else { return [] }
-        
-        return (0..<7).compactMap {
-            calendar.date(byAdding: .day, value: $0, to: startOfWeek)
-        }
-    }
-    
-    private func startOfCurrentWeek() -> Date {
-        let components = calendar.dateComponents(
-            [.yearForWeekOfYear, .weekOfYear],
-            from: Date()
-        )
-        return calendar.date(from: components) ?? Date()
+        return calendarManager.daysInWeek(for: self.weekOffset)
     }
     
     private func dayAbbreviation(for date: Date) -> String {
@@ -166,57 +138,3 @@ struct WeekView: View {
         calendar.component(.day, from: date)
     }
 }
-
-struct WeekView_Previews: PreviewProvider {
-    static var previews: some View {
-        // Get today's date
-        let today = Date()
-        let calendar = Calendar.current
-        
-        // Create dates for this week
-        let monday = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: today))!
-        let tuesday = calendar.date(byAdding: .day, value: 1, to: monday)!
-        let saturday = calendar.date(byAdding: .day, value: 5, to: monday)!
-        
-        // Create progress data for specific dates
-        let progressData: [Date: Double] = [
-            monday: 0.3,    // 30% progress
-            tuesday: 0.7,   // 70% progress
-            saturday: 1.0   // 100% progress
-        ]
-        
-        // Sample usage of WeekView
-        WeekView(
-            weekOffset: 0,  // Current week
-            selectedDate: .constant(today),
-            progressByDate: progressData,
-            highlightedDays: [2, 3, 7]  // Highlight Monday(2), Tuesday(3), Saturday(7)
-        )
-    }
-}
-
-/*
-struct YourMainView: View {
-    @State private var selectedDate = Date()
-    
-    var body: some View {
-        let progressData: [Date: Double] = [
-            // Today with 50% progress
-            Date(): 0.5,
-            
-            // Tomorrow with 30% progress
-            Calendar.current.date(byAdding: .day, value: 1, to: Date())!: 0.3,
-            
-            // Day after tomorrow with 80% progress
-            Calendar.current.date(byAdding: .day, value: 2, to: Date())!: 0.8
-        ]
-        
-        WeekView(
-            weekOffset: 0,
-            selectedDate: $selectedDate,
-            progressByDate: progressData,
-            highlightedWeekdays: [2, 7]  // Monday and Saturday
-        )
-    }
-}
-*/

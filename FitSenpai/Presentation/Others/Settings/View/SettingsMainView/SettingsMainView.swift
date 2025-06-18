@@ -34,62 +34,67 @@ struct SettingsMainView: View {
                 FSTextView("Settings", typography: .h3)
                     .padding(.top, 32)
                 
-                VStack(alignment: .leading, spacing: 4) {
-                    sectionHeader("PROFILE")
-                    VStack(alignment: .leading, spacing: 12) {
-                        profileHeader
-                        profileSection
-                    }
-                }
-                
-                VStack(alignment: .leading, spacing: 4) {
-                    sectionHeader("PREFERENCES")
-                    preferencesSection
-                }
-                
-                VStack(alignment: .leading, spacing: 4) {
-                    sectionHeader("RESTRICTIONS")
-                    restrictionsSection
-                }
-                
-                VStack(alignment: .leading, spacing: 4) {
-                    sectionHeader("SUPPORT & LEGAL")
-                    supportSection
-                }
-                
-                VStack(alignment: .leading, spacing: 4) {
-                    sectionHeader("ACCOUNT")
-                    accountSection
-                }
-                
-                if superwall.canLogout {
-                    deleteAccountButton
-                        .padding(.bottom, 24)
-                }
-                
-               
-                // MARK: Debug menu
-                if !appViewModel.isProduction {
-                    HStack(spacing: 24) {
-                        Spacer()
-                        buildVersionText
-                            .padding(.bottom, 4)
-                        
-                        Menu {
-                            Button(role: .destructive, action: clearAllData) {
-                                Label("Clear All Data", systemImage: "trash")
+                if viewModel.viewState == .loading {
+                    ShimmerSettingsView()
+                } else {
+                    VStack(alignment: .leading, spacing: 32) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            sectionHeader("PROFILE")
+                            VStack(alignment: .leading, spacing: 12) {
+                                profileHeader
+                                profileSection
                             }
-                            
-                            Button(action: clearCache) {
-                                Label("Clear Cache", systemImage: "arrow.triangle.2.circlepath")
-                            }
-                        } label: {
-                            Text("Debug Menu")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
                         }
-                        .padding(.bottom, 8)
-                        Spacer()
+                        
+                        VStack(alignment: .leading, spacing: 4) {
+                            sectionHeader("PREFERENCES")
+                            preferencesSection
+                        }
+                        
+                        VStack(alignment: .leading, spacing: 4) {
+                            sectionHeader("RESTRICTIONS")
+                            restrictionsSection
+                        }
+                        
+                        VStack(alignment: .leading, spacing: 4) {
+                            sectionHeader("SUPPORT & LEGAL")
+                            supportSection
+                        }
+                        
+                        VStack(alignment: .leading, spacing: 4) {
+                            sectionHeader("ACCOUNT")
+                            accountSection
+                        }
+                        
+                        if superwall.canLogout {
+                            deleteAccountButton
+                                .padding(.bottom, 24)
+                        }
+                        
+                        // MARK: Debug menu
+                        if !appViewModel.isProduction {
+                            HStack(spacing: 24) {
+                                Spacer()
+                                buildVersionText
+                                    .padding(.bottom, 4)
+                                
+                                Menu {
+                                    Button(role: .destructive, action: clearAllData) {
+                                        Label("Clear All Data", systemImage: "trash")
+                                    }
+                                    
+                                    Button(action: clearCache) {
+                                        Label("Clear Cache", systemImage: "arrow.triangle.2.circlepath")
+                                    }
+                                } label: {
+                                    Text("Debug Menu")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                                .padding(.bottom, 8)
+                                Spacer()
+                            }
+                        }
                     }
                 }
             }
@@ -146,7 +151,7 @@ struct SettingsMainView: View {
                 }
             }
         }
-        .loadingOverlay(state: $viewModel.viewState)
+//        .reducedWhiteLoadingOverlay(state: $viewModel.viewState)
         .sheet(isPresented: $showSafariView) {
             if let url = safariURL {
                 SafariView(url: url)
@@ -157,7 +162,7 @@ struct SettingsMainView: View {
     private var profileHeader: some View {
         FSCard(borderColor: .gray230) {
             HStack(alignment: .center, spacing: 16) {
-                Image(superwall.canLogout ? .imgDummyProf1 : .avatarPlaceholder)
+                Image(superwall.canLogout ? .avatarPlaceholder : .avatarPlaceholder)
                     .resizable()
                     .frame(width: 75, height: 75)
                     .overlay(alignment: .bottomTrailing) {
@@ -179,7 +184,7 @@ struct SettingsMainView: View {
                         FSPill(text: "GUEST", color: .fsMutedForeground)
                     }
                     
-                    FSTextView(superwall.canLogout ? "bella@fitsenpai.com" : "Anonymous user", typography: .p_ui_medium, color: .fsMutedForeground)
+                    FSTextView(viewModel.user?.email ?? "Anonymous user", typography: .p_ui_medium, color: .fsMutedForeground)
                 }
             }
             .padding(5)

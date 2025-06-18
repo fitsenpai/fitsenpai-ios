@@ -11,7 +11,8 @@ import CoreKit
 protocol SigninUseCaseProtocol {
     func execute(email: String, password: String) async throws -> (FSUser, FSSession)
     func executeWithApple(user: String) async throws -> (FSUser, FSSession)
-    func executeWithGoogle() async throws -> (FSUser, FSSession)
+    func executeWithGoogle() async throws -> String
+    func executeWithGoogleCallback(code: String) async throws -> AuthCallbackResponse
 }
 
 final class SigninUseCase: SigninUseCaseProtocol {
@@ -27,7 +28,11 @@ final class SigninUseCase: SigninUseCaseProtocol {
         return try await authRepository.signInWithApple(user: user)
     }
     
-    func executeWithGoogle() async throws -> (FSUser, FSSession) {
+    func executeWithGoogle() async throws -> String {
         return try await authRepository.signInWithGoogle()
+    }
+    
+    func executeWithGoogleCallback(code: String) async throws -> AuthCallbackResponse {
+        return try await authRepository.getLoginCallback(code: code)
     }
 }

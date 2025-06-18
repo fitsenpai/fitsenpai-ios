@@ -10,9 +10,7 @@ import SwiftUI
 
 // MARK: - ViewModel
 struct FSInfoViewModel {
-    let iconName: String
-    let iconTint: Color
-    let iconBackground: Color
+    let iconName: ImageResource?
     let title: String
     let mainLabel: String
     let buttonLabel: String
@@ -24,9 +22,7 @@ struct FSInfoViewModel {
     
     // Default initializer for testing or previews
     static let defaultConfig = FSInfoViewModel(
-        iconName: "ic_calendar_check",
-        iconTint: .fsAccentForeground,
-        iconBackground: .fsAccent,
+        iconName: .icCalendarCheck,
         title: "Week 5 is now unlocked!",
         mainLabel: "Tap below to generate your new workout and\nmeal plans. This may take a few minutes.",
         buttonLabel: "Generate plans",
@@ -34,6 +30,6 @@ struct FSInfoViewModel {
         buttonAction: { print("Button tapped") }
     )
     
-    static let checkSession = FSInfoViewModel(iconName: "", iconTint: .clear, iconBackground: .clear, title: "", mainLabel: "Checking session...", buttonLabel: "", containerHeight: .infinity, showButton: false, showBorder: false, isLoading: true, buttonAction: {
+    static let checkSession = FSInfoViewModel(iconName: nil, title: "", mainLabel: "Checking session...", buttonLabel: "", containerHeight: .infinity, showButton: false, showBorder: false, isLoading: true, buttonAction: {
     })
 }
