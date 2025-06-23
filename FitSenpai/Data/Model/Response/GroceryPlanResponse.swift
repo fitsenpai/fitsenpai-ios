@@ -1,18 +1,18 @@
 //
-//  MealPlanResponse.swift
+//  GroceryPlanResponse.swift
 //  FitSenpai
 //
-//  Created by Mark Daquis on 5/5/25.
+//  Created by Mark Daquis on 6/23/25.
 //
+
 
 import Foundation
 
-struct MealPlanResponse: Decodable {
+struct GroceryPlanResponse: Decodable {
     let id: Int
-    let plan: [DayMealResponse]
+    let plan: [GroceryWeekDTO]
     let createdAt: String?
     let updatedAt: String?
     let userId: String?
     let profileId: String?
 }
-

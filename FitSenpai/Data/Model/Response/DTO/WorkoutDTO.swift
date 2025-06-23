@@ -7,23 +7,6 @@
 
 import Foundation
 
-struct WorkoutPlanResponse: Decodable {
-    let id: String
-    let plan: [WorkoutWeekDTO]
-    let createdAt: String?
-    let updatedAt: String?
-    let userId: String?
-    let profileId: String?
-    
-    enum CodingKeys: String, CodingKey {
-        case id, plan
-        case createdAt = "created_at"
-        case updatedAt = "updated_at"
-        case userId = "user_id"
-        case profileId = "profile_id"
-    }
-}
-
 struct WorkoutWeekDTO: Decodable {
     let week: Int
     let startDate: String
@@ -55,7 +38,7 @@ struct WorkoutWeekDTO: Decodable {
             week: week,
             startDate: startDate,
             endDate: endDate,
-            days: days.map { $0.toDomain() }
+            days: days.map { $0.toDomain(week: week) }
         )
     }
 }
@@ -90,13 +73,13 @@ struct WorkoutDayDTO: Decodable {
         self.pendingGeneration = try container.decodeIfPresent(Bool.self, forKey: .pendingGeneration) ?? false
     }
     
-    func toDomain() -> WorkoutDay {
+    func toDomain(week: Int) -> WorkoutDay {
         let routines = routines.enumerated()
             .map({ (index, data) in
-                let domain = data.toDomain()
+                let domain = data.toDomain(week: week, day: day)
                 domain.sortIndex = index
                 return domain
             })
-        return .init(id: id, routines: routines, totalTime: totalTime, day: day, totalRoutines: totalRoutines, title: title, pendingGeneration: pendingGeneration)
+        return .init(id: id, week: week, routines: routines, totalTime: totalTime, day: day, totalRoutines: totalRoutines, title: title, pendingGeneration: pendingGeneration)
     }
 }

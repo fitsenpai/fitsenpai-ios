@@ -35,25 +35,25 @@ import SwiftData
 
 @Model class MealEntity {
     var name: String
-    var ingredients: [String]
+    var ingredients: String
     var imageUrl: String
-    var recipe: [String]
+    var recipe: String
     var macros: MacrosEntity
     
     init(name: String, ingredients: [String], imageUrl: String, recipe: [String], macros: MacrosEntity) {
         self.name = name
-        self.ingredients = ingredients
+        self.ingredients = ingredients.joined(separator: ",")
         self.imageUrl = imageUrl
-        self.recipe = recipe
+        self.recipe = recipe.joined(separator: ",")
         self.macros = macros
     }
 
     func toDomain() -> Meal {
         return Meal(
             name: name,
-            ingredients: ingredients,
+            ingredients: ingredients.split(separator: ",").map(String.init),
             imageUrl: imageUrl,
-            recipe: recipe,
+            recipe: recipe.split(separator: ",").map(String.init),
             macros: macros.toDomain()
         )
     }

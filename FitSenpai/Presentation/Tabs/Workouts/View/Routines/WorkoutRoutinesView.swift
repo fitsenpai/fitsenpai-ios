@@ -10,16 +10,18 @@ import SwiftUI
 struct WorkoutRoutinesView: View {
     @EnvironmentObject private var viewModel: WorkoutsViewModel
     @State private var selectedRoutine: WorkoutRoutine?
-    @State private var selectedIdex: Int = 0
+    
+    private var sortedRoutines: [WorkoutRoutine] {
+        viewModel.routines.sorted(by: { $0.sortIndex < $1.sortIndex })
+    }
     
     var body: some View {
         ScrollView {
             VStack(spacing: 12) {
-                ForEach(viewModel.routines.indices.sorted(by: { viewModel.routines[$0].sortIndex < viewModel.routines[$1].sortIndex }), id: \.self) { index in
-                    WorkoutRoutineItemView(routine: $viewModel.routines[index])
+                ForEach(sortedRoutines, id: \.id) { routine in
+                    WorkoutRoutineItemView(routine: binding(for: routine))
                         .onTapGesture {
-                            self.selectedRoutine = viewModel.routines[index]
-                            self.selectedIdex = index
+                            self.selectedRoutine = routine
                             triggerHaptics()
                         }
                 }
@@ -27,8 +29,15 @@ struct WorkoutRoutinesView: View {
             .padding(.horizontal, 1)
         }
         .scrollIndicators(.hidden)
-        .sheet(item: $selectedRoutine) { _ in
-            WorkoutDetailView(routine: $viewModel.routines[selectedIdex])
+        .sheet(item: $selectedRoutine) { routine in
+            WorkoutDetailView(routine: binding(for: routine))
         }
+    }
+    
+    private func binding(for routine: WorkoutRoutine) -> Binding<WorkoutRoutine> {
+        guard let index = viewModel.routines.firstIndex(where: { $0.id == routine.id }) else {
+            return .constant(routine)
+        }
+        return $viewModel.routines[index]
     }
 }

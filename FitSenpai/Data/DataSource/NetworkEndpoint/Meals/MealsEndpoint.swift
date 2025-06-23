@@ -10,6 +10,7 @@ import Foundation
 import CoreKit
 
 enum MealsEndpoint {
+    case getMealPlan
     case generateMealsDemo(_ params: ParameterProtocol)
 }
 
@@ -17,6 +18,8 @@ extension MealsEndpoint: NetworkEndpoint {
     
     var path: String {
         switch self {
+        case .getMealPlan:
+            return "/meals"
         case .generateMealsDemo:
             return "/meals/demo"
         }
@@ -24,6 +27,7 @@ extension MealsEndpoint: NetworkEndpoint {
     
     var method: HTTPMethod {
         switch self {
+        case .getMealPlan: .get
         case .generateMealsDemo: .post
         }
     }
@@ -44,6 +48,8 @@ extension MealsEndpoint: NetworkEndpoint {
         switch self {
         case let .generateMealsDemo(params):
             return params.toDictionary()
+        default:
+            return nil
         }
     }
     

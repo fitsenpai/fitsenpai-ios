@@ -10,6 +10,7 @@ import SwiftUI
 struct MealsView: View {
     
     @StateObject private var viewModel: MealsViewModel = MealsViewModel()
+    @StateObject private var calendarManager = CalendarDataManager.shared
     
     let columns = [
         GridItem(.flexible(), spacing: 8),
@@ -20,7 +21,7 @@ struct MealsView: View {
         .init(
             iconName: nil,
             title: "Generating meals...",
-            mainLabel: "This won’t take long. Please don’t exit.",
+            mainLabel: "This won't take long. Please don't exit.",
             buttonLabel: "",
             containerHeight: .infinity,
             showButton: false,
@@ -45,7 +46,7 @@ struct MealsView: View {
             }
         )
     }
-
+    
     func errorInfoViewModel(error: Error) -> FSInfoViewModel {
         .init(
             iconName: .iconBoxWarning,
@@ -65,7 +66,9 @@ struct MealsView: View {
         MainContainerView {
             VStack(spacing: 20) {
                 switch viewModel.viewState {
-                case .loading, .fetching, .updating:
+                case .loading:
+                    ShimmerMealsView()
+                case   .fetching, .updating:
                     FSInfoView(viewModel: generatingViewModel)
                         .padding(.vertical, 12)
                 case .idle:
@@ -115,8 +118,21 @@ struct MealsView: View {
                 case .error(let error):
                     FSInfoView(viewModel: errorInfoViewModel(error: error))
                         .padding(.vertical, 12)
+                    Spacer()
                 default:
                     Text("Unhandled view state.") // Fallback
+                }
+            }
+            .onReceive(calendarManager.$selectedDate, perform: { date in
+                viewModel.updateSelectedMealData(for: date)
+            })
+            .onReceive(viewModel.$mealsWeek, perform: { weeks in
+                configureCalendar(with: weeks)
+            })
+            // This helps if the view appears after the initial data load.
+            .onAppear {
+                if !viewModel.mealsWeek.isEmpty {
+                    viewModel.updateSelectedMealData(for: calendarManager.selectedDate)
                 }
             }
         }
@@ -134,6 +150,27 @@ struct MealsView: View {
                 MacrosItemView(name: "Fat", metric: .Fat, value: macros.fat, fontColor: .fatPurple, bgColor: .fatPurpleBG)
             }
         }
+    }
+    
+    private func configureCalendar(with weeks: [WeekPlan<MealsDay>]) {
+        if !weeks.isEmpty,
+           let firstWeekStartDateString = weeks.min(by: { $0.week < $1.week })?.startDate,
+           let overallStartDate = firstWeekStartDateString.toDate(format: "yyyy-MM-dd") {
+            
+            let overallEndDate = weeks.max(by: {
+                $0.endDate.toDate(format: "yyyy-MM-dd") ?? Date.distantPast <
+                    $1.endDate.toDate(format: "yyyy-MM-dd") ?? Date.distantPast
+            })?.endDate.toDate(format: "yyyy-MM-dd") ?? Date()
+            
+            let currentDateToMaintain = calendarManager.selectedDate
+            calendarManager.configure(startDate: overallStartDate, endDate: max(overallEndDate, Date()))
+            calendarManager.selectedDate = currentDateToMaintain
+            
+        } else {
+            calendarManager.configure(startDate: Date(), endDate: Date())
+        }
+        
+        viewModel.updateSelectedMealData(for: calendarManager.selectedDate)
     }
 }
 

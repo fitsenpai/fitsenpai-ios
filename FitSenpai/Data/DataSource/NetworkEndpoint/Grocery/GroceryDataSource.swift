@@ -10,7 +10,7 @@ import Foundation
 import CoreKit
 
 protocol GroceryDataSourceProtocol {
-    func generateGroceryPlan() async throws -> MealPlanResponse
+    func getGroceriesPlan() async throws -> GroceryPlanResponse
 }
 
 final class GroceryDataSource: GroceryDataSourceProtocol {
@@ -21,7 +21,7 @@ final class GroceryDataSource: GroceryDataSourceProtocol {
     
     // MARK: - API Calls
     
-    func generateGroceryPlan() async throws -> MealPlanResponse {
+    func getGroceriesPlan() async throws -> GroceryPlanResponse {
         return try await networkService.request(.getGroceries)
     }
 }

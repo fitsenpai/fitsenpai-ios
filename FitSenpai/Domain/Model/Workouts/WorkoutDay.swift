@@ -10,6 +10,7 @@ import Foundation
 
 class WorkoutDay: DomainProtocol {
     var id: String
+    var week: Int
     var routines: [WorkoutRoutine]
     var totalTime: String
     var day: String
@@ -17,8 +18,9 @@ class WorkoutDay: DomainProtocol {
     var title: String
     var pendingGeneration: Bool
     
-    init(id: String, routines: [WorkoutRoutine], totalTime: String, day: String, totalRoutines: String, title: String, pendingGeneration: Bool) {
+    init(id: String, week: Int, routines: [WorkoutRoutine], totalTime: String, day: String, totalRoutines: String, title: String, pendingGeneration: Bool) {
         self.id = id
+        self.week = week
         self.routines = routines
         self.totalTime = totalTime
         self.day = day
@@ -30,6 +32,7 @@ class WorkoutDay: DomainProtocol {
     func toEntity() -> WorkoutDayEntity {
         return WorkoutDayEntity(
             id: id,
+            week: week,
             routines: routines.sorted(by: { $0.sortIndex < $1.sortIndex }).map { $0.toEntity() },
             totalTime: totalTime,
             day: day,
@@ -42,6 +45,8 @@ class WorkoutDay: DomainProtocol {
 
 class WorkoutRoutine: Identifiable {
     var id: String
+    var week: Int
+    var day: String
     var name: String
     var muscleGroup: String?
     var routineCount: String?
@@ -54,9 +59,11 @@ class WorkoutRoutine: Identifiable {
     var sortIndex: Int
     var isCompleted: Bool
     
-    init(id: String = UUID().uuidString, name: String? = nil, muscleGroup: String? = nil, routineCount: String? = nil, duration: String? = nil, instructions: [String]? = nil, repetition: String? = nil, sets: String? = nil, load: String? = nil, gifUrl: String? = nil, sortIndex: Int = 0, isCompleted: Bool) {
-        self.id = id
-        self.name = name ?? ""
+    init(week: Int, day: String, name: String, muscleGroup: String? = nil, routineCount: String? = nil, duration: String? = nil, instructions: [String]? = nil, repetition: String? = nil, sets: String? = nil, load: String? = nil, gifUrl: String? = nil, sortIndex: Int = 0, isCompleted: Bool) {
+        self.id = "\(name)-\(day)-\(week)"
+        self.day = day
+        self.week = week
+        self.name = name
         self.muscleGroup = muscleGroup
         self.routineCount = routineCount
         self.duration = duration
@@ -72,6 +79,8 @@ class WorkoutRoutine: Identifiable {
     func toEntity() -> RoutineEntity {
         return RoutineEntity(
             id: id,
+            week: week,
+            day: day,
             name: name,
             muscleGroup: muscleGroup,
             routineCount: routineCount,

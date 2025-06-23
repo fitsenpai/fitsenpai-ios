@@ -94,7 +94,7 @@ struct UserProfile {
         entity.createdAt = self.createdAt
         entity.gender = self.gender?.id
         entity.activityLevel = self.activityLevel?.id
-        entity.previousExperience = self.previousExperience.map({ $0.id })
+        entity.previousExperience = self.previousExperience.map({ $0.id }).joined(separator: ",")
         entity.height = self.height
         entity.weight = self.weight
         entity.systemOfMeasurement = self.systemOfMeasurement?.id
@@ -104,14 +104,14 @@ struct UserProfile {
         entity.fitnessGoal = self.fitnessGoal?.id
         entity.workoutExperience = self.workoutExperience?.id
         entity.workoutLocation = self.workoutLocation?.id
-        entity.workoutDays = self.workoutDays.map({ $0.id })
+        entity.workoutDays = self.workoutDays.map({ $0.id }).joined(separator: ",")
         entity.workoutDuration = self.workoutDuration?.id
-        entity.healthConcerns = self.healthConcerns.map({ $0.id })
+        entity.healthConcerns = self.healthConcerns.map({ $0.id }).joined(separator: ",")
         entity.otherHealthConcern = self.otherHealthConcern
         entity.dietPreference = self.dietPreference?.id
         entity.otherDietPreference = self.otherDietPreference
-        entity.allergies = self.allergies.map({ $0.id })
-        entity.otherAllergies = self.otherAllergies
+        entity.allergies = self.allergies.map({ $0.id }).joined(separator: ",")
+        entity.otherAllergies = self.otherAllergies.joined(separator: ",")
         entity.cookingStyle = self.cookingStyle?.id
         return entity
     }

@@ -24,7 +24,7 @@ extension GroceryEndpoint: NetworkEndpoint {
     
     var method: HTTPMethod {
         switch self {
-        case .getGroceries: .post
+        case .getGroceries: .get
         }
     }
     

@@ -29,7 +29,6 @@ class WorkoutsViewModel: ObservableObject {
     @Inject private var updateRoutineUseCase: UpdateRoutineUseCaseProtocol
 
     private var cancellables = Set<AnyCancellable>()
-    
     var animatedDailyProgress: Double  = 0
 
     init() {
@@ -57,14 +56,21 @@ extension WorkoutsViewModel {
     }
 
     func updateSelectedWorkoutData(for date: Date) {
-        let dateFormat: String? = nil
         if let dayType = WeekDayType(rawValue: date.dayName.lowercased()) {
             self.selectedDay = dayType
         }
         
+        if SuperwallManager.shared.isFirstDayTrialActive {
+            self.selectedWorkoutWeek = workoutWeeks.first
+            self.selectedWorkoutDay = self.selectedWorkoutWeek?.days.first
+            self.routines = selectedWorkoutDay?.routinesSorted().routines ?? []
+            self.updateDailyProgress()
+            return
+        }
+        
         let targetWeek = workoutWeeks.first { weekPlan in
-            guard let weekStartDate = weekPlan.startDate.toDate(format: dateFormat)?.startOfDay,
-                  let weekEndDate = weekPlan.endDate.toDate(format: dateFormat)?.startOfDay,
+            guard let weekStartDate = weekPlan.startDate.toDate(format: nil)?.startOfDay,
+                  let weekEndDate = weekPlan.endDate.toDate(format: nil)?.startOfDay,
                   let nextDayAfterWeekEndDate = Calendar.current.date(byAdding: .day, value: 1, to: weekEndDate) else {
                 return false
             }

@@ -9,19 +9,24 @@ import Foundation
 import CoreKit
 
 protocol MealsDataSourceProtocol {
-    func generateMealPlanDemo(_ params: WorkoutDemoRequest) async throws -> MealPlanResponse
+    func generateMealPlanDemo(_ params: WorkoutDemoRequest) async throws -> MealPlanDemoResponse
+    func getMealPlan() async throws -> MealPlanResponse
 }
 
 final class MealsDataSource: MealsDataSourceProtocol {
-    
+   
     // MARK: - Dependencies
     @Inject(key: "meals")
     private var networkService: NetworkService<MealsEndpoint>
     
     // MARK: - API Calls
     
-    func generateMealPlanDemo(_ params: WorkoutDemoRequest) async throws -> MealPlanResponse {
+    func generateMealPlanDemo(_ params: WorkoutDemoRequest) async throws -> MealPlanDemoResponse {
         return try await networkService.request(.generateMealsDemo(params))
-
     }
+    
+    func getMealPlan() async throws -> MealPlanResponse {
+        return try await networkService.request(.getMealPlan)
+    }
+
 }

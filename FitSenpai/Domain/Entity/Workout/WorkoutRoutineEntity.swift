@@ -10,11 +10,13 @@ import SwiftData
 @Model
 class RoutineEntity: Identifiable {
     @Attribute(.unique) var id: String
-    var name: String?
+    var week: Int
+    var day: String
+    var name: String
     var muscleGroup: String?
     var routineCount: String?
     var duration: String?
-    var instructions: [String]?
+    var instructions: String?
     var repetition: String?
     var sets: String?
     var load: String?
@@ -23,13 +25,15 @@ class RoutineEntity: Identifiable {
     var isCompleted: Bool
     var workoutDay: WorkoutDayEntity?
 
-    init(id: String, name: String? = nil, muscleGroup: String? = nil, routineCount: String? = nil, duration: String? = nil, instructions: [String]? = nil, repetition: String? = nil, sets: String? = nil, load: String? = nil, gifUrl: String? = nil, sortIndex: Int = 0, isCompleted: Bool = false, workoutDay: WorkoutDayEntity? = nil) {
+    init(id: String, week: Int, day: String, name: String, muscleGroup: String? = nil, routineCount: String? = nil, duration: String? = nil, instructions: [String]? = nil, repetition: String? = nil, sets: String? = nil, load: String? = nil, gifUrl: String? = nil, sortIndex: Int = 0, isCompleted: Bool = false, workoutDay: WorkoutDayEntity? = nil) {
         self.id = id
         self.name = name
+        self.week = week
+        self.day = day
         self.muscleGroup = muscleGroup
         self.routineCount = routineCount
         self.duration = duration
-        self.instructions = instructions
+        self.instructions = instructions?.joined(separator: ",")
         self.repetition = repetition
         self.sets = sets
         self.load = load
@@ -41,12 +45,13 @@ class RoutineEntity: Identifiable {
 
     func toDomain() -> WorkoutRoutine {
         return WorkoutRoutine(
-            id: id,
+            week: week,
+            day: day,
             name: name,
             muscleGroup: muscleGroup,
             routineCount: routineCount,
             duration: duration,
-            instructions: instructions,
+            instructions: instructions?.split(separator: ",").map(String.init),
             repetition: repetition,
             sets: sets,
             load: load,

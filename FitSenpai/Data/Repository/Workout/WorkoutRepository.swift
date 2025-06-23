@@ -23,7 +23,7 @@ final class WorkoutRepository: WorkoutRepositoryProtocol {
     }
     
     func generateWorkoutDemo(_ params: WorkoutDemoRequest) async throws -> [WeekPlan<WorkoutDay>] {
-        let workoutDay = try await remoteDataSource.generateWorkoutDemo(params).toDomain()
+        let workoutDay = try await remoteDataSource.generateWorkoutDemo(params).toDomain(week: 1)
         let workoutWeek = WeekPlan<WorkoutDay>.init(week: 1, startDate: Date().formatted(), endDate: Date().formatted(), days: [workoutDay])
         
         workoutDataStore.deleteAll()

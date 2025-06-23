@@ -14,11 +14,24 @@ final class GroceryRepository: GroceryRepositoryProtocol {
     @Inject private var remoteDataSource: GroceryDataSourceProtocol
     @Inject private var groceriesDataStore: GroceriesDataStore
     
+    @AppState(\.trialStartDate) private var trialStartDate
+
     func getGroceries() async throws -> [GroceryWeek] {
-        await groceriesDataStore.items.map({ $0.toDomain() })
+        if trialStartDate != nil {
+            return groceriesDataStore.items.map({ $0.toDomain() })
+        } else {
+            let response = try await remoteDataSource.getGroceriesPlan()
+            groceriesDataStore.deleteAll()
+            let domainPlan = response.plan.map({ plan in
+                return plan.toDomain()
+            })
+            groceriesDataStore.addBatch(domainPlan.map({ $0.toEntity() }))
+            
+            return domainPlan
+        }
     }
     
     func updateGrocery(_ entity: GroceryWeekEntity) async throws {
-        await groceriesDataStore.updateSelectedItem(entity)
+        groceriesDataStore.updateSelectedItem(entity)
     }
 }

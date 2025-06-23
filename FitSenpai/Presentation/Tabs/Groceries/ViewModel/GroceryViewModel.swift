@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  GroceryViewModel.swift
 //  FitSenpai
 //
 //  Created by Mark Daquis on 5/16/25.
@@ -19,26 +19,16 @@ class GroceryViewModel: ObservableObject {
     @Published var selectionProgress: Double = 0.0
     @Published var totalCount: String = ""
     @Published var groceryWeeks: [GroceryWeek] = []
+    @Published var selectedGroceryWeek: GroceryWeek?
     @Published var groceryWeek: GroceryWeek?
-    @Published var shoppingCategoryList: [ShoppingCategory] = [] {
-        didSet {
-            if !isUpdatingFromStore {
-                observeItemChanges()
-                recalculateProgress(fromUserInteraction: true)
-            } else {
-                observeItemChanges()
-                recalculateProgress(fromUserInteraction: false)
-            }
-        }
-    }
+    @Published var shoppingCategoryList: [ShoppingCategory] = []
+    @Published var activeWeek: Int = 1
+    @Published var selectedDay: WeekDayType = .monday
 
     private var cancellables = Set<AnyCancellable>()
     private var itemCancellables = Set<AnyCancellable>()
-    
-    private var isUpdatingFromStore: Bool = false
 
     init() {
-        observeGroceryData()
         Task {
             await getGroceryPlan()
         }
@@ -70,53 +60,52 @@ extension GroceryViewModel {
 }
 
 extension GroceryViewModel {
-    private func observeGroceryData() {
-        groceriesDataStore.$items
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] groceryWeekEntities in
-                guard let self else { return }
-                self.isUpdatingFromStore = true
-
-                self.groceryWeeks = groceryWeekEntities.map { $0.toDomain() }
-                self.groceryWeek = self.groceryWeeks.first
-                
-                let unsortedShoppingCategories = self.groceryWeek?.shopping ?? []
-                self.shoppingCategoryList = unsortedShoppingCategories.sorted { $0.category.lowercased() < $1.category.lowercased() }
-                
-                if groceryWeekEntities.isEmpty {
-                    if self.viewState != .error(NSError()) {
-                        self.viewState = .idle
-                    }
-                } else {
-                     if self.viewState != .error(NSError()) {
-                        self.viewState = .idle
-                    }
-                }
-                
-                self.isUpdatingFromStore = false
-            }
-            .store(in: &cancellables)
-    }
-
     func getGroceryPlan() async  {
-        switch viewState {
-            case .loading, .fetching, .updating:
-                return
-            default:
-                break
-        }
-
         viewState = .loading
+        defer { viewState = .idle }
         do {
-            _ = try await groceryPlanUseCase.execute()
-            
-            if viewState == .loading {
-                viewState = .idle
-            }
+            self.groceryWeeks = try await groceryPlanUseCase.execute()
+            let currentActiveWeek = String(self.activeWeek)
+            self.selectedGroceryWeek = self.groceryWeeks.first(where: { $0.week == currentActiveWeek })
+            self.updateSelectedGroceryData(for: Date())
         } catch {
             FSLogger.error("Failed to get grocery plan: \(error.localizedDescription)")
             viewState = .error(error)
         }
+    }
+    
+    func updateSelectedGroceryData(for date: Date) {
+        let dateFormat: String? = nil
+        if let dayType = WeekDayType(rawValue: date.dayName.lowercased()) {
+            self.selectedDay = dayType
+        }
+        
+        if SuperwallManager.shared.isFirstDayTrialActive {
+            self.selectedGroceryWeek = self.groceryWeeks.first
+            self.groceryWeek = self.selectedGroceryWeek
+            self.updateShoppingCategories()
+            return
+        }
+        
+        let targetWeek = self.groceryWeeks.first { weekPlan in
+            guard let weekStartDate = weekPlan.startDate.toDate(format: dateFormat)?.startOfDay,
+                  let weekEndDate = weekPlan.endDate.toDate(format: dateFormat)?.startOfDay,
+                  let nextDayAfterWeekEndDate = Calendar.current.date(byAdding: .day, value: 1, to: weekEndDate) else {
+                return false
+            }
+            return date.startOfDay >= weekStartDate && date.startOfDay < nextDayAfterWeekEndDate
+        }
+        
+        self.selectedGroceryWeek = targetWeek
+        self.groceryWeek = self.selectedGroceryWeek
+        self.updateShoppingCategories()
+    }
+    
+    private func updateShoppingCategories() {
+        let unsortedShoppingCategories = self.groceryWeek?.shopping ?? []
+        self.shoppingCategoryList = unsortedShoppingCategories.sorted { $0.category.lowercased() < $1.category.lowercased() }
+        observeItemChanges()
+        recalculateProgress(fromUserInteraction: false)
     }
     
     func recalculateProgress(fromUserInteraction: Bool = false) {
@@ -136,7 +125,6 @@ extension GroceryViewModel {
             Task { @MainActor in
                 try? await updateGroceryUseCase.execute(groceryWeek.toEntity())
             }
-        } else {
         }
     }
 }

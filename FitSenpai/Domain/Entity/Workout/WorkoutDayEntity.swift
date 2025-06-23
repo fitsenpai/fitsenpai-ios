@@ -10,6 +10,7 @@ import SwiftData
 @Model class WorkoutDayEntity {
     var id: String
     @Relationship(deleteRule: .cascade, inverse: \RoutineEntity.workoutDay)
+    var week: Int
     var routines: [RoutineEntity]
     var totalTime: String
     var day: String
@@ -18,8 +19,9 @@ import SwiftData
     var pendingGeneration: Bool
     var workoutWeek: WorkoutWeekEntity?
     
-    init(id: String, routines: [RoutineEntity] = [], totalTime: String, day: String, totalRoutines: String, title: String, pendingGeneration: Bool, workoutWeek: WorkoutWeekEntity? = nil) {
+    init(id: String, week: Int, routines: [RoutineEntity] = [], totalTime: String, day: String, totalRoutines: String, title: String, pendingGeneration: Bool, workoutWeek: WorkoutWeekEntity? = nil) {
         self.id = id
+        self.week = week
         self.routines = routines
         self.totalTime = totalTime
         self.day = day
@@ -34,6 +36,7 @@ extension WorkoutDayEntity {
     func toDomain() -> WorkoutDay {
         return WorkoutDay(
             id: id,
+            week: week,
             routines: routines.map({ $0.toDomain() }),
             totalTime: totalTime,
             day: day,
