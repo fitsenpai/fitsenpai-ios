@@ -21,7 +21,6 @@ class MealsViewModel: ObservableObject {
     @Published var viewState: ViewState = .loading
     @Published var selectedMeal: Meal?
     @Published var selectedMealType: MealType = .breakfast
-    @Published var activeWeek: Int = 1
     @Published var selectedDay: WeekDayType = .monday
     
     private var cancellables = Set<AnyCancellable>()
@@ -40,8 +39,6 @@ extension MealsViewModel {
         defer { viewState = .idle }
         do {
             self.mealsWeek = try await mealsPlanUseCase.execute()
-            let currentActiveWeek = self.activeWeek
-            self.selectedMealWeek = self.mealsWeek.first(where: { $0.week == currentActiveWeek })
             self.updateSelectedMealData(for: Date())
         } catch {
             FSLogger.error("Failed to get meal plan: \(error.localizedDescription)")
@@ -75,7 +72,6 @@ extension MealsViewModel {
         
         if let week = targetWeek, let dayType = WeekDayType(rawValue: date.dayName.lowercased()) {
             self.selectedMealDay = week.days.first { $0.day.lowercased() == dayType.rawValue }
-            // Set mealDay for backward compatibility with existing UI
             self.mealDay = self.selectedMealDay
         } else {
             self.selectedMealDay = nil

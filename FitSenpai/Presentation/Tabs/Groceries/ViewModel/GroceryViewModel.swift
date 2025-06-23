@@ -22,7 +22,6 @@ class GroceryViewModel: ObservableObject {
     @Published var selectedGroceryWeek: GroceryWeek?
     @Published var groceryWeek: GroceryWeek?
     @Published var shoppingCategoryList: [ShoppingCategory] = []
-    @Published var activeWeek: Int = 1
     @Published var selectedDay: WeekDayType = .monday
 
     private var cancellables = Set<AnyCancellable>()
@@ -65,8 +64,6 @@ extension GroceryViewModel {
         defer { viewState = .idle }
         do {
             self.groceryWeeks = try await groceryPlanUseCase.execute()
-            let currentActiveWeek = String(self.activeWeek)
-            self.selectedGroceryWeek = self.groceryWeeks.first(where: { $0.week == currentActiveWeek })
             self.updateSelectedGroceryData(for: Date())
         } catch {
             FSLogger.error("Failed to get grocery plan: \(error.localizedDescription)")

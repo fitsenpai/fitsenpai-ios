@@ -9,8 +9,8 @@ import Foundation
 
 final class WorkoutDataStore: SwiftDataStore<WorkoutWeekEntity> {
     
-    func updateSelectedItem(week: Int, days: [WorkoutDayEntity]) {
-        guard let entity = items.first(where: { $0.week == week }) else { return }
+    func updateSelectedItem(startDate: String, endDate: String, days: [WorkoutDayEntity]) {
+        guard let entity = items.first(where: { $0.startDate == startDate && $0.endDate == endDate }) else { return }
         
         entity.days = days
         update(entity)
@@ -23,14 +23,14 @@ final class WorkoutDataStore: SwiftDataStore<WorkoutWeekEntity> {
         }
     }
     
-    func delete(by week: Int) {
-        guard let entity = items.first(where: { $0.week == week }) else {
-            FSLogger.error("\(week) not found")
+    func delete(by startDate: String, endDate: String) {
+        guard let entity = items.first(where: { $0.startDate == startDate && $0.endDate == endDate }) else {
+            FSLogger.error("Week with dates \(startDate) - \(endDate) not found")
             return
         }
         delete(entity)
     }
-    
+
     /// Deletes all messages from the data store.
     func deleteAll() {
         items.forEach { item in

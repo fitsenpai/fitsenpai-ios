@@ -10,14 +10,12 @@ import Foundation
 import SwiftData
 
 @Model class GroceryWeekEntity {
-    var week: String
     var startDate: String
     var endDate: String
     var shopping: [ShoppingCategoryEntity]
     var totalEstimatedPrice: String
     
-    init(week: String, startDate: String, endDate: String, shopping: [ShoppingCategoryEntity], totalEstimatedPrice: String) {
-        self.week = week
+    init(startDate: String, endDate: String, shopping: [ShoppingCategoryEntity], totalEstimatedPrice: String) {
         self.startDate = startDate
         self.endDate = endDate
         self.shopping = shopping
@@ -26,7 +24,6 @@ import SwiftData
 
     func toDomain() -> GroceryWeek {
         return GroceryWeek(
-            week: week,
             startDate: startDate,
             endDate: endDate,
             shopping: shopping.map { $0.toDomain() },

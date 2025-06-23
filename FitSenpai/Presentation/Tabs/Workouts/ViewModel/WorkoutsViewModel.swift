@@ -21,7 +21,6 @@ class WorkoutsViewModel: ObservableObject {
     @Published var selectedRoutine: WorkoutRoutine?
     @Published var showingDetail = false
     @Published var showRateApp = false
-    @Published var activeWeek: Int = 1
     @Published var selectedDay: WeekDayType = .monday
 
     @Inject private var workoutPlanUseCase: WorkoutPlanUseCaseProtocol
@@ -47,7 +46,6 @@ extension WorkoutsViewModel {
         defer { viewState = .idle }
         do {
             self.workoutWeeks = try await workoutPlanUseCase.execute()
-            self.selectedWorkoutWeek = workoutWeeks.first(where: { $0.week == activeWeek })
             self.updateSelectedWorkoutData(for: Date())
         } catch {
             FSLogger.error("Failed to get workout plan: \(error.localizedDescription)")

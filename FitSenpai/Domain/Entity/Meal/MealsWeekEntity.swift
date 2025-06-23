@@ -8,13 +8,11 @@
 import SwiftData
 
 @Model class MealsWeekEntity {
-    var week: Int
     var startDate: String
     var endDate: String
     var days: [MealDayEntity]
 
-    init(week: Int, startDate: String, endDate: String, days: [MealDayEntity]) {
-        self.week = week
+    init(startDate: String, endDate: String, days: [MealDayEntity]) {
         self.startDate = startDate
         self.endDate = endDate
         self.days = days
@@ -24,7 +22,6 @@ import SwiftData
 extension MealsWeekEntity {
     func toDomain() -> WeekPlan<MealsDay> {
         return WeekPlan<MealsDay>(
-            week: week,
             startDate: startDate,
             endDate: endDate,
             days: days.map { $0.toDomain() }

@@ -18,8 +18,9 @@ struct RoutineDTO: Decodable {
     let duration: String?
     let gifUrl: String?
     let instructions: [String]?
+    let completed: Bool?
     
-    func toDomain(week: Int, day: String) -> WorkoutRoutine {
-        .init(week: week, day: day, name: name ?? "", muscleGroup: muscleGroup, routineCount: routineCount, duration: duration, instructions: instructions, repetition: repetition, sets: sets, load: load, gifUrl: gifUrl, isCompleted: false)
+    func toDomain(date: String) -> WorkoutRoutine {
+        .init(date: date, name: name ?? "", muscleGroup: muscleGroup, routineCount: routineCount, duration: duration, instructions: instructions, repetition: repetition, sets: sets, load: load, gifUrl: gifUrl, isCompleted: completed ?? false)
     }
 }

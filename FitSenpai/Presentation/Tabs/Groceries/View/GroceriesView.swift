@@ -74,9 +74,6 @@ struct GroceriesView: View {
             .onReceive(calendarManager.$selectedDate, perform: { date in
                 viewModel.updateSelectedGroceryData(for: date)
             })
-            .onReceive(viewModel.$groceryWeeks, perform: { weeks in
-                configureCalendar(with: weeks)
-            })
             // This helps if the view appears after the initial data load.
             .onAppear {
                 if !viewModel.groceryWeeks.isEmpty {
@@ -133,27 +130,6 @@ struct GroceriesView: View {
             .padding(.horizontal, 1)
         }
         .scrollIndicators(.hidden)
-    }
-    
-    private func configureCalendar(with weeks: [GroceryWeek]) {
-        if !weeks.isEmpty,
-           let firstWeekStartDateString = weeks.min(by: { $0.week < $1.week })?.startDate,
-           let overallStartDate = firstWeekStartDateString.toDate(format: "yyyy-MM-dd") {
-
-            let overallEndDate = weeks.max(by: {
-                $0.endDate.toDate(format: "yyyy-MM-dd") ?? Date.distantPast <
-                $1.endDate.toDate(format: "yyyy-MM-dd") ?? Date.distantPast
-            })?.endDate.toDate(format: "yyyy-MM-dd") ?? Date()
-
-            let currentDateToMaintain = calendarManager.selectedDate
-            calendarManager.configure(startDate: overallStartDate, endDate: max(overallEndDate, Date()))
-            calendarManager.selectedDate = currentDateToMaintain
-
-        } else {
-            calendarManager.configure(startDate: Date(), endDate: Date())
-        }
-
-        viewModel.updateSelectedGroceryData(for: calendarManager.selectedDate)
     }
 }
 

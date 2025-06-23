@@ -11,13 +11,11 @@ protocol DomainProtocol {
 }
 
 class WeekPlan<T: DomainProtocol> {
-    var week: Int
     var startDate: String
     var endDate: String
     var days: [T]
 
-    init(week: Int, startDate: String, endDate: String, days: [T]) {
-        self.week = week
+    init(startDate: String, endDate: String, days: [T]) {
         self.startDate = startDate
         self.endDate = endDate
         self.days = days
@@ -27,7 +25,6 @@ class WeekPlan<T: DomainProtocol> {
 extension WeekPlan where T.Entity == WorkoutDayEntity {
     func toEntity() -> WorkoutWeekEntity {
         return WorkoutWeekEntity(
-            week: week,
             startDate: startDate,
             endDate: endDate,
             days: days.map { $0.toEntity() }
@@ -38,7 +35,6 @@ extension WeekPlan where T.Entity == WorkoutDayEntity {
 extension WeekPlan where T.Entity == MealDayEntity {
     func toEntity() -> MealsWeekEntity {
         return MealsWeekEntity(
-            week: week,
             startDate: startDate,
             endDate: endDate,
             days: days.map { $0.toEntity() }

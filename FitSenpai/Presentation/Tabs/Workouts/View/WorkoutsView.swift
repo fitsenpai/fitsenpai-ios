@@ -111,7 +111,10 @@ struct WorkoutsView: View {
     
     private func configureCalendar(with weeks: [WeekPlan<WorkoutDay>]) {
         if !weeks.isEmpty,
-           let firstWeekStartDateString = weeks.min(by: { $0.week < $1.week })?.startDate,
+           let firstWeekStartDateString = weeks.min(by: { 
+               $0.startDate.toDate(format: "yyyy-MM-dd") ?? Date.distantFuture <
+               $1.startDate.toDate(format: "yyyy-MM-dd") ?? Date.distantFuture
+           })?.startDate,
            let overallStartDate = firstWeekStartDateString.toDate(format: "yyyy-MM-dd") {
 
             let overallEndDate = weeks.max(by: {

@@ -10,20 +10,20 @@ import Foundation
 
 class WorkoutDay: DomainProtocol {
     var id: String
-    var week: Int
     var routines: [WorkoutRoutine]
     var totalTime: String
     var day: String
+    var date: String
     var totalRoutines: String
     var title: String
     var pendingGeneration: Bool
     
-    init(id: String, week: Int, routines: [WorkoutRoutine], totalTime: String, day: String, totalRoutines: String, title: String, pendingGeneration: Bool) {
+    init(id: String, routines: [WorkoutRoutine], totalTime: String, day: String, date: String, totalRoutines: String, title: String, pendingGeneration: Bool) {
         self.id = id
-        self.week = week
         self.routines = routines
         self.totalTime = totalTime
         self.day = day
+        self.date = date
         self.totalRoutines = totalRoutines
         self.title = title
         self.pendingGeneration = pendingGeneration
@@ -32,10 +32,10 @@ class WorkoutDay: DomainProtocol {
     func toEntity() -> WorkoutDayEntity {
         return WorkoutDayEntity(
             id: id,
-            week: week,
             routines: routines.sorted(by: { $0.sortIndex < $1.sortIndex }).map { $0.toEntity() },
             totalTime: totalTime,
             day: day,
+            date: date,
             totalRoutines: totalRoutines,
             title: title,
             pendingGeneration: pendingGeneration
@@ -43,83 +43,3 @@ class WorkoutDay: DomainProtocol {
     }
 }
 
-class WorkoutRoutine: Identifiable {
-    var id: String
-    var week: Int
-    var day: String
-    var name: String
-    var muscleGroup: String?
-    var routineCount: String?
-    var duration: String?
-    var instructions: [String]
-    var repetition: String?
-    var sets: String?
-    var load: String?
-    var gifUrl: String?
-    var sortIndex: Int
-    var isCompleted: Bool
-    
-    init(week: Int, day: String, name: String, muscleGroup: String? = nil, routineCount: String? = nil, duration: String? = nil, instructions: [String]? = nil, repetition: String? = nil, sets: String? = nil, load: String? = nil, gifUrl: String? = nil, sortIndex: Int = 0, isCompleted: Bool) {
-        self.id = "\(name)-\(day)-\(week)"
-        self.day = day
-        self.week = week
-        self.name = name
-        self.muscleGroup = muscleGroup
-        self.routineCount = routineCount
-        self.duration = duration
-        self.instructions = instructions ?? []
-        self.repetition = repetition
-        self.sets = sets
-        self.load = load
-        self.gifUrl = gifUrl
-        self.sortIndex = sortIndex
-        self.isCompleted = isCompleted
-    }
-    
-    func toEntity() -> RoutineEntity {
-        return RoutineEntity(
-            id: id,
-            week: week,
-            day: day,
-            name: name,
-            muscleGroup: muscleGroup,
-            routineCount: routineCount,
-            duration: duration,
-            instructions: instructions,
-            repetition: repetition,
-            sets: sets,
-            load: load,
-            gifUrl: gifUrl,
-            sortIndex: sortIndex,
-            isCompleted: isCompleted
-        )
-    }
-}
-
-extension WorkoutRoutine {
-    var intReps: Int? {
-        Int(self.repetition ?? "")
-    }
-    
-    var intSets: Int? {
-        Int(self.sets ?? "")
-    }
-    
-    var timerOnly: Bool {
-        intSets == nil && intReps == nil
-    }
-
-    var intDuration: Int? {
-        guard let duration else { return 0 }
-        let durationTime = duration.split(separator: " ").compactMap({ String($0).trimmingCharacters(in: .whitespaces) }).first ?? "0"
-        return Int(durationTime)
-    }
-    
-    var videoURL: URL {
-        URL(string: self.gifUrl ?? "") ?? URL(fileURLWithPath: "")
-    }
-    
-    var muscleGroups: [String] {
-        muscleGroup?.split(separator: ",").compactMap({ String($0).trimmingCharacters(in: .whitespaces) }) ?? []
-    }
-}

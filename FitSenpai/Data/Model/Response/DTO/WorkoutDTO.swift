@@ -8,7 +8,6 @@
 import Foundation
 
 struct WorkoutWeekDTO: Decodable {
-    let week: Int
     let startDate: String
     let endDate: String
     let days: [WorkoutDayDTO]
@@ -19,15 +18,6 @@ struct WorkoutWeekDTO: Decodable {
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-
-        if let intWeek = try? container.decode(Int.self, forKey: .week) {
-            self.week = intWeek
-        } else if let stringWeek = try? container.decode(String.self, forKey: .week), let intFromString = Int(stringWeek) {
-            self.week = intFromString
-        } else {
-            self.week = 0
-        }
-
         self.startDate = try container.decode(String.self, forKey: .startDate)
         self.endDate = try container.decode(String.self, forKey: .endDate)
         self.days = try container.decode([WorkoutDayDTO].self, forKey: .days)
@@ -35,10 +25,9 @@ struct WorkoutWeekDTO: Decodable {
 
     func toDomain() -> WeekPlan<WorkoutDay> {
         return WeekPlan<WorkoutDay>(
-            week: week,
             startDate: startDate,
             endDate: endDate,
-            days: days.map { $0.toDomain(week: week) }
+            days: days.map { $0.toDomain() }
         )
     }
 }
@@ -46,6 +35,7 @@ struct WorkoutWeekDTO: Decodable {
 struct WorkoutDayDTO: Decodable {
     var id: String
     let day: String
+    let date: String
     let title: String
     let totalTime: String
     let totalRoutines: String
@@ -55,6 +45,7 @@ struct WorkoutDayDTO: Decodable {
     enum CodingKeys: CodingKey {
         case id
         case day
+        case date
         case title
         case totalTime
         case totalRoutines
@@ -66,6 +57,7 @@ struct WorkoutDayDTO: Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decodeIfPresent(String.self, forKey: .id) ?? UUID().uuidString
         self.day = try container.decodeIfPresent(String.self, forKey: .day) ?? ""
+        self.date = try container.decodeIfPresent(String.self, forKey: .day) ?? ""
         self.title = try container.decodeIfPresent(String.self, forKey: .title) ?? ""
         self.totalTime = try container.decodeIfPresent(String.self, forKey: .totalTime) ?? ""
         self.totalRoutines = try container.decodeIfPresent(String.self, forKey: .totalRoutines) ?? ""
@@ -73,13 +65,13 @@ struct WorkoutDayDTO: Decodable {
         self.pendingGeneration = try container.decodeIfPresent(Bool.self, forKey: .pendingGeneration) ?? false
     }
     
-    func toDomain(week: Int) -> WorkoutDay {
+    func toDomain() -> WorkoutDay {
         let routines = routines.enumerated()
             .map({ (index, data) in
-                let domain = data.toDomain(week: week, day: day)
+                let domain = data.toDomain(date: date)
                 domain.sortIndex = index
                 return domain
             })
-        return .init(id: id, week: week, routines: routines, totalTime: totalTime, day: day, totalRoutines: totalRoutines, title: title, pendingGeneration: pendingGeneration)
+        return .init(id: id, routines: routines, totalTime: totalTime, day: day, date: date, totalRoutines: totalRoutines, title: title, pendingGeneration: pendingGeneration)
     }
 }

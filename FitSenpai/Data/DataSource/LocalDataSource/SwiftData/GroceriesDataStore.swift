@@ -11,7 +11,7 @@ import Foundation
 final class GroceriesDataStore: SwiftDataStore<GroceryWeekEntity> {
     
     func updateSelectedItem(_ groceryWeek: GroceryWeekEntity) {
-        guard let entity = items.first(where: { $0.week == groceryWeek.week }) else { return }
+        guard let entity = items.first(where: { $0.startDate == groceryWeek.startDate && $0.endDate == groceryWeek.endDate }) else { return }
         
         entity.shopping = groceryWeek.shopping
         update(entity)

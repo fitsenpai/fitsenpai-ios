@@ -8,7 +8,6 @@
 import Foundation
 
 struct DayMealResponse: Decodable {
-    let week: Int
     let startDate: String
     let endDate: String
     let days: [DailyMealPlanDTO]

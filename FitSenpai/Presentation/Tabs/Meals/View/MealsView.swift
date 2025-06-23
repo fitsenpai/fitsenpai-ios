@@ -126,10 +126,6 @@ struct MealsView: View {
             .onReceive(calendarManager.$selectedDate, perform: { date in
                 viewModel.updateSelectedMealData(for: date)
             })
-            .onReceive(viewModel.$mealsWeek, perform: { weeks in
-                configureCalendar(with: weeks)
-            })
-            // This helps if the view appears after the initial data load.
             .onAppear {
                 if !viewModel.mealsWeek.isEmpty {
                     viewModel.updateSelectedMealData(for: calendarManager.selectedDate)
@@ -150,27 +146,6 @@ struct MealsView: View {
                 MacrosItemView(name: "Fat", metric: .Fat, value: macros.fat, fontColor: .fatPurple, bgColor: .fatPurpleBG)
             }
         }
-    }
-    
-    private func configureCalendar(with weeks: [WeekPlan<MealsDay>]) {
-        if !weeks.isEmpty,
-           let firstWeekStartDateString = weeks.min(by: { $0.week < $1.week })?.startDate,
-           let overallStartDate = firstWeekStartDateString.toDate(format: "yyyy-MM-dd") {
-            
-            let overallEndDate = weeks.max(by: {
-                $0.endDate.toDate(format: "yyyy-MM-dd") ?? Date.distantPast <
-                    $1.endDate.toDate(format: "yyyy-MM-dd") ?? Date.distantPast
-            })?.endDate.toDate(format: "yyyy-MM-dd") ?? Date()
-            
-            let currentDateToMaintain = calendarManager.selectedDate
-            calendarManager.configure(startDate: overallStartDate, endDate: max(overallEndDate, Date()))
-            calendarManager.selectedDate = currentDateToMaintain
-            
-        } else {
-            calendarManager.configure(startDate: Date(), endDate: Date())
-        }
-        
-        viewModel.updateSelectedMealData(for: calendarManager.selectedDate)
     }
 }
 

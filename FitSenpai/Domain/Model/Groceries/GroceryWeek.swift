@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct GroceryWeek {
-    let week: String
     let startDate: String
     let endDate: String
     let shopping: [ShoppingCategory]
@@ -16,7 +15,6 @@ struct GroceryWeek {
 
     func toEntity() -> GroceryWeekEntity {
         return GroceryWeekEntity(
-            week: week,
             startDate: startDate,
             endDate: endDate,
             shopping: shopping.map { $0.toEntity() },
