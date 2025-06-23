@@ -10,13 +10,15 @@ struct MealsDay: DomainProtocol {
     let date: String
     let meals: MealsPlan
     let totalDailyMacros: Macros
+    let pendingGeneration: Bool
 
     func toEntity() -> MealDayEntity {
         return MealDayEntity(
             day: day,
             date: date,
             meals: meals.toEntity(),
-            totalDailyMacros: totalDailyMacros.toEntity()
+            totalDailyMacros: totalDailyMacros.toEntity(),
+            pendingGeneration: pendingGeneration
         )
     }
 }

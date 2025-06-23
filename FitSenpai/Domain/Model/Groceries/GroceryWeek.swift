@@ -12,13 +12,15 @@ struct GroceryWeek {
     let endDate: String
     let shopping: [ShoppingCategory]
     let totalEstimatedPrice: String
+    let pendingGeneration: Bool
 
     func toEntity() -> GroceryWeekEntity {
         return GroceryWeekEntity(
             startDate: startDate,
             endDate: endDate,
             shopping: shopping.map { $0.toEntity() },
-            totalEstimatedPrice: totalEstimatedPrice
+            totalEstimatedPrice: totalEstimatedPrice,
+            pendingGeneration: pendingGeneration
         )
     }
 }

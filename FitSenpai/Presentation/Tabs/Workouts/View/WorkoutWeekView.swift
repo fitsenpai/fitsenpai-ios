@@ -11,6 +11,7 @@ import SwiftUI
 struct WorkoutWeekView: View {
     @EnvironmentObject private var superwall: SuperwallManager
     @EnvironmentObject private var viewModel: WorkoutsViewModel
+    @StateObject private var calendarManager = CalendarDataManager.shared
     var workoutWeek: WeekPlan<WorkoutDay>
     
     var planUnavailable: FSInfoViewModel {
@@ -27,9 +28,17 @@ struct WorkoutWeekView: View {
         )
     }
     
+    private var shouldShowGenerateButton: Bool {
+        let selectedDate = calendarManager.selectedDate
+        let currentWeekStart = Calendar.current.dateInterval(of: .weekOfYear, for: Date())?.start ?? Date()
+        let selectedWeekStart = Calendar.current.dateInterval(of: .weekOfYear, for: selectedDate)?.start ?? selectedDate
+        
+        return selectedWeekStart >= currentWeekStart
+    }
+    
     var body: some View {
         VStack(spacing: 16) {
-            FSSectionHeaderView(text: "Workouts") {
+            FSSectionHeaderView(text: "Workouts", showGenerateButton: shouldShowGenerateButton) {
                 triggerHaptics()
                 if superwall.isFirstDayTrialActive {
                     superwall.presentPaywall(for: .proContent)
@@ -50,19 +59,20 @@ struct WorkoutWeekView: View {
 struct WorkoutDayView: View {
     @EnvironmentObject private var viewModel: WorkoutsViewModel
     @StateObject private var calendarManager = CalendarDataManager.shared
+    @State private var pollingTimer: Timer?
 
     var workoutDay: WorkoutDay
     
     var body: some View {
         VStack(spacing: 16) {
-            if workoutDay.pendingGeneration {
-                generateWorkoutInfo
+            if viewModel.isPendingGeneration {
+                pendingGenerationView
             } else {
                 if workoutDay.routines.isEmpty {
                     FSInfoView(viewModel: .init(
                         iconName: .iconBoxHeart,
                         title: "Rest day",
-                        mainLabel: "Your body’s recharging. Recovery is part of \nthe process — you’ve earned this.",
+                        mainLabel: "Your body's recharging. Recovery is part of \nthe process — you've earned this.",
                         buttonLabel: "I want to stay active",
                         buttonAction: {
                             triggerHaptics()
@@ -77,20 +87,47 @@ struct WorkoutDayView: View {
                 }
             }
         }
+        .onChange(of: viewModel.isPendingGeneration) { _, isPending in
+            if isPending {
+                startPolling()
+            } else {
+                stopPolling()
+            }
+        }
+        .onAppear {
+            if viewModel.isPendingGeneration {
+                startPolling()
+            }
+        }
+        .onDisappear {
+            stopPolling()
+        }
     }
     
-    var generateWorkoutInfo: some View {
-        FSInfoView(viewModel: .init(
-            iconName: .iconBoxSparcle,
-            title: "Your workout plan is ready!",
-            mainLabel: "Tap below to generate your new workouts\nfor the week",
-            buttonLabel: "Generate workouts",
-            buttonAction: {
-                triggerHaptics()
-                Task {
-                    await viewModel.generateWorkoutPlan(date: calendarManager.selectedDate)
-                }
+    private func startPolling() {
+        stopPolling()
+        pollingTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { _ in
+            Task {
+                await viewModel.checkWorkoutGenerationStatus()
             }
+        }
+    }
+    
+    private func stopPolling() {
+        pollingTimer?.invalidate()
+        pollingTimer = nil
+    }
+    
+    var pendingGenerationView: some View {
+        FSInfoView(viewModel: .init(
+            iconName: nil,
+            title: "Generating workouts...",
+            mainLabel: "This won’t take long. Please don’t exit.",
+            buttonLabel: "",
+            containerHeight: .infinity,
+            showButton: false,
+            isLoading: true,
+            buttonAction: { }
         ))
     }
 }

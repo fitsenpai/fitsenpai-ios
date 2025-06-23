@@ -1,15 +1,15 @@
 //
-//  GenerateWorkoutRequest.swift
+//  GenerateRequest.swift
 //  FitSenpai
 //
 //  Created by Mark Daquis on 6/23/25.
 //
 
-struct GenerateWorkoutRequest: ParameterProtocol {
+struct GenerateRequest: ParameterProtocol {
     let date: String
 }
 
-struct RegenerateWorkoutRequest: ParameterProtocol {
+struct RegenerateRequest: ParameterProtocol {
     let date: String
     let instruction: String
 }

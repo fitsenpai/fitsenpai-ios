@@ -12,12 +12,14 @@ import SwiftData
     var date: String
     var meals: MealsPlanEntity
     var totalDailyMacros: MacrosEntity
+    var pendingGeneration: Bool
     
-    init(day: String, date: String, meals: MealsPlanEntity, totalDailyMacros: MacrosEntity) {
+    init(day: String, date: String, meals: MealsPlanEntity, totalDailyMacros: MacrosEntity, pendingGeneration: Bool = false) {
         self.day = day
         self.date = date
         self.meals = meals
         self.totalDailyMacros = totalDailyMacros
+        self.pendingGeneration = pendingGeneration
     }
 
     func toDomain() -> MealsDay {
@@ -25,7 +27,8 @@ import SwiftData
             day: day,
             date: date,
             meals: meals.toDomain(),
-            totalDailyMacros: totalDailyMacros.toDomain()
+            totalDailyMacros: totalDailyMacros.toDomain(),
+            pendingGeneration: pendingGeneration
         )
     }
 }

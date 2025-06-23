@@ -31,7 +31,7 @@ extension MealsEndpoint: NetworkEndpoint {
         switch self {
         case .getMealPlan: .get
         case .generateMealsDemo, .generateMealPlan: .post
-        case .regenerateMealPlan: .put
+        case .regenerateMealPlan: .patch
         }
     }
     

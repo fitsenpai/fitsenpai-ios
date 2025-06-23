@@ -9,14 +9,14 @@ import Foundation
 import CoreKit
 
 protocol GenerateMealsPlanUseCaseProtocol {
-    func execute() async throws -> [WeekPlan<MealsDay>]
+    func execute(date: String) async throws
 }
 
 final class GenerateMealsPlanUseCase: GenerateMealsPlanUseCaseProtocol {
     // MARK: - Dependencies
     @Inject private var repository: MealsRepositoryProtocol
     
-    func execute() async throws -> [WeekPlan<MealsDay>] {
-        return try await repository.getMealPlan()
+    func execute(date: String) async throws  {
+        try await repository.generateMealPlan(.init(date: date))
     }
 }

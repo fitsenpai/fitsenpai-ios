@@ -9,8 +9,9 @@ import SwiftUI
 
 struct GroceriesView: View {
     @EnvironmentObject private var superwall: SuperwallManager
-    @StateObject private var viewModel: GroceryViewModel = .init()
+    @ObservedObject var viewModel: MealsViewModel
     @StateObject private var calendarManager = CalendarDataManager.shared
+    @State private var pollingTimer: Timer?
     
     var generatingViewModel: FSInfoViewModel {
         .init(
@@ -35,7 +36,7 @@ struct GroceriesView: View {
             buttonLabel: "Generate list",
             buttonAction: {
                 Task {
-                    await viewModel.getGroceryPlan()
+                    await viewModel.generateMealPlan(date: calendarManager.selectedDate)
                 }
                 triggerHaptics()
             }
@@ -57,7 +58,10 @@ struct GroceriesView: View {
                     FSInfoView(viewModel: generatingViewModel)
                         .padding(.vertical, 12)
                 case .idle:
-                    if !viewModel.shoppingCategoryList.isEmpty {
+                    if viewModel.isGroceryGenerationPending {
+                        FSInfoView(viewModel: generatingViewModel)
+                            .padding(.vertical, 12)
+                    } else if !viewModel.shoppingCategoryList.isEmpty {
                         contentView
                         groceryListView
                     } else {
@@ -67,22 +71,53 @@ struct GroceriesView: View {
                 case .error(let error):
                     FSInfoView(viewModel: errorInfoViewModel(error: error))
                         .padding(.vertical, 12)
+                    Spacer()
                 default:
-                    Text("Unhandled view state.")
+                    EmptyView()
                 }
             }
             .onReceive(calendarManager.$selectedDate, perform: { date in
-                viewModel.updateSelectedGroceryData(for: date)
+                viewModel.updateSelectedData(for: date)
             })
             // This helps if the view appears after the initial data load.
             .onAppear {
                 if !viewModel.groceryWeeks.isEmpty {
-                     viewModel.updateSelectedGroceryData(for: calendarManager.selectedDate)
+                     viewModel.updateSelectedData(for: calendarManager.selectedDate)
+                }
+            }
+            .onChange(of: viewModel.shouldPollGroceries) { _, shouldPoll in
+                if shouldPoll {
+                    startGroceryPollingIfNeeded()
+                } else {
+                    stopGroceryPolling()
+                }
+            }
+            .onChange(of: viewModel.viewState) { _, newState in
+                if case .idle = newState, viewModel.shouldPollGroceries {
+                    startGroceryPollingIfNeeded()
                 }
             }
         }
     }
     
+    private func startGroceryPollingIfNeeded() {
+        guard viewModel.shouldPollGroceries else { return }
+        
+        // Don't restart if already polling
+        guard pollingTimer == nil else { return }
+        
+        pollingTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { _ in
+            Task {
+                await viewModel.checkGroceryGenerationStatus()
+            }
+        }
+    }
+    
+    private func stopGroceryPolling() {
+        pollingTimer?.invalidate()
+        pollingTimer = nil
+    }
+
     func errorInfoViewModel(error: Error) -> FSInfoViewModel {
         .init(
             iconName: .iconBoxWarning,

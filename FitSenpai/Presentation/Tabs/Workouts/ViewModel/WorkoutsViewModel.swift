@@ -11,7 +11,7 @@ import CoreKit
 import SwiftUI
 
 @MainActor
-class WorkoutsViewModel: ObservableObject {
+class WorkoutsViewModel: ObservableObject, HandlesErrors {
     @Published var activeSheet: WorkoutSheet?
     @Published var viewState: ViewState = .loading
     @Published var workoutWeeks: [WeekPlan<WorkoutDay>] = []
@@ -22,6 +22,8 @@ class WorkoutsViewModel: ObservableObject {
     @Published var showingDetail = false
     @Published var showRateApp = false
     @Published var selectedDay: WeekDayType = .monday
+    
+    @Published var isPendingGeneration = false
 
     @Inject private var workoutDataStore: WorkoutDataStore
     @Inject private var workoutPlanUseCase: WorkoutPlanUseCaseProtocol
@@ -31,6 +33,8 @@ class WorkoutsViewModel: ObservableObject {
 
     private var cancellables = Set<AnyCancellable>()
     var animatedDailyProgress: Double  = 0
+    
+    private var isCheckingStatus = false
 
     init() {
         Task {
@@ -51,6 +55,25 @@ extension WorkoutsViewModel {
         } catch {
             FSLogger.error("Failed to get workout plan: \(error.localizedDescription)")
             viewState = .error(error)
+        }
+    }
+    
+    func checkWorkoutGenerationStatus() async {
+        // Prevent multiple simultaneous calls
+        guard !isCheckingStatus else { return }
+        isCheckingStatus = true
+        defer { isCheckingStatus = false }
+        
+        do {
+            let updatedWorkoutWeeks = try await workoutPlanUseCase.execute()
+            self.workoutWeeks = updatedWorkoutWeeks
+            
+            let currentDate = CalendarDataManager.shared.selectedDate
+            self.updateSelectedWorkoutData(for: currentDate)
+            
+        } catch {
+            FSLogger.error("Failed to check workout generation status: \(error.localizedDescription)")
+            // Don't update viewState here as this is background polling
         }
     }
     
@@ -91,6 +114,7 @@ extension WorkoutsViewModel {
             self.selectedWorkoutWeek = workoutWeeks.first
             self.selectedWorkoutDay = self.selectedWorkoutWeek?.days.first
             self.routines = selectedWorkoutDay?.routinesSorted().routines ?? []
+            self.isPendingGeneration = selectedWorkoutDay?.pendingGeneration ?? false
             self.updateDailyProgress()
             return
         }
@@ -109,9 +133,11 @@ extension WorkoutsViewModel {
         if let week = targetWeek, let dayType = WeekDayType(rawValue: date.dayName.lowercased()) {
             self.selectedWorkoutDay = week.days.first { $0.day.lowercased() == dayType.rawValue }
             self.routines = selectedWorkoutDay?.routinesSorted().routines ?? []
+            self.isPendingGeneration = selectedWorkoutDay?.pendingGeneration ?? false
             self.updateDailyProgress()
         } else {
             self.selectedWorkoutDay = nil
+            self.isPendingGeneration = false
         }
     }
     

@@ -49,36 +49,12 @@ final class MealsRepository: MealsRepositoryProtocol {
         }
     }
     
-    func generateMealPlan(_ params: GenerateWorkoutRequest) async throws -> ([WeekPlan<MealsDay>], GroceryWeek) {
-        let response = try await remoteDataSource.generateMealPlan(params)
-    
-        let mealsDay = response.meal.toDomain()
-        let mealsWeek = WeekPlan<MealsDay>.init(startDate: Date().formatted(), endDate: Date().formatted(), days: [mealsDay])
-        
-//        mealsDataStore.deleteAll()
-//        mealsDataStore.add(mealsWeek.toEntity())
-        
-        let groceryPlan = response.grocery.toDomain()
-//        groceriesDataStore.deleteAll()
-//        groceriesDataStore.add(groceryPlan.toEntity())
-        
-        return ([mealsWeek], groceryPlan)
+    func generateMealPlan(_ params: GenerateRequest) async throws  {
+        try await remoteDataSource.generateMealPlan(params)
     }
     
-    func regenerateMealPlan(_ params: RegenerateWorkoutRequest) async throws -> ([WeekPlan<MealsDay>], GroceryWeek) {
-        let response = try await remoteDataSource.regenerateMealPlan(params)
-    
-        let mealsDay = response.meal.toDomain()
-        let mealsWeek = WeekPlan<MealsDay>.init(startDate: Date().formatted(), endDate: Date().formatted(), days: [mealsDay])
-        
-//        mealsDataStore.deleteAll()
-//        mealsDataStore.add(mealsWeek.toEntity())
-        
-        let groceryPlan = response.grocery.toDomain()
-//        groceriesDataStore.deleteAll()
-//        groceriesDataStore.add(groceryPlan.toEntity())
-        
-        return ([mealsWeek], groceryPlan)
+    func regenerateMealPlan(_ params: RegenerateRequest) async throws {
+        try await remoteDataSource.regenerateMealPlan(params)
     }
     
 }

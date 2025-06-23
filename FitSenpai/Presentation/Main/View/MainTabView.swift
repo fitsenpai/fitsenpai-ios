@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MainTabView: View {
     @StateObject private var viewModel: MainViewModel = .init()
+    @StateObject private var mealsViewModel: MealsViewModel = .init()
     @EnvironmentObject private var appViewModel: AppViewModel
     @State private var selectedTab: FSTabs = .workouts
     
@@ -22,13 +23,13 @@ struct MainTabView: View {
                         }
                         .tag(FSTabs.workouts)
                     
-                    MealsView()
+                    MealsView(viewModel: mealsViewModel)
                         .tabItem {
                             Label(FSTabs.meals.title, image: FSTabs.meals.icon)
                         }
                         .tag(FSTabs.meals)
                     
-                    GroceriesView()
+                    GroceriesView(viewModel: mealsViewModel)
                         .tabItem {
                             Label(FSTabs.groceries.title, image: FSTabs.groceries.icon)
                         }

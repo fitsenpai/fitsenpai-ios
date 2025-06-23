@@ -11,7 +11,6 @@ import CoreKit
 
 struct WorkoutsView: View {
     @EnvironmentObject private var superwall: SuperwallManager
-    // @EnvironmentObject var mainViewModel: MainViewModel
     @StateObject private var viewModel: WorkoutsViewModel = .init()
     @StateObject private var calendarManager = CalendarDataManager.shared
     
@@ -24,9 +23,7 @@ struct WorkoutsView: View {
             containerHeight: .infinity,
             showButton: false,
             isLoading: true,
-            buttonAction: {
-                triggerHaptics()
-            }
+            buttonAction: { }
         )
     }
 
@@ -124,8 +121,13 @@ struct WorkoutsView: View {
             })?.endDate.toDate(format: format) ?? Date()
 
             let currentDateToMaintain = calendarManager.selectedDate
-            calendarManager.configure(startDate: overallStartDate, endDate: max(overallEndDate, Date()))
-            calendarManager.selectedDate = currentDateToMaintain
+            let currentWeekOffsetToMaintain = calendarManager.currentWeekOffset
+            calendarManager.configure(
+                startDate: overallStartDate,
+                endDate: max(overallEndDate, Date()),
+                initialSelectedDate: currentDateToMaintain,
+                initialWeekOffset: currentWeekOffsetToMaintain
+            )
 
         } else {
             calendarManager.configure(startDate: Date(), endDate: Date())

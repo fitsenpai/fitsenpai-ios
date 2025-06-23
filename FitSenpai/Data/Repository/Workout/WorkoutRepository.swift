@@ -17,11 +17,11 @@ final class WorkoutRepository: WorkoutRepositoryProtocol {
 
     @AppState(\.trialStartDate) private var trialStartDate
 
-    func generateWorkouts(_ params: GenerateWorkoutRequest) async throws -> WeekPlan<WorkoutDay> {
+    func generateWorkouts(_ params: GenerateRequest) async throws -> WeekPlan<WorkoutDay> {
         try await remoteDataSource.generateWorkout(params).toDomain()
     }
     
-    func regenerateWorkouts(_ params: RegenerateWorkoutRequest) async throws -> WorkoutDay {
+    func regenerateWorkouts(_ params: RegenerateRequest) async throws -> WorkoutDay {
         try await remoteDataSource.regenerateWorkout(params).toDomain()
     }
     

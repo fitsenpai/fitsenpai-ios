@@ -14,12 +14,14 @@ import SwiftData
     var endDate: String
     var shopping: [ShoppingCategoryEntity]
     var totalEstimatedPrice: String
+    var pendingGeneration: Bool
     
-    init(startDate: String, endDate: String, shopping: [ShoppingCategoryEntity], totalEstimatedPrice: String) {
+    init(startDate: String, endDate: String, shopping: [ShoppingCategoryEntity], totalEstimatedPrice: String, pendingGeneration: Bool = false) {
         self.startDate = startDate
         self.endDate = endDate
         self.shopping = shopping
         self.totalEstimatedPrice = totalEstimatedPrice
+        self.pendingGeneration = pendingGeneration
     }
 
     func toDomain() -> GroceryWeek {
@@ -27,7 +29,8 @@ import SwiftData
             startDate: startDate,
             endDate: endDate,
             shopping: shopping.map { $0.toDomain() },
-            totalEstimatedPrice: totalEstimatedPrice
+            totalEstimatedPrice: totalEstimatedPrice,
+            pendingGeneration: pendingGeneration
         )
     }
 }

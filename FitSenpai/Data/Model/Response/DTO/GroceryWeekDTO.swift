@@ -12,12 +12,14 @@ struct GroceryWeekDTO: Decodable {
     let endDate: String?
     let shopping: [ShoppingCategoryDTO]?
     let totalEstimatedPrice: String?
+    let pendingGeneration: Bool?
 
     enum CodingKeys: String, CodingKey {
         case startDate
         case endDate
         case shopping
         case totalEstimatedPrice
+        case pendingGeneration
     }
 
     init(from decoder: Decoder) throws {
@@ -26,6 +28,7 @@ struct GroceryWeekDTO: Decodable {
         self.endDate = try container.decodeIfPresent(String.self, forKey: .endDate)
         self.shopping = try container.decodeIfPresent([ShoppingCategoryDTO].self, forKey: .shopping)
         self.totalEstimatedPrice = try container.decodeIfPresent(String.self, forKey: .totalEstimatedPrice)
+        self.pendingGeneration = try container.decodeIfPresent(Bool.self, forKey: .pendingGeneration) ?? false
     }
 
     func toDomain() -> GroceryWeek {
@@ -33,7 +36,8 @@ struct GroceryWeekDTO: Decodable {
             startDate: startDate ?? "",
             endDate: endDate ?? "",
             shopping: shopping?.map { $0.toDomain() } ?? [],
-            totalEstimatedPrice: totalEstimatedPrice ?? ""
+            totalEstimatedPrice: totalEstimatedPrice ?? "",
+            pendingGeneration: pendingGeneration ?? false
         )
     }
 }
