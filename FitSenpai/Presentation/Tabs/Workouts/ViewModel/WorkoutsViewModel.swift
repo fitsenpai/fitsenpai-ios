@@ -23,9 +23,11 @@ class WorkoutsViewModel: ObservableObject {
     @Published var showRateApp = false
     @Published var selectedDay: WeekDayType = .monday
 
-    @Inject private var workoutPlanUseCase: WorkoutPlanUseCaseProtocol
     @Inject private var workoutDataStore: WorkoutDataStore
+    @Inject private var workoutPlanUseCase: WorkoutPlanUseCaseProtocol
     @Inject private var updateRoutineUseCase: UpdateRoutineUseCaseProtocol
+    @Inject private var generateWorkoutUseCase: GenerateWorkoutUseCaseProtocol
+    @Inject private var regenerateWorkoutUseCase: RegenerateWorkoutUseCaseProtocol
 
     private var cancellables = Set<AnyCancellable>()
     var animatedDailyProgress: Double  = 0
@@ -42,13 +44,40 @@ class WorkoutsViewModel: ObservableObject {
 extension WorkoutsViewModel {
   
     func getWorkoutPlan() async  {
-        viewState = .loading
-        defer { viewState = .idle }
         do {
             self.workoutWeeks = try await workoutPlanUseCase.execute()
             self.updateSelectedWorkoutData(for: Date())
+            self.viewState = .idle
         } catch {
             FSLogger.error("Failed to get workout plan: \(error.localizedDescription)")
+            viewState = .error(error)
+        }
+    }
+    
+    func generateWorkoutPlan(date: Date) async  {
+        viewState = .fetching
+        do {
+            let selectedDate = date.toString(WithFormat: "yyyy-MM-dd")
+            let workoutWeek = try await generateWorkoutUseCase.execute(date: selectedDate)
+            updateOrAddWorkoutWeek(workoutWeek)
+            self.updateSelectedWorkoutData(for: date)
+            self.viewState = .idle
+        } catch {
+            FSLogger.error("Failed to generate workout plan: \(error.localizedDescription)")
+            viewState = .error(error)
+        }
+    }
+    
+    func regenerateWorkoutPlan(date: Date, instruction: String) async  {
+        viewState = .fetching
+        do {
+            let selectedDate = date.toString(WithFormat: "yyyy-MM-dd")
+            let workoutDay = try await regenerateWorkoutUseCase.execute(date: selectedDate, instruction: instruction)
+            updateWorkoutDay(workoutDay, for: selectedDate)
+            self.updateSelectedWorkoutData(for: date)
+            self.viewState = .idle
+        } catch {
+            FSLogger.error("Failed to regenerate workout plan: \(error.localizedDescription)")
             viewState = .error(error)
         }
     }
@@ -116,4 +145,42 @@ extension WorkoutDay {
         self.routines.sort(by: { $0.sortIndex < $1.sortIndex })
         return self
     }
+}
+
+private extension WorkoutsViewModel {
+
+    private func updateOrAddWorkoutWeek(_ workoutWeek: WeekPlan<WorkoutDay>) {
+        if let index = findWeekIndex(by: workoutWeek.startDate, endDate: workoutWeek.endDate) {
+            self.workoutWeeks[index] = workoutWeek
+        } else {
+            self.workoutWeeks.append(workoutWeek)
+        }
+    }
+
+    private func updateWorkoutDay(_ workoutDay: WorkoutDay, for selectedDate: String) {
+        guard let weekIndex = findWeekIndex(containing: selectedDate) else { return }
+        
+        if let dayIndex = findDayIndex(in: weekIndex, matching: workoutDay.date) {
+            self.workoutWeeks[weekIndex].days[dayIndex] = workoutDay
+        } else {
+            self.workoutWeeks[weekIndex].days.append(workoutDay)
+        }
+    }
+
+    private func findWeekIndex(by startDate: String, endDate: String) -> Int? {
+        return self.workoutWeeks.firstIndex { weekPlan in
+            weekPlan.startDate == startDate && weekPlan.endDate == endDate
+        }
+    }
+
+    private func findWeekIndex(containing date: String) -> Int? {
+        return self.workoutWeeks.firstIndex { weekPlan in
+            date >= weekPlan.startDate && date <= weekPlan.endDate
+        }
+    }
+
+    private func findDayIndex(in weekIndex: Int, matching date: String) -> Int? {
+        return self.workoutWeeks[weekIndex].days.firstIndex { $0.date == date }
+    }
+
 }

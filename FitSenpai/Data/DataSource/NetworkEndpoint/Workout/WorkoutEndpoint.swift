@@ -10,6 +10,8 @@ import CoreKit
 
 enum WorkoutEndpoint {
     case getWorkoutPlan
+    case generateWorkoutPlan(_ params: ParameterProtocol)
+    case regenerateWorkoutPlan(_ params: ParameterProtocol)
     case generateWorkoutDemo(_ params: ParameterProtocol)
 }
 
@@ -17,7 +19,7 @@ extension WorkoutEndpoint: NetworkEndpoint {
     
     var path: String {
         switch self {
-        case .getWorkoutPlan: "/workouts"
+        case .getWorkoutPlan, .generateWorkoutPlan, .regenerateWorkoutPlan: "/workouts"
         case .generateWorkoutDemo: "/workouts/demo"
         }
     }
@@ -25,7 +27,8 @@ extension WorkoutEndpoint: NetworkEndpoint {
     var method: HTTPMethod {
         switch self {
         case .getWorkoutPlan: .get
-        case .generateWorkoutDemo: .post
+        case .generateWorkoutDemo, .generateWorkoutPlan: .post
+        case .regenerateWorkoutPlan: .patch
         }
     }
     
@@ -43,7 +46,7 @@ extension WorkoutEndpoint: NetworkEndpoint {
     
     var body: [String: Any]? {
         switch self {
-        case .generateWorkoutDemo(let params):
+        case .generateWorkoutDemo(let params), .regenerateWorkoutPlan(let params), .generateWorkoutPlan(let params):
             return params.toDictionary()
         default:
             return nil

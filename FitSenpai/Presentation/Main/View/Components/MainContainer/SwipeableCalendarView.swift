@@ -33,8 +33,6 @@ struct SwipeableCalendarView: View {
                 TabView(selection: $calendarManager.currentWeekOffset) {
                     if calendarManager.computedMinimumWeekOffset <= displayMaximumWeekOffset {
                         ForEach(calendarManager.computedMinimumWeekOffset...displayMaximumWeekOffset, id: \.self) { offset in
-                        // NOTE: WeekView has its own CalendarDataManager.
-                            // The call should only include 'weekOffset'.
                             WeekView(
                                 weekOffset: offset
                             )

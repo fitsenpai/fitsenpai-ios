@@ -119,6 +119,9 @@ struct NegativeFeedbackInoutSheet: View {
 
 struct ChangeWorkoutSheetSheet: View {
     @EnvironmentObject private var superwall: SuperwallManager
+    @ObservedObject var viewModel: WorkoutsViewModel
+    @StateObject private var calendarManager = CalendarDataManager.shared
+
     @Environment(\.dismiss) private var dismiss
     @State var instructionText: String = ""
     
@@ -162,6 +165,9 @@ struct ChangeWorkoutSheetSheet: View {
             VStack(spacing: 10) {
                 FSButton(title: superwall.isFirstDayTrialActive ? "Upgrade to continue" :  "Confirm", fontStyle: .bodyBold16, cornerRadius: 32) {
                     dismiss()
+                    Task {
+                        await viewModel.regenerateWorkoutPlan(date: calendarManager.selectedDate, instruction: instructionText)
+                    }
                 }
                 if superwall.isFirstDayTrialActive {
                     FSTextView("This feature is only available for Pro users.", typography: .detail_semi, color: .fsMutedForeground)

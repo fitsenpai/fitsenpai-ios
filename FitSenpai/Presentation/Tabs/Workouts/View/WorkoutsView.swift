@@ -64,9 +64,9 @@ struct WorkoutsView: View {
         MainContainerView {
             VStack(alignment: .leading) {
                 switch viewModel.viewState {
-                case .loading:
+                case .loading,  .updating:
                     ShimmerWorkoutWeekView()
-                case .updating:
+                case .fetching:
                     FSInfoView(viewModel: generatingViewModel)
                         .padding(.vertical, 12)
                 case .idle:
@@ -74,14 +74,15 @@ struct WorkoutsView: View {
                         WorkoutWeekView(workoutWeek: selectedWeek)
                             .environmentObject(viewModel)
                     } else {
-                        FSInfoView(viewModel: planUnavailable)
-                            .padding(.vertical, 12)
+//                        FSInfoView(viewModel: planUnavailable)
+//                            .padding(.vertical, 12)
+                        generateWorkoutInfo
                     }
                 case .error(let error):
                     FSInfoView(viewModel: errorViewModel(error: error))
                         .padding(.vertical, 12)
                 default:
-                    Text("Unhandled view state.")
+                    EmptyView()
                 }
                 Spacer()
             }
@@ -94,7 +95,7 @@ struct WorkoutsView: View {
             .sheet(item: $viewModel.activeSheet, content: { type in
                 switch type {
                 case .changeWorkout:
-                    ChangeWorkoutSheetSheet()
+                    ChangeWorkoutSheetSheet(viewModel: viewModel)
                         .flexibleSheet()
                         .background(.white)
                         .presentationCornerRadius(32)
@@ -110,17 +111,17 @@ struct WorkoutsView: View {
     }
     
     private func configureCalendar(with weeks: [WeekPlan<WorkoutDay>]) {
+        let format = "yyyy-MM-dd";
         if !weeks.isEmpty,
-           let firstWeekStartDateString = weeks.min(by: { 
-               $0.startDate.toDate(format: "yyyy-MM-dd") ?? Date.distantFuture <
-               $1.startDate.toDate(format: "yyyy-MM-dd") ?? Date.distantFuture
+           let firstWeekStartDateString = weeks.min(by: {
+               $0.startDate.toDate(format: format) ?? Date.distantFuture <
+                $1.startDate.toDate(format: format) ?? Date.distantFuture
            })?.startDate,
-           let overallStartDate = firstWeekStartDateString.toDate(format: "yyyy-MM-dd") {
+           let overallStartDate = firstWeekStartDateString.toDate(format: format) {
 
-            let overallEndDate = weeks.max(by: {
-                $0.endDate.toDate(format: "yyyy-MM-dd") ?? Date.distantPast <
-                $1.endDate.toDate(format: "yyyy-MM-dd") ?? Date.distantPast
-            })?.endDate.toDate(format: "yyyy-MM-dd") ?? Date()
+            let overallEndDate = weeks.max(
+                by: { $0.endDate.toDate(format: format) ?? Date.distantPast < $1.endDate.toDate(format: format) ?? Date.distantPast
+            })?.endDate.toDate(format: format) ?? Date()
 
             let currentDateToMaintain = calendarManager.selectedDate
             calendarManager.configure(startDate: overallStartDate, endDate: max(overallEndDate, Date()))
@@ -132,4 +133,20 @@ struct WorkoutsView: View {
 
         viewModel.updateSelectedWorkoutData(for: calendarManager.selectedDate)
     }
+    
+    private var generateWorkoutInfo: some View {
+        FSInfoView(viewModel: .init(
+            iconName: .iconBoxSparcle,
+            title: "Your workout plan is ready!",
+            mainLabel: "Tap below to generate your new workouts\nfor the week",
+            buttonLabel: "Generate workouts",
+            buttonAction: {
+                triggerHaptics()
+                Task {
+                    await viewModel.generateWorkoutPlan(date: calendarManager.selectedDate)
+                }
+            }
+        ))
+    }
+
 }

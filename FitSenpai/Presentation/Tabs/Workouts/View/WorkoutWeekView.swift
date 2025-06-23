@@ -49,21 +49,14 @@ struct WorkoutWeekView: View {
 
 struct WorkoutDayView: View {
     @EnvironmentObject private var viewModel: WorkoutsViewModel
+    @StateObject private var calendarManager = CalendarDataManager.shared
 
     var workoutDay: WorkoutDay
     
     var body: some View {
         VStack(spacing: 16) {
             if workoutDay.pendingGeneration {
-                FSInfoView(viewModel: .init(
-                    iconName: .iconBoxSparcle,
-                    title: "Your workout plan is ready!",
-                    mainLabel: "Tap below to generate your new workouts\nfor the week",
-                    buttonLabel: "Generate workouts",
-                    buttonAction: {
-                        triggerHaptics()
-                    }
-                ))
+                generateWorkoutInfo
             } else {
                 if workoutDay.routines.isEmpty {
                     FSInfoView(viewModel: .init(
@@ -73,6 +66,9 @@ struct WorkoutDayView: View {
                         buttonLabel: "I want to stay active",
                         buttonAction: {
                             triggerHaptics()
+                            Task {
+                                await viewModel.regenerateWorkoutPlan(date: calendarManager.selectedDate, instruction: "")
+                            }
                         }
                     ))
                 } else {
@@ -81,5 +77,20 @@ struct WorkoutDayView: View {
                 }
             }
         }
+    }
+    
+    var generateWorkoutInfo: some View {
+        FSInfoView(viewModel: .init(
+            iconName: .iconBoxSparcle,
+            title: "Your workout plan is ready!",
+            mainLabel: "Tap below to generate your new workouts\nfor the week",
+            buttonLabel: "Generate workouts",
+            buttonAction: {
+                triggerHaptics()
+                Task {
+                    await viewModel.generateWorkoutPlan(date: calendarManager.selectedDate)
+                }
+            }
+        ))
     }
 }

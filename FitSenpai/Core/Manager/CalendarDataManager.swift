@@ -87,7 +87,16 @@ class CalendarDataManager: ObservableObject {
     }
     
     private func updateCurrentWeekStartDate() {
-        currentWeekStartDate = daysInWeek(for: currentWeekOffset).first ?? Date()
+        let newWeekDays = daysInWeek(for: currentWeekOffset)
+        currentWeekStartDate = newWeekDays.first ?? Date()
+        
+        let currentDayOfWeek = calendar.component(.weekday, from: selectedDate)
+        if let newSelectedDate = newWeekDays.first(where: { calendar.component(.weekday, from: $0) == currentDayOfWeek }) {
+            selectedDate = newSelectedDate
+        } else if let firstDayOfNewWeek = newWeekDays.first {
+            // Fallback to first day of the week if same weekday not found
+            selectedDate = firstDayOfNewWeek
+        }
     }
 
     // MARK: - Date Calculations

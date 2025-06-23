@@ -70,6 +70,8 @@ enum DependencyRegistry {
         DependencyInjector.register(GetUserProfileUseCase() as any GetUserProfileUseCaseProtocol)
         DependencyInjector.register(WorkoutDemoUseCase() as any WorkoutDemoUseCaseProtocol)
         DependencyInjector.register(WorkoutPlanUseCase() as any WorkoutPlanUseCaseProtocol)
+        DependencyInjector.register(GenerateWorkoutUseCase() as any GenerateWorkoutUseCaseProtocol)
+        DependencyInjector.register(RegenerateWorkoutUseCase() as any RegenerateWorkoutUseCaseProtocol)
         DependencyInjector.register(MealPlanDemoUseCase() as any MealPlanDemoUseCaseProtocol)
         DependencyInjector.register(SaveUserProfileUseCase() as any SaveUserProfileUseCaseProtocol)
         DependencyInjector.register(MealsPlanUseCase() as any MealsPlanUseCaseProtocol)

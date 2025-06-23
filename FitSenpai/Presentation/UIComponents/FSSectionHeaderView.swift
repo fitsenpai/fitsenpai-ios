@@ -66,7 +66,7 @@ struct FSSectionHeaderView: View {
                 feedbackType = .negative
                 triggerHaptics()
             } label: {
-                Image(.icThumbsUp)
+                Image(.icThumbsDown)
                     .resizable()
                     .frame(width: 20, height: 20)
             }
