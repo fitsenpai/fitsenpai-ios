@@ -71,6 +71,7 @@ class ProfileCompletionViewModel: ObservableObject {
             // await MainActor.run {
             //     self.loadingConfiguration = FSLoadingConfig(title: "Finalizing Profile", subtitle: "Saving your preferences...")
             // }
+            SuperwallManager.shared.startTrial()
             let _ = try await saveUserProfileUseCase.execute(profile)
             await MainActor.run { self.overallProgress = 1.0 } // Final progress
 

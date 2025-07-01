@@ -32,7 +32,8 @@ extension UserEndpoint: NetworkEndpoint {
     var method: HTTPMethod {
         switch self {
         case .getUser, .getUserProfile: .get
-        case .updateUserProfile, .createUserProfile: .post
+        case .createUserProfile: .post
+        case .updateUserProfile: .patch
         case .deleteAccount: .delete
         }
     }

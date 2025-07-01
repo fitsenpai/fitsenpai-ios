@@ -136,7 +136,6 @@ extension AppViewModel {
     }
     
     func startTrial() {
-        SuperwallManager.shared.startTrial()
         self.loginMethod = LoginMethod.trial.rawValue
         self.authState = .ontrial
     }
@@ -175,7 +174,7 @@ private extension AppViewModel {
     /// Retrieves the currently authenticated user and updates the global environment.
     func getCurrentUser() async {
         
-        guard !SuperwallManager.shared.isFirstDayTrialActive, !SuperwallManager.shared.isSubscrivedWithoutUserID else {
+        guard !SuperwallManager.shared.isTrialActive, !SuperwallManager.shared.isSubscrivedWithoutUserID else {
             self.authState = .ontrial
             return
         }

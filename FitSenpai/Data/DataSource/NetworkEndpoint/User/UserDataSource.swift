@@ -13,6 +13,7 @@ protocol UserDataSourceProtocol {
     func getUser() async throws -> UserDTO
     func getUserProfile() async throws -> UserProfileDTO
     func createUserProfile(_ params: WorkoutProfileRequest) async throws
+    func updateUserProfile(_ params: WorkoutProfileRequest) async throws
     func deleteAccount(reason: String) async throws
 }
 
@@ -34,6 +35,10 @@ final class UserDataSource: UserDataSourceProtocol {
     
     func createUserProfile(_ params: WorkoutProfileRequest) async throws {
         try await networkService.request(.createUserProfile(params))
+    }
+    
+    func updateUserProfile(_ params: WorkoutProfileRequest) async throws {
+        try await networkService.request(.updateUserProfile(params))
     }
     
     func deleteAccount(reason: String) async throws {

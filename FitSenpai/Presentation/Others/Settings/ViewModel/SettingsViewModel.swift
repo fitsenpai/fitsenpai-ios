@@ -109,29 +109,20 @@ extension SettingsViewModel {
         Task { @MainActor in
             viewState = .loading
             defer { viewState = .idle }
-            await getUserProfile()
-            await getUserData()
-        }
-    }
-    
-    func getUserProfile() async {
-        do {
-            self.profile = try await self.getUserProfileUseCase.execute()
-        } catch {
-            print(error)
-        }
-    }
-    
-    func getUserData() async {
-        do {
-            self.user = try await self.getUserUseCase.execute()
-        } catch {
-            print(error)
+            async let user = self.getUserUseCase.execute()
+            async let profile = self.getUserProfileUseCase.execute()
+            self.user = try await user
+            self.profile = try await profile
         }
     }
     
     private func saveProfile() async throws {
-        let _ = try await saveUserProfileUseCase.execute(self.profile)
+        self.viewState = .loading
+        defer { self.viewState = .idle }
+        let profilreResponse = try await saveUserProfileUseCase.execute(self.profile)
+        if let profilreResponse {
+            self.profile = profilreResponse
+        }
     }
     
     func getTitle<T: SelectableItemProtocol>(

@@ -10,6 +10,7 @@ import SwiftUI
 struct MealsView: View {
     
     @ObservedObject var viewModel: MealsViewModel
+    @EnvironmentObject private var superwall: SuperwallManager
     @StateObject private var calendarManager = CalendarDataManager.shared
     @State private var pollingTimer: Timer?
     @State private var mealPollingTimer: Timer?
@@ -107,8 +108,10 @@ struct MealsView: View {
                         VStack(spacing: 16) {
                             FSSectionHeaderView(text: "Meals", showGenerateButton: shouldShowGenerateButton) {
                                 triggerHaptics()
-                                Task {
-                                    await viewModel.regenerateMealPlan(date: calendarManager.selectedDate)
+                                if superwall.isTrialActive {
+                                    superwall.presentPaywall(for: .proContent)
+                                } else {
+                                    viewModel.showGenerateSheet.toggle()
                                 }
                             }
                             gridView
@@ -157,6 +160,12 @@ struct MealsView: View {
                     Text("Unhandled view state.") // Fallback
                 }
             }
+            .sheet(isPresented: $viewModel.showGenerateSheet, content: {
+                ChangeMealsSheetSheet(viewModel: viewModel)
+                    .flexibleSheet()
+                    .background(.white)
+                    .presentationCornerRadius(32)
+            })
             .onReceive(calendarManager.$selectedDate, perform: { date in
                 viewModel.updateSelectedData(for: date)
             })

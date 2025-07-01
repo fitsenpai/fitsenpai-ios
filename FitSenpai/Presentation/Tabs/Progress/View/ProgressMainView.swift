@@ -12,7 +12,7 @@ struct ProgressMainView: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 24) {
                         WeightChartCard(data: viewModel.weightData)
-                        if superwall.isFirstDayTrialActive {
+                        if superwall.isTrialActive {
                             UpgrageCardView {
                                 onTryForFreeTapped()
                             }

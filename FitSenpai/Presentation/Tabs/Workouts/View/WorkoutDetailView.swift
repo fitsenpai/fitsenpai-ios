@@ -51,7 +51,7 @@ struct WorkoutDetailView: View {
             .scrollIndicators(.hidden)
             .padding(.bottom, 24)
             
-            if superwall.isFirstDayTrialActive {
+            if superwall.isTrialActive {
                 FSButton(title: "Unlock full week", fontStyle: .bodyBold16, cornerRadius: 32, tapAction: {
                     triggerHaptics()
                     superwall.presentPaywall(for: .proContent)
@@ -105,7 +105,7 @@ struct WorkoutDetailView: View {
                 .scaledToFit()
                 .frame(width: 25, height: 25)
                 .onTapGesture {
-                    if superwall.isFirstDayTrialActive {
+                    if superwall.isTrialActive {
                         superwall.presentPaywall(for: .proContent)
                     }
                     triggerHaptics()

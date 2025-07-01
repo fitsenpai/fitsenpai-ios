@@ -59,6 +59,20 @@ struct WorkoutsView: View {
         )
     }
     
+    var subscriptionEnded: FSInfoViewModel {
+        .init(
+            iconName: .iconBoxWarning,
+            title: "Your subscription\nhas ended",
+            mainLabel: "Subscribe to unlock new plans.",
+            buttonLabel: "Upgrade to Pro",
+            showButton: true,
+            isLoading: false,
+            buttonAction: {
+                
+            }
+        )
+    }
+    
     var body: some View {
         MainContainerView {
             VStack(alignment: .leading) {
@@ -69,12 +83,13 @@ struct WorkoutsView: View {
                     FSInfoView(viewModel: generatingViewModel)
                         .padding(.vertical, 12)
                 case .idle:
-                    if let selectedWeek = viewModel.selectedWorkoutWeek {
+                    if superwall.isFirstDayTrialEnded {
+                        FSInfoView(viewModel: subscriptionEnded)
+                            .padding(.vertical, 12)
+                    } else if let selectedWeek = viewModel.selectedWorkoutWeek {
                         WorkoutWeekView(workoutWeek: selectedWeek)
                             .environmentObject(viewModel)
-                    } else {
-//                        FSInfoView(viewModel: planUnavailable)
-//                            .padding(.vertical, 12)
+                    }  else {
                         generateWorkoutInfo
                     }
                 case .error(let error):

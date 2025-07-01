@@ -163,13 +163,77 @@ struct ChangeWorkoutSheetSheet: View {
             .padding(.vertical, 16)
             
             VStack(spacing: 10) {
-                FSButton(title: superwall.isFirstDayTrialActive ? "Upgrade to continue" :  "Confirm", fontStyle: .bodyBold16, cornerRadius: 32) {
+                FSButton(title: superwall.isTrialActive ? "Upgrade to continue" :  "Confirm", fontStyle: .bodyBold16, cornerRadius: 32) {
                     dismiss()
                     Task {
                         await viewModel.regenerateWorkoutPlan(date: calendarManager.selectedDate, instruction: instructionText)
                     }
                 }
-                if superwall.isFirstDayTrialActive {
+                if superwall.isTrialActive {
+                    FSTextView("This feature is only available for Pro users.", typography: .detail_semi, color: .fsMutedForeground)
+                }
+            }
+        }
+        .padding(.horizontal, 24)
+        .padding(.bottom, 24)
+        .padding(.top, 10)
+    }
+    
+}
+
+struct ChangeMealsSheetSheet: View {
+    @EnvironmentObject private var superwall: SuperwallManager
+    @ObservedObject var viewModel: MealsViewModel
+    @StateObject private var calendarManager = CalendarDataManager.shared
+
+    @Environment(\.dismiss) private var dismiss
+    @State var instructionText: String = ""
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            SheetIndicator()
+            Image(.iconRepeatSquare)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 40, height: 40)
+            
+            FSTextView("Change meals?", typography: .h3)
+            FSTextView("Get new meals for this day. Groceries will be\nupdated. Add instruction below (optional).", typography: .body, alignment: .center)
+
+            VStack(spacing: 12) {
+                TextEditor(text: $instructionText)
+                    .font(.body14)
+                    .padding(12)
+                    .frame(height: 88)
+                    .background(
+                        ZStack {
+                            Color.clear
+                            RoundedRectangle(cornerRadius: 6)
+                                .stroke(Color.fsInputBorderColor, lineWidth: 1)
+                        }
+                    )
+                    .scrollContentBackground(.hidden)
+                    .overlay(alignment: .topLeading, content: {
+                        if instructionText.isEmpty {
+                            Text("e.g., 'No dairy today’")
+                                .font(.body14)
+                                .foregroundColor(.gray)
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 20)
+                                .frame(maxWidth: .infinity, alignment: .topLeading)
+                        }
+                    })
+            }
+            .padding(.vertical, 16)
+            
+            VStack(spacing: 10) {
+                FSButton(title: superwall.isTrialActive ? "Upgrade to continue" :  "Confirm", fontStyle: .bodyBold16, cornerRadius: 32) {
+                    dismiss()
+                    Task {
+                        await viewModel.regenerateMealPlan(date: calendarManager.selectedDate, instruction: instructionText)
+                    }
+                }
+                if superwall.isTrialActive {
                     FSTextView("This feature is only available for Pro users.", typography: .detail_semi, color: .fsMutedForeground)
                 }
             }

@@ -40,7 +40,7 @@ struct WorkoutWeekView: View {
         VStack(spacing: 16) {
             FSSectionHeaderView(text: "Workouts", showGenerateButton: shouldShowGenerateButton) {
                 triggerHaptics()
-                if superwall.isFirstDayTrialActive {
+                if superwall.isTrialActive {
                     superwall.presentPaywall(for: .proContent)
                 } else {
                     viewModel.activeSheet = .changeWorkout

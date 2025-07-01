@@ -109,7 +109,7 @@ extension WorkoutsViewModel {
             self.selectedDay = dayType
         }
         
-        if SuperwallManager.shared.isFirstDayTrialActive {
+        if SuperwallManager.shared.isTrialActive {
             self.selectedWorkoutWeek = workoutWeeks.first
             self.selectedWorkoutDay = self.selectedWorkoutWeek?.days.first
             self.routines = selectedWorkoutDay?.routinesSorted().routines ?? []

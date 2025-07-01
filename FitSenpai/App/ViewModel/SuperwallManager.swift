@@ -124,13 +124,17 @@ final class SuperwallManager: ObservableObject, SuperwallDelegate {
     
     /// Returns true if user can safely logout
     var canLogout: Bool {
-        !isFirstDayTrialActive
+        !isTrialActive
     }
     
     /// Returns true if user is within their first 24-hour trial period
-    var isFirstDayTrialActive: Bool {
+    var isTrialActive: Bool {
+        trialStartDate != nil
+    }
+    
+    var isFirstDayTrialEnded: Bool {
         guard let trialStartDate else { return false }
-        return Date().timeIntervalSince(trialStartDate) < 86400 // 24 hours
+        return Date().timeIntervalSince(trialStartDate) > 86400 // 24 hours
     }
     
     /// Returns true if user subscribed without being logged in

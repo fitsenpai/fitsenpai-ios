@@ -32,7 +32,8 @@ class MealsViewModel: ObservableObject, HandlesErrors {
     // MARK: - Shared Properties
     @Published var viewState: ViewState = .loading
     @Published var selectedDay: WeekDayType = .monday
-    
+    @Published var showGenerateSheet: Bool = false
+
     // MARK: - Polling Properties
     @Published var isMealGenerationPending = false
     @Published var isGroceryGenerationPending = false
@@ -146,11 +147,11 @@ class MealsViewModel: ObservableObject, HandlesErrors {
         }
     }
     
-    func regenerateMealPlan(date: Date) async {
+    func regenerateMealPlan(date: Date, instruction: String) async {
         viewState = .fetching
         do {
             let selectedDate = date.toString(WithFormat: "yyyy-MM-dd")
-            try await regenerateMealPlanUseCase.execute(date: selectedDate, instruction: "")
+            try await regenerateMealPlanUseCase.execute(date: selectedDate, instruction: instruction)
             
             async let mealsResult = mealsPlanUseCase.execute()
             async let groceriesResult = groceryPlanUseCase.execute()
@@ -205,7 +206,7 @@ class MealsViewModel: ObservableObject, HandlesErrors {
             self.selectedDay = dayType
         }
         
-        if SuperwallManager.shared.isFirstDayTrialActive {
+        if SuperwallManager.shared.isTrialActive {
             self.selectedGroceryWeek = self.groceryWeeks.first
             self.groceryWeek = self.selectedGroceryWeek
             self.isGroceryGenerationPending = self.selectedGroceryWeek?.pendingGeneration ?? false
@@ -267,7 +268,7 @@ class MealsViewModel: ObservableObject, HandlesErrors {
             self.selectedDay = dayType
         }
         
-        if SuperwallManager.shared.isFirstDayTrialActive {
+        if SuperwallManager.shared.isTrialActive {
             self.selectedMealWeek = self.mealsWeek.first
             self.selectedMealDay = self.selectedMealWeek?.days.first
             self.mealDay = self.selectedMealDay

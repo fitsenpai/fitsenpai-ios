@@ -22,7 +22,7 @@ struct MainContainerView<Content: View>: View {
             VStack(alignment: .leading, spacing: 12) {
                 headerView
 
-                if superwall.isFirstDayTrialActive {
+                if superwall.isTrialActive {
                     UpgrageCardView {
                         triggerHaptics()
                         superwall.presentPaywall(for: .proContent)
@@ -47,8 +47,8 @@ struct MainContainerView<Content: View>: View {
         VStack(alignment: .leading) {
             FSNavBarView()
             SwipeableCalendarView()
-                .blur(radius: superwall.isFirstDayTrialActive ? 4 : 0)
-                .disabled(superwall.isFirstDayTrialActive)
+                .blur(radius: superwall.isTrialActive ? 4 : 0)
+                .disabled(superwall.isTrialActive)
         }
     }
 }

@@ -41,7 +41,11 @@ final class UserRepository: UserRepositoryProtocol {
     }
     
     func saveUserProfile(_ userProfile: UserProfile) async throws -> UserProfile? {
-        return profileStore.addProfile(userProfile.toEntity())?.toDomain()
+        let profile = profileStore.addProfile(userProfile.toEntity())?.toDomain()
+        if trialStartDate == nil, let requestBody = profile?.toRequestBody() {
+            try await remoteDataSource.updateUserProfile(requestBody)
+        }
+        return profile
     }
     
     func deleteAccount(reason: String) async throws {
