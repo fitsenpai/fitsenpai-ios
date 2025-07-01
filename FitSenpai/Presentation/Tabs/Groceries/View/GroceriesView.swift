@@ -13,6 +13,8 @@ struct GroceriesView: View {
     @StateObject private var calendarManager = CalendarDataManager.shared
     @State private var pollingTimer: Timer?
     
+    @AppState(\.didSubscribedWithoutUserID) private var didSubscribedWithoutUserID: Bool
+
     var generatingViewModel: FSInfoViewModel {
         .init(
             iconName: nil,
@@ -97,6 +99,13 @@ struct GroceriesView: View {
                     startGroceryPollingIfNeeded()
                 }
             }
+            .onChange(of: didSubscribedWithoutUserID, { _, didSubscribedWithoutUserID in
+                if didSubscribedWithoutUserID {
+                    viewModel.groceryWeeks.removeAll()
+                    viewModel.updateSelectedGroceryData(for: Date())
+                }
+            })
+            
         }
     }
     

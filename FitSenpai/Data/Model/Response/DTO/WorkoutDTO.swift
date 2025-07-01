@@ -57,7 +57,7 @@ struct WorkoutDayDTO: Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decodeIfPresent(String.self, forKey: .id) ?? UUID().uuidString
         self.day = try container.decodeIfPresent(String.self, forKey: .day) ?? ""
-        self.date = try container.decodeIfPresent(String.self, forKey: .day) ?? ""
+        self.date = try container.decodeIfPresent(String.self, forKey: .date) ?? ""
         self.title = try container.decodeIfPresent(String.self, forKey: .title) ?? ""
         self.totalTime = try container.decodeIfPresent(String.self, forKey: .totalTime) ?? ""
         self.totalRoutines = try container.decodeIfPresent(String.self, forKey: .totalRoutines) ?? ""

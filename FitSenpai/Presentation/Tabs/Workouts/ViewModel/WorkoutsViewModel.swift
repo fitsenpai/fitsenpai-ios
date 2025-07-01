@@ -53,8 +53,7 @@ extension WorkoutsViewModel {
             self.updateSelectedWorkoutData(for: Date())
             self.viewState = .idle
         } catch {
-            FSLogger.error("Failed to get workout plan: \(error.localizedDescription)")
-            viewState = .error(error)
+            self.viewState = .idle
         }
     }
     
@@ -153,10 +152,10 @@ extension WorkoutsViewModel {
     }
     
 
-    func onToggleCompleted(id: String) async {
+    func onToggleCompleted(for date: String, name: String) async {
         triggerHaptics()
         do {
-            try await updateRoutineUseCase.execute(id)
+            try await updateRoutineUseCase.execute(date: date, name: name)
             self.updateDailyProgress()
             self.objectWillChange.send()
         } catch {

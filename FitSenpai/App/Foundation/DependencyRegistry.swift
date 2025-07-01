@@ -68,6 +68,7 @@ enum DependencyRegistry {
         DependencyInjector.register(SignOutUseCase() as any SignOutUseCaseProtocol)
         DependencyInjector.register(GetUserUseCase() as any GetUserUseCaseProtocol)
         DependencyInjector.register(GetUserProfileUseCase() as any GetUserProfileUseCaseProtocol)
+        DependencyInjector.register(CreateProfileUseCase() as any CreateProfileUseCaseProtocol)
         DependencyInjector.register(WorkoutDemoUseCase() as any WorkoutDemoUseCaseProtocol)
         DependencyInjector.register(WorkoutPlanUseCase() as any WorkoutPlanUseCaseProtocol)
         DependencyInjector.register(GenerateWorkoutUseCase() as any GenerateWorkoutUseCaseProtocol)

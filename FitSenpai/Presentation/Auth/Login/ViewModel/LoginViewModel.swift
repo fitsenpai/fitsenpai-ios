@@ -28,6 +28,7 @@ class LoginViewModel: NSObject, ObservableObject, ASWebAuthenticationPresentatio
     @Inject private var getUserProfileUseCase: GetUserProfileUseCaseProtocol
     
     @AppState(\.loginMethod) var loginMethod: String?
+    @AppState(\.didSubscribedWithoutUserID) var didSubscribedWithoutUserID: Bool
     
     private let appleSignInManager = AppleSignInManager()
     private var authSession: ASWebAuthenticationSession?
@@ -114,9 +115,7 @@ class LoginViewModel: NSObject, ObservableObject, ASWebAuthenticationPresentatio
     func loginWithGoogle() async {
         viewState = .loading
         errorMessage = nil
-        
-        defer { viewState = .idle }
-        
+                
         do {
             let urlString = try await signinUseCase.executeWithGoogle()
             loginMethod = LoginMethod.google.rawValue
@@ -164,6 +163,8 @@ class LoginViewModel: NSObject, ObservableObject, ASWebAuthenticationPresentatio
     }
     
     private func handleGoogleAuthCallback(_ url: URL) {
+        defer { viewState = .idle }
+
         guard let queryItems = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems, let code = queryItems.first(where: { $0.name == "code" })?.value else {
             FSLogger.log("Google Auth Callback: Code not found in query parameters. URL: \(url.absoluteString)")
             return
@@ -175,6 +176,8 @@ class LoginViewModel: NSObject, ObservableObject, ASWebAuthenticationPresentatio
                 networkSession.setTokens(accessToken: session.token, refreshToken: session.refreshToken)
                 loginMethod = LoginMethod.google.rawValue
                 await getCurrentUser()
+            } catch {
+                self.errorMessage = "Google Sign-In failed: \(error.localizedDescription)"
             }
         }
     }
@@ -191,9 +194,18 @@ class LoginViewModel: NSObject, ObservableObject, ASWebAuthenticationPresentatio
     /// Retrieves the currently authenticated user and updates the global environment.
     func getCurrentUser() async {
         do {
-            _ = try await self.getUserProfileUseCase.execute()
-            loginMethod = LoginMethod.google.rawValue
+            async let profileData =  self.getUserProfileUseCase.execute()
+            async let userData = self.getUserUseCase.execute()
+            
+            let _ = try await profileData
+            let user = try await userData
+            
+            didSubscribedWithoutUserID = false
             shouldLogin = true
+            let userId = user.id.uuidString
+            SuperwallManager.shared.userId = userId
+            SuperwallManager.shared.identifyUser(with: userId)
+            loginMethod = LoginMethod.google.rawValue
         } catch {
             networkSession.setTokens(accessToken: "", refreshToken: "")
             FSLogger.log("Login error: \(error.localizedDescription)")

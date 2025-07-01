@@ -7,11 +7,13 @@
 
 import SwiftUI
 import AVKit
+import Lottie
 
 struct WorkoutDetailView: View {
     @EnvironmentObject private var viewModel: WorkoutsViewModel
     @EnvironmentObject private var superwall: SuperwallManager
     @Environment(\.dismiss) private var dismiss
+    @State private var viewState: ViewState = .idle
     
     private var player: AVPlayer
     
@@ -56,15 +58,21 @@ struct WorkoutDetailView: View {
                 })
             } else if !routine.isCompleted {
                 FSButton(title: "Complete", fontStyle: .bodyBold16, cornerRadius: 32, tapAction: {
-                    routine.isCompleted = true
-                    viewModel.updateDailyProgress()
-                    viewModel.objectWillChange.send()
-                    dismiss()
-                    triggerHaptics()
+                    Task {
+                        viewState = .updating
+                        defer { viewState = .idle }
+                        await viewModel.onToggleCompleted(for: routine.date, name: routine.name)
+                        withAnimation {
+                            routine.isCompleted = true
+                        }
+                        dismiss()
+                        triggerHaptics()
+                    }
                 })
             }
             
         }
+        .blur(radius: viewState == .updating ? 10 : 0)
         .padding(24)
         .background {
             Color.workoutBackgroundColor.ignoresSafeArea()
@@ -72,6 +80,16 @@ struct WorkoutDetailView: View {
         .overlay(alignment: .top) {
             SheetIndicator()
                 .padding(12)
+        }
+        .overlay(alignment: .center) {
+            if viewState == .updating {
+                ZStack {
+                    Color.clear
+                    LottieView(animation: .named("fs-loading"))
+                      .playing(loopMode: .loop)
+                      .frame(width: 32, height: 32)
+                }
+            }
         }
         .onDisappear {
             player.pause()

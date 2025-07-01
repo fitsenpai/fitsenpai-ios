@@ -14,6 +14,8 @@ struct WorkoutsView: View {
     @StateObject private var viewModel: WorkoutsViewModel = .init()
     @StateObject private var calendarManager = CalendarDataManager.shared
     
+    @AppState(\.didSubscribedWithoutUserID) private var didSubscribedWithoutUserID: Bool
+    
     var generatingViewModel: FSInfoViewModel {
         .init(
             iconName: nil,
@@ -88,6 +90,12 @@ struct WorkoutsView: View {
             })
             .onReceive(viewModel.$workoutWeeks, perform: { weeks in
                 configureCalendar(with: weeks)
+            })
+            .onChange(of: didSubscribedWithoutUserID, { _, didSubscribedWithoutUserID in
+                if didSubscribedWithoutUserID {
+                    viewModel.workoutWeeks.removeAll()
+                    viewModel.updateSelectedWorkoutData(for: Date())
+                }
             })
             .sheet(item: $viewModel.activeSheet, content: { type in
                 switch type {

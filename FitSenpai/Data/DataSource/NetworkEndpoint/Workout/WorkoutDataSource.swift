@@ -13,7 +13,8 @@ protocol WorkoutDataSourceProtocol {
     func getWorkoutPlan() async throws -> WorkoutPlanResponse
     func generateWorkout(_ params: GenerateRequest) async throws -> WorkoutWeekDTO
     func regenerateWorkout(_ params: RegenerateRequest) async throws -> WorkoutDayDTO
-    func generateWorkoutDemo(_ params: WorkoutDemoRequest) async throws -> WorkoutDayDTO
+    func generateWorkoutDemo(_ params: WorkoutProfileRequest) async throws -> WorkoutDayDTO
+    func updateWorkoutRoutine(_ params: UpdateRoutineRequest) async throws 
 }
 
 final class WorkoutDataSource: WorkoutDataSourceProtocol {
@@ -36,7 +37,11 @@ final class WorkoutDataSource: WorkoutDataSourceProtocol {
         try await networkService.request(.regenerateWorkoutPlan(params))
     }
     
-    func generateWorkoutDemo(_ params: WorkoutDemoRequest) async throws -> WorkoutDayDTO {
+    func generateWorkoutDemo(_ params: WorkoutProfileRequest) async throws -> WorkoutDayDTO {
         try await networkService.request(.generateWorkoutDemo(params))
+    }
+    
+    func updateWorkoutRoutine(_ params: UpdateRoutineRequest) async throws {
+        try await networkService.request(.updateWorkoutRoutine(params))
     }
 }

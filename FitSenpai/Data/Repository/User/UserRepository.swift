@@ -35,6 +35,11 @@ final class UserRepository: UserRepositoryProtocol {
         return try await remoteDataSource.getUserProfile().toDomain()
     }
     
+    func createUserProfile() async throws  {
+        guard let profileEntity = profileStore.getCurrentProfile()?.toDomain() else { throw AuthRepositoryError.missingUser }
+        try await remoteDataSource.createUserProfile(profileEntity.toRequestBody())
+    }
+    
     func saveUserProfile(_ userProfile: UserProfile) async throws -> UserProfile? {
         return profileStore.addProfile(userProfile.toEntity())?.toDomain()
     }

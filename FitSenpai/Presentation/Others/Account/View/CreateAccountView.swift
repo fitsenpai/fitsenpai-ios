@@ -33,6 +33,7 @@ struct CreateAccountView: View {
                         background: .black) {
                     appViewModel.loginWithApple()
                 }
+                        .disabled(true)
                 
                 FSButton(icon: "google-logo",
                         title: "Sign in with Google",
@@ -40,7 +41,9 @@ struct CreateAccountView: View {
                         cornerRadius: 100,
                         background: .white,
                         borderColor: .fsPurple) {
-                    appViewModel.loginWithGoogle()
+                    Task {
+                        await appViewModel.loginWithGoogle()
+                    }
                 }
             }
             .padding(.horizontal, 24)

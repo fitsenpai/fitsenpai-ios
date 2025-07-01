@@ -20,7 +20,7 @@ struct SettingsMainView: View {
     @State private var showSafariView = false
     @State private var safariURL: URL?
     @State private var isPresentedManageSubscription: Bool = false
-        
+    
     // URLs
     private let supportEmail = "support@fitsenpai.com"
     private let termsURL = "https://www.fitsenpai.com/terms"
@@ -73,27 +73,7 @@ struct SettingsMainView: View {
                         
                         // MARK: Debug menu
                         if !appViewModel.isProduction {
-                            HStack(spacing: 24) {
-                                Spacer()
-                                buildVersionText
-                                    .padding(.bottom, 4)
-                                
-                                Menu {
-                                    Button(role: .destructive, action: clearAllData) {
-                                        Label("Clear All Data", systemImage: "trash")
-                                    }
-                                    
-                                    Button(action: clearCache) {
-                                        Label("Clear Cache", systemImage: "arrow.triangle.2.circlepath")
-                                    }
-                                } label: {
-                                    Text("Debug Menu")
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                }
-                                .padding(.bottom, 8)
-                                Spacer()
-                            }
+                            debugMenuSection
                         }
                     }
                 }
@@ -134,7 +114,6 @@ struct SettingsMainView: View {
                 .background(BackgroundClearView())
             })
         }
-        
         .environmentObject(viewModel)
         .navigationBarBackButtonHidden()
         .toolbar {
@@ -151,7 +130,7 @@ struct SettingsMainView: View {
                 }
             }
         }
-//        .reducedWhiteLoadingOverlay(state: $viewModel.viewState)
+        //        .reducedWhiteLoadingOverlay(state: $viewModel.viewState)
         .sheet(isPresented: $showSafariView) {
             if let url = safariURL {
                 SafariView(url: url)
@@ -308,9 +287,9 @@ struct SettingsMainView: View {
                 NegativeFeedbackInoutSheet {
                     viewModel.activeSheet = .negativeInput
                 }
-                    .flexibleSheet()
-                    .background(.white)
-                    .presentationCornerRadius(32)
+                .flexibleSheet()
+                .background(.white)
+                .presentationCornerRadius(32)
             }
         })
     }
@@ -517,5 +496,39 @@ struct SettingsMainView: View {
             print("Error clearing cache: \(error)")
         }
         triggerHaptics()
+    }
+    
+    private var debugMenuSection: some View {
+        HStack(spacing: 24) {
+            Spacer()
+            buildVersionText
+            
+            HStack(spacing: 12) {
+                Text("|")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                Text("\(superwall.status)")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                Text("|")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+           
+            Menu {
+                Button(role: .destructive, action: clearAllData) {
+                    Label("Clear All Data", systemImage: "trash")
+                }
+                
+                Button(action: clearCache) {
+                    Label("Clear Cache", systemImage: "arrow.triangle.2.circlepath")
+                }
+            } label: {
+                Text("Debug Menu")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            Spacer()
+        }
     }
 }

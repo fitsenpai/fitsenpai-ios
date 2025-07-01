@@ -18,7 +18,7 @@ final class MealsRepository: MealsRepositoryProtocol {
     
     @AppState(\.trialStartDate) private var trialStartDate
 
-    func generateMealPlanDemo(_ params: WorkoutDemoRequest) async throws -> ([WeekPlan<MealsDay>], GroceryWeek) {
+    func generateMealPlanDemo(_ params: WorkoutProfileRequest) async throws -> ([WeekPlan<MealsDay>], GroceryWeek) {
         let response = try await remoteDataSource.generateMealPlanDemo(params)
     
         let mealsDay = response.meal.toDomain()
@@ -40,10 +40,13 @@ final class MealsRepository: MealsRepositoryProtocol {
         } else {
             let mealPlanResponse = try await remoteDataSource.getMealPlan()
             mealsDataStore.deleteAll()
-            let domainPlan = mealPlanResponse.plan.map({ mealplan in
+            let domainPlan = mealPlanResponse?.plan.map({ mealplan in
                 return WeekPlan<MealsDay>.init(startDate: mealplan.startDate, endDate: mealplan.endDate, days: mealplan.days.map({ $0.toDomain() }))
-            })
-            mealsDataStore.addBatch(domainPlan.map({ $0.toEntity() }))
+            }) ?? []
+         
+            if !domainPlan.isEmpty {
+                mealsDataStore.addBatch(domainPlan.map({ $0.toEntity() }))
+            }
             
             return domainPlan
         }

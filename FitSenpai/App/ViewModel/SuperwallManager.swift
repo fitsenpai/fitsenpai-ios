@@ -79,10 +79,10 @@ final class SuperwallManager: ObservableObject, SuperwallDelegate {
     
     @Published private(set) var status: FSSubscriptionStatus = .unknown
     @Published private(set) var accessLevel: FSAccessLevel = .locked
+    @Published var userId: String?
     
     // MARK: - App State Properties
     
-    @AppState(\.userID) private var userID: String?
     @AppState(\.trialStartDate) private var trialStartDate: Date?
     @AppState(\.didSubscribedWithoutUserID) private var didSubscribedWithoutUserID: Bool
     
@@ -124,7 +124,7 @@ final class SuperwallManager: ObservableObject, SuperwallDelegate {
     
     /// Returns true if user can safely logout
     var canLogout: Bool {
-        !isFirstDayTrialActive && !didSubscribedWithoutUserID
+        !isFirstDayTrialActive
     }
     
     /// Returns true if user is within their first 24-hour trial period
@@ -151,10 +151,6 @@ final class SuperwallManager: ObservableObject, SuperwallDelegate {
     func configure() {
         Superwall.configure(apiKey: apiKey)
         Superwall.shared.delegate = self
-        
-        if let deviceId {
-            self.identifyUser(with: deviceId.uuidString)
-        }
     }
     
     // MARK: - Trial Management
@@ -182,7 +178,7 @@ final class SuperwallManager: ObservableObject, SuperwallDelegate {
                 self.handleSubscriptionUpdate()
                 
                 // Show login screen if user subscribed without being logged in
-                if self.userID == nil {
+                if self.userId == nil {
                     self.loginPresenter?.presentLogin()
                 }
                 
@@ -223,9 +219,9 @@ final class SuperwallManager: ObservableObject, SuperwallDelegate {
     func restore() async {
         logger.debug("Starting purchase restoration...")
         
-        if let userID = userID {
-            logger.debug("Restoring purchases for user: \(userID)")
-            Superwall.shared.identify(userId: userID)
+        if let userId {
+            logger.debug("Restoring purchases for user: \(userId)")
+            Superwall.shared.identify(userId: userId)
         } else if let deviceId = deviceId {
             logger.debug("No user ID found, using device ID: \(deviceId)")
             Superwall.shared.identify(userId: deviceId.uuidString)
@@ -271,17 +267,23 @@ final class SuperwallManager: ObservableObject, SuperwallDelegate {
     /// Resets the current user session
     func resetUser() {
         Superwall.shared.reset()
-        userID = nil
+        userId = nil
         logger.debug("🔓 User reset")
     }
     
     /// Switches to a different user
     /// - Parameter id: The UUID of the user to switch to
     func switchToUser(with id: UUID?) {
+        userId = id?.uuidString
         Superwall.shared.reset()
         if let id {
             Superwall.shared.identify(userId: id.uuidString)
             logger.debug("🔄 Switched to user with ID: \(id)")
         }
+    }
+    
+    func restoreSubscription(with userID: UUID?) async {
+        self.userId = userID?.uuidString
+        await self.restore()
     }
 }

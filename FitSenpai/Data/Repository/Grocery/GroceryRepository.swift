@@ -22,10 +22,13 @@ final class GroceryRepository: GroceryRepositoryProtocol {
         } else {
             let response = try await remoteDataSource.getGroceriesPlan()
             groceriesDataStore.deleteAll()
-            let domainPlan = response.plan.map({ plan in
+            let domainPlan = response?.plan.map({ plan in
                 return plan.toDomain()
-            })
-            groceriesDataStore.addBatch(domainPlan.map({ $0.toEntity() }))
+            }) ?? []
+            
+            if !domainPlan.isEmpty {
+                groceriesDataStore.addBatch(domainPlan.map({ $0.toEntity() }))
+            }
             
             return domainPlan
         }

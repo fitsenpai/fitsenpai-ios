@@ -11,8 +11,8 @@ import CoreKit
 protocol MealsDataSourceProtocol {
     func generateMealPlan(_ params: GenerateRequest) async throws -> Void
     func regenerateMealPlan(_ params: RegenerateRequest) async throws -> Void
-    func generateMealPlanDemo(_ params: WorkoutDemoRequest) async throws -> MealPlanDemoResponse
-    func getMealPlan() async throws -> MealPlanResponse
+    func generateMealPlanDemo(_ params: WorkoutProfileRequest) async throws -> MealPlanDemoResponse
+    func getMealPlan() async throws -> MealPlanResponse?
 }
 
 final class MealsDataSource: MealsDataSourceProtocol {
@@ -23,11 +23,11 @@ final class MealsDataSource: MealsDataSourceProtocol {
     
     // MARK: - API Calls
     
-    func generateMealPlanDemo(_ params: WorkoutDemoRequest) async throws -> MealPlanDemoResponse {
+    func generateMealPlanDemo(_ params: WorkoutProfileRequest) async throws -> MealPlanDemoResponse {
         return try await networkService.request(.generateMealsDemo(params))
     }
     
-    func getMealPlan() async throws -> MealPlanResponse {
+    func getMealPlan() async throws -> MealPlanResponse? {
         return try await networkService.request(.getMealPlan)
     }
     

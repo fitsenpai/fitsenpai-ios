@@ -9,7 +9,7 @@
 import Foundation
 
 protocol MealsRepositoryProtocol {
-    func generateMealPlanDemo(_ params: WorkoutDemoRequest) async throws -> ([WeekPlan<MealsDay>], GroceryWeek)
+    func generateMealPlanDemo(_ params: WorkoutProfileRequest) async throws -> ([WeekPlan<MealsDay>], GroceryWeek)
     func getMealPlan() async throws -> [WeekPlan<MealsDay>]
     func generateMealPlan(_ params: GenerateRequest) async throws
     func regenerateMealPlan(_ params: RegenerateRequest) async throws

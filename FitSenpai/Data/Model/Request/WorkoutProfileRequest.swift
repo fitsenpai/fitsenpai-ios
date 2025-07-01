@@ -6,7 +6,7 @@
 //
 
 
-struct WorkoutDemoRequest: ParameterProtocol {
+struct WorkoutProfileRequest: ParameterProtocol {
     let gender: String?
     let genderOther: String?
     let activityLevel: String?

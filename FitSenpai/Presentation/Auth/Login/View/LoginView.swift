@@ -59,6 +59,7 @@ struct LoginView: View {
                         viewModel.loginWithApple()
                     }
                 }
+                .disabled(true)
                 
                 FSButton(icon: "google-logo", title: "Google", fontStyle: .bodyBold16, cornerRadius: 100, background: .white, borderColor: .fsPurple) {
                     Task {

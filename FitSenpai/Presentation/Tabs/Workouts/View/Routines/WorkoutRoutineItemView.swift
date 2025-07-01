@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import Lottie
 
 struct WorkoutRoutineItemView: View {
     @EnvironmentObject private var viewModel: WorkoutsViewModel
     @Binding var routine: WorkoutRoutine
+    @State private var viewState: ViewState = .idle
     
     init(routine: Binding<WorkoutRoutine>) {
         self._routine = routine
@@ -65,19 +67,34 @@ struct WorkoutRoutineItemView: View {
     
     var checkBoxButton: some View {
         Button(action: {
+            guard !routine.isCompleted else { return }
             Task { @MainActor in
-                routine.isCompleted.toggle()
-                await viewModel.onToggleCompleted(id: routine.id)
+                viewState = .updating
+                defer { viewState = .idle }
+                await viewModel.onToggleCompleted(for: routine.date, name: routine.name)
+                withAnimation {
+                    routine.isCompleted = true
+                }
             }
         }, label: {
-            if routine.isCompleted {
-                Image(.icCheckboxSelected)
-                    .resizable()
-                    .frame(width: 29, height: 29)
-            } else {
-                Image(.icCheckboxUnselected)
-                    .resizable()
-                    .frame(width: 26, height: 26)
+            Group {
+                if routine.isCompleted {
+                    Image(.icCheckboxSelected)
+                        .resizable()
+                        .frame(width: 29, height: 29)
+                } else {
+                    Image(.icCheckboxUnselected)
+                        .resizable()
+                        .frame(width: 26, height: 26)
+                }
+            }
+            .overlay(alignment: .center) {
+                if viewState == .updating {
+                    LottieView(animation: .named("fs-loading"))
+                      .playing(loopMode: .loop)
+                      .frame(width: 32, height: 32)
+
+                }
             }
         })
     }

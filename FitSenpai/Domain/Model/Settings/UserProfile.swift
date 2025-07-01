@@ -116,9 +116,9 @@ struct UserProfile {
         return entity
     }
     
-    func toRequestBody() -> WorkoutDemoRequest {
+    func toRequestBody() -> WorkoutProfileRequest {
         
-        return WorkoutDemoRequest(
+        return WorkoutProfileRequest(
             gender: gender?.id,
             genderOther: gender?.id == "other" ? "other": nil,
             activityLevel: activityLevel?.id,

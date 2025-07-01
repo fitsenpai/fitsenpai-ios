@@ -13,3 +13,8 @@ struct RegenerateRequest: ParameterProtocol {
     let date: String
     let instruction: String
 }
+
+struct UpdateRoutineRequest: ParameterProtocol {
+    let date: String
+    let name: String
+}

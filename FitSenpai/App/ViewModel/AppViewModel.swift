@@ -21,6 +21,9 @@ class AppViewModel: NSObject, ObservableObject {
     /// The authenticated user object, if available.
     @Published var user: FSUser?
     
+    /// The authenticated user object, if available.
+    @Published var userProfile: UserProfile?
+    
     /// Indicates whether the user is currently logged in.
     @Published var authState: AppAuthState = .checkingAuth
     
@@ -36,12 +39,23 @@ class AppViewModel: NSObject, ObservableObject {
     /// A flag indicating whether the user should be directed to the sign in screen.
     @Published var shouldSignIn: Bool = false
     
+    @Published var errorMessage: String?
+    
+    @Published var networkSession = NetworkSession.shared
+
     // MARK: - UseCases
     /// Use case for fetching the current user from a data source (e.g., Supabase).
     @Inject private var getUserUseCase: GetUserUseCaseProtocol
+    @Inject private var signinUseCase: SigninUseCaseProtocol
+    @Inject private var getUserProfileUseCase: GetUserProfileUseCaseProtocol
+    @Inject private var createProfileUseCase: CreateProfileUseCaseProtocol
     
     @AppState(\.loginMethod) var loginMethod: String?
-    
+    @AppState(\.didSubscribedWithoutUserID) private var didSubscribedWithoutUserID: Bool
+
+    private let appleSignInManager = AppleSignInManager()
+    private var authSession: ASWebAuthenticationSession?
+        
     /// A flag indicating whether the user should be directed to the login screen.
     var isProduction: Bool {
         return EnvironmentManager.shared.value(for: .isProduction) ?? false
@@ -50,9 +64,6 @@ class AppViewModel: NSObject, ObservableObject {
     var isLoggedIn: Bool {
         return authState == .authenticated
     }
-    
-    private let appleSignInManager = AppleSignInManager()
-    private let superwall = SuperwallManager.shared
 
     /// Initializes the AppViewModel.
     ///
@@ -62,14 +73,13 @@ class AppViewModel: NSObject, ObservableObject {
         super.init()
         Task { @MainActor in
             // Register as login presenter
-            self.superwall.loginPresenter = self
+            SuperwallManager.shared.loginPresenter = self
             await self.getCurrentUser()
         }
        
     }
     
 }
-
 
 // MARK: - Public Methods
 
@@ -88,23 +98,6 @@ extension AppViewModel {
     
     func handleExistingAccount() {
         authDestination = .signin
-    }
-    
-    func loginWithGoogle() {
-        self.loginMethod = LoginMethod.google.rawValue
-        guard let url = URL(string: "https://fitsenpai-web-git-docs-doument-auth-endpoints-c35204-royallabs.vercel.app/api/user/signInWithGoogle") else {
-            FSLogger.error("Invalid URL for Google Sign In")
-            return
-        }
-
-        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-              let rootViewController = windowScene.windows.first?.rootViewController else {
-            FSLogger.error("Could not get root view controller to present SafariViewController")
-            return
-        }
-
-        let safariVC = SFSafariViewController(url: url)
-        rootViewController.present(safariVC, animated: true, completion: nil)
     }
     
     func loginWithApple() {
@@ -143,13 +136,11 @@ extension AppViewModel {
     }
     
     func startTrial() {
-        self.superwall.startTrial()
+        SuperwallManager.shared.startTrial()
         self.loginMethod = LoginMethod.trial.rawValue
         self.authState = .ontrial
     }
 }
-
-
 
 // MARK: - Private Methods
 
@@ -174,14 +165,7 @@ private extension AppViewModel {
             
             self.authState = .authenticated
             
-            // Additional startup tasks, e.g., fetching weeks to generate
-            let weekGenerator = WeekGenerator(client: supabaseClient)
-            if let weekToGenerate = try await weekGenerator.execute(forUser: session.user.id) {
-                globalAppEnvObject.weekToGenerate = weekToGenerate
-                print("Week to generate: \(weekToGenerate)")
-            } else {
-                print("No week data available.")
-            }
+
         } catch {
             print("No active session found or error occurred: \(error.localizedDescription)")
             self.authState = .unauthenticated
@@ -191,7 +175,7 @@ private extension AppViewModel {
     /// Retrieves the currently authenticated user and updates the global environment.
     func getCurrentUser() async {
         
-        guard !superwall.isFirstDayTrialActive, !superwall.isSubscrivedWithoutUserID else {
+        guard !SuperwallManager.shared.isFirstDayTrialActive, !SuperwallManager.shared.isSubscrivedWithoutUserID else {
             self.authState = .ontrial
             return
         }
@@ -199,8 +183,8 @@ private extension AppViewModel {
         do {
             let user = try await self.getUserUseCase.execute()
             updateUser(user)
-            superwall.endTrial()
-            superwall.switchToUser(with: user.id)
+            SuperwallManager.shared.endTrial()
+            SuperwallManager.shared.switchToUser(with: user.id)
             authState = .authenticated
         } catch {
             NSLog("Login error: \(error.localizedDescription)")
@@ -217,7 +201,92 @@ private extension AppViewModel {
     
 }
 
-// MARK: - LoginPresenter
+// MARK: - Google Login
+
+extension AppViewModel: ASWebAuthenticationPresentationContextProviding {
+    
+    func loginWithGoogle() async {
+        viewState = .loading
+        errorMessage = nil
+        
+        defer { viewState = .idle }
+        
+        do {
+            let urlString = try await signinUseCase.executeWithGoogle()
+            
+            guard let authURL = URL(string: urlString) else {
+                return
+            }
+            
+            let callbackScheme = "fitsenpai"
+
+            authSession = ASWebAuthenticationSession(
+                url: authURL,
+                callbackURLScheme: callbackScheme,
+                completionHandler: { [weak self] callbackURL, error in
+                    guard let self = self else { return }
+                    
+                    if let error = error {
+                        self.errorMessage = "Google Sign-In failed: \(error.localizedDescription)"
+                        FSLogger
+                            .log(self.errorMessage ?? "Google Sign-In error")
+                        self.viewState = .idle
+                        return
+                    }
+                    
+                    guard let callbackURL = callbackURL else {
+                        self.errorMessage = "Google Sign-In failed: No callback URL received."
+                        FSLogger.log(self.errorMessage ?? "No callback URL")
+                        self.viewState = .idle
+                        return
+                    }
+                    
+                    self.handleGoogleAuthCallback(callbackURL)
+                })
+
+            authSession?.presentationContextProvider = self
+            authSession?.start()
+            viewState = .loading
+            
+        } catch {
+            errorMessage = error.localizedDescription
+            print("Error during Google login: \(error.localizedDescription)")
+        }
+
+    }
+    
+    private func handleGoogleAuthCallback(_ url: URL) {
+        guard let queryItems = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems, let code = queryItems.first(where: { $0.name == "code" })?.value else {
+            FSLogger.log("Google Auth Callback: Code not found in query parameters. URL: \(url.absoluteString)")
+            return
+        }
+        
+        Task { @MainActor in
+            do {
+                let session = try await signinUseCase.executeWithGoogleCallback(code: code)
+                networkSession.setTokens(accessToken: session.token, refreshToken: session.refreshToken)
+        
+                try await createProfileUseCase.execute()
+                let user = try await getUserUseCase.execute()
+                SuperwallManager.shared.identifyUser(with: user.id.uuidString)
+                loginMethod = LoginMethod.google.rawValue
+                didSubscribedWithoutUserID = false
+                shouldSignIn = false
+            } catch {
+                self.errorMessage = "Google Sign-In failed: \(error.localizedDescription)"
+            }
+        }
+    }
+    
+    func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let window = windowScene.windows.first(where: { $0.isKeyWindow }) else {
+            FSLogger.log("Could not find key window for ASWebAuthenticationSession. Returning a new UIWindow().")
+            return UIWindow()
+        }
+        return window
+    }
+}
 
 extension AppViewModel: LoginPresenter {
     func presentLogin() {

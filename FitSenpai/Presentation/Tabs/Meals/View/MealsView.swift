@@ -14,6 +14,8 @@ struct MealsView: View {
     @State private var pollingTimer: Timer?
     @State private var mealPollingTimer: Timer?
     
+    @AppState(\.didSubscribedWithoutUserID) private var didSubscribedWithoutUserID: Bool
+    
     let columns = [
         GridItem(.flexible(), spacing: 8),
         GridItem(.flexible(), spacing: 8)
@@ -156,30 +158,23 @@ struct MealsView: View {
                 }
             }
             .onReceive(calendarManager.$selectedDate, perform: { date in
-                print("🔄 MealsView: Calendar date changed, calling updateSelectedData")
                 viewModel.updateSelectedData(for: date)
             })
             .onAppear {
-                print("🔄 MealsView: onAppear called")
                 if !viewModel.mealsWeek.isEmpty {
                     viewModel.updateSelectedData(for: calendarManager.selectedDate)
                 }
             }
             .onChange(of: viewModel.shouldPoll) { oldValue, newValue in
-                print("🔄 MealsView: shouldPoll changed from \(oldValue) to \(newValue)")
                 if newValue {
-                    print("🔄 MealsView: Should start polling via shouldPoll change")
                     startMealPollingIfNeeded()
                 } else {
-                    print("🔄 MealsView: Should stop polling via shouldPoll change")
                     stopMealPolling()
                 }
             }
             .onChange(of: viewModel.viewState) { oldState, newState in
-                print("🔄 MealsView: viewState changed from \(oldState) to \(newState)")
                 // Start polling when generation completes and polling is needed
                 if case .idle = newState, viewModel.shouldPoll {
-                    print("🔄 MealsView: Generation complete and polling needed - starting timer via viewState")
                     startMealPollingIfNeeded()
                 }
             }
@@ -196,6 +191,12 @@ struct MealsView: View {
                     startMealPollingIfNeeded()
                 }
             }
+            .onChange(of: didSubscribedWithoutUserID, { _, didSubscribedWithoutUserID in
+                if didSubscribedWithoutUserID {
+                    viewModel.mealsWeek.removeAll()
+                    viewModel.updateSelectedMealData(for: Date())
+                }
+            })
         }
     }
     
