@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct GroceriesSectionView: View {
+    @StateObject private var calendarManager = CalendarDataManager.shared
+    @ObservedObject var viewModel: MealsViewModel
     @Binding var shoppingCategory: ShoppingCategory
     @State private var isShowingDetails: Bool = false
 
@@ -64,6 +66,9 @@ struct GroceriesSectionView: View {
                                 onItemSelected: {
                                     triggerHaptics()
                                     item.isSelected = true
+                                    Task {
+                                        await viewModel.toggleGroceryItem(date: calendarManager.selectedDate, name: item.name, category: shoppingCategory.category)
+                                    }
                                 },
                                 onItemDeselected: {
                                     triggerHaptics()

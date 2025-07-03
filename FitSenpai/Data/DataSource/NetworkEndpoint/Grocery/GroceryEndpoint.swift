@@ -11,20 +11,23 @@ import CoreKit
 
 enum GroceryEndpoint {
     case getGroceries
+    case groceryToggleCompleted(_ params: ParameterProtocol)
 }
 
 extension GroceryEndpoint: NetworkEndpoint {
     
     var path: String {
         switch self {
-        case .getGroceries:
-            return "/groceries"
+        case .getGroceries: "/groceries"
+        case .groceryToggleCompleted: "/groceries/items/toggle-completed"
+            
         }
     }
     
     var method: HTTPMethod {
         switch self {
         case .getGroceries: .get
+        case .groceryToggleCompleted: .patch
         }
     }
     
@@ -41,10 +44,21 @@ extension GroceryEndpoint: NetworkEndpoint {
     }
     
     var body: [String: Any]? {
-        return nil
+        switch self {
+        case .getGroceries:
+            return nil
+        case .groceryToggleCompleted(let params):
+            return params.toDictionary()
+        }
     }
     
     var queryItems: [URLQueryItem]? {
         nil // No query parameters needed for auth endpoints
     }
+}
+
+struct GroceryToggleParams: ParameterProtocol {
+    let date: String
+    let name: String
+    let category: String
 }

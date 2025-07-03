@@ -166,7 +166,7 @@ struct GroceriesView: View {
             VStack(alignment: .leading, spacing: 12) {
                 ForEach($viewModel.shoppingCategoryList) { $category in
                     GroceriesSectionView(
-                        shoppingCategory: $category
+                        viewModel: viewModel, shoppingCategory: $category
                     )
                     .modifier(onReceiveItems(category.items))
                 }

@@ -37,4 +37,8 @@ final class GroceryRepository: GroceryRepositoryProtocol {
     func updateGrocery(_ entity: GroceryWeekEntity) async throws {
         groceriesDataStore.updateSelectedItem(entity)
     }
+    
+    func toggleGroceryItem(_ params: GroceryToggleParams) async throws {
+        try await remoteDataSource.toggleGroceryItem(params)
+    }
 }

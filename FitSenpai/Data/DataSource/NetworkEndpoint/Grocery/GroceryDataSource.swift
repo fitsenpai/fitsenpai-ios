@@ -11,6 +11,7 @@ import CoreKit
 
 protocol GroceryDataSourceProtocol {
     func getGroceriesPlan() async throws -> GroceryPlanResponse?
+    func toggleGroceryItem(_ params: GroceryToggleParams) async throws
 }
 
 final class GroceryDataSource: GroceryDataSourceProtocol {
@@ -23,5 +24,9 @@ final class GroceryDataSource: GroceryDataSourceProtocol {
     
     func getGroceriesPlan() async throws -> GroceryPlanResponse? {
         return try await networkService.request(.getGroceries)
+    }
+    
+    func toggleGroceryItem(_ params: GroceryToggleParams) async throws {
+        return try await networkService.request(.groceryToggleCompleted(params))
     }
 }

@@ -10,13 +10,15 @@ import Foundation
 struct GroceryItemDTO: Decodable {
     let name: String?
     let qty: String?
+    let completed: Bool?
     let estimatedPrice: String?
 
     func toDomain() -> GroceryItem {
         return GroceryItem(
             name: name ?? "",
             qty: qty ?? "",
-            estimatedPrice: estimatedPrice ?? ""
+            estimatedPrice: estimatedPrice ?? "",
+            isSelected: completed ?? false
         )
     }
 }

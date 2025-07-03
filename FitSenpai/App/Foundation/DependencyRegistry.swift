@@ -84,6 +84,7 @@ enum DependencyRegistry {
         DependencyInjector.register(MealsPlanUseCase() as any MealsPlanUseCaseProtocol)
         DependencyInjector.register(MealsPlanUseCase() as any MealsPlanUseCaseProtocol)
         DependencyInjector.register(GroceryPlanUseCase() as any GroceryPlanUseCaseProtocol)
+        DependencyInjector.register(GroceryTogleUseCase() as any GroceryTogleUseCaseProtocol)
         DependencyInjector.register(UpdateGroceryUseCase() as any UpdateGroceryUseCaseProtocol)
         DependencyInjector.register(UpdateRoutineUseCase() as any UpdateRoutineUseCaseProtocol)
     }

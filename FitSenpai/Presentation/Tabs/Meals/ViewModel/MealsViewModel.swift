@@ -53,7 +53,7 @@ class MealsViewModel: ObservableObject, HandlesErrors {
     // MARK: - Grocery Dependencies
     @Inject private var groceryPlanUseCase: GroceryPlanUseCaseProtocol
     @Inject private var updateGroceryUseCase: UpdateGroceryUseCaseProtocol
-    @Inject private var groceriesDataStore: GroceriesDataStore
+    @Inject private var groceryTogleUseCase: GroceryTogleUseCaseProtocol
     
     init() {
         Task {
@@ -254,6 +254,11 @@ class MealsViewModel: ObservableObject, HandlesErrors {
                 try? await updateGroceryUseCase.execute(groceryWeek.toEntity())
             }
         }
+    }
+    
+    func toggleGroceryItem(date: Date, name: String, category: String) async {
+        let selectedDate = date.toString(WithFormat: "yyyy-MM-dd")
+        try? await groceryTogleUseCase.execute(.init(date: selectedDate, name: name, category: category))
     }
     
     // MARK: - Combined Update Method

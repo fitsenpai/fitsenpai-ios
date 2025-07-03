@@ -11,4 +11,5 @@ import Foundation
 protocol GroceryRepositoryProtocol {
     func getGroceries() async throws -> [GroceryWeek]
     func updateGrocery(_ entity: GroceryWeekEntity) async throws
+    func toggleGroceryItem(_ params: GroceryToggleParams) async throws 
 }
