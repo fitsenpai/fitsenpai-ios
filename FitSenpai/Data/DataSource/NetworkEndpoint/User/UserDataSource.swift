@@ -10,7 +10,6 @@ import Foundation
 import CoreKit
 
 protocol UserDataSourceProtocol {
-    func getUser() async throws -> UserDTO
     func getUserProfile() async throws -> UserProfileDTO
     func createUserProfile(_ params: WorkoutProfileRequest) async throws
     func updateUserProfile(_ params: WorkoutProfileRequest) async throws
@@ -24,10 +23,6 @@ final class UserDataSource: UserDataSourceProtocol {
     private var networkService: NetworkService<UserEndpoint>
     
     // MARK: - Auth API Calls
-    
-    func getUser() async throws -> UserDTO {
-        return try await networkService.request(.getUser)
-    }
     
     func getUserProfile() async throws -> UserProfileDTO {
         return try await networkService.request(.getUserProfile)

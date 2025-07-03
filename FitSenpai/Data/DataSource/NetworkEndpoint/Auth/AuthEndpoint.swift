@@ -13,11 +13,15 @@ enum AuthEndpoint {
     case signIn(email: String, password: String)
     case signUp(name: String, email: String, password: String)
     case signOut
-    case resetPassword(email: String)
-    case changePassword(currentPassword: String, newPassword: String)
     case signInWithApple(user: String)
     case signInWithGoogle
     case getLoginCallback(code: String)
+    case getUserAuth
+    case resetPassword(password: String)
+    case forgotPassword(email: String)
+    case deleteAccount(feedback: String)
+    case verifyOTP(email: String, token: String)
+    
 }
 
 extension AuthEndpoint: NetworkEndpoint {
@@ -37,28 +41,31 @@ extension AuthEndpoint: NetworkEndpoint {
         case .signInWithGoogle:
             return "/auth/mobile/google"
         case .resetPassword:
-            return "/user/reset-password"
-        case .changePassword:
-            return "/user/change-password"
-            
+            return "/auth/reset-password"
+        case .forgotPassword:
+            return "/auth/forgot-password"
+        case .getUserAuth, .deleteAccount:
+            return "/auth/me"
+        case .verifyOTP:
+            return "/auth/verify-otp"
         }
     }
     
     var method: HTTPMethod {
         switch self {
-        case .signIn, .signUp, .signOut, .resetPassword:
+        case .signIn, .signUp, .signOut, .resetPassword, .forgotPassword, .verifyOTP:
             return .post
-        case .changePassword:
-            return .put
-        case .signInWithGoogle, .signInWithApple, .getLoginCallback:
+        case .getUserAuth, .signInWithGoogle, .signInWithApple, .getLoginCallback:
             return .get
+        case .deleteAccount:
+            return .delete
         }
     }
     
     var headers: [String: String]? {
         var headers = ["Content-Type": "application/json"]
         switch self {
-        case .signIn, .signUp, .resetPassword, .signInWithGoogle, .signInWithApple:
+        case .signIn, .signUp, .resetPassword, .signInWithGoogle, .signInWithApple, .verifyOTP:
             // No additional headers needed for public endpoints
             break
         default:
@@ -75,18 +82,15 @@ extension AuthEndpoint: NetworkEndpoint {
         case let .signIn(email, password):
             return ["email": email, "password": password]
         case let .signUp(name, email, password):
-            return [
-                "name": name,
-                "email": email,
-                "password": password
-            ]
-        case let .resetPassword(email):
+            return ["name": name, "email": email, "password": password]
+        case let .resetPassword(password):
+            return ["password": password]
+        case let .forgotPassword(email):
             return ["email": email]
-        case let .changePassword(currentPassword, newPassword):
-            return [
-                "current_password": currentPassword,
-                "new_password": newPassword
-            ]
+        case let .deleteAccount(feedback):
+            return ["feedback": feedback]
+        case let .verifyOTP(email, token):
+            return ["email": email, "token": token]
         default:
             return nil
         }

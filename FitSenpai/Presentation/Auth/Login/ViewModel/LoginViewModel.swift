@@ -15,15 +15,15 @@ import Supabase
 
 @MainActor
 class LoginViewModel: NSObject, ObservableObject, ASWebAuthenticationPresentationContextProviding {
-    @Published var email: String = "obi+3@gmail.com"
-    @Published var password: String = "test12345"
+    @Published var email: String = ""
+    @Published var password: String = ""
     @Published var viewState: ViewState = .idle
     @Published var errorMessage: String?
     @Published var showForgotPassword: Bool = false
     @Published var shouldLogin: Bool = false
     
     /// Use case for fetching the current user from a data source (e.g., Supabase).
-    @Inject private var getUserUseCase: GetUserUseCaseProtocol
+    @Inject private var getUserUseCase: GetUserAuthUseCaseProtocol
     @Inject private var signinUseCase: SigninUseCaseProtocol
     @Inject private var getUserProfileUseCase: GetUserProfileUseCaseProtocol
     

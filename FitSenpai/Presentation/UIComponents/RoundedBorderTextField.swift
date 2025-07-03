@@ -15,6 +15,8 @@ struct RoundedBorderTextField: View {
     var showAccessory: Bool = false
     var height: CGFloat = 44
     var cornerRadius: CGFloat = 6.0
+    var errorMessage: String? = nil
+    var isValid: Bool = true
     
     @State private var isInputHidden: Bool = true
 
@@ -47,12 +49,35 @@ struct RoundedBorderTextField: View {
             }
             .background(
                 RoundedRectangle(cornerRadius: cornerRadius)
-                    .stroke(Color.fsInputBorderColor, lineWidth: 1)
+                    .stroke(isValid ? Color.fsInputBorderColor : Color.red, lineWidth: isValid ? 1 : 2)
             )
+            
+            // Error message
+            if let errorMessage = errorMessage, !isValid {
+                FSText(text: errorMessage, fontStyle: .caption2, color: .red)
+                    .padding(.leading, 4)
+            }
         }
     }
 }
 
 #Preview {
-    RoundedBorderTextField(text: .constant(""), label: "Email", isSecure: true, showAccessory: true)
+    VStack(spacing: 20) {
+        RoundedBorderTextField(
+            text: .constant(""), 
+            label: "Email", 
+            isSecure: true, 
+            showAccessory: true
+        )
+        
+        RoundedBorderTextField(
+            text: .constant(""), 
+            label: "Password", 
+            isSecure: true, 
+            showAccessory: true,
+            errorMessage: "Password must be at least 8 characters",
+            isValid: false
+        )
+    }
+    .padding()
 }

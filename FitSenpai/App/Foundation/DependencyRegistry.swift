@@ -64,9 +64,13 @@ enum DependencyRegistry {
     /// Use cases represent the app's core business logic and are
     /// responsible for executing the app's actions based on user requests.
     static func registerUseCases() {
+        DependencyInjector.register(ForgotPasswordUseCase() as any ForgotPasswordUseCaseProtocol)
+        DependencyInjector.register(ResetPasswordUseCase() as any ResetPasswordUseCaseProtocol)
+        DependencyInjector.register(VerifyOTPUseCase() as any VerifyOTPUseCaseProtocol)
+        DependencyInjector.register(DeleteAccountUseCase() as any DeleteAccountUseCaseProtocol)
         DependencyInjector.register(SigninUseCase() as any SigninUseCaseProtocol)
         DependencyInjector.register(SignOutUseCase() as any SignOutUseCaseProtocol)
-        DependencyInjector.register(GetUserUseCase() as any GetUserUseCaseProtocol)
+        DependencyInjector.register(GetUserAuthUseCase() as any GetUserAuthUseCaseProtocol)
         DependencyInjector.register(GetUserProfileUseCase() as any GetUserProfileUseCaseProtocol)
         DependencyInjector.register(CreateProfileUseCase() as any CreateProfileUseCaseProtocol)
         DependencyInjector.register(WorkoutDemoUseCase() as any WorkoutDemoUseCaseProtocol)

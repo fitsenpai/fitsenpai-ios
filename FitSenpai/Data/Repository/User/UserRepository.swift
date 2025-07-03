@@ -18,16 +18,6 @@ final class UserRepository: UserRepositoryProtocol {
     @AppState(\.trialStartDate) private var trialStartDate
     
     
-    func getUser() async throws -> FSUser {
-        let response = try await remoteDataSource.getUser()
-        
-        guard let user = response.toDomain() else {
-            throw AuthRepositoryError.missingUser
-        }
-        
-        return user
-    }
-    
     func getUserProfile() async throws -> UserProfile {
         if trialStartDate != nil, let profileEntity = profileStore.getCurrentProfile() {
             return profileEntity.toDomain()

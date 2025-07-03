@@ -22,7 +22,7 @@ class SettingsViewModel: ObservableObject {
     // MARK: - Use Cases
     @Inject private var singoutUseCase: SignOutUseCaseProtocol
     @Inject private var getUserProfileUseCase: GetUserProfileUseCaseProtocol
-    @Inject private var getUserUseCase: GetUserUseCaseProtocol
+    @Inject private var getUserUseCase: GetUserAuthUseCaseProtocol
     @Inject private var saveUserProfileUseCase: SaveUserProfileUseCaseProtocol
 
     // MARK: - Init

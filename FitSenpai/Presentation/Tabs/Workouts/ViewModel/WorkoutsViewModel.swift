@@ -31,7 +31,6 @@ class WorkoutsViewModel: ObservableObject, HandlesErrors {
     @Inject private var generateWorkoutUseCase: GenerateWorkoutUseCaseProtocol
     @Inject private var regenerateWorkoutUseCase: RegenerateWorkoutUseCaseProtocol
 
-    private var cancellables = Set<AnyCancellable>()
     var animatedDailyProgress: Double  = 0
     
     private var isCheckingStatus = false
@@ -138,6 +137,9 @@ extension WorkoutsViewModel {
             self.selectedWorkoutDay = nil
             self.isPendingGeneration = false
         }
+        
+        // Update calendar data whenever selected workout data changes
+        self.updateCalendarData()
     }
     
     func updateDailyProgress() {
@@ -152,27 +154,51 @@ extension WorkoutsViewModel {
     }
     
 
-    func onToggleCompleted(for date: String, name: String) async {
-        triggerHaptics()
-        do {
-            try await updateRoutineUseCase.execute(date: date, name: name)
-            self.updateDailyProgress()
-            self.objectWillChange.send()
-        } catch {
-            FSLogger.error("Failed to save workout routine: \(error.localizedDescription)")
+    func onToggleCompleted(for date: String, name: String) async throws {
+        try await updateRoutineUseCase.execute(date: date, name: name)
+    }
+    
+
+    func updateCalendarData() {
+        // Only update calendar data, don't configure the manager
+        guard !workoutWeeks.isEmpty else { return }
+        
+        // Calculate progress data and highlighted days
+        var progressData: [Date: Double] = [:]
+        var highlightedDaysSet: Set<Int> = []
+        
+        for week in workoutWeeks {
+            for day in week.days {
+                guard let dayDate = day.date.toDate(format: nil) else { continue }
+                
+                // Calculate progress for this day
+                let completedRoutines = day.routines.filter { $0.isCompleted }.count
+                let totalRoutines = day.routines.count
+                let progress = totalRoutines > 0 ? Double(completedRoutines) / Double(totalRoutines) : 0.0
+                progressData[dayDate] = progress.isFinite ? progress : 0.0
+                
+                // Check if this day should be highlighted (not a rest day)
+                if !day.title.lowercased().contains("rest") && totalRoutines > 0 {
+                    let dayOfWeek = Calendar.current.component(.weekday, from: dayDate)
+                    highlightedDaysSet.insert(dayOfWeek)
+                }
+            }
         }
+        
+        // Update data with explicit property assignment to trigger @Published
+        let manager = CalendarDataManager.shared
+        
+        // Clear first to force change detection
+        manager.progressData = [:]
+        manager.highlightedDays = []
+        
+        // Then set the new values
+        manager.progressData = progressData
+        manager.highlightedDays = highlightedDaysSet
+        
+        // Force UI update
+        manager.objectWillChange.send()
     }
-
-}
-
-extension WorkoutDay {
-    func routinesSorted() -> Self {
-        self.routines.sort(by: { $0.sortIndex < $1.sortIndex })
-        return self
-    }
-}
-
-private extension WorkoutsViewModel {
 
     private func updateOrAddWorkoutWeek(_ workoutWeek: WeekPlan<WorkoutDay>) {
         if let index = findWeekIndex(by: workoutWeek.startDate, endDate: workoutWeek.endDate) {
@@ -208,4 +234,11 @@ private extension WorkoutsViewModel {
         return self.workoutWeeks[weekIndex].days.firstIndex { $0.date == date }
     }
 
+}
+
+extension WorkoutDay {
+    func routinesSorted() -> Self {
+        self.routines.sort(by: { $0.sortIndex < $1.sortIndex })
+        return self
+    }
 }

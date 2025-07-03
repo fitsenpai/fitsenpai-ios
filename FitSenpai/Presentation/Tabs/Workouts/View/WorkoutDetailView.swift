@@ -58,16 +58,14 @@ struct WorkoutDetailView: View {
                 })
             } else if !routine.isCompleted {
                 FSButton(title: "Complete", fontStyle: .bodyBold16, cornerRadius: 32, tapAction: {
-                    Task {
-                        viewState = .updating
-                        defer { viewState = .idle }
-                        await viewModel.onToggleCompleted(for: routine.date, name: routine.name)
-                        withAnimation {
-                            routine.isCompleted = true
-                        }
-                        dismiss()
-                        triggerHaptics()
+                    triggerHaptics()
+                    withAnimation {
+                        routine.isCompleted = true
+                        viewModel.updateDailyProgress()
+                        viewModel.updateCalendarData()
+                        viewModel.objectWillChange.send()
                     }
+                    Task { try? await viewModel.onToggleCompleted(for: routine.date, name: routine.name) }
                 })
             }
             

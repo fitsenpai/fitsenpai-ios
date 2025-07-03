@@ -8,12 +8,15 @@
 import Foundation
 
 protocol AuthRepositoryProtocol {
+    func getUserAuth() async throws -> FSUser
     func signIn(email: String, password: String) async throws -> (FSUser, FSSession)
     func signUp(name: String, email: String, password: String) async throws -> (FSUser, FSSession)
     func signInWithApple(user: String) async throws -> (FSUser, FSSession)
     func signInWithGoogle() async throws -> String
     func signOut() async throws
-    func sendPasswordResetEmail(to email: String) async throws
-    func changePassword(currentPassword: String, newPassword: String) async throws
     func getLoginCallback(code: String) async throws -> AuthCallbackResponse
+    func forgotPasswod(email: String) async throws
+    func resetPassword(password: String) async throws
+    func verifyOTP(email: String, token: String) async throws
+    func deleteAccount(feedback: String) async throws
 }

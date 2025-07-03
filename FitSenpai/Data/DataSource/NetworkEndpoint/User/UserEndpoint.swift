@@ -9,7 +9,6 @@ import Foundation
 import CoreKit
 
 enum UserEndpoint {
-    case getUser
     case getUserProfile
     case createUserProfile(_ params: ParameterProtocol)
     case updateUserProfile(_ params: ParameterProtocol)
@@ -20,8 +19,6 @@ extension UserEndpoint: NetworkEndpoint {
     
     var path: String {
         switch self {
-        case .getUser:
-            return "/users/me"
         case .getUserProfile, .updateUserProfile, .createUserProfile:
             return "/profile"
         case .deleteAccount:
@@ -31,7 +28,7 @@ extension UserEndpoint: NetworkEndpoint {
     
     var method: HTTPMethod {
         switch self {
-        case .getUser, .getUserProfile: .get
+        case .getUserProfile: .get
         case .createUserProfile: .post
         case .updateUserProfile: .patch
         case .deleteAccount: .delete

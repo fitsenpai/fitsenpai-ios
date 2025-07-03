@@ -2,7 +2,8 @@ import SwiftUI
 
 struct DeleteAccountView: View {
     @Environment(\.dismiss) var dismiss
-    @State private var selectedReason: DeletionReason?
+    @StateObject private var viewModel = AuthViewModel()
+    @State private var selectedReason: DeletionReason = .other
     @State private var navigateToSuccess = false
     
     enum DeletionReason: String, CaseIterable {
@@ -54,8 +55,14 @@ struct DeleteAccountView: View {
             VStack(spacing: 12) {
                 
                 FSButton(title: "Delete account", fontStyle: .bodyBold16, foregroundColor: .white, cornerRadius: 32, background: .red) {
-                    navigateToSuccess = true
+                    
                     triggerHaptics()
+                    Task {
+                        do {
+                            try await viewModel.deleteAccount(feedback: selectedReason.rawValue)
+                            navigateToSuccess = true
+                        }
+                    }
                 }
                 
                 FSButton(title: "Cancel", fontStyle: .bodyBold16, foregroundColor: .gray156, cornerRadius: 32, background: .white, borderColor: .gray156) {
@@ -66,6 +73,9 @@ struct DeleteAccountView: View {
         }
         .padding(24)
         .navigationBarBackButtonHidden()
+        .navigationDestination(isPresented: $navigateToSuccess) {
+            AccountDeletedView()
+        }
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: {
@@ -80,8 +90,13 @@ struct DeleteAccountView: View {
                 }
             }
         }
-        .navigationDestination(isPresented: $navigateToSuccess) {
-            AccountDeletedView()
+        .overlay(alignment: .center) {
+            if viewModel.viewState == .loading {
+                ZStack {
+                    Color.black.opacity(0.25)
+                    ProgressView()
+                }
+            }
         }
     }
 }

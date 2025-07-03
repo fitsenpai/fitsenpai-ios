@@ -45,7 +45,7 @@ class AppViewModel: NSObject, ObservableObject {
 
     // MARK: - UseCases
     /// Use case for fetching the current user from a data source (e.g., Supabase).
-    @Inject private var getUserUseCase: GetUserUseCaseProtocol
+    @Inject private var getUserUseCase: GetUserAuthUseCaseProtocol
     @Inject private var signinUseCase: SigninUseCaseProtocol
     @Inject private var getUserProfileUseCase: GetUserProfileUseCaseProtocol
     @Inject private var createProfileUseCase: CreateProfileUseCaseProtocol
@@ -144,32 +144,6 @@ extension AppViewModel {
 // MARK: - Private Methods
 
 private extension AppViewModel {
-    
-    /// (Deprecated) Initializes the user session by checking for an active session in Supabase.
-    /// This function will be removed in the future.
-    /// - Throws: An error if the FSClient could not be initialized.
-    func initSession() async throws {
-        defer { self.viewState = .idle }
-        guard let fsClient = FSClient.shared else {
-            throw NSError(domain: "AppStartBlock", code: -1, userInfo: [NSLocalizedDescriptionKey: "FSClient could not be initialized."])
-        }
-        
-        let supabaseClient = fsClient.getClient()
-        
-        // Check for an active session
-        do {
-            let session = try await supabaseClient.auth.session
-            self.initGlobalEnv(user: session.user)
-            print("Active session found for user: \(session.user.email ?? "unknown email")")
-            
-            self.authState = .authenticated
-            
-
-        } catch {
-            print("No active session found or error occurred: \(error.localizedDescription)")
-            self.authState = .unauthenticated
-        }
-    }
     
     /// Retrieves the currently authenticated user and updates the global environment.
     func getCurrentUser() async {

@@ -9,14 +9,17 @@ import Foundation
 import CoreKit
 
 protocol AuthDataSourceProtocol {
+    func getUserAuth() async throws -> UserDTO 
     func signIn(email: String, password: String) async throws -> LoginResponse
     func signInWithApple(user: String) async throws -> LoginResponse
     func signInWithGoogle() async throws -> SignInResponse
     func signUp(name: String, email: String, password: String) async throws -> LoginResponse
     func signOut() async throws
-    func sendPasswordResetEmail(to email: String) async throws
-    func changePassword(currentPassword: String, newPassword: String) async throws
     func getLoginCallback(code: String) async throws -> AuthCallbackResponse
+    func forgotPassword(email: String) async throws
+    func resetPassword(password: String) async throws
+    func verifyOTP(email: String, token: String) async throws
+    func deleteAccount(feedback: String) async throws
 }
 
 final class AuthDataSource: AuthDataSourceProtocol {
@@ -26,6 +29,10 @@ final class AuthDataSource: AuthDataSourceProtocol {
     private var networkService: NetworkService<AuthEndpoint>
     
     // MARK: - Auth API Calls
+    
+    func getUserAuth() async throws -> UserDTO {
+        return try await networkService.request(.getUserAuth)
+    }
     
     func signIn(email: String, password: String) async throws -> LoginResponse {
         return try await networkService.request(.signIn(email: email, password: password))
@@ -51,11 +58,19 @@ final class AuthDataSource: AuthDataSourceProtocol {
         try await networkService.request(.signOut)
     }
     
-    func sendPasswordResetEmail(to email: String) async throws {
-        try await networkService.request(.resetPassword(email: email))
+    func forgotPassword(email: String) async throws {
+        try await networkService.request(.forgotPassword(email: email))
     }
     
-    func changePassword(currentPassword: String, newPassword: String) async throws {
-        try await networkService.request(.changePassword(currentPassword: currentPassword, newPassword: newPassword))
+    func resetPassword(password: String) async throws {
+        try await networkService.request(.resetPassword(password: password))
+    }
+    
+    func verifyOTP(email: String, token: String) async throws {
+        try await networkService.request(.verifyOTP(email: email, token: token))
+    }
+    
+    func deleteAccount(feedback: String) async throws {
+        try await networkService.request(.deleteAccount(feedback: feedback))
     }
 }

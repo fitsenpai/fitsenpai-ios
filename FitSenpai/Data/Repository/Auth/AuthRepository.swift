@@ -13,6 +13,7 @@ enum AuthRepositoryError: LocalizedError {
     case missingAccessToken
     case missingRefreshToken
     case missingUser
+    case invalidEmail
     
     var errorDescription: String? {
         switch self {
@@ -24,6 +25,8 @@ enum AuthRepositoryError: LocalizedError {
             return "Refresh token is missing"
         case .missingUser:
             return "User data is missing"
+        case .invalidEmail:
+            return "Invalid email address."
         }
     }
 }
@@ -34,6 +37,16 @@ final class AuthRepository: AuthRepositoryProtocol {
     @Inject private var remoteDataSource: AuthDataSourceProtocol
 
     // MARK: - Authentication Methods
+    
+    func getUserAuth() async throws -> FSUser {
+        let response = try await remoteDataSource.getUserAuth()
+        
+        guard let user = response.toDomain() else {
+            throw AuthRepositoryError.missingUser
+        }
+        
+        return user
+    }
     
     func signIn(email: String, password: String) async throws -> (FSUser, FSSession) {
         let response = try await remoteDataSource.signIn(email: email, password: password)
@@ -91,11 +104,19 @@ final class AuthRepository: AuthRepositoryProtocol {
         NetworkSession.shared.clearTokens()
     }
     
-    func sendPasswordResetEmail(to email: String) async throws {
-        try await remoteDataSource.sendPasswordResetEmail(to: email)
+    func forgotPasswod(email: String) async throws {
+        try await remoteDataSource.forgotPassword(email: email)
     }
     
-    func changePassword(currentPassword: String, newPassword: String) async throws {
-        try await remoteDataSource.changePassword(currentPassword: currentPassword, newPassword: newPassword)
+    func resetPassword(password: String) async throws {
+        try await remoteDataSource.resetPassword(password: password)
+    }
+    
+    func verifyOTP(email: String, token: String) async throws {
+        try await remoteDataSource.verifyOTP(email: email, token: token)
+    }
+    
+    func deleteAccount(feedback: String) async throws {
+        try await remoteDataSource.deleteAccount(feedback: feedback)
     }
 }

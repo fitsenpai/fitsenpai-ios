@@ -2,7 +2,8 @@ import SwiftUI
 
 struct ChangePasswordView: View {
     @Environment(\.dismiss) var dismiss
-    @State private var currentPassword = ""
+    @StateObject private var viewModel = AuthViewModel()
+    
     @State private var newPassword = ""
     @State private var confirmPassword = ""
     @State private var showCurrentPassword = false
@@ -10,37 +11,77 @@ struct ChangePasswordView: View {
     @State private var showConfirmPassword = false
     @State private var navigateToForgotPassword = false
     
+    // Validation states
+    @State private var newPasswordError: String? = nil
+    @State private var confirmPasswordError: String? = nil
+    @State private var hasValidatedNewPassword = false
+    @State private var hasValidatedConfirmPassword = false
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 32) {
             Text("Change password")
                 .font(.bodyBold28)
             
-            VStack(alignment: .leading, spacing: 8) {
-                RoundedBorderTextField(text: $currentPassword, label: "Current Password", isSecure: true, showAccessory: true, cornerRadius: 12)
-                
-                Button {
-                    triggerHaptics()
-                    navigateToForgotPassword = true
-                } label: {
-                    FSText(text: "Forgot password?", fontStyle: .body14, letterSpace: 0, color: .fsMutedForeground, isUnderlined: true)
+            // New password
+            RoundedBorderTextField(
+                text: $newPassword, 
+                label: "New Password", 
+                isSecure: true, 
+                showAccessory: true, 
+                cornerRadius: 12,
+                errorMessage: newPasswordError,
+                isValid: newPasswordError == nil
+            )
+            .onChange(of: newPassword) { _, _ in
+                if hasValidatedNewPassword {
+                    validateNewPassword()
+                }
+                if hasValidatedConfirmPassword {
+                    validateConfirmPassword()
                 }
             }
-            
-            // New password
-            RoundedBorderTextField(text: $newPassword, label: "New Password", isSecure: true, showAccessory: true, cornerRadius: 12)
+            .onSubmit {
+                validateNewPassword()
+                hasValidatedNewPassword = true
+            }
             
             // Confirm password
-            RoundedBorderTextField(text: $confirmPassword, label: "Confirm Password", isSecure: true, showAccessory: true, cornerRadius: 12)
+            RoundedBorderTextField(
+                text: $confirmPassword, 
+                label: "Confirm Password", 
+                isSecure: true, 
+                showAccessory: true, 
+                cornerRadius: 12,
+                errorMessage: confirmPasswordError,
+                isValid: confirmPasswordError == nil
+            )
+            .onChange(of: confirmPassword) { _, _ in
+                if hasValidatedConfirmPassword {
+                    validateConfirmPassword()
+                }
+            }
+            .onSubmit {
+                validateConfirmPassword()
+                hasValidatedConfirmPassword = true
+            }
             
             Spacer()
             
             FSButton(title: "Save changes", fontStyle: .bodyBold16, cornerRadius: 32) {
                 triggerHaptics()
-                dismiss()
+                if validateAllFields() {
+                    Task {
+                        try await viewModel.resetPassword(password: newPassword)
+                        dismiss()
+                    }
+                }
             }
         }
         .padding(24)
         .navigationBarBackButtonHidden()
+        .navigationDestination(isPresented: $navigateToForgotPassword) {
+            ForgotPasswordView()
+        }
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: {
@@ -55,8 +96,54 @@ struct ChangePasswordView: View {
                 }
             }
         }
-        .navigationDestination(isPresented: $navigateToForgotPassword) {
-            ForgotPasswordView()
+        .overlay(alignment: .center) {
+            if viewModel.viewState == .loading {
+                ZStack {
+                    Color.black.opacity(0.25)
+                    ProgressView()
+                }
+            }
         }
+    }
+    
+    // MARK: - Validation Methods
+    
+    private func validateNewPassword() {
+        if newPassword.isEmpty {
+            newPasswordError = "Password is required"
+        } else if newPassword.count < 8 {
+            newPasswordError = "Password must be at least 8 characters"
+        } else if !isValidPassword(newPassword) {
+            newPasswordError = "Password must contain at least one uppercase letter, one lowercase letter, and one number"
+        } else {
+            newPasswordError = nil
+        }
+    }
+    
+    private func validateConfirmPassword() {
+        if confirmPassword.isEmpty {
+            confirmPasswordError = "Please confirm your password"
+        } else if confirmPassword != newPassword {
+            confirmPasswordError = "Passwords do not match"
+        } else {
+            confirmPasswordError = nil
+        }
+    }
+    
+    private func validateAllFields() -> Bool {
+        validateNewPassword()
+        validateConfirmPassword()
+        hasValidatedNewPassword = true
+        hasValidatedConfirmPassword = true
+        
+        return newPasswordError == nil && confirmPasswordError == nil
+    }
+    
+    private func isValidPassword(_ password: String) -> Bool {
+        let hasUppercase = password.range(of: "[A-Z]", options: .regularExpression) != nil
+        let hasLowercase = password.range(of: "[a-z]", options: .regularExpression) != nil
+        let hasNumber = password.range(of: "[0-9]", options: .regularExpression) != nil
+        
+        return hasUppercase && hasLowercase && hasNumber
     }
 }

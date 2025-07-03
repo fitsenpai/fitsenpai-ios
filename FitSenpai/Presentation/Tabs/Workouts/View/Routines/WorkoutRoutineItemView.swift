@@ -68,14 +68,14 @@ struct WorkoutRoutineItemView: View {
     var checkBoxButton: some View {
         Button(action: {
             guard !routine.isCompleted else { return }
-            Task { @MainActor in
-                viewState = .updating
-                defer { viewState = .idle }
-                await viewModel.onToggleCompleted(for: routine.date, name: routine.name)
-                withAnimation {
-                    routine.isCompleted = true
-                }
+            triggerHaptics()
+            withAnimation {
+                routine.isCompleted = true
+                viewModel.updateDailyProgress()
+                viewModel.updateCalendarData()
+                viewModel.objectWillChange.send()
             }
+            Task { try? await viewModel.onToggleCompleted(for: routine.date, name: routine.name) }
         }, label: {
             Group {
                 if routine.isCompleted {
