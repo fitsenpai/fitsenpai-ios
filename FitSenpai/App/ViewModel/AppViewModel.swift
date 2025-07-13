@@ -181,9 +181,7 @@ extension AppViewModel: ASWebAuthenticationPresentationContextProviding {
     func loginWithGoogle() async {
         viewState = .loading
         errorMessage = nil
-        
-        defer { viewState = .idle }
-        
+                
         do {
             let urlString = try await signinUseCase.executeWithGoogle()
             
@@ -219,16 +217,16 @@ extension AppViewModel: ASWebAuthenticationPresentationContextProviding {
 
             authSession?.presentationContextProvider = self
             authSession?.start()
-            viewState = .loading
-            
         } catch {
             errorMessage = error.localizedDescription
             print("Error during Google login: \(error.localizedDescription)")
+            self.viewState = .idle
         }
 
     }
     
     private func handleGoogleAuthCallback(_ url: URL) {
+        defer { self.viewState = .idle }
         guard let queryItems = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems, let code = queryItems.first(where: { $0.name == "code" })?.value else {
             FSLogger.log("Google Auth Callback: Code not found in query parameters. URL: \(url.absoluteString)")
             return

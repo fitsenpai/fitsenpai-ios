@@ -17,7 +17,7 @@ final class CreateProfileUseCase: CreateProfileUseCaseProtocol {
     // MARK: - Dependencies
     @Inject private var repository: UserRepositoryProtocol
 
-    func execute() async throws  {
+    func execute() async throws {
         return try await repository.createUserProfile()
     }
 }

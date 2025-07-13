@@ -21,5 +21,6 @@ struct AppView: View {
                 LandingView()
             }
         }
+        .withToastOverlay()
     }
 }

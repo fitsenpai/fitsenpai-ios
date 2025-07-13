@@ -1,4 +1,5 @@
 import SwiftUI
+import CoreKit
 
 struct DeleteAccountView: View {
     @Environment(\.dismiss) var dismiss
@@ -60,6 +61,7 @@ struct DeleteAccountView: View {
                     Task {
                         do {
                             try await viewModel.deleteAccount(feedback: selectedReason.rawValue)
+                            NetworkSession.shared.clearTokens()
                             navigateToSuccess = true
                         }
                     }

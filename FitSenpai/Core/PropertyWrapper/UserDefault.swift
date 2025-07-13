@@ -32,9 +32,9 @@ struct UserDefault<Value> {
             let container = instance.userDefaults
             let key = instance[keyPath: storageKeyPath].key
             let defaultValue = instance[keyPath: storageKeyPath].defaultValue
-        
             
-            if defaultValue is Date? {
+            // Check if Value type is Date or Optional<Date>
+            if Value.self == Date.self || Value.self == Date?.self {
                 if let timestamp = container.object(forKey: key) as? TimeInterval {
                     return Date(timeIntervalSince1970: timestamp) as! Value
                 }

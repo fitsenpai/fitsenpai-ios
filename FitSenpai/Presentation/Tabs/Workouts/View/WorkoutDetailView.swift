@@ -65,7 +65,15 @@ struct WorkoutDetailView: View {
                         viewModel.updateCalendarData()
                         viewModel.objectWillChange.send()
                     }
-                    Task { try? await viewModel.onToggleCompleted(for: routine.date, name: routine.name) }
+                    Task {
+                        do {
+                            try await viewModel.onToggleCompleted(for: routine.date, name: routine.name)
+                            dismiss()
+                        } catch {
+                            routine.isCompleted = false
+                            ToastManager.shared.showError("Something went wrong. Please try again later.", duration: 5.0)
+                        }
+                    }
                 })
             }
             

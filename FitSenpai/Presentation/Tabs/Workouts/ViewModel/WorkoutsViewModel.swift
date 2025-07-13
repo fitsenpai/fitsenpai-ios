@@ -167,7 +167,7 @@ extension WorkoutsViewModel {
         var progressData: [Date: Double] = [:]
         var highlightedDaysSet: Set<Int> = []
         
-        for week in workoutWeeks {
+        if let week = selectedWorkoutWeek {
             for day in week.days {
                 guard let dayDate = day.date.toDate(format: nil) else { continue }
                 

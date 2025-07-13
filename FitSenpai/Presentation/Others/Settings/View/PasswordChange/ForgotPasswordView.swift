@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ForgotPasswordView: View {
     @Environment(\.dismiss) var dismiss
+    @StateObject private var viewModel: AuthViewModel = .init()
     @State private var email = ""
     @State private var navigateToNewPassword = false
     
@@ -16,13 +17,26 @@ struct ForgotPasswordView: View {
                     .lineSpacing(8)
             }
             
-            RoundedBorderTextField(text: $email, label: "Email", isSecure: false, showAccessory: false, cornerRadius: 12)
-            
-            Spacer()
-            
-            FSButton(title: "Get password reset link", fontStyle: .bodyBold16, cornerRadius: 32) {
-                triggerHaptics()
-                navigateToNewPassword = true
+            VStack(alignment: .leading, spacing: 12) {
+                RoundedBorderTextField(text: $email, label: "Email", isSecure: false, showAccessory: false, cornerRadius: 12)
+                    .disabled(viewModel.viewState == .loading)
+                
+                Spacer()
+                
+                FSButton(title: "Confirm", fontStyle: .bodyBold16, cornerRadius: 32) {
+                    triggerHaptics()
+                    onLogin()
+                }
+                .disabled(viewModel.viewState == .loading)
+                .opacity(viewModel.viewState == .loading ? 0.5 : 1)
+                .overlay(alignment: .trailing) {
+                    if viewModel.viewState == .loading {
+                        ProgressView()
+                            .controlSize(.mini)
+                            .padding(12)
+                    }
+                }
+
             }
         }
         .padding(24)
@@ -43,6 +57,18 @@ struct ForgotPasswordView: View {
         }
         .navigationDestination(isPresented: $navigateToNewPassword) {
             NewPasswordView()
+        }
+    }
+    
+    func onLogin() {
+        Task {
+            do {
+                try await viewModel.forgotPassword(email: email)
+                dismiss()
+                ToastManager.shared.showSuccess("Password reset email sent successfully. You will receive email shortly if you really have an account with us.", duration: 10)
+            } catch {
+                ToastManager.shared.showError("Invalid email address.", duration: 5)
+            }
         }
     }
 }

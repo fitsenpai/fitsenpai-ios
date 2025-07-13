@@ -152,7 +152,6 @@ class LoginViewModel: NSObject, ObservableObject, ASWebAuthenticationPresentatio
 
             authSession?.presentationContextProvider = self
             authSession?.start()
-            viewState = .loading
             loginMethod = LoginMethod.google.rawValue
             
         } catch {
@@ -163,10 +162,9 @@ class LoginViewModel: NSObject, ObservableObject, ASWebAuthenticationPresentatio
     }
     
     private func handleGoogleAuthCallback(_ url: URL) {
-        defer { viewState = .idle }
-
         guard let queryItems = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems, let code = queryItems.first(where: { $0.name == "code" })?.value else {
             FSLogger.log("Google Auth Callback: Code not found in query parameters. URL: \(url.absoluteString)")
+            self.viewState = .idle
             return
         }
         
@@ -176,11 +174,13 @@ class LoginViewModel: NSObject, ObservableObject, ASWebAuthenticationPresentatio
                 networkSession.setTokens(accessToken: session.token, refreshToken: session.refreshToken)
                 loginMethod = LoginMethod.google.rawValue
                 await getCurrentUser()
+                self.viewState = .idle
             } catch {
                 self.errorMessage = "Google Sign-In failed: \(error.localizedDescription)"
+                self.viewState = .idle
             }
         }
-    }
+    }   
     
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
         guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
