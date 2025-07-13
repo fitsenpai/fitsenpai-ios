@@ -29,7 +29,7 @@ struct ToastView: View {
         .padding(16)
         .background(
             RoundedRectangle(cornerRadius: 12)
-                .fill(borderColor)
+                .fill(bgColor)
                 .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: 4)
         )
         .overlay(
@@ -68,7 +68,7 @@ struct ToastView: View {
     private var bgColor: Color {
         switch toast.type {
         case .success:
-            return Color.green.opacity(0.9)
+            return Color.fsPrimary
         case .error:
             return Color.red.opacity(0.8)
         case .warning:

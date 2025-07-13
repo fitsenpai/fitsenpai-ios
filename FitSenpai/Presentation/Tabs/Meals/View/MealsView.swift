@@ -106,7 +106,7 @@ struct MealsView: View {
                             .padding(.vertical, 12)
                     } else if let mealDay = viewModel.mealDay {
                         VStack(spacing: 16) {
-                            FSSectionHeaderView(text: "Meals", showGenerateButton: shouldShowGenerateButton) {
+                            FSSectionHeaderView(category: .meal, showGenerateButton: shouldShowGenerateButton) {
                                 triggerHaptics()
                                 if superwall.isTrialActive {
                                     superwall.presentPaywall(for: .proContent)

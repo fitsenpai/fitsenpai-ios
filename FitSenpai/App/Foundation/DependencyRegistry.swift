@@ -31,6 +31,7 @@ enum DependencyRegistry {
         DependencyInjector.register(NetworkService<WorkoutEndpoint>(), key: "workout")
         DependencyInjector.register(NetworkService<MealsEndpoint>(), key: "meals")
         DependencyInjector.register(NetworkService<GroceryEndpoint>(), key: "grocery")
+        DependencyInjector.register(NetworkService<FeedbackEndpoint>(), key: "feedback")
     }
     
     /// Registers data sources with the `DependencyInjector`.
@@ -43,6 +44,7 @@ enum DependencyRegistry {
         DependencyInjector.register(WorkoutDataSource() as any WorkoutDataSourceProtocol)
         DependencyInjector.register(MealsDataSource() as any MealsDataSourceProtocol)
         DependencyInjector.register(GroceryDataSource() as any GroceryDataSourceProtocol)
+        DependencyInjector.register(FeedbackDataSource() as any FeedbackDataSourceProtocol)
     }
     
     /// Registers repositories with the `DependencyInjector`.
@@ -56,6 +58,7 @@ enum DependencyRegistry {
         DependencyInjector.register(WorkoutRepository() as any WorkoutRepositoryProtocol)
         DependencyInjector.register(MealsRepository() as any MealsRepositoryProtocol)
         DependencyInjector.register(GroceryRepository() as any GroceryRepositoryProtocol)
+        DependencyInjector.register(FeedbackRepository() as any FeedbackRepositoryProfocol)
     }
     
     /// Registers use cases with the `DependencyInjector`.
@@ -87,6 +90,7 @@ enum DependencyRegistry {
         DependencyInjector.register(GroceryTogleUseCase() as any GroceryTogleUseCaseProtocol)
         DependencyInjector.register(UpdateGroceryUseCase() as any UpdateGroceryUseCaseProtocol)
         DependencyInjector.register(UpdateRoutineUseCase() as any UpdateRoutineUseCaseProtocol)
+        DependencyInjector.register(SendFeedbackUseCase() as any SendFeedbackUseCaseProtocol)
     }
     
     @MainActor static func registerDataStores(modelContext: ModelContext) {

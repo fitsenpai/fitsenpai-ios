@@ -38,7 +38,7 @@ struct WorkoutWeekView: View {
     
     var body: some View {
         VStack(spacing: 16) {
-            FSSectionHeaderView(text: "Workouts", showGenerateButton: shouldShowGenerateButton) {
+            FSSectionHeaderView(category: .workout, showGenerateButton: shouldShowGenerateButton) {
                 triggerHaptics()
                 if superwall.isTrialActive {
                     superwall.presentPaywall(for: .proContent)

@@ -280,12 +280,12 @@ struct SettingsMainView: View {
         .sheet(item: $viewModel.activeSheet, content: { type in
             switch type {
             case .negative:
-                NegativeFeedbackSheet(feedbackType: $viewModel.activeSheet)
+                NegativeFeedbackSheet(feedbackType: $viewModel.activeSheet, category: "workout")
                     .flexibleSheet()
                     .background(.white)
                     .presentationCornerRadius(32)
             case .negativeInput:
-                NegativeFeedbackInoutSheet {
+                NegativeFeedbackInoutSheet(category: "workout") {
                     viewModel.activeSheet = .negativeInput
                 }
                 .flexibleSheet()

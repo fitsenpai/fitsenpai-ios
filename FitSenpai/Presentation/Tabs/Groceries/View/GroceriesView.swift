@@ -144,7 +144,7 @@ struct GroceriesView: View {
     
     var contentView: some View {
         VStack(spacing: 16) {
-            FSSectionHeaderView(text: "Groceries", showGenerateButton: false) {
+            FSSectionHeaderView(category: .grocery, showGenerateButton: false) {
                 triggerHaptics()
                 if superwall.isTrialActive {
                     superwall.presentPaywall(for: .proContent)

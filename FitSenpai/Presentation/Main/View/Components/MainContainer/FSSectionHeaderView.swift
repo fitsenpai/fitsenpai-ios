@@ -7,9 +7,23 @@
 
 import SwiftUI
 
+enum TabCategory: String {
+    case workout
+    case meal
+    case grocery
+    
+    var text: String {
+        switch self {
+        case .workout: "Workouts"
+        case .meal: "Meals"
+        case .grocery: "Groceries"
+        }
+    }
+}
+
 struct FSSectionHeaderView: View {
     @Environment(\.requestReview) var requestReview
-    let text: String
+    let category: TabCategory
     var showGenerateButton: Bool = true
     @State private var feedbackType: FeedbackType?
     @State private var showRateApp: Bool = false
@@ -18,7 +32,7 @@ struct FSSectionHeaderView: View {
     
     var body: some View {
         HStack(spacing: 12) {
-            FSTextView(text, typography: .h3)
+            FSTextView(category.text, typography: .h3)
             Spacer()
             HStack(spacing: 15) {
                 if showGenerateButton {
@@ -44,12 +58,12 @@ struct FSSectionHeaderView: View {
         .sheet(item: $feedbackType, content: { type in
             switch type {
             case .negative:
-                NegativeFeedbackSheet(feedbackType: $feedbackType)
+                NegativeFeedbackSheet(feedbackType: $feedbackType, category: category.rawValue)
                     .flexibleSheet()
                     .background(.white)
                     .presentationCornerRadius(32)
             case .negativeInput:
-                NegativeFeedbackInoutSheet {
+                NegativeFeedbackInoutSheet(category: category.rawValue) {
                     feedbackType = .negative
                 }
                     .flexibleSheet()

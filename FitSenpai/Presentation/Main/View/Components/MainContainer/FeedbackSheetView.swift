@@ -8,10 +8,13 @@
 import SwiftUI
 
 struct NegativeFeedbackSheet: View {
+    @StateObject private var viewModel = FeedbackViewModel()
     @Binding var feedbackType: FeedbackType?
     @Environment(\.dismiss) private var dismiss
     @State private var selectedOption: String?
     @State var feedbackText: String = ""
+    
+    var category: String
     
     var body: some View {
         VStack(spacing: 20) {
@@ -44,11 +47,28 @@ struct NegativeFeedbackSheet: View {
                 if selectedOption == "Other" {
                     feedbackType = .negativeInput
                 } else {
-                    dismiss()
+                    Task {
+                        let result = await viewModel.sendNegativeFeedback(message: selectedOption ?? "", category: category)
+                        switch result {
+                        case .success:
+                            dismiss()
+                            ToastManager.shared.showSuccess("Feedback submitted successfully", duration: 5)
+                        case .failure:
+                            ToastManager.shared.showSuccess("Something went wrong. Please try again later.")
+
+                        }
+                    }
                 }
             }
-            .disabled(selectedOption == nil)
-            .opacity(selectedOption == nil ? 0.3 : 1)
+            .disabled(selectedOption == nil || viewModel.viewState == .loading)
+            .opacity(selectedOption == nil || viewModel.viewState == .loading ? 0.3 : 1)
+            .overlay(alignment: .trailing) {
+                if viewModel.viewState == .loading {
+                    ProgressView()
+                        .controlSize(.mini)
+                        .padding(12)
+                }
+            }
         }
         .padding(.horizontal, 24)
         .padding(.bottom, 24)
@@ -57,8 +77,11 @@ struct NegativeFeedbackSheet: View {
 }
 
 struct NegativeFeedbackInoutSheet: View {
+    @StateObject private var viewModel = FeedbackViewModel()
     @Environment(\.dismiss) private var dismiss
     @State var feedbackText: String = ""
+    var category: String
+
     var onBackPress: () -> Void
     
     var body: some View {
@@ -104,10 +127,27 @@ struct NegativeFeedbackInoutSheet: View {
                     onBackPress()
                 }
                 FSButton(title: "Submit", fontStyle: .bodyBold14, cornerRadius: 32) {
-                    dismiss()
+                    Task {
+                        let result = await viewModel.sendNegativeFeedback(message: feedbackText, category: category)
+                        switch result {
+                        case .success:
+                            dismiss()
+                            ToastManager.shared.showSuccess("Feedback submitted successfully", duration: 5)
+                        case .failure:
+                            ToastManager.shared.showSuccess("Something went wrong. Please try again later.")
+
+                        }
+                    }
                 }
-                .disabled(feedbackText.isEmpty)
-                .opacity(feedbackText.isEmpty ? 0.3 : 1)
+                .disabled(feedbackText.isEmpty || feedbackText.count < 5 || viewModel.viewState == .loading)
+                .opacity(feedbackText.isEmpty || feedbackText.count < 5 || viewModel.viewState == .loading ? 0.3 : 1)
+                .overlay(alignment: .trailing) {
+                    if viewModel.viewState == .loading {
+                        ProgressView()
+                            .controlSize(.mini)
+                            .padding(12)
+                    }
+                }
             }
         }
         .padding(.horizontal, 24)
