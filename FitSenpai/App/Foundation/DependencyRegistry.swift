@@ -32,6 +32,7 @@ enum DependencyRegistry {
         DependencyInjector.register(NetworkService<MealsEndpoint>(), key: "meals")
         DependencyInjector.register(NetworkService<GroceryEndpoint>(), key: "grocery")
         DependencyInjector.register(NetworkService<FeedbackEndpoint>(), key: "feedback")
+        DependencyInjector.register(NetworkService<WeightsEndpoint>(), key: "weights")
     }
     
     /// Registers data sources with the `DependencyInjector`.
@@ -45,6 +46,7 @@ enum DependencyRegistry {
         DependencyInjector.register(MealsDataSource() as any MealsDataSourceProtocol)
         DependencyInjector.register(GroceryDataSource() as any GroceryDataSourceProtocol)
         DependencyInjector.register(FeedbackDataSource() as any FeedbackDataSourceProtocol)
+        DependencyInjector.register(WeightsDataSource() as any WeightsDataSourceProtocol)
     }
     
     /// Registers repositories with the `DependencyInjector`.
@@ -59,6 +61,7 @@ enum DependencyRegistry {
         DependencyInjector.register(MealsRepository() as any MealsRepositoryProtocol)
         DependencyInjector.register(GroceryRepository() as any GroceryRepositoryProtocol)
         DependencyInjector.register(FeedbackRepository() as any FeedbackRepositoryProfocol)
+        DependencyInjector.register(WeightsRepository() as any WeightsRepositoryProtocol)
     }
     
     /// Registers use cases with the `DependencyInjector`.
@@ -91,6 +94,9 @@ enum DependencyRegistry {
         DependencyInjector.register(UpdateGroceryUseCase() as any UpdateGroceryUseCaseProtocol)
         DependencyInjector.register(UpdateRoutineUseCase() as any UpdateRoutineUseCaseProtocol)
         DependencyInjector.register(SendFeedbackUseCase() as any SendFeedbackUseCaseProtocol)
+        DependencyInjector.register(GetWeigthsUseCase() as any GetWeightsUseCaseProtocol)
+        DependencyInjector.register(CreateWeigthsUseCase() as any CreateWeightsUseCaseProtocol)
+        DependencyInjector.register(GetBMIUseCase() as any GetBMIUseCaseProtocol)
     }
     
     @MainActor static func registerDataStores(modelContext: ModelContext) {

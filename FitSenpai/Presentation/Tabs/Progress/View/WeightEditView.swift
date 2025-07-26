@@ -34,7 +34,10 @@ struct WeightEditView: View {
             Spacer()
             
             FSButton(title: "Save changes", fontStyle: .bodyBold16, cornerRadius: 32) {
-                dismiss()
+                Task {
+                    await viewModel.createWeigths(weight: weight)
+                    dismiss()
+                }
             }
         }
         .padding(24)
@@ -52,5 +55,6 @@ struct WeightEditView: View {
                 }
             }
         }
+        .loadingOverlay(state: $viewModel.viewState)
     }
 }

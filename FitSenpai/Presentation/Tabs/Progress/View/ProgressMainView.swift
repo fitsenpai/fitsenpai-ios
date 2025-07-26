@@ -38,6 +38,7 @@ struct ProgressMainView: View {
                 }
             }
             .padding()
+            .loadingOverlay(state: $viewModel.viewState)
             .navigationDestination(isPresented: $viewModel.showBMIDetail, destination: {
                 BMIDetailView(viewModel: BMIDetailViewModel(bmi: viewModel.bmiValue))
                     .navigationBarBackButtonHidden()

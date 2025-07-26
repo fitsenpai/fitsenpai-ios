@@ -90,6 +90,7 @@ extension AppViewModel {
     func updateUser(_ user: FSUser) {
         self.user = user
         self.authState = .authenticated
+        AppStorage.userID = user.id.uuidString
     }
     
     func handleCreatePlan() {

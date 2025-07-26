@@ -51,3 +51,8 @@ struct FeedbackRequest: ParameterProtocol {
     let type: String
     let path: String
 }
+
+struct WeightRequest: ParameterProtocol {
+    let weight: Double
+    let date: String
+}
