@@ -100,6 +100,7 @@ class ProgressViewModel: ObservableObject {
                 case .oneYear:
                     weightData = response.filter { $0.date >= Calendar.current.date(byAdding: .year, value: -1, to: Date())! }
                 }
+                self.weight = response.last?.weight ?? 0
             } catch {
                 print(error.localizedDescription)
             }

@@ -12,10 +12,26 @@ struct ProfileCompletionView: View {
     @StateObject var viewModel: ProfileCompletionViewModel = ProfileCompletionViewModel()
     @Environment(\.dismiss) private var dismiss
     
+    @State private var viewState: ViewState = .idle
     @State private var confettiScale: CGFloat = 0.5
     @State private var confettiRotation: Double = -10
     @State private var confettiOpacity: Double = 0
     @State private var textOpacity: Double = 0
+    
+    func errorViewModel(error: Error) -> FSInfoViewModel {
+        .init(
+            iconName: .iconBoxWarning,
+            title: "An Error Occurred",
+            mainLabel: error.localizedDescription,
+            buttonLabel: "Retry",
+            buttonAction: {
+                Task {
+                    triggerHaptics()
+                    await onRetry()
+                }
+            }
+        )
+    }
     
     var profile: UserProfile
     
@@ -23,10 +39,17 @@ struct ProfileCompletionView: View {
         NavigationStack {
             VStack(spacing: 16) {
                 CreateProfileHeaderView(progress: viewModel.overallProgress, hideBackButton: true) { }
-                contentView
+                switch viewState {
+                case .idle:
+                    contentView
+                case .error(let error):
+                    errorView(error)
+                default:
+                    EmptyView()
+                }
+                
             }
         }
-        
     }
     
     private var contentView: some View {
@@ -45,12 +68,7 @@ struct ProfileCompletionView: View {
                 background: .fsPrimary
             ) {
                 Task {
-                    do {
-                        try await viewModel.createLimitedWorkoutPlan(profile: profile)
-                        appVM.startTrial()
-                    } catch {
-                        print("Error creating workout plan: \(error)")
-                    }
+                    await createProfile()
                 }
             }
             .padding(.horizontal, 24)
@@ -95,6 +113,30 @@ struct ProfileCompletionView: View {
                     }
                 }
             }
+    }
+    
+    private func errorView(_ error: Error) -> some View {
+        VStack {
+            Spacer()
+            FSInfoView(viewModel: errorViewModel(error: error))
+                .padding(.horizontal, 24)
+            Spacer()
+        }
+    }
+    
+    private func createProfile() async {
+        do {
+            try await viewModel.createLimitedWorkoutPlan(profile: profile)
+            appVM.startTrial()
+        } catch {
+            viewState = .error(error)
+        }
+    }
+    
+    private func onRetry() async {
+        // this is for retry view
+        viewState = .idle
+        await createProfile()
     }
 }
 

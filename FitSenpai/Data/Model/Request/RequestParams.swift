@@ -10,9 +10,8 @@ struct WorkoutProfileRequest: ParameterProtocol {
     let genderOther: String?
     let activityLevel: String?
     let previousExperience: [String]?
-    let height: Double?
-    let weight: Double?
-    let systemOfMeasurement: String?
+    let height_cm: Double?
+    let weight_kg: Double?
     let birthYear: String?
     let mainGoal: String?
     let fitnessBarrier: String?

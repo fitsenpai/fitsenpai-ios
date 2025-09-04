@@ -13,9 +13,10 @@ struct UserDefault<Value> {
     let key: String
     let defaultValue: Value
 
+    @available(*, unavailable, message: "Access wrappedValue directly is not supported. Use AppPreferences instead.")
     var wrappedValue: Value {
-        get { fatalError("Wrapped value should not be used.") }
-        set { fatalError("Wrapped value should not be used.") }
+        get { fatalError() }
+        set { fatalError() }
     }
     
     init(wrappedValue: Value, _ key: String) {
@@ -36,7 +37,10 @@ struct UserDefault<Value> {
             // Check if Value type is Date or Optional<Date>
             if Value.self == Date.self || Value.self == Date?.self {
                 if let timestamp = container.object(forKey: key) as? TimeInterval {
-                    return Date(timeIntervalSince1970: timestamp) as! Value
+                    if let dateValue = Date(timeIntervalSince1970: timestamp) as? Value {
+                        return dateValue
+                    }
+                    return defaultValue
                 }
                 return defaultValue
             }
@@ -57,7 +61,6 @@ struct UserDefault<Value> {
                 container.set(newValue, forKey: key)
             }
             
-            container.synchronize()
             instance.preferencesChangedSubject.send(wrappedKeyPath)
         }
     }

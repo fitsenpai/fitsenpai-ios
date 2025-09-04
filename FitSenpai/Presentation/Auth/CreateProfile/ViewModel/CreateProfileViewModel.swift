@@ -108,7 +108,7 @@ class CreateProfileViewModel: ObservableObject {
         triggerHaptics()
         
         // adds animation after selection before going to next step
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             withAnimation(.easeInOut(duration: 0.2)) {
                 self.moveToNextStep()
             }
@@ -178,8 +178,7 @@ class CreateProfileViewModel: ObservableObject {
             previousExperience: getValues(for: .pastTraining),
             height: Int(height),
             weight: Int(weight),
-            systemOfMeasurement: isMetric ? .init(id: "metric") : .init(id: "imperial"),
-            birthYear: "\(age)",
+            birthYear: yearOfBirth(from: age),
             mainGoal: getValue(for: .mainGoal),
             fitnessBarrier: getValue(for: .barriers),
             fitnessGoal: getValue(for: .goals),
@@ -195,6 +194,11 @@ class CreateProfileViewModel: ObservableObject {
             otherAllergies: stepInputs[.allergies].map { [$0] } ?? [],
             cookingStyle: getValue(for: .cookingStyle)
         )
+    }
+    
+    func yearOfBirth(from age: Int) -> String {
+        let currentYear = Calendar.current.component(.year, from: Date())
+        return String(currentYear - age)
     }
     
     private func handleStepNavigation() {

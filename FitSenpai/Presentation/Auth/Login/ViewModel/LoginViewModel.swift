@@ -121,6 +121,8 @@ class LoginViewModel: NSObject, ObservableObject, ASWebAuthenticationPresentatio
             loginMethod = LoginMethod.google.rawValue
             
             guard let authURL = URL(string: urlString) else {
+                viewState = .idle
+                errorMessage = "Google Sign-in error: Invalid URL"
                 return
             }
             

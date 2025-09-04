@@ -140,7 +140,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1540;
-				LastUpgradeCheck = 1540;
+				LastUpgradeCheck = 1640;
 				TargetAttributes = {
 					F24B33562CEDB421004AD370 = {
 						CreatedOnToolsVersion = 15.4;
@@ -165,6 +165,7 @@
 				938DBF762DAA1EFD005A0D5C /* XCRemoteSwiftPackageReference "Superwall-iOS" */,
 				934465552DBBC738000073D9 /* XCRemoteSwiftPackageReference "core-kit" */,
 				93CDC6772DF1C99500EC011C /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				931C774C2E3576BB00A33E4E /* XCRemoteSwiftPackageReference "purchases-ios-spm" */,
 			);
 			preferredProjectObjectVersion = 56;
 			productRefGroup = F24B334E2CEDB421004AD370;
@@ -232,6 +233,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = SJLNKJK54M;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -295,6 +297,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = SJLNKJK54M;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -325,7 +328,6 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = SJLNKJK54M;
 				EXCLUDED_ARCHS = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = FitSenpai/Info.plist;
@@ -363,7 +365,6 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = SJLNKJK54M;
 				EXCLUDED_ARCHS = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = FitSenpai/Info.plist;
@@ -421,6 +422,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 2.77.0;
+			};
+		};
+		931C774C2E3576BB00A33E4E /* XCRemoteSwiftPackageReference "purchases-ios-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RevenueCat/purchases-ios-spm.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.33.1;
 			};
 		};
 		934465552DBBC738000073D9 /* XCRemoteSwiftPackageReference "core-kit" */ = {
