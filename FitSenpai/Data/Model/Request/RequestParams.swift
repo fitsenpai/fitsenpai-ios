@@ -52,6 +52,11 @@ struct FeedbackRequest: ParameterProtocol {
 }
 
 struct WeightRequest: ParameterProtocol {
-    let weight: Double
+    let weight_kg: Double
     let date: String
+}
+
+struct BMIRequest: ParameterProtocol {
+    let height_cm: Double
+    let weight_kg: Double
 }

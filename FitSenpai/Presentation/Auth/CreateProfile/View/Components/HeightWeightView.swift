@@ -25,8 +25,22 @@ struct HeightWeightView: View {
 }
 
 struct HeightInputView: View {
-    @Binding var height: Double
+    @Binding var height: Double  // Always in cm
     let isMetric: Bool
+    
+    // Display ranges for metric (122 cm to 241 cm covers 4'0" to 7'11")
+    var cmRange: ClosedRange<Int> {
+        122...241
+    }
+
+    // Display ranges for imperial
+    var feetRange: ClosedRange<Int> {
+        4...7
+    }
+
+    var inchRange: ClosedRange<Int> {
+        0...11
+    }
     
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
@@ -38,7 +52,7 @@ struct HeightInputView: View {
                         get: { Int(height) },
                         set: { height = Double($0) }
                     )) {
-                        ForEach(120...220, id: \.self) { cm in
+                        ForEach(cmRange, id: \.self) { cm in
                             HStack {
                                 Text("\(cm)").tag(cm)
                                 Text("cm")
@@ -49,20 +63,23 @@ struct HeightInputView: View {
                     }
                     .pickerStyle(.wheel)
                     .frame(width: 160)
-                    
                 }
             } else {
                 HStack(spacing: 0) {
                     // Feet
                     HStack {
                         Picker("", selection: Binding(
-                            get: { Int(floor(height / 30.48)) },
+                            get: { 
+                                let totalInches = height / 2.54
+                                return Int(totalInches / 12)
+                            },
                             set: { newValue in
-                                let inches = height.truncatingRemainder(dividingBy: 30.48) / 2.54
-                                height = (Double(newValue) * 30.48) + (inches * 2.54)
+                                let currentInches = (height / 2.54).truncatingRemainder(dividingBy: 12)
+                                let totalInches = Double(newValue) * 12 + currentInches
+                                height = totalInches * 2.54  // Convert back to cm
                             }
                         )) {
-                            ForEach(4...7, id: \.self) { feet in
+                            ForEach(feetRange, id: \.self) { feet in
                                 HStack {
                                     Text("\(feet)").tag(feet)
                                     Text("ft")
@@ -78,13 +95,17 @@ struct HeightInputView: View {
                     // Inches
                     HStack {
                         Picker("", selection: Binding(
-                            get: { Int((height.truncatingRemainder(dividingBy: 30.48) / 2.54).rounded()) },
+                            get: { 
+                                let totalInches = height / 2.54
+                                return Int(totalInches.truncatingRemainder(dividingBy: 12).rounded())
+                            },
                             set: { newValue in
-                                let feet = floor(height / 30.48)
-                                height = (feet * 30.48) + (Double(newValue) * 2.54)
+                                let currentFeet = Int((height / 2.54) / 12)
+                                let totalInches = Double(currentFeet) * 12 + Double(newValue)
+                                height = totalInches * 2.54  // Convert back to cm
                             }
                         )) {
-                            ForEach(0...11, id: \.self) { inch in
+                            ForEach(inchRange, id: \.self) { inch in
                                 HStack {
                                     Text("\(inch)").tag(inch)
                                     Text("in")
@@ -95,7 +116,6 @@ struct HeightInputView: View {
                         }
                         .pickerStyle(.wheel)
                         .frame(width: 80)
-                        
                     }
                 }
             }
@@ -105,29 +125,59 @@ struct HeightInputView: View {
 
 struct WeightInputView: View {
     var title: String = "Weight"
-    @Binding var weight: Double
+    @Binding var weight: Double  // Always in kg
     let isMetric: Bool
     
+    // Display ranges for metric
+    var kgRange: ClosedRange<Int> {
+        40...150
+    }
+
+    // Display ranges for imperial (90 lbs to 330 lbs)
+    var lbRange: ClosedRange<Int> {
+        90...330
+    }
+
     var body: some View {
         VStack(alignment: .center, spacing: 8) {
             FSText(text: title, fontStyle: .bodyBold16)
             
-            HStack {
-                Picker("", selection: Binding(
-                    get: { Int(weight) },
-                    set: { weight = Double($0) }
-                )) {
-                    ForEach(isMetric ? 40...150 : 88...330, id: \.self) { value in
-                        HStack {
-                            Text("\(value)").tag(value)
-                            Text(isMetric ? "kg" : "lb")
+            if isMetric {
+                HStack {
+                    Picker("", selection: Binding(
+                        get: { Int(weight) },
+                        set: { weight = Double($0) }
+                    )) {
+                        ForEach(kgRange, id: \.self) { value in
+                            HStack {
+                                Text("\(value)").tag(value)
+                                Text("kg")
+                            }
+                            .font(.custom("PlusJakartaSans-Regular", size: 16))
+                            .fontWeight(.medium)
                         }
-                        .font(.custom("PlusJakartaSans-Regular", size: 16))
-                        .fontWeight(.medium)
                     }
+                    .pickerStyle(.wheel)
+                    .frame(width: 150)
                 }
-                .pickerStyle(.wheel)
-                .frame(width: 150)
+            } else {
+                HStack {
+                    Picker("", selection: Binding(
+                        get: { Int(weight * 2.20462) },  // Convert kg to lbs for display
+                        set: { weight = Double($0) / 2.20462 }  // Convert lbs back to kg
+                    )) {
+                        ForEach(lbRange, id: \.self) { value in
+                            HStack {
+                                Text("\(value)").tag(value)
+                                Text("lb")
+                            }
+                            .font(.custom("PlusJakartaSans-Regular", size: 16))
+                            .fontWeight(.medium)
+                        }
+                    }
+                    .pickerStyle(.wheel)
+                    .frame(width: 150)
+                }
             }
         }
     }

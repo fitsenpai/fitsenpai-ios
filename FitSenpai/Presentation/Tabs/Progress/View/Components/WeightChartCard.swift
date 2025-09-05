@@ -15,7 +15,6 @@ struct WeightChartCard: View {
             VStack(alignment: .leading, spacing: 48) {
                 FSTextView("Your Weight", typography: .h4)
                 WeightChartView(data: data)
-                    .frame(height: 153)
             }
             .padding(12)
         }

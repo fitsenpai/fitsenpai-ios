@@ -19,8 +19,8 @@ class UserProfileEntity {
     var previousExperience: String?
     var height: Int?
     var weight: Int?
-    var systemOfMeasurement: String?
-    var birthYear: String?
+    var isMetric: Bool?
+    var age: Int?
     var mainGoal: String?
     var fitnessBarrier: String?
     var fitnessGoal: String?
@@ -45,8 +45,8 @@ class UserProfileEntity {
         previousExperience: [String]? = nil,
         height: Int? = nil,
         weight: Int? = nil,
-        systemOfMeasurement: String? = nil,
-        birthYear: String? = nil,
+        isMetric: Bool? = false,
+        age: Int = 0,
         mainGoal: String? = nil,
         fitnessBarrier: String? = nil,
         fitnessGoal: String? = nil,
@@ -70,8 +70,8 @@ class UserProfileEntity {
         self.previousExperience = previousExperience?.joined(separator: ",")
         self.height = height
         self.weight = weight
-        self.systemOfMeasurement = systemOfMeasurement
-        self.birthYear = birthYear
+        self.isMetric = isMetric
+        self.age = age
         self.mainGoal = mainGoal
         self.fitnessBarrier = fitnessBarrier
         self.fitnessGoal = fitnessGoal
@@ -103,8 +103,8 @@ class UserProfileEntity {
             previousExperience: previousExperience,
             height: height,
             weight: weight,
-            systemOfMeasurement: .init(id: systemOfMeasurement),
-            birthYear: birthYear,
+            isMetric: isMetric ?? false,
+            age: age ?? 0,
             mainGoal: .init(id: mainGoal),
             fitnessBarrier: .init(id: fitnessBarrier),
             fitnessGoal: .init(id: fitnessGoal),
@@ -130,8 +130,8 @@ class UserProfileEntity {
         self.previousExperience = profile.previousExperience.map({ $0.id }).joined(separator: ",")
         self.height = profile.height
         self.weight = profile.weight
-        self.systemOfMeasurement = profile.systemOfMeasurement?.id
-        self.birthYear = profile.birthYear
+        self.isMetric = profile.isMetric
+        self.age = profile.age
         self.mainGoal = profile.mainGoal?.id
         self.fitnessBarrier = profile.fitnessBarrier?.id
         self.fitnessGoal = profile.fitnessGoal?.id

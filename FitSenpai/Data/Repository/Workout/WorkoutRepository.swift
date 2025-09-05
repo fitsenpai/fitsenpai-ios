@@ -45,7 +45,11 @@ final class WorkoutRepository: WorkoutRepositoryProtocol {
         }
     }
     
-    func updateRoutine(date: String, name: String) async throws {
-        try await remoteDataSource.updateWorkoutRoutine(.init(date: date, name: name))
+    func updateRoutine(id: String, date: String, name: String) async throws {
+        if trialStartDate != nil {
+            routineDataStore.toggleCompleted(id: id)
+        } else {
+            try await remoteDataSource.updateWorkoutRoutine(.init(date: date, name: name))
+        }
     }
 }

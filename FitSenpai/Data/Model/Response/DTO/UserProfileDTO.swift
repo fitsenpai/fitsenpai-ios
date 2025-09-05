@@ -9,7 +9,6 @@ struct UserProfileDTO: Codable {
     let previousExperience: [SelectionDTO]
     let height: Int
     let weight: Int
-    let systemOfMeasurement: SelectionDTO
     let birthYear: String
     let mainGoal: SelectionDTO
     let fitnessBarrier: SelectionDTO
@@ -27,7 +26,9 @@ struct UserProfileDTO: Codable {
     let cookingStyle: SelectionDTO
     
     enum CodingKeys: String, CodingKey {
-        case id, createdAt, userId, gender, activityLevel, previousExperience, height, weight, systemOfMeasurement, birthYear, mainGoal, fitnessBarrier, fitnessGoal, workoutExperience, workoutLocation, workoutDays, workoutDuration, healthConcerns, otherHealthConcern, dietPreference, otherDietPreference, allergies, otherAllergies, cookingStyle
+        case id, createdAt, userId, gender, activityLevel, previousExperience, birthYear, mainGoal, fitnessBarrier, fitnessGoal, workoutExperience, workoutLocation, workoutDays, workoutDuration, healthConcerns, otherHealthConcern, dietPreference, otherDietPreference, allergies, otherAllergies, cookingStyle
+        case height = "heightCm"
+        case weight = "weightKg"
     }
     
     init(from decoder: Decoder) throws {
@@ -42,7 +43,6 @@ struct UserProfileDTO: Codable {
         previousExperience = try container.decode([SelectionDTO].self, forKey: .previousExperience)
         height = try container.decode(Int.self, forKey: .height)
         weight = try container.decode(Int.self, forKey: .weight)
-        systemOfMeasurement = try container.decode(SelectionDTO.self, forKey: .systemOfMeasurement)
         birthYear = try container.decode(String.self, forKey: .birthYear)
         mainGoal = try container.decode(SelectionDTO.self, forKey: .mainGoal)
         fitnessBarrier = try container.decode(SelectionDTO.self, forKey: .fitnessBarrier)
@@ -79,8 +79,8 @@ extension UserProfileDTO {
             previousExperience: previousExperience.map { $0.toDomain() },
             height: height,
             weight: weight,
-            systemOfMeasurement: systemOfMeasurement.toDomain(),
-            birthYear: birthYear,
+            isMetric: false,
+            age: calculateAge(from: birthYear),
             mainGoal: mainGoal.toDomain(),
             fitnessBarrier: fitnessBarrier.toDomain(),
             fitnessGoal: fitnessGoal.toDomain(),
@@ -96,6 +96,14 @@ extension UserProfileDTO {
             otherAllergies: otherAllergies,
             cookingStyle: cookingStyle.toDomain()
         )
+    }
+    
+    private func calculateAge(from birthYear: String) -> Int {
+        if let year = Int(birthYear),
+           let currentYear = Calendar.current.dateComponents([.year], from: Date()).year {
+            return currentYear - year
+        }
+        return 0
     }
 }
 

@@ -10,8 +10,7 @@ struct HeightWeightEditView: View {
     
     init(viewModel: SettingsViewModel) {
         self.viewModel = viewModel
-        let systemOfMeasurement = MeasurementType(rawValue: viewModel.profile.systemOfMeasurement?.id ?? "") ?? .imperial
-        _isMetric = State(initialValue: systemOfMeasurement == .metric)
+        _isMetric = State(initialValue: viewModel.profile.isMetric)
         _height = State(initialValue: Double(viewModel.profile.height ?? 0))
         _weight = State(initialValue: Double(viewModel.profile.weight ?? 0))
     }
@@ -20,12 +19,11 @@ struct HeightWeightEditView: View {
         BaseProfileEditView(
             title: "Height & Weight",
             onSave: {
-                let measurement: MeasurementType = isMetric ? .metric : .imperial
                 Task {
                     await viewModel.updateHeightWeight(
                         height: height,
                         weight: weight,
-                        measurement: measurement
+                        isMetric: isMetric
                     )
                 }
             },

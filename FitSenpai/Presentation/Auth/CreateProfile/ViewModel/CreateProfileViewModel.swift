@@ -10,7 +10,6 @@ import Combine
 import UserNotifications
 import CoreKit
 
-// ADD: Navigation direction enum
 enum NavigationDirection {
     case forward
     case backward
@@ -25,8 +24,9 @@ class CreateProfileViewModel: ObservableObject {
     @Published var navSheets: CreateProfileSheets? = nil
     @Published private(set) var navigationDirection: NavigationDirection = .forward
     
-    @Published var height: Double = 70
-    @Published var weight: Double = 150
+    // Always store in metric (cm and kg)
+    @Published var height: Double = 170 // Default to 170 cm
+    @Published var weight: Double = 70  // Default to 70 kg
     @Published var age: Int = 18
     
     // Macro breakdown
@@ -48,10 +48,8 @@ class CreateProfileViewModel: ObservableObject {
         return placeholder
     }
     
-    // Height & Weight
-    @Published var isMetric = false {
-        didSet { convertMeasurements(toMetric: isMetric) }
-    }
+    // Height & Weight - display preference only, doesn't affect stored values
+    @Published var isMetric = false
     
     var currentStep: OnboardingStep {
         OnboardingStep.steps[currentStepIndex]
@@ -59,17 +57,6 @@ class CreateProfileViewModel: ObservableObject {
     
     var progress: Double {
         Double(currentStepIndex + 1) / Double(OnboardingStep.steps.count)
-    }
-    
-    // IMPROVE: Separate measurement conversion logic
-    private func convertMeasurements(toMetric: Bool) {
-        if toMetric {
-            height *= 2.54 // inches to cm
-            weight *= 0.453592 // lbs to kg
-        } else {
-            height /= 2.54 // cm to inches
-            weight /= 0.453592 // kg to lbs
-        }
     }
     
     // IMPROVE: Selection handling
@@ -171,14 +158,16 @@ class CreateProfileViewModel: ObservableObject {
     }
 
     func createProfile() -> UserProfile {
+        // No conversion needed here since we always store in metric
         return UserProfile(
             createdAt: Date().formatted(date: .complete, time: .complete),
             gender: getValue(for: .gender),
             activityLevel: getValue(for: .activityLevel),
             previousExperience: getValues(for: .pastTraining),
-            height: Int(height),
-            weight: Int(weight),
-            birthYear: yearOfBirth(from: age),
+            height: Int(height),      // Already in cm
+            weight: Int(weight),      // Already in kg
+            isMetric: isMetric,
+            age: age,
             mainGoal: getValue(for: .mainGoal),
             fitnessBarrier: getValue(for: .barriers),
             fitnessGoal: getValue(for: .goals),
@@ -195,12 +184,6 @@ class CreateProfileViewModel: ObservableObject {
             cookingStyle: getValue(for: .cookingStyle)
         )
     }
-    
-    func yearOfBirth(from age: Int) -> String {
-        let currentYear = Calendar.current.component(.year, from: Date())
-        return String(currentYear - age)
-    }
-    
     private func handleStepNavigation() {
         saveCurrentState()
         
@@ -302,7 +285,6 @@ class CreateProfileViewModel: ObservableObject {
         }
     }
 
-    // ADD: Helper methods for getting stored selections
     private func getSelectedTitle(for stepID: StepID) -> String {
         guard let selections = stepSelections[stepID],
               let firstSelection = selections.first,

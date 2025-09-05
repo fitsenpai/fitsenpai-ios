@@ -78,7 +78,7 @@ struct WorkoutRoutineItemView: View {
             }
             Task {
                 do {
-                    try await viewModel.onToggleCompleted(for: routine.date, name: routine.name)
+                    try await viewModel.onToggleCompleted(for: routine.id, date: routine.date, name: routine.name)
 
                 } catch {
                     routine.isCompleted = false

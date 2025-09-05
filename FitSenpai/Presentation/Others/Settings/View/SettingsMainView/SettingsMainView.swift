@@ -179,7 +179,7 @@ struct SettingsMainView: View {
     
     private var profileSection: some View {
         VStack(spacing: 0) {
-            settingsRow("Age", value: "\(String(describing: Int(viewModel.profile.birthYear ?? "0") ?? 0))")
+            settingsRow("Age", value: "\(viewModel.profile.age)")
             Divider()
             settingsRow("Gender", value: viewModel.getTitle(for: \.gender, as: Gender.self))
             Divider()

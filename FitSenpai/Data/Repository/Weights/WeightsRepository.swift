@@ -12,7 +12,8 @@ final class WeightsRepository: WeightsRepositoryProtocol {
     
     // MARK: - Dependencies
     @Inject private var remoteDataSource: WeightsDataSourceProtocol
-        
+    @Inject private var profileStore: ProfileDataStore
+
     @AppState(\.trialStartDate) private var trialStartDate
     
     func getWeights() async throws -> [WeightDataPoint] {
@@ -24,6 +25,15 @@ final class WeightsRepository: WeightsRepositoryProtocol {
     }
     
     func getBMI(id: String) async throws -> BMIData {
-        return try await remoteDataSource.getBMI(id: id).toDomain()
+        if trialStartDate != nil {
+            let profile = profileStore.getCurrentProfile()
+            if let height = profile?.height, let weight = profile?.weight {
+                return try await remoteDataSource.getBMIDemo(.init(height_cm: Double(height), weight_kg: Double(weight))).toDomain()
+            } else {
+                return BMIData(bmi: 0.0, status: "Normal")
+            }
+        } else {
+            return try await remoteDataSource.getBMI(id: id).toDomain()
+        }
     }
 }

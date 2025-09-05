@@ -17,8 +17,8 @@ struct UserProfile {
     var previousExperience: [OptionItem]
     var height: Int?
     var weight: Int?
-    var systemOfMeasurement: OptionItem?
-    var birthYear: String?
+    var isMetric: Bool
+    var age: Int
     var mainGoal: OptionItem?
     var fitnessBarrier: OptionItem?
     var fitnessGoal: OptionItem?
@@ -33,7 +33,7 @@ struct UserProfile {
     var allergies: [OptionItem]
     var otherAllergies: [String]
     var cookingStyle: OptionItem?
-
+    
     init(
         id: String = UUID().uuidString,
         userId: String = UUID().uuidString,
@@ -43,8 +43,8 @@ struct UserProfile {
         previousExperience: [OptionItem] = [],
         height: Int? = nil,
         weight: Int? = nil,
-        systemOfMeasurement: OptionItem? = nil,
-        birthYear: String? = nil,
+        isMetric: Bool = false,
+        age: Int = 0,
         mainGoal: OptionItem? = nil,
         fitnessBarrier: OptionItem? = nil,
         fitnessGoal: OptionItem? = nil,
@@ -68,8 +68,8 @@ struct UserProfile {
         self.previousExperience = previousExperience
         self.height = height
         self.weight = weight
-        self.systemOfMeasurement = systemOfMeasurement
-        self.birthYear = birthYear
+        self.isMetric = isMetric
+        self.age = age
         self.mainGoal = mainGoal
         self.fitnessBarrier = fitnessBarrier
         self.fitnessGoal = fitnessGoal
@@ -84,6 +84,7 @@ struct UserProfile {
         self.allergies = allergies
         self.otherAllergies = otherAllergies
         self.cookingStyle = cookingStyle
+        self.isMetric = isMetric
     }
     
     
@@ -97,8 +98,8 @@ struct UserProfile {
         entity.previousExperience = self.previousExperience.map({ $0.id }).joined(separator: ",")
         entity.height = self.height
         entity.weight = self.weight
-        entity.systemOfMeasurement = self.systemOfMeasurement?.id
-        entity.birthYear = self.birthYear
+        entity.isMetric = isMetric
+        entity.age = self.age
         entity.mainGoal = self.mainGoal?.id
         entity.fitnessBarrier = self.fitnessBarrier?.id
         entity.fitnessGoal = self.fitnessGoal?.id
@@ -116,6 +117,11 @@ struct UserProfile {
         return entity
     }
     
+    private func yearOfBirth(from age: Int) -> String {
+        let currentYear = Calendar.current.component(.year, from: Date())
+        return String(currentYear - age)
+    }
+    
     func toRequestBody() -> WorkoutProfileRequest {
         
         return WorkoutProfileRequest(
@@ -125,7 +131,7 @@ struct UserProfile {
             previousExperience: previousExperience.map { $0.id },
             height_cm: Double(height ?? 0),
             weight_kg: Double(weight ?? 0),
-            birthYear: birthYear,
+            birthYear: yearOfBirth(from: age),
             mainGoal: mainGoal?.id,
             fitnessBarrier: fitnessBarrier?.id,
             fitnessGoal: fitnessGoal?.id,

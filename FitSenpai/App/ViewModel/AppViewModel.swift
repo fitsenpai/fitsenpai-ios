@@ -246,6 +246,7 @@ extension AppViewModel: ASWebAuthenticationPresentationContextProviding {
                 shouldSignIn = false
             } catch {
                 self.errorMessage = "Google Sign-In failed: \(error.localizedDescription)"
+                networkSession.clearTokens()
             }
         }
     }

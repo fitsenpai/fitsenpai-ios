@@ -12,6 +12,7 @@ enum WeightsEndpoint {
     case getWeights
     case createWeights(_ params: ParameterProtocol)
     case getBMI(id: String)
+    case getBMIDemo(_ params: ParameterProtocol)
 }
 
 extension WeightsEndpoint: NetworkEndpoint {
@@ -22,13 +23,15 @@ extension WeightsEndpoint: NetworkEndpoint {
             return "/weights"
         case .getBMI:
             return "/bmi"
+        case .getBMIDemo:
+            return "/bmi/guest"
         }
     }
     
     var method: HTTPMethod {
         switch self {
         case .getWeights, .getBMI : .get
-        case .createWeights: .post
+        case .createWeights, .getBMIDemo: .post
         }
     }
     
@@ -46,7 +49,7 @@ extension WeightsEndpoint: NetworkEndpoint {
     
     var body: [String: Any]? {
         switch self {
-        case .createWeights(let params):
+        case .createWeights(let params), .getBMIDemo(let params):
             return params.toDictionary()
         default:
             return nil

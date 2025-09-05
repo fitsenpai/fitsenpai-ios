@@ -153,9 +153,8 @@ extension WorkoutsViewModel {
         }
     }
     
-
-    func onToggleCompleted(for date: String, name: String) async throws {
-        try await updateRoutineUseCase.execute(date: date, name: name)
+    func onToggleCompleted(for id: String, date: String, name: String) async throws {
+        try await updateRoutineUseCase.execute(id: id, date: date, name: name)
     }
     
 

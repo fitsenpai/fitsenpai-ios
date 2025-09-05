@@ -13,6 +13,7 @@ protocol WeightsDataSourceProtocol {
     func getWeights() async throws -> [WeightsDTO]
     func createWeights(_ params: WeightRequest) async throws -> [WeightsDTO]
     func getBMI(id: String) async throws -> BmiDTO
+    func getBMIDemo(_ params: BMIRequest) async throws -> BmiDTO
 }
 
 final class WeightsDataSource: WeightsDataSourceProtocol {
@@ -33,5 +34,9 @@ final class WeightsDataSource: WeightsDataSourceProtocol {
     
     func getBMI(id: String) async throws -> BmiDTO {
         return try await networkService.request(.getBMI(id: id))
+    }
+    
+    func getBMIDemo(_ params: BMIRequest) async throws -> BmiDTO {
+        return try await networkService.request(.getBMIDemo(params))
     }
 }

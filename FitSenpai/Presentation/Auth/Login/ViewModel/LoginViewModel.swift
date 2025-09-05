@@ -178,8 +178,9 @@ class LoginViewModel: NSObject, ObservableObject, ASWebAuthenticationPresentatio
                 await getCurrentUser()
                 self.viewState = .idle
             } catch {
-                self.errorMessage = "Google Sign-In failed: \(error.localizedDescription)"
+                networkSession.clearTokens()
                 self.viewState = .idle
+                self.errorMessage = "Google Sign-In failed: \(error.localizedDescription)"
             }
         }
     }   

@@ -87,9 +87,7 @@ extension SettingsViewModel {
     }
     
     var formattedHeightWeight: String {
-        guard let value = profile.systemOfMeasurement, let measurement = MeasurementType(rawValue: value.id) else { return "" }
-        
-        if measurement == .metric {
+        if profile.isMetric {
             return String(format: "%.0f cm, %.0f kg", Double(profile.height ?? 0), Double(profile.weight ?? 0))
         } else {
             let heightInCm = Double(profile.height ?? 0)
@@ -111,7 +109,7 @@ extension SettingsViewModel {
             defer { viewState = .idle }
             async let user = self.getUserUseCase.execute()
             async let profile = self.getUserProfileUseCase.execute()
-            self.user = try await user
+            self.user = try? await user
             self.profile = try await profile
         }
     }
@@ -168,10 +166,10 @@ extension SettingsViewModel {
         try? await saveProfile()
     }
     
-    func updateHeightWeight(height: Double, weight: Double, measurement: MeasurementType) async {
+    func updateHeightWeight(height: Double, weight: Double, isMetric: Bool) async {
         profile.height = Int(height)
         profile.weight = Int(weight)
-        profile.systemOfMeasurement = measurement.toOption()
+        profile.isMetric = isMetric
         try? await saveProfile()
     }
     
@@ -182,7 +180,7 @@ extension SettingsViewModel {
     }
     
     func updateAge(_ newAge: Int) async {
-        profile.birthYear = "\(newAge)"
+        profile.age = newAge
         try? await saveProfile()
     }
     

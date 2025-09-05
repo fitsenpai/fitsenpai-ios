@@ -18,6 +18,6 @@ final class CreateWeigthsUseCase: CreateWeightsUseCaseProtocol {
     @Inject private var repository: WeightsRepositoryProtocol
 
     func execute(_ params: WeightsData) async throws -> [WeightDataPoint] {
-        return try await repository.createWeights(.init(weight: params.weight, date: params.date))
+        return try await repository.createWeights(.init(weight_kg: params.weight, date: params.date))
     }
 }

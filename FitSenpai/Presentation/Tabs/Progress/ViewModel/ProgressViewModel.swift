@@ -5,6 +5,7 @@ import CoreKit
 @MainActor
 class ProgressViewModel: ObservableObject {
     @Published var viewState: ViewState = .idle
+    @Published var profile: UserProfile?
     @Published var selectedTimeframe: ProgressTimeframe = .ninety
     @Published var weightData: [WeightDataPoint] = []
     @Published var bmiValue: Double = 0
@@ -19,6 +20,10 @@ class ProgressViewModel: ObservableObject {
     @Inject private var getBMIUseCase: GetBMIUseCaseProtocol
     @Inject private var getWeigthsUseCase: GetWeightsUseCaseProtocol
     @Inject private var createWeightsUseCase: CreateWeightsUseCaseProtocol
+    @Inject private var getUserProfileUseCase: GetUserProfileUseCaseProtocol
+    @Inject private var saveUserProfileUseCase: SaveUserProfileUseCaseProtocol
+    
+    // MARK: - Use Cases
 
     @AppState(\.userID) private var id: String?
 
@@ -41,19 +46,19 @@ class ProgressViewModel: ObservableObject {
     }
     
     func createWeigths(weight: Double) async {
-        
-        let date = Date()
+        guard var profile else { return }
         viewState = .loading
         defer { viewState = .idle }
         try? await Task.sleep(for: .seconds(2))
-        let newWeights = WeightDataPoint(date: date, weight: weight)
-
+        profile.weight = Int(weight)
         do {
-            let _ = try await createWeightsUseCase.execute(.init(weight: weight, date: date.toString(WithFormat: "yyyy-MM-dd")))
-            self.weightData.append(newWeights)
+            self.profile = try await saveUserProfileUseCase.execute(profile)
+            self.weight = weight
             self.viewState = .idle
+            self.loadData()
         } catch {
             self.viewState = .idle
+            ToastManager.shared.showError(error.localizedDescription)
         }
     }
     
@@ -67,8 +72,16 @@ class ProgressViewModel: ObservableObject {
     }
     
     private func initializeData() {
+        self.loadProfile()
         self.loadData()
         self.loadBMI()
+    }
+    
+    private func loadProfile() {
+        Task { @MainActor in
+            self.profile = try? await self.getUserProfileUseCase.execute()
+            self.weight = Double(profile?.weight ?? 0)
+        }
     }
     
     private func loadBMI() {

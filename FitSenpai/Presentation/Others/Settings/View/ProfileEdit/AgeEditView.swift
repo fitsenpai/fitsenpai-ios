@@ -6,7 +6,7 @@ struct AgeEditView: View {
     
     init(viewModel: SettingsViewModel) {
         self.viewModel = viewModel
-        _age = State(initialValue: Int(viewModel.profile.birthYear ?? "0") ?? 0)
+        _age = State(initialValue: viewModel.profile.age)
     }
     
     var body: some View {
