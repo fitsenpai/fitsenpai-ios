@@ -50,7 +50,7 @@ struct MealsView: View {
         .init(
             iconName: .iconBoxSparcle,
             title: "Your meal plan is ready!",
-            mainLabel: "Tap below to generate meals for \nthe week",
+            mainLabel: "Tap below to generate meals for the week",
             buttonLabel: "Generate meals",
             buttonAction: {
                 Task {

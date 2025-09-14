@@ -24,7 +24,7 @@ struct FSInfoViewModel {
     static let defaultConfig = FSInfoViewModel(
         iconName: .icCalendarCheck,
         title: "Week 5 is now unlocked!",
-        mainLabel: "Tap below to generate your new workout and\nmeal plans. This may take a few minutes.",
+        mainLabel: "Tap below to generate your new workout and meal plans. This may take a few minutes.",
         buttonLabel: "Generate plans",
         containerHeight: 320,
         buttonAction: { print("Button tapped") }

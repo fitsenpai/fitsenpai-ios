@@ -18,7 +18,7 @@ struct WorkoutWeekView: View {
         .init(
             iconName: .iconBoxWarning,
             title: "Plan unavailable for this week",
-            mainLabel: "You have no active subscription\nduring this time.",
+            mainLabel: "You have no active subscription during this time.",
             buttonLabel: "",
             showButton: false,
             isLoading: false,
@@ -72,7 +72,7 @@ struct WorkoutDayView: View {
                     FSInfoView(viewModel: .init(
                         iconName: .iconBoxHeart,
                         title: "Rest day",
-                        mainLabel: "Your body's recharging. Recovery is part of \nthe process — you've earned this.",
+                        mainLabel: "Your body's recharging. Recovery is part of the process — you've earned this.",
                         buttonLabel: "I want to stay active",
                         buttonAction: {
                             triggerHaptics()

@@ -49,7 +49,7 @@ struct WorkoutsView: View {
         .init(
             iconName: .iconBoxWarning,
             title: "Plan unavailable for this week",
-            mainLabel: "You have no active subscription\nduring this time.",
+            mainLabel: "You have no active subscription during this time.",
             buttonLabel: "",
             showButton: false,
             isLoading: false,

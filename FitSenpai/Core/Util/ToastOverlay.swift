@@ -16,14 +16,14 @@ struct ToastView: View {
     
     var body: some View {
         HStack(spacing: 12) {
-            FSTextView(toast.message, typography: .body_medium, color: .black, alignment: .leading)
+            FSTextView(toast.message, typography: .body_medium, color: fontColor, alignment: .leading)
             
             Spacer()
             
             Button(action: onDismiss) {
                 Image(systemName: "xmark")
                     .font(.system(size: 12, weight: .medium))
-                    .foregroundColor(.secondary)
+                    .foregroundColor(fontColor)
             }
         }
         .padding(16)
@@ -62,6 +62,15 @@ struct ToastView: View {
             withAnimation(.easeInOut(duration: 0.1)) {
                 shakeOffset = 0
             }
+        }
+    }
+    
+    private var fontColor: Color {
+        switch toast.type {
+        case .success, .info:
+            return .black
+        case .error, .warning:
+            return .white
         }
     }
     

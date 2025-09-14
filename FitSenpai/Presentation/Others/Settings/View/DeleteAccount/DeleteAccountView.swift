@@ -92,13 +92,6 @@ struct DeleteAccountView: View {
                 }
             }
         }
-        .overlay(alignment: .center) {
-            if viewModel.viewState == .loading {
-                ZStack {
-                    Color.black.opacity(0.25)
-                    ProgressView()
-                }
-            }
-        }
+        .loadingOverlay(state: $viewModel.viewState)
     }
 }

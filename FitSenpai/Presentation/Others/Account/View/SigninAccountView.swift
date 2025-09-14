@@ -7,9 +7,10 @@
 
 import SwiftUI
 
-struct CreateAccountView: View {
+struct SigninAccountView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var appViewModel: AppViewModel
+    @StateObject private var viewModel = SignInAccountViewModel()
     
     var body: some View {
         VStack(alignment: .leading, spacing: 36) {
@@ -42,7 +43,7 @@ struct CreateAccountView: View {
                         background: .white,
                         borderColor: .fsPurple) {
                     Task {
-                        await appViewModel.loginWithGoogle()
+                        await viewModel.loginWithGoogle()
                     }
                 }
             }
@@ -52,10 +53,17 @@ struct CreateAccountView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.white)
+        .loadingOverlay(state: $viewModel.viewState)
+        .withToastOverlay()
+        .onReceive(viewModel.$didSignIn) { signedIn in
+            if signedIn {
+                dismiss()
+            }
+        }
     }
 }
 
 #Preview {
-    CreateAccountView()
+    SigninAccountView()
         .environmentObject(AppViewModel())
 }

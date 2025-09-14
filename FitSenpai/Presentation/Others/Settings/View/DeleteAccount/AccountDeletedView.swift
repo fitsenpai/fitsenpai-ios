@@ -28,7 +28,7 @@ struct AccountDeletedView: View {
             
             FSButton(title: "Sign up", fontStyle: .bodyBold16, cornerRadius: 32) {
                 appViewModel.authState = .unauthenticated
-                appViewModel.shouldLogin = true
+                appViewModel.shouldSignIn = true
             }
         }
         .padding(24)

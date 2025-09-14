@@ -51,7 +51,7 @@ struct MainTabView: View {
                 triggerHaptics()
             }
             .fullScreenCover(isPresented: $appViewModel.shouldSignIn) {
-                CreateAccountView()
+                SigninAccountView()
             }
         }
     }

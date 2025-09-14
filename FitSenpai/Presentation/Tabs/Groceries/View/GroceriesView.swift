@@ -34,7 +34,7 @@ struct GroceriesView: View {
         .init(
             iconName: .iconBoxSparcle,
             title: "Your grocery list is ready!",
-            mainLabel: "Tap below to generate your grocery list\nfor the week",
+            mainLabel: "Tap below to generate your grocery list for the week",
             buttonLabel: "Generate list",
             buttonAction: {
                 Task {

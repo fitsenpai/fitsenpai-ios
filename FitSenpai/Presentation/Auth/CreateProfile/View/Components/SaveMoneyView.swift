@@ -12,7 +12,7 @@ struct SaveMoneyView: View {
         VStack(spacing: 16) {
             Spacer()
             VStack(spacing: 16) {
-                FSText(text: "Your monthly expences on fitness", fontStyle: .body16)
+                FSText(text: "Your monthly expenses on fitness", fontStyle: .body16)
                     .padding(.horizontal, 24)
                 
                 Image(.analytics)

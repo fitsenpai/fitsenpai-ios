@@ -87,7 +87,7 @@ enum FSTypography {
     
     var letterSpaceTracking: CGFloat {
         switch self {
-        case .h2, .body, .body_bold: tracking(fromPercentage: -1, fontSize: fontSize)
+        case .h2, .body, .body_bold: tracking(fromPercentage: -2, fontSize: fontSize)
         case .h3, .body_medium: tracking(fromPercentage: -2, fontSize: fontSize)
         case .h3_heavy: tracking(fromPercentage: -1.2, fontSize: fontSize)
         case .h4: tracking(fromPercentage: -0.5, fontSize: fontSize)
