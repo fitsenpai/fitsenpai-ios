@@ -10,6 +10,8 @@ import SwiftUI
 struct WorkoutRoutinesView: View {
     @EnvironmentObject private var viewModel: WorkoutsViewModel
     @State private var selectedRoutine: WorkoutRoutine?
+    @StateObject private var calendarManager = CalendarDataManager.shared
+
     
     private var sortedRoutines: [WorkoutRoutine] {
         viewModel.routines.sorted(by: { $0.sortIndex < $1.sortIndex })
@@ -24,14 +26,18 @@ struct WorkoutRoutinesView: View {
                             self.selectedRoutine = routine
                             triggerHaptics()
                         }
+                        .sheet(item: $selectedRoutine) { routine in
+                            WorkoutDetailView(routine: binding(for: routine))
+                        }
                 }
             }
             .padding(.horizontal, 1)
         }
+        .refreshable(action: {
+            await viewModel.getWorkoutPlan(for: calendarManager.selectedDate)
+        })
         .scrollIndicators(.hidden)
-        .sheet(item: $selectedRoutine) { routine in
-            WorkoutDetailView(routine: binding(for: routine))
-        }
+       
     }
     
     private func binding(for routine: WorkoutRoutine) -> Binding<WorkoutRoutine> {

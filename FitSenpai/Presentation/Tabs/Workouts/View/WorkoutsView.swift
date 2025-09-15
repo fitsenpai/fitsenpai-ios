@@ -37,7 +37,7 @@ struct WorkoutsView: View {
             buttonLabel: "Retry",
             buttonAction: {
                 Task {
-                    await viewModel.getWorkoutPlan()
+                    await viewModel.getWorkoutPlan(for: calendarManager.selectedDate)
                     viewModel.updateSelectedWorkoutData(for: calendarManager.selectedDate)
                 }
                 triggerHaptics()

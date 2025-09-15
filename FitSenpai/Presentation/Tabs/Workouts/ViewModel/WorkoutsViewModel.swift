@@ -37,7 +37,7 @@ class WorkoutsViewModel: ObservableObject, HandlesErrors {
 
     init() {
         Task {
-            await getWorkoutPlan()
+            await getWorkoutPlan(for: Date())
         }
     }
     
@@ -46,10 +46,10 @@ class WorkoutsViewModel: ObservableObject, HandlesErrors {
 // MARK: - Workout Data Handling
 extension WorkoutsViewModel {
   
-    func getWorkoutPlan() async  {
+    func getWorkoutPlan(for date: Date) async  {
         do {
             self.workoutWeeks = try await workoutPlanUseCase.execute()
-            self.updateSelectedWorkoutData(for: Date())
+            self.updateSelectedWorkoutData(for: date)
             self.viewState = .idle
         } catch {
             self.viewState = .idle

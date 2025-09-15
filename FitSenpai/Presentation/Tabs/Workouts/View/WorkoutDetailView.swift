@@ -33,7 +33,7 @@ struct WorkoutDetailView: View {
                     workoutSection
                     VStack(spacing: 16) {
                         PlayerView(player: .constant(player))
-                            .frame(height: 345)
+                            .frame(height: 195)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 12)
                                     .stroke(Color.gray230, lineWidth: 1)
