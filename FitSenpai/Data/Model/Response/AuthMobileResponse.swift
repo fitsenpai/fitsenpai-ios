@@ -7,6 +7,11 @@
 
 import Foundation
 
-struct SignInResponse: Decodable {
+struct AuthMobileResponse: Decodable {
     let url: String
+}
+
+enum AuthProvider: String {
+    case google
+    case apple
 }

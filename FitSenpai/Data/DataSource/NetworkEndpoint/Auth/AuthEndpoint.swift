@@ -15,12 +15,13 @@ enum AuthEndpoint {
     case signOut
     case signInWithApple(user: String)
     case signInWithGoogle
-    case getLoginCallback(code: String)
+    case getAuthCallback(code: String)
     case getUserAuth
     case resetPassword(password: String)
     case forgotPassword(email: String)
     case deleteAccount(feedback: String)
     case verifyOTP(email: String, token: String)
+    case getAuthUrl(provider: String)
     
 }
 
@@ -36,7 +37,7 @@ extension AuthEndpoint: NetworkEndpoint {
             return "/auth/logout"
         case .signInWithApple:
             return "/auth/mobile/apple"
-        case .getLoginCallback:
+        case .getAuthCallback:
             return "/auth/mobile/callback"
         case .signInWithGoogle:
             return "/auth/mobile/google"
@@ -48,6 +49,8 @@ extension AuthEndpoint: NetworkEndpoint {
             return "/auth/me"
         case .verifyOTP:
             return "/auth/verify-otp"
+        case .getAuthUrl(let provider):
+            return "/auth/mobile/\(provider)"
         }
     }
     
@@ -55,7 +58,7 @@ extension AuthEndpoint: NetworkEndpoint {
         switch self {
         case .signIn, .signUp, .signOut, .resetPassword, .forgotPassword, .verifyOTP:
             return .post
-        case .getUserAuth, .signInWithGoogle, .signInWithApple, .getLoginCallback:
+        case .getUserAuth, .signInWithGoogle, .signInWithApple, .getAuthCallback, .getAuthUrl:
             return .get
         case .deleteAccount:
             return .delete
@@ -65,7 +68,7 @@ extension AuthEndpoint: NetworkEndpoint {
     var headers: [String: String]? {
         var headers = ["Content-Type": "application/json"]
         switch self {
-        case .signIn, .signUp, .resetPassword, .signInWithGoogle, .signInWithApple, .verifyOTP:
+        case .signIn, .signUp, .resetPassword, .signInWithGoogle, .signInWithApple, .verifyOTP, .getAuthUrl:
             // No additional headers needed for public endpoints
             break
         default:
@@ -98,7 +101,7 @@ extension AuthEndpoint: NetworkEndpoint {
     
     var queryItems: [URLQueryItem]? {
         switch self {
-        case .getLoginCallback(let code):
+        case .getAuthCallback(let code):
             return [URLQueryItem(name: "code", value: code)]
         default:
             return nil

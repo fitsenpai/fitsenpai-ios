@@ -179,13 +179,21 @@ private extension AppViewModel {
 
 extension AppViewModel: ASWebAuthenticationPresentationContextProviding {
     
+    func loginWithApple() async {
+        await authentiationLogin(provider: .apple)
+    }
+    
     func loginWithGoogle() async {
+        await authentiationLogin(provider: .google)
+    }
+    
+    func authentiationLogin(provider: AuthProvider) async {
         viewState = .loading
         errorMessage = nil
                 
         do {
-            let urlString = try await signinUseCase.executeWithGoogle()
-            
+            let urlString = try await signinUseCase.execute(with: provider)
+
             guard let authURL = URL(string: urlString) else {
                 return
             }
@@ -213,7 +221,7 @@ extension AppViewModel: ASWebAuthenticationPresentationContextProviding {
                         return
                     }
                     
-                    self.handleGoogleAuthCallback(callbackURL)
+                    self.handleAuthCallback(callbackURL)
                 })
 
             authSession?.presentationContextProvider = self
@@ -226,7 +234,7 @@ extension AppViewModel: ASWebAuthenticationPresentationContextProviding {
 
     }
     
-    private func handleGoogleAuthCallback(_ url: URL) {
+    private func handleAuthCallback(_ url: URL) {
         defer { self.viewState = .idle }
         guard let queryItems = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems, let code = queryItems.first(where: { $0.name == "code" })?.value else {
             FSLogger.log("Google Auth Callback: Code not found in query parameters. URL: \(url.absoluteString)")

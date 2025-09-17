@@ -12,7 +12,8 @@ protocol AuthDataSourceProtocol {
     func getUserAuth() async throws -> UserDTO 
     func signIn(email: String, password: String) async throws -> LoginResponse
     func signInWithApple(user: String) async throws -> LoginResponse
-    func signInWithGoogle() async throws -> SignInResponse
+    func signInWithGoogle() async throws -> AuthMobileResponse
+    func getAuthUrl(provider: AuthProvider) async throws -> AuthMobileResponse
     func signUp(name: String, email: String, password: String) async throws -> LoginResponse
     func signOut() async throws
     func getLoginCallback(code: String) async throws -> AuthCallbackResponse
@@ -38,16 +39,20 @@ final class AuthDataSource: AuthDataSourceProtocol {
         return try await networkService.request(.signIn(email: email, password: password))
     }
     
+    func getAuthUrl(provider: AuthProvider) async throws -> AuthMobileResponse {
+        return try await networkService.request(.getAuthUrl(provider: provider.rawValue))
+    }
+    
     func signInWithApple(user: String) async throws -> LoginResponse {
         return try await networkService.request(.signInWithApple(user: user))
     }
     
-    func signInWithGoogle() async throws -> SignInResponse {
+    func signInWithGoogle() async throws -> AuthMobileResponse {
         return try await networkService.request(.signInWithGoogle)
     }
     
     func getLoginCallback(code: String) async throws -> AuthCallbackResponse {
-        return try await networkService.request(.getLoginCallback(code: code))
+        return try await networkService.request(.getAuthCallback(code: code))
     }
     
     func signUp(name: String, email: String, password: String) async throws -> LoginResponse {

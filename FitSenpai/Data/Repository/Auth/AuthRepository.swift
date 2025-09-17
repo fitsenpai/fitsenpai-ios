@@ -119,4 +119,9 @@ final class AuthRepository: AuthRepositoryProtocol {
     func deleteAccount(feedback: String) async throws {
         try await remoteDataSource.deleteAccount(feedback: feedback)
     }
+    
+    func getAuthUrl(provider: AuthProvider) async throws -> String {
+        let response = try await remoteDataSource.getAuthUrl(provider: provider)
+        return response.url
+    }
 }

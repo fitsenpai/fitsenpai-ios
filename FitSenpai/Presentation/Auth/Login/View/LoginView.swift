@@ -56,10 +56,9 @@ struct LoginView: View {
             HStack {
                 FSButton(icon: "apple-logo", title: "Apple", fontStyle: .bodyBold16, foregroundColor: .white, cornerRadius: 100, background: .black) {
                     Task {
-                        viewModel.loginWithApple()
+                       await viewModel.loginWithApple()
                     }
                 }
-                .disabled(true)
                 
                 FSButton(icon: "google-logo", title: "Google", fontStyle: .bodyBold16, cornerRadius: 100, background: .white, borderColor: .fsPurple) {
                     Task {

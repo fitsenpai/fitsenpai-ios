@@ -58,19 +58,8 @@ class LoginViewModel: NSObject, ObservableObject, ASWebAuthenticationPresentatio
         }
     }
     
-    func loginWithApple() {
-        viewState = .loading
-        errorMessage = nil
-        
-        appleSignInManager.signIn { [weak self] result in
-            switch result {
-            case .success(let authorization):
-                self?.handleSuccessfulLogin(with: authorization)
-            case .failure(let error):
-                self?.handleLoginError(with: error)
-            }
-            self?.viewState = .idle
-        }
+    func loginWithApple() async {
+        await authentiationLogin(provider: .apple)
     }
     
     private func handleSuccessfulLogin(with authorization: ASAuthorization) {
@@ -112,17 +101,22 @@ class LoginViewModel: NSObject, ObservableObject, ASWebAuthenticationPresentatio
             )
     }
     
+    
     func loginWithGoogle() async {
+        await authentiationLogin(provider: .google)
+    }
+        
+    func authentiationLogin(provider: AuthProvider) async {
         viewState = .loading
         errorMessage = nil
                 
         do {
-            let urlString = try await signinUseCase.executeWithGoogle()
+            let urlString = try await signinUseCase.execute(with: provider)
             loginMethod = LoginMethod.google.rawValue
             
             guard let authURL = URL(string: urlString) else {
                 viewState = .idle
-                errorMessage = "Google Sign-in error: Invalid URL"
+                errorMessage = "Sign-in error: Invalid URL"
                 return
             }
             
@@ -135,7 +129,7 @@ class LoginViewModel: NSObject, ObservableObject, ASWebAuthenticationPresentatio
                     guard let self = self else { return }
                     
                     if let error = error {
-                        self.errorMessage = "Google Sign-In failed: \(error.localizedDescription)"
+                        self.errorMessage = "Sign-In failed: \(error.localizedDescription)"
                         FSLogger
                             .log(self.errorMessage ?? "Google Sign-In error")
                         self.viewState = .idle
@@ -143,13 +137,13 @@ class LoginViewModel: NSObject, ObservableObject, ASWebAuthenticationPresentatio
                     }
                     
                     guard let callbackURL = callbackURL else {
-                        self.errorMessage = "Google Sign-In failed: No callback URL received."
+                        self.errorMessage = "Sign-In failed: No callback URL received."
                         FSLogger.log(self.errorMessage ?? "No callback URL")
                         self.viewState = .idle
                         return
                     }
                     
-                    self.handleGoogleAuthCallback(callbackURL)
+                    self.handleAuthCallback(callbackURL)
                 })
 
             authSession?.presentationContextProvider = self
@@ -158,14 +152,14 @@ class LoginViewModel: NSObject, ObservableObject, ASWebAuthenticationPresentatio
             
         } catch {
             errorMessage = error.localizedDescription
-            print("Error during Google login: \(error.localizedDescription)")
+            print("Error during login: \(error.localizedDescription)")
         }
 
     }
     
-    private func handleGoogleAuthCallback(_ url: URL) {
+    private func handleAuthCallback(_ url: URL) {
         guard let queryItems = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems, let code = queryItems.first(where: { $0.name == "code" })?.value else {
-            FSLogger.log("Google Auth Callback: Code not found in query parameters. URL: \(url.absoluteString)")
+            FSLogger.log("Auth Callback: Code not found in query parameters. URL: \(url.absoluteString)")
             self.viewState = .idle
             return
         }
@@ -180,7 +174,7 @@ class LoginViewModel: NSObject, ObservableObject, ASWebAuthenticationPresentatio
             } catch {
                 networkSession.clearTokens()
                 self.viewState = .idle
-                self.errorMessage = "Google Sign-In failed: \(error.localizedDescription)"
+                self.errorMessage = "Sign-In failed: \(error.localizedDescription)"
             }
         }
     }   
@@ -212,7 +206,7 @@ class LoginViewModel: NSObject, ObservableObject, ASWebAuthenticationPresentatio
         } catch {
             networkSession.setTokens(accessToken: "", refreshToken: "")
             FSLogger.log("Login error: \(error.localizedDescription)")
-            self.errorMessage = "Google Sign-In failed: No profile found."
+            self.errorMessage = "Sign-In failed: No profile found."
         }
     }
 }

@@ -13,6 +13,7 @@ protocol AuthRepositoryProtocol {
     func signUp(name: String, email: String, password: String) async throws -> (FSUser, FSSession)
     func signInWithApple(user: String) async throws -> (FSUser, FSSession)
     func signInWithGoogle() async throws -> String
+    func getAuthUrl(provider: AuthProvider) async throws -> String 
     func signOut() async throws
     func getLoginCallback(code: String) async throws -> AuthCallbackResponse
     func forgotPasswod(email: String) async throws

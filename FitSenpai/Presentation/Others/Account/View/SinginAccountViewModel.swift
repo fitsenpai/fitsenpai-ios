@@ -34,11 +34,19 @@ final class SignInAccountViewModel: NSObject, ObservableObject, HandlesErrors {
 
 extension SignInAccountViewModel: ASWebAuthenticationPresentationContextProviding {
     
+    func loginWithApple() async {
+        await authentiationLogin(provider: .apple)
+    }
+    
     func loginWithGoogle() async {
+        await authentiationLogin(provider: .google)
+    }
+    
+    func authentiationLogin(provider: AuthProvider) async {
         viewState = .loading
                 
         do {
-            let urlString = try await signinUseCase.executeWithGoogle()
+            let urlString = try await signinUseCase.execute(with: provider)
             
             guard let authURL = URL(string: urlString) else {
                 return
