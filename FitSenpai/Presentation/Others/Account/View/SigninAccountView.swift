@@ -32,9 +32,10 @@ struct SigninAccountView: View {
                         foregroundColor: .white,
                         cornerRadius: 100,
                         background: .black) {
-                    appViewModel.loginWithApple()
+                    Task {
+                        await viewModel.loginWithApple()
+                    }
                 }
-                        .disabled(true)
                 
                 FSButton(icon: "google-logo",
                         title: "Sign in with Google",

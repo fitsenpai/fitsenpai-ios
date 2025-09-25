@@ -12,8 +12,8 @@ protocol SigninUseCaseProtocol {
     func execute(email: String, password: String) async throws -> (FSUser, FSSession)
     func executeWithApple(user: String) async throws -> (FSUser, FSSession)
     func executeWithGoogle() async throws -> String
-    func executeWithGoogleCallback(code: String) async throws -> AuthCallbackResponse
-    func execute(with provider: AuthProvider) async throws -> String 
+    func executeWithCallback(code: String) async throws -> AuthCallbackResponse
+    func execute(with provider: AuthProvider) async throws -> String
 }
 
 final class SigninUseCase: SigninUseCaseProtocol {
@@ -33,8 +33,8 @@ final class SigninUseCase: SigninUseCaseProtocol {
         return try await authRepository.signInWithGoogle()
     }
     
-    func executeWithGoogleCallback(code: String) async throws -> AuthCallbackResponse {
-        return try await authRepository.getLoginCallback(code: code)
+    func executeWithCallback(code: String) async throws -> AuthCallbackResponse {
+        return try await authRepository.getAuthCallback(code: code)
     }
     
     func execute(with provider: AuthProvider) async throws -> String {

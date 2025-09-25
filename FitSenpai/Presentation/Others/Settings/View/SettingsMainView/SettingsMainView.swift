@@ -127,7 +127,6 @@ struct SettingsMainView: View {
                         .foregroundColor(.black)
                         .frame(width: 24, height: 24)
                         .padding(10)
-                        .background(Circle().fill(Color.gray246))
                 }
             }
         }
@@ -508,7 +507,7 @@ struct SettingsMainView: View {
                     Text("|")
                         .font(.caption)
                         .foregroundColor(.secondary)
-                    Text("\(superwall.status)")
+                    Text(String(describing: superwall.status))
                         .font(.caption)
                         .foregroundColor(.secondary)
                     Text("|")
@@ -534,3 +533,4 @@ struct SettingsMainView: View {
         }
     }
 }
+

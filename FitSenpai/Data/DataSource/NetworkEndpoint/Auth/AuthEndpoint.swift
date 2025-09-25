@@ -22,6 +22,7 @@ enum AuthEndpoint {
     case deleteAccount(feedback: String)
     case verifyOTP(email: String, token: String)
     case getAuthUrl(provider: String)
+    case exchangeCode(code: String)
     
 }
 
@@ -51,6 +52,8 @@ extension AuthEndpoint: NetworkEndpoint {
             return "/auth/verify-otp"
         case .getAuthUrl(let provider):
             return "/auth/mobile/\(provider)"
+        case .exchangeCode:
+            return "/auth/mobile/exchange"
         }
     }
     
@@ -58,7 +61,7 @@ extension AuthEndpoint: NetworkEndpoint {
         switch self {
         case .signIn, .signUp, .signOut, .resetPassword, .forgotPassword, .verifyOTP:
             return .post
-        case .getUserAuth, .signInWithGoogle, .signInWithApple, .getAuthCallback, .getAuthUrl:
+        case .getUserAuth, .signInWithGoogle, .signInWithApple, .getAuthCallback, .getAuthUrl, .exchangeCode:
             return .get
         case .deleteAccount:
             return .delete
@@ -94,6 +97,8 @@ extension AuthEndpoint: NetworkEndpoint {
             return ["feedback": feedback]
         case let .verifyOTP(email, token):
             return ["email": email, "token": token]
+        case let .exchangeCode(code):
+            return ["code": code]
         default:
             return nil
         }
@@ -106,5 +111,9 @@ extension AuthEndpoint: NetworkEndpoint {
         default:
             return nil
         }
+    }
+    
+    var isLoggingEnabled: Bool {
+        true
     }
 }

@@ -166,7 +166,7 @@ class LoginViewModel: NSObject, ObservableObject, ASWebAuthenticationPresentatio
         
         Task { @MainActor in
             do {
-                let session = try await signinUseCase.executeWithGoogleCallback(code: code)
+                let session = try await signinUseCase.executeWithCallback(code: code)
                 networkSession.setTokens(accessToken: session.token, refreshToken: session.refreshToken)
                 loginMethod = LoginMethod.google.rawValue
                 await getCurrentUser()
@@ -177,7 +177,7 @@ class LoginViewModel: NSObject, ObservableObject, ASWebAuthenticationPresentatio
                 self.errorMessage = "Sign-In failed: \(error.localizedDescription)"
             }
         }
-    }   
+    }
     
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
         guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,

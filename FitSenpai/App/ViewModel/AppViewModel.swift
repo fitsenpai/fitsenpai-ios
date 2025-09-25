@@ -243,7 +243,7 @@ extension AppViewModel: ASWebAuthenticationPresentationContextProviding {
         
         Task { @MainActor in
             do {
-                let session = try await signinUseCase.executeWithGoogleCallback(code: code)
+                let session = try await signinUseCase.executeWithCallback(code: code)
                 networkSession.setTokens(accessToken: session.token, refreshToken: session.refreshToken)
         
                 try await createProfileUseCase.execute()

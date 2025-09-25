@@ -177,10 +177,11 @@ class MealsViewModel: ObservableObject, HandlesErrors {
     
     // MARK: - Grocery Methods
     var dateRangeText: Text? {
-        guard let groceryWeek, let startDate = groceryWeek.startDate.toDate(), let endDate = groceryWeek.endDate.toDate() else { return nil }
-        let format = "MMM DD"
-        let startDateText = startDate.toString(WithFormat: format)
-        let endDateText = endDate.toString(WithFormat: format)
+        let format = "yyyy-MM-dd"
+        guard let groceryWeek, let startDate = groceryWeek.startDate.toDate(format: format), let endDate = groceryWeek.endDate.toDate(format: format) else { return nil }
+        let newFormat = "MMM dd"
+        let startDateText = startDate.toString(WithFormat: newFormat)
+        let endDateText = endDate.toString(WithFormat: newFormat)
         let datesRange = Text("\(startDateText)-\(endDateText)").foregroundStyle(.black).bold()
         return Text("Your grocery list for \(datesRange) is ready! These items match your meal plan for the week.")
     }

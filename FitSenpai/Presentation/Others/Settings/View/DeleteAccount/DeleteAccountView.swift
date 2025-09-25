@@ -63,6 +63,8 @@ struct DeleteAccountView: View {
                             try await viewModel.deleteAccount(feedback: selectedReason.rawValue)
                             NetworkSession.shared.clearTokens()
                             navigateToSuccess = true
+                        } catch {
+                            ToastManager.shared.showError(error.localizedDescription)
                         }
                     }
                 }

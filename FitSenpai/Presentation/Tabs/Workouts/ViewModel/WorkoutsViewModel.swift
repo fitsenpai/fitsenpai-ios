@@ -90,13 +90,16 @@ extension WorkoutsViewModel {
     }
     
     func regenerateWorkoutPlan(date: Date, instruction: String) async  {
-        viewState = .fetching
+        guard let workday = selectedWorkoutDay else { return }
         do {
+            isPendingGeneration = true
+            workday.pendingGeneration = true
+            self.workoutDataStore.updateDayPlan(workoutDay: workday)
             let selectedDate = date.toString(WithFormat: "yyyy-MM-dd")
             let workoutDay = try await regenerateWorkoutUseCase.execute(date: selectedDate, instruction: instruction)
             updateWorkoutDay(workoutDay, for: selectedDate)
             self.updateSelectedWorkoutData(for: date)
-            self.viewState = .idle
+            isPendingGeneration = false
         } catch {
             FSLogger.error("Failed to regenerate workout plan: \(error.localizedDescription)")
             viewState = .error(error)

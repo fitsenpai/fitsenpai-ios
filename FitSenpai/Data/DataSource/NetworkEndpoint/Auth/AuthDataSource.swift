@@ -21,6 +21,7 @@ protocol AuthDataSourceProtocol {
     func resetPassword(password: String) async throws
     func verifyOTP(email: String, token: String) async throws
     func deleteAccount(feedback: String) async throws
+    func exchangeCode(_ code: String) async throws -> AuthCallbackResponse 
 }
 
 final class AuthDataSource: AuthDataSourceProtocol {
@@ -77,5 +78,9 @@ final class AuthDataSource: AuthDataSourceProtocol {
     
     func deleteAccount(feedback: String) async throws {
         try await networkService.request(.deleteAccount(feedback: feedback))
+    }
+    
+    func exchangeCode(_ code: String) async throws -> AuthCallbackResponse {
+        return try await networkService.request(.getAuthCallback(code: code))
     }
 }

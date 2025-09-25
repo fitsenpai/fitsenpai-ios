@@ -29,7 +29,13 @@ class ProgressViewModel: ObservableObject {
 
     init() {
         setupBindings()
-        initializeData()
+        loadAllData()
+    }
+    
+    func loadAllData() {
+        self.loadProfile()
+        self.loadData()
+        self.loadBMI()
     }
     
     func updateWeight() {
@@ -71,11 +77,7 @@ class ProgressViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    private func initializeData() {
-        self.loadProfile()
-        self.loadData()
-        self.loadBMI()
-    }
+    
     
     private func loadProfile() {
         Task { @MainActor in

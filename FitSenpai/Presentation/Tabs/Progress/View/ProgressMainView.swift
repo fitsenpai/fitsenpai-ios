@@ -12,6 +12,11 @@ struct ProgressMainView: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 24) {
                         WeightChartCard(data: viewModel.weightData)
+                            .overlay(alignment: .center) {
+                                if viewModel.viewState == .loading {
+                                    ProgressView()
+                                }
+                            }
                         if superwall.isTrialActive {
                             UpgrageCardView {
                                 onTryForFreeTapped()
@@ -35,10 +40,13 @@ struct ProgressMainView: View {
                             }
                         )
                     }
+                    
+                }
+                .refreshable {
+                    viewModel.loadAllData()
                 }
             }
             .padding()
-            .loadingOverlay(state: $viewModel.viewState)
             .navigationDestination(isPresented: $viewModel.showBMIDetail, destination: {
                 BMIDetailView(viewModel: BMIDetailViewModel(bmi: viewModel.bmiValue))
                     .navigationBarBackButtonHidden()

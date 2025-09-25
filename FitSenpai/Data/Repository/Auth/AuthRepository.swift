@@ -95,7 +95,7 @@ final class AuthRepository: AuthRepositoryProtocol {
         return response.url
     }
     
-    func getLoginCallback(code: String) async throws -> AuthCallbackResponse {
+    func getAuthCallback(code: String) async throws -> AuthCallbackResponse {
         try await remoteDataSource.getLoginCallback(code: code)
     }
     
@@ -123,5 +123,9 @@ final class AuthRepository: AuthRepositoryProtocol {
     func getAuthUrl(provider: AuthProvider) async throws -> String {
         let response = try await remoteDataSource.getAuthUrl(provider: provider)
         return response.url
+    }
+    
+    func exchangeCode(_ code: String) async throws -> AuthCallbackResponse {
+        try await remoteDataSource.exchangeCode(code)
     }
 }

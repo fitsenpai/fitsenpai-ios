@@ -15,9 +15,10 @@ protocol AuthRepositoryProtocol {
     func signInWithGoogle() async throws -> String
     func getAuthUrl(provider: AuthProvider) async throws -> String 
     func signOut() async throws
-    func getLoginCallback(code: String) async throws -> AuthCallbackResponse
+    func getAuthCallback(code: String) async throws -> AuthCallbackResponse
     func forgotPasswod(email: String) async throws
     func resetPassword(password: String) async throws
     func verifyOTP(email: String, token: String) async throws
     func deleteAccount(feedback: String) async throws
+    func exchangeCode(_ code: String) async throws -> AuthCallbackResponse 
 }
