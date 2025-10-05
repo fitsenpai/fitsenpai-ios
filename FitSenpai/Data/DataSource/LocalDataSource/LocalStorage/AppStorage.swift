@@ -13,7 +13,6 @@ public struct AppStorage {
     @AppState(\.accessToken) static var accessToken
     @AppState(\.refreshToken) static var refreshToken
     @AppState(\.trialStartDate) static var trialStartDate
-    @AppState(\.didSubscribedWithoutUserID) static var didSubscribedWithoutUserID
     @AppState(\.loginMethod) static var loginMethod
     
     public static func removeSession() {
@@ -23,7 +22,6 @@ public struct AppStorage {
         self.userEmail = nil
         self.refreshToken = nil
         self.trialStartDate = nil
-        self.didSubscribedWithoutUserID = false
         self.loginMethod = nil
     }
 }

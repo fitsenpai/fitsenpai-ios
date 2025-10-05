@@ -100,7 +100,6 @@ extension SignInAccountViewModel: ASWebAuthenticationPresentationContextProvidin
                 try await createProfileUseCase.execute()
                 let user = try await getUserUseCase.execute()
                 SuperwallManager.shared.identifyUser(with: user.id.uuidString)
-                didSubscribedWithoutUserID = false
                 didSignIn = true
                 viewState = .idle
             } catch {

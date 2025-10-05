@@ -11,7 +11,6 @@ import AuthenticationServices
 import CoreKit
 import SafariServices
 import UIKit
-import Supabase
 
 @MainActor
 class LoginViewModel: NSObject, ObservableObject, ASWebAuthenticationPresentationContextProviding {
@@ -197,7 +196,6 @@ class LoginViewModel: NSObject, ObservableObject, ASWebAuthenticationPresentatio
             let _ = try await profileData
             let user = try await userData
             
-            didSubscribedWithoutUserID = false
             shouldLogin = true
             let userId = user.id.uuidString
             SuperwallManager.shared.userId = userId

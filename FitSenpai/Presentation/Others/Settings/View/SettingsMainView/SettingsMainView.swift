@@ -308,11 +308,7 @@ struct SettingsMainView: View {
             if superwall.canLogout {
                 Divider()
                 Button {
-                    Task {
-                        await MainActor.run {
-                            isPresentedManageSubscription = true
-                        }
-                    }
+                    isPresentedManageSubscription = true
                     triggerHaptics()
                 } label: {
                     settingsLinkLabel("Manage subscription")

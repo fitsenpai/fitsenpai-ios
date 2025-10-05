@@ -10,6 +10,7 @@ class SettingsViewModel: ObservableObject {
     @Published var firstName: String = "Bella"
     @Published var lastName: String = "Oakley"
     @Published var user: FSUser?
+    @Published var userProfile: UserProfile = UserProfile()
     @Published var profile = UserProfile()
     @Published var viewState: ViewState = .idle
     @Published var activeSheet: FeedbackType?
@@ -189,7 +190,6 @@ extension SettingsViewModel {
         defer { viewState = .idle }
         do {
             try await singoutUseCase.execute()
-            NetworkSession.shared.clearTokens()
             return true
         } catch {
             print("Error during logout: \(error.localizedDescription)")

@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Supabase
 import AuthenticationServices
 import CoreKit
 import SafariServices
@@ -64,7 +63,7 @@ class AppViewModel: NSObject, ObservableObject {
     var isLoggedIn: Bool {
         return authState == .authenticated
     }
-
+ 
     /// Initializes the AppViewModel.
     ///
     /// This sets up dependencies and attempts to fetch the current user to determine
@@ -148,29 +147,29 @@ private extension AppViewModel {
     
     /// Retrieves the currently authenticated user and updates the global environment.
     func getCurrentUser() async {
-        
-        guard !SuperwallManager.shared.isTrialActive, !SuperwallManager.shared.isSubscrivedWithoutUserID else {
+        let isTrialActive = SuperwallManager.shared.isTrialActive
+        guard !isTrialActive else {
             self.authState = .ontrial
             return
         }
         
         do {
-            let user = try await self.getUserUseCase.execute()
-            updateUser(user)
+            async let userResult = self.getUserUseCase.execute()
+            async let profileResult = self.getUserProfileUseCase.execute()
+            user = try await userResult
+            userProfile = try await profileResult
+            guard let user else {
+                authState = .unauthenticated
+                return
+            }
             SuperwallManager.shared.endTrial()
             SuperwallManager.shared.switchToUser(with: user.id)
+            AppStorage.userID = user.id.uuidString
             authState = .authenticated
         } catch {
             NSLog("Login error: \(error.localizedDescription)")
             authState = .unauthenticated
         }
-    }
-    
-    /// Initializes the global environment object with the given Supabase user.
-    /// - Parameter user: The Supabase user to convert and assign.
-    func initGlobalEnv(user: User) {
-        let fsUser = FSUser(fromSupabaseUser: user)
-        globalAppEnvObject.user = fsUser
     }
     
 }
@@ -250,7 +249,6 @@ extension AppViewModel: ASWebAuthenticationPresentationContextProviding {
                 let user = try await getUserUseCase.execute()
                 SuperwallManager.shared.identifyUser(with: user.id.uuidString)
                 loginMethod = LoginMethod.google.rawValue
-                didSubscribedWithoutUserID = false
                 shouldSignIn = false
             } catch {
                 self.errorMessage = "Google Sign-In failed: \(error.localizedDescription)"

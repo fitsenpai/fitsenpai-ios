@@ -84,7 +84,6 @@ final class SuperwallManager: ObservableObject, SuperwallDelegate {
     // MARK: - App State Properties
     
     @AppState(\.trialStartDate) private var trialStartDate: Date?
-    @AppState(\.didSubscribedWithoutUserID) private var didSubscribedWithoutUserID: Bool
     
     @Inject private var workoutDataStore: WorkoutDataStore
     @Inject private var mealsDataStore: MealsDataStore
@@ -135,11 +134,6 @@ final class SuperwallManager: ObservableObject, SuperwallDelegate {
     var isFirstDayTrialEnded: Bool {
         guard let trialStartDate else { return false }
         return Date().timeIntervalSince(trialStartDate) > 86400 // 24 hours
-    }
-    
-    /// Returns true if user subscribed without being logged in
-    var isSubscrivedWithoutUserID: Bool {
-        return didSubscribedWithoutUserID
     }
     
     // MARK: - Initialization
@@ -197,7 +191,6 @@ final class SuperwallManager: ObservableObject, SuperwallDelegate {
     
     /// Updates subscription state when a purchase is successful
     private func handleSubscriptionUpdate() {
-        self.didSubscribedWithoutUserID = true
         self.endTrial()
     }
     
@@ -248,7 +241,6 @@ final class SuperwallManager: ObservableObject, SuperwallDelegate {
                 await MainActor.run {
                     self.endTrial()
                     self.status = .active
-                    self.didSubscribedWithoutUserID = true
                 }
             }
             

@@ -7,7 +7,6 @@
 
 import Foundation
 import ObjectMapper
-import Supabase
 
 class FSUser {
     var id: UUID
@@ -29,35 +28,6 @@ class FSUser {
     var lastSignInAt: Date?
     var role: String?
     var updatedAt: Date?
-    
-    init(fromSupabaseUser user: Supabase.User) {
-        self.id = user.id
-        self.email = user.email
-        self.phone = user.phone
-        
-        if let appMeta = user.appMetadata as? [AnyJSON: AnyJSON] {
-            self.appMetadata = AppMetadata(from: appMeta)
-        }
-        
-        if let userMeta = user.userMetadata as? [AnyJSON: AnyJSON] {
-            self.userMetadata = UserMetadata(from: userMeta)
-        }
-        
-        self.aud = user.aud
-        self.confirmationSentAt = user.confirmationSentAt
-        self.recoverySentAt = user.recoverySentAt
-        self.emailChangeSentAt = user.emailChangeSentAt
-        self.newEmail = user.newEmail
-        self.invitedAt = user.invitedAt
-        self.actionLink = user.actionLink
-        self.createdAt = user.createdAt
-        self.confirmedAt = user.confirmedAt
-        self.emailConfirmedAt = user.emailConfirmedAt
-        self.phoneConfirmedAt = user.phoneConfirmedAt
-        self.lastSignInAt = user.lastSignInAt
-        self.role = user.role
-        self.updatedAt = user.updatedAt
-    }
     
     init?(fromResponse data: UserDTO?) {
         guard let data else { return nil }
@@ -86,11 +56,6 @@ extension FSUser {
             self.provider = ""
         }
         
-        init(from metadata: [AnyJSON: AnyJSON]) {
-            self.providers = (metadata["providers"]?.value as? [String]) ?? []
-            self.provider = (metadata["provider"]?.value as? String) ?? ""
-        }
-        
         init(providers: [String], provider: String) {
             self.providers = providers
             self.provider = provider
@@ -102,7 +67,7 @@ extension FSUser {
         }
     }
     
-    struct UserMetadata: Mappable {
+    struct UserMetadata {
         var emailVerified: Bool
         var phoneVerified: Bool
         var sub: String
@@ -119,16 +84,6 @@ extension FSUser {
             self.email = ""
             self.emailConfirmedAt = ""
             self.confirmedAt = ""
-        }
-        
-        init(from metadata: [AnyJSON: AnyJSON]) {
-            self.emailVerified = (metadata["email_verified"]?.value as? Bool) ?? false
-            self.phoneVerified = (metadata["phone_verified"]?.value as? Bool) ?? false
-            self.sub = (metadata["sub"]?.value as? String) ?? ""
-            self.confirmationSentAt = (metadata["confirmation_sent_at"]?.value as? String) ?? ""
-            self.email = (metadata["email"]?.value as? String) ?? ""
-            self.emailConfirmedAt = (metadata["email_confirmed_at"]?.value as? String) ?? ""
-            self.confirmedAt = (metadata["confirmed_at"]?.value as? String) ?? ""
         }
         
         init(emailVerified: Bool,

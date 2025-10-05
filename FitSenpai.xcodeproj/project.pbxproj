@@ -10,15 +10,7 @@
 		9335B0552E75E6930085AC15 /* SuperwallKit in Frameworks */ = {isa = PBXBuildFile; productRef = 9335B0542E75E6930085AC15 /* SuperwallKit */; };
 		934465572DBBC738000073D9 /* CoreKit in Frameworks */ = {isa = PBXBuildFile; productRef = 934465562DBBC738000073D9 /* CoreKit */; };
 		938DBF752DA918B0005A0D5C /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 938DBF742DA918B0005A0D5C /* Lottie */; };
-		93CDC6792DF1C99500EC011C /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 93CDC6782DF1C99500EC011C /* GoogleSignIn */; };
-		93CDC67B2DF1C99500EC011C /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 93CDC67A2DF1C99500EC011C /* GoogleSignInSwift */; };
 		F2802BE02CF721CA00617942 /* ObjectMapper in Frameworks */ = {isa = PBXBuildFile; productRef = F2802BDF2CF721CA00617942 /* ObjectMapper */; };
-		F2CF8CE62CF62FDF00461D0D /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = F2CF8CE52CF62FDF00461D0D /* Auth */; };
-		F2CF8CE82CF62FDF00461D0D /* Functions in Frameworks */ = {isa = PBXBuildFile; productRef = F2CF8CE72CF62FDF00461D0D /* Functions */; };
-		F2CF8CEA2CF62FDF00461D0D /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = F2CF8CE92CF62FDF00461D0D /* PostgREST */; };
-		F2CF8CEC2CF62FDF00461D0D /* Realtime in Frameworks */ = {isa = PBXBuildFile; productRef = F2CF8CEB2CF62FDF00461D0D /* Realtime */; };
-		F2CF8CEE2CF62FDF00461D0D /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = F2CF8CED2CF62FDF00461D0D /* Storage */; };
-		F2CF8CF02CF62FDF00461D0D /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = F2CF8CEF2CF62FDF00461D0D /* Supabase */; };
 		F2CF8CF32CF630F700461D0D /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = F2CF8CF22CF630F700461D0D /* Kingfisher */; };
 		F2F8CA322D06F5B100E3DCF3 /* BottomSheet in Frameworks */ = {isa = PBXBuildFile; productRef = F2F8CA312D06F5B100E3DCF3 /* BottomSheet */; };
 /* End PBXBuildFile section */
@@ -60,17 +52,9 @@
 				934465572DBBC738000073D9 /* CoreKit in Frameworks */,
 				F2802BE02CF721CA00617942 /* ObjectMapper in Frameworks */,
 				F2F8CA322D06F5B100E3DCF3 /* BottomSheet in Frameworks */,
-				93CDC6792DF1C99500EC011C /* GoogleSignIn in Frameworks */,
-				F2CF8CEA2CF62FDF00461D0D /* PostgREST in Frameworks */,
 				9335B0552E75E6930085AC15 /* SuperwallKit in Frameworks */,
-				F2CF8CE82CF62FDF00461D0D /* Functions in Frameworks */,
 				F2CF8CF32CF630F700461D0D /* Kingfisher in Frameworks */,
 				938DBF752DA918B0005A0D5C /* Lottie in Frameworks */,
-				93CDC67B2DF1C99500EC011C /* GoogleSignInSwift in Frameworks */,
-				F2CF8CF02CF62FDF00461D0D /* Supabase in Frameworks */,
-				F2CF8CE62CF62FDF00461D0D /* Auth in Frameworks */,
-				F2CF8CEE2CF62FDF00461D0D /* Storage in Frameworks */,
-				F2CF8CEC2CF62FDF00461D0D /* Realtime in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -113,19 +97,11 @@
 			);
 			name = FitSenpai;
 			packageProductDependencies = (
-				F2CF8CE52CF62FDF00461D0D /* Auth */,
-				F2CF8CE72CF62FDF00461D0D /* Functions */,
-				F2CF8CE92CF62FDF00461D0D /* PostgREST */,
-				F2CF8CEB2CF62FDF00461D0D /* Realtime */,
-				F2CF8CED2CF62FDF00461D0D /* Storage */,
-				F2CF8CEF2CF62FDF00461D0D /* Supabase */,
 				F2CF8CF22CF630F700461D0D /* Kingfisher */,
 				F2802BDF2CF721CA00617942 /* ObjectMapper */,
 				F2F8CA312D06F5B100E3DCF3 /* BottomSheet */,
 				938DBF742DA918B0005A0D5C /* Lottie */,
 				934465562DBBC738000073D9 /* CoreKit */,
-				93CDC6782DF1C99500EC011C /* GoogleSignIn */,
-				93CDC67A2DF1C99500EC011C /* GoogleSignInSwift */,
 				9335B0542E75E6930085AC15 /* SuperwallKit */,
 			);
 			productName = FitSenpai;
@@ -140,7 +116,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1540;
-				LastUpgradeCheck = 1640;
+				LastUpgradeCheck = 2600;
 				TargetAttributes = {
 					F24B33562CEDB421004AD370 = {
 						CreatedOnToolsVersion = 15.4;
@@ -156,15 +132,12 @@
 			);
 			mainGroup = F24B334E2CEDB421004AD370;
 			packageReferences = (
-				F2CF8CE32CF62FBD00461D0D /* XCRemoteSwiftPackageReference "supabase-swift" */,
 				F2CF8CF12CF630F700461D0D /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				F2802BDE2CF721CA00617942 /* XCRemoteSwiftPackageReference "ObjectMapper" */,
 				F2F8CA302D06F5B100E3DCF3 /* XCRemoteSwiftPackageReference "BottomSheet" */,
 				12084EDF2D1696E2003E3769 /* XCRemoteSwiftPackageReference "swift-nio" */,
 				938DBF732DA918B0005A0D5C /* XCRemoteSwiftPackageReference "lottie-ios" */,
 				934465552DBBC738000073D9 /* XCRemoteSwiftPackageReference "core-kit" */,
-				93CDC6772DF1C99500EC011C /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
-				931C774C2E3576BB00A33E4E /* XCRemoteSwiftPackageReference "purchases-ios-spm" */,
 				9335B0532E75E6930085AC15 /* XCRemoteSwiftPackageReference "Superwall-iOS" */,
 			);
 			preferredProjectObjectVersion = 56;
@@ -257,6 +230,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -314,6 +288,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -424,14 +399,6 @@
 				minimumVersion = 2.77.0;
 			};
 		};
-		931C774C2E3576BB00A33E4E /* XCRemoteSwiftPackageReference "purchases-ios-spm" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/RevenueCat/purchases-ios-spm.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.33.1;
-			};
-		};
 		9335B0532E75E6930085AC15 /* XCRemoteSwiftPackageReference "Superwall-iOS" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/superwall-me/Superwall-iOS";
@@ -456,28 +423,12 @@
 				minimumVersion = 4.5.1;
 			};
 		};
-		93CDC6772DF1C99500EC011C /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 8.0.0;
-			};
-		};
 		F2802BDE2CF721CA00617942 /* XCRemoteSwiftPackageReference "ObjectMapper" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/tristanhimmelman/ObjectMapper.git";
 			requirement = {
 				kind = exactVersion;
 				version = 4.4.3;
-			};
-		};
-		F2CF8CE32CF62FBD00461D0D /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/supabase/supabase-swift.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.5.1;
 			};
 		};
 		F2CF8CF12CF630F700461D0D /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
@@ -514,50 +465,10 @@
 			package = 938DBF732DA918B0005A0D5C /* XCRemoteSwiftPackageReference "lottie-ios" */;
 			productName = Lottie;
 		};
-		93CDC6782DF1C99500EC011C /* GoogleSignIn */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 93CDC6772DF1C99500EC011C /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
-			productName = GoogleSignIn;
-		};
-		93CDC67A2DF1C99500EC011C /* GoogleSignInSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 93CDC6772DF1C99500EC011C /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
-			productName = GoogleSignInSwift;
-		};
 		F2802BDF2CF721CA00617942 /* ObjectMapper */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = F2802BDE2CF721CA00617942 /* XCRemoteSwiftPackageReference "ObjectMapper" */;
 			productName = ObjectMapper;
-		};
-		F2CF8CE52CF62FDF00461D0D /* Auth */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F2CF8CE32CF62FBD00461D0D /* XCRemoteSwiftPackageReference "supabase-swift" */;
-			productName = Auth;
-		};
-		F2CF8CE72CF62FDF00461D0D /* Functions */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F2CF8CE32CF62FBD00461D0D /* XCRemoteSwiftPackageReference "supabase-swift" */;
-			productName = Functions;
-		};
-		F2CF8CE92CF62FDF00461D0D /* PostgREST */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F2CF8CE32CF62FBD00461D0D /* XCRemoteSwiftPackageReference "supabase-swift" */;
-			productName = PostgREST;
-		};
-		F2CF8CEB2CF62FDF00461D0D /* Realtime */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F2CF8CE32CF62FBD00461D0D /* XCRemoteSwiftPackageReference "supabase-swift" */;
-			productName = Realtime;
-		};
-		F2CF8CED2CF62FDF00461D0D /* Storage */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F2CF8CE32CF62FBD00461D0D /* XCRemoteSwiftPackageReference "supabase-swift" */;
-			productName = Storage;
-		};
-		F2CF8CEF2CF62FDF00461D0D /* Supabase */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F2CF8CE32CF62FBD00461D0D /* XCRemoteSwiftPackageReference "supabase-swift" */;
-			productName = Supabase;
 		};
 		F2CF8CF22CF630F700461D0D /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;

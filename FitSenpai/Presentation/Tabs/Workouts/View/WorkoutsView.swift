@@ -68,7 +68,8 @@ struct WorkoutsView: View {
             showButton: true,
             isLoading: false,
             buttonAction: {
-                
+                triggerHaptics()
+                superwall.presentPaywall(for: .proContent)
             }
         )
     }

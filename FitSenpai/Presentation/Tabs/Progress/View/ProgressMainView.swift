@@ -9,42 +9,7 @@ struct ProgressMainView: View {
             VStack(alignment: .leading, spacing: 24) {
                 FSTextView("Progress", typography: .h3)
                 TimeframeSelectorView(selectedTimeframe: $viewModel.selectedTimeframe)
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 24) {
-                        WeightChartCard(data: viewModel.weightData)
-                            .overlay(alignment: .center) {
-                                if viewModel.viewState == .loading {
-                                    ProgressView()
-                                }
-                            }
-                        if superwall.isTrialActive {
-                            UpgrageCardView {
-                                onTryForFreeTapped()
-                            }
-                        } else {
-                            WeightUpdatePrompt(
-                                title: "Keep going!",
-                                subtitle: "Tracking your weight helps\nyou see real progress.",
-                                icon: .iconSparkleGreen,
-                                buttonText: "Update weight",
-                                onButtonTap: viewModel.updateWeight
-                            )
-                        }
-                       
-                        BMISummaryCard(
-                            bmiValue: viewModel.bmiValue,
-                            bmiCategory: viewModel.bmiCategory,
-                            onInfoTap: {
-                                triggerHaptics()
-                                viewModel.showBMIDetail = true
-                            }
-                        )
-                    }
-                    
-                }
-                .refreshable {
-                    viewModel.loadAllData()
-                }
+                content
             }
             .padding()
             .navigationDestination(isPresented: $viewModel.showBMIDetail, destination: {
@@ -55,6 +20,45 @@ struct ProgressMainView: View {
                 WeightEditView(viewModel: viewModel)
                     .navigationBarBackButtonHidden()
             })
+        }
+    }
+    
+    var content: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 24) {
+                WeightChartCard(data: viewModel.weightData)
+                    .overlay(alignment: .center) {
+                        if viewModel.viewState == .loading {
+                            ProgressView()
+                        }
+                    }
+                if superwall.isTrialActive {
+                    UpgrageCardView {
+                        onTryForFreeTapped()
+                    }
+                } else {
+                    WeightUpdatePrompt(
+                        title: "Keep going!",
+                        subtitle: "Tracking your weight helps\nyou see real progress.",
+                        icon: .iconSparkleGreen,
+                        buttonText: "Update weight",
+                        onButtonTap: viewModel.updateWeight
+                    )
+                }
+               
+                BMISummaryCard(
+                    bmiValue: viewModel.bmiValue,
+                    bmiCategory: viewModel.bmiCategory,
+                    onInfoTap: {
+                        triggerHaptics()
+                        viewModel.showBMIDetail = true
+                    }
+                )
+            }
+            
+        }
+        .refreshable {
+            viewModel.loadAllData()
         }
     }
     

@@ -14,13 +14,7 @@ struct BMIDetailView: View {
     
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 32) {
-                bmiView
-                disclaimerView
-                whyBMIView
-                sourceLinkButton
-            }
-            .padding(24)
+            content
         }
         .sheet(isPresented: $viewModel.showBrowser) {
             if let url = URL(string: "https://www.cdc.gov/bmi/about/index.html") {
@@ -42,6 +36,16 @@ struct BMIDetailView: View {
                 }
             }
         }
+    }
+    
+    var content: some View {
+        VStack(alignment: .leading, spacing: 32) {
+            bmiView
+            disclaimerView
+            whyBMIView
+            sourceLinkButton
+        }
+        .padding(24)
     }
     
     var bmiView: some View {

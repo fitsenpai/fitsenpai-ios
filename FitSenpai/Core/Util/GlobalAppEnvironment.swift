@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Auth
 
 class GlobalAppEnvironment: ObservableObject {
     @Published var user: FSUser?
