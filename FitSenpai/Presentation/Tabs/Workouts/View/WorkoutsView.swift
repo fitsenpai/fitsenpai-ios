@@ -78,7 +78,7 @@ struct WorkoutsView: View {
         MainContainerView {
             VStack(alignment: .leading) {
                 switch viewModel.viewState {
-                case .loading,  .updating:
+                case .loading, .updating:
                     ShimmerWorkoutWeekView()
                 case .fetching:
                     FSInfoView(viewModel: generatingViewModel)
@@ -87,11 +87,13 @@ struct WorkoutsView: View {
                     if superwall.isFirstDayTrialEnded {
                         FSInfoView(viewModel: subscriptionEnded)
                             .padding(.vertical, 12)
-                    } else if let selectedWeek = viewModel.selectedWorkoutWeek {
-                        WorkoutWeekView(workoutWeek: selectedWeek)
-                            .environmentObject(viewModel)
-                    }  else {
-                        generateWorkoutInfo
+                    } else {
+                        if let selectedWeek = viewModel.selectedWorkoutWeek {
+                            WorkoutWeekView(workoutWeek: selectedWeek)
+                                .environmentObject(viewModel)
+                        }  else {
+                            generateWorkoutInfo
+                        }
                     }
                 case .error(let error):
                     FSInfoView(viewModel: errorViewModel(error: error))

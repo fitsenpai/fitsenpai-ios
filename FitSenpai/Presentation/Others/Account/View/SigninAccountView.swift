@@ -57,7 +57,9 @@ struct SigninAccountView: View {
         .loadingOverlay(state: $viewModel.viewState)
         .withToastOverlay()
         .onReceive(viewModel.$didSignIn) { signedIn in
-            if signedIn {
+            guard signedIn else { return }
+            Task {
+                await appViewModel.refreshCurrentUser()
                 dismiss()
             }
         }

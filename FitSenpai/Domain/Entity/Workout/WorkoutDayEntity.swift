@@ -11,15 +11,15 @@ import SwiftData
     var id: String
     @Relationship(deleteRule: .cascade, inverse: \RoutineEntity.workoutDay)
     var routines: [RoutineEntity]
-    var totalTime: String
+    var totalTime: Int
     var day: String
     var date: String
-    var totalRoutines: String
+    var totalRoutines: Int
     var title: String
     var pendingGeneration: Bool
     var workoutWeek: WorkoutWeekEntity?
     
-    init(id: String, routines: [RoutineEntity] = [], totalTime: String, day: String, date: String, totalRoutines: String, title: String, pendingGeneration: Bool, workoutWeek: WorkoutWeekEntity? = nil) {
+    init(id: String, routines: [RoutineEntity] = [], totalTime: Int, day: String, date: String, totalRoutines: Int, title: String, pendingGeneration: Bool, workoutWeek: WorkoutWeekEntity? = nil) {
         self.id = id
         self.routines = routines
         self.totalTime = totalTime

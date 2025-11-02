@@ -12,17 +12,17 @@ class WorkoutRoutine: Identifiable {
     var name: String
     var date: String
     var muscleGroup: String?
-    var routineCount: String?
-    var duration: String?
+    var routineCount: Int?
+    var duration: Int?
     var instructions: [String]
-    var repetition: String?
-    var sets: String?
+    var repetition: Int?
+    var sets: Int?
     var load: String?
     var gifUrl: String?
     var sortIndex: Int
     var isCompleted: Bool
     
-    init(date: String, name: String, muscleGroup: String? = nil, routineCount: String? = nil, duration: String? = nil, instructions: [String]? = nil, repetition: String? = nil, sets: String? = nil, load: String? = nil, gifUrl: String? = nil, sortIndex: Int = 0, isCompleted: Bool) {
+    init(date: String, name: String, muscleGroup: String? = nil, routineCount: Int? = nil, duration: Int? = nil, instructions: [String]? = nil, repetition: Int? = nil, sets: Int? = nil, load: String? = nil, gifUrl: String? = nil, sortIndex: Int = 0, isCompleted: Bool) {
         self.id = "\(name)-\(date)"
         self.name = name
         self.muscleGroup = muscleGroup
@@ -58,24 +58,10 @@ class WorkoutRoutine: Identifiable {
 }
 
 extension WorkoutRoutine {
-    var intReps: Int? {
-        Int(self.repetition ?? "")
-    }
-    
-    var intSets: Int? {
-        Int(self.sets ?? "")
-    }
-    
     var timerOnly: Bool {
-        intSets == nil && intReps == nil
+        sets == nil && repetition == nil
     }
 
-    var intDuration: Int? {
-        guard let duration else { return 0 }
-        let durationTime = duration.split(separator: " ").compactMap({ String($0).trimmingCharacters(in: .whitespaces) }).first ?? "0"
-        return Int(durationTime)
-    }
-    
     var videoURL: URL {
         URL(string: self.gifUrl ?? "") ?? URL(fileURLWithPath: "")
     }

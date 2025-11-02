@@ -33,6 +33,7 @@ enum DependencyRegistry {
         DependencyInjector.register(NetworkService<GroceryEndpoint>(), key: "grocery")
         DependencyInjector.register(NetworkService<FeedbackEndpoint>(), key: "feedback")
         DependencyInjector.register(NetworkService<WeightsEndpoint>(), key: "weights")
+        DependencyInjector.register(NetworkService<SubscriptionEndpoint>(), key: "subscription")
     }
     
     /// Registers data sources with the `DependencyInjector`.
@@ -47,6 +48,7 @@ enum DependencyRegistry {
         DependencyInjector.register(GroceryDataSource() as any GroceryDataSourceProtocol)
         DependencyInjector.register(FeedbackDataSource() as any FeedbackDataSourceProtocol)
         DependencyInjector.register(WeightsDataSource() as any WeightsDataSourceProtocol)
+        DependencyInjector.register(SubscriptionDataSource() as any SubscriptionDataSourceProtocol)
     }
     
     /// Registers repositories with the `DependencyInjector`.
@@ -62,6 +64,7 @@ enum DependencyRegistry {
         DependencyInjector.register(GroceryRepository() as any GroceryRepositoryProtocol)
         DependencyInjector.register(FeedbackRepository() as any FeedbackRepositoryProfocol)
         DependencyInjector.register(WeightsRepository() as any WeightsRepositoryProtocol)
+        DependencyInjector.register(SubscriptionRepository() as any SubscriptionRepositoryProtocol)
     }
     
     /// Registers use cases with the `DependencyInjector`.
@@ -97,6 +100,7 @@ enum DependencyRegistry {
         DependencyInjector.register(GetWeigthsUseCase() as any GetWeightsUseCaseProtocol)
         DependencyInjector.register(CreateWeigthsUseCase() as any CreateWeightsUseCaseProtocol)
         DependencyInjector.register(GetBMIUseCase() as any GetBMIUseCaseProtocol)
+        DependencyInjector.register(GetSubscriptionUseCase() as any GetSubscriptionUseCaseProtocol)
     }
     
     @MainActor static func registerDataStores(modelContext: ModelContext) {

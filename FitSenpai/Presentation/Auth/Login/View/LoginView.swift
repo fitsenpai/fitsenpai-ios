@@ -34,7 +34,7 @@ struct LoginView: View {
             FSButton(title: viewModel.viewState == .loading ? "Logging in..." : "Login", fontStyle: .bodyBold16, cornerRadius: 32) {
                 Task {
                     if await viewModel.login() {
-                        appViewModel.authState = .authenticated
+                        await appViewModel.refreshCurrentUser()
                     }
                 }
             }
@@ -89,8 +89,9 @@ struct LoginView: View {
             ForgotPasswordView()
         }
         .onReceive(viewModel.$shouldLogin) { shouldLogin in
-            if shouldLogin {
-                appViewModel.authState = .authenticated
+            guard shouldLogin else { return }
+            Task {
+                await appViewModel.refreshCurrentUser()
             }
         }
     }

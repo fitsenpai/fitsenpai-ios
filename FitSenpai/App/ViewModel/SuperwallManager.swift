@@ -76,7 +76,7 @@ final class SuperwallManager: ObservableObject, SuperwallDelegate {
     static let shared = SuperwallManager()
     
     // MARK: - Published Properties
-    
+    @Published private(set) var subscriptionDetails = SubscriptionDetails(isTrial: false, isActive: false)
     @Published private(set) var status: FSSubscriptionStatus = .unknown
     @Published private(set) var accessLevel: FSAccessLevel = .locked
     @Published var userId: String?
@@ -167,24 +167,24 @@ final class SuperwallManager: ObservableObject, SuperwallDelegate {
     
     /// Presents a paywall for the specified identifier
     /// - Parameter identifier: The paywall identifier to present
-    func presentPaywall(for identifier: FSPaywallIdentifier) {
-        Superwall.shared.register(placement: identifier.rawValue) { [weak self] in
-            guard let self else { return }
-            
-            let status = Superwall.shared.subscriptionStatus
-            if case .active = status {
-                self.handleSubscriptionUpdate()
+
+    @MainActor
+    func presentPaywall(for identifier: FSPaywallIdentifier, onUnlock: (() -> Void)? = nil){
+        Superwall.shared.register(
+            placement: identifier.rawValue,
+            handler: nil, // Or your PaywallPresentationHandler if you need granular callbacks
+            feature: { [weak self] in
+                guard let self else { return }
+                self.workoutDataStore.deleteAll()
+                self.mealsDataStore.deleteAll()
+                self.groceryDataDataStore.deleteAll()
                 
-                // Show login screen if user subscribed without being logged in
                 if self.userId == nil {
                     self.loginPresenter?.presentLogin()
                 }
-                
-                workoutDataStore.deleteAll()
-                mealsDataStore.deleteAll()
-                groceryDataDataStore.deleteAll()
+                onUnlock?()
             }
-        }
+        )
     }
     
     // MARK: - Subscription Management
@@ -203,11 +203,21 @@ final class SuperwallManager: ObservableObject, SuperwallDelegate {
                 guard let self else { return }
                 logger.debug("Subscription status changed to: \(String(describing: status))")
                 
-                self.status = status
-                if case .active = status {
+                switch Superwall.shared.subscriptionStatus {
+                case .active(let entitlements):
+                    endTrial()
+                    logger.info("User has \(entitlements.count) active entitlements.")
+                    for entitlement in entitlements {
+                        logger.info("🧾 Entitlement ID: \(entitlement, privacy: .public) | Product ID: \(entitlement.id, privacy: .public)")
+                    }
+                case .inactive:
+                    logger.info("User is free plan.")
                     self.endTrial()
-                    logger.debug("Subscription is active, ending trial period")
+                case .unknown:
+                    logger.info("User is inactive.")
                 }
+                self.status = status
+
             }
             .store(in: &cancellables)
     }
@@ -256,6 +266,7 @@ final class SuperwallManager: ObservableObject, SuperwallDelegate {
     /// Identifies a user with Superwall
     /// - Parameter userID: The unique identifier for the user
     func identifyUser(with userID: String) {
+        self.userId = userID
         Superwall.shared.identify(userId: userID)
         logger.debug("🔐 Identified user with ID: \(userID)")
     }
@@ -264,6 +275,8 @@ final class SuperwallManager: ObservableObject, SuperwallDelegate {
     func resetUser() {
         Superwall.shared.reset()
         userId = nil
+        status = .unknown
+        endTrial()
         logger.debug("🔓 User reset")
     }
     

@@ -41,6 +41,7 @@ class AppViewModel: NSObject, ObservableObject {
     @Published var errorMessage: String?
     
     @Published var networkSession = NetworkSession.shared
+    @Published var subscription: SubscriptionResponse?
 
     // MARK: - UseCases
     /// Use case for fetching the current user from a data source (e.g., Supabase).
@@ -48,6 +49,7 @@ class AppViewModel: NSObject, ObservableObject {
     @Inject private var signinUseCase: SigninUseCaseProtocol
     @Inject private var getUserProfileUseCase: GetUserProfileUseCaseProtocol
     @Inject private var createProfileUseCase: CreateProfileUseCaseProtocol
+    @Inject private var getSubscriptionUseCase: GetSubscriptionUseCaseProtocol
     
     @AppState(\.loginMethod) var loginMethod: String?
     @AppState(\.didSubscribedWithoutUserID) private var didSubscribedWithoutUserID: Bool
@@ -83,6 +85,18 @@ class AppViewModel: NSObject, ObservableObject {
 // MARK: - Public Methods
 
 extension AppViewModel {
+    func refreshCurrentUser() async {
+        await getCurrentUser()
+    }
+
+    func fetchSubscription() async -> SubscriptionResponse? {
+        do {
+            return try await getSubscriptionUseCase.execute()
+        } catch {
+            FSLogger.error("Failed to fetch subscriptions: \(error.localizedDescription)")
+            return nil
+        }
+    }
     
     /// Updates the global environment with the given user and sets the login state.
     /// - Parameter user: The user to set in the global environment.
@@ -160,8 +174,11 @@ private extension AppViewModel {
             userProfile = try await profileResult
             guard let user else {
                 authState = .unauthenticated
+                subscription = nil
                 return
             }
+            let subscriptionResponse = await fetchSubscription()
+            subscription = subscriptionResponse
             SuperwallManager.shared.endTrial()
             SuperwallManager.shared.switchToUser(with: user.id)
             AppStorage.userID = user.id.uuidString
@@ -169,6 +186,7 @@ private extension AppViewModel {
         } catch {
             NSLog("Login error: \(error.localizedDescription)")
             authState = .unauthenticated
+            subscription = nil
         }
     }
     
@@ -250,6 +268,7 @@ extension AppViewModel: ASWebAuthenticationPresentationContextProviding {
                 SuperwallManager.shared.identifyUser(with: user.id.uuidString)
                 loginMethod = LoginMethod.google.rawValue
                 shouldSignIn = false
+                await self.getCurrentUser()
             } catch {
                 self.errorMessage = "Google Sign-In failed: \(error.localizedDescription)"
                 networkSession.clearTokens()

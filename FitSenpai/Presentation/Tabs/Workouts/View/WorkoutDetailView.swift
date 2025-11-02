@@ -127,16 +127,15 @@ struct WorkoutDetailView: View {
             
             HStack(spacing: 8) {
                 
-                if let sets = routine.intSets {
+                if let sets = routine.sets {
                     WorkoutPillView(image: "icon_chart_orange", value: sets, label: "sets")
                 }
                 
-                if let reps = routine.intReps {
-                   
+                if let reps = routine.repetition {
                     WorkoutPillView(image: "icon_repeat_purple", value: reps, label: "reps")
                 }
                 
-                if let duration = routine.intDuration {
+                if let duration = routine.duration {
                     WorkoutPillView(image: "icon_clock_green", value: duration, label: "mins")
                         .frame(maxWidth: routine.timerOnly ? 100 : .infinity)
                 }

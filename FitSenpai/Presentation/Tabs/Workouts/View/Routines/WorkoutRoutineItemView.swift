@@ -21,15 +21,15 @@ struct WorkoutRoutineItemView: View {
     var horizontalInfoView: some View  {
         HStack(spacing: 10) {
             
-            if let sets = routine.intSets {
+            if let sets = routine.sets {
                 IconLabelView(fsMetric: .WorkoutSet, value: sets, typography: .custom(size: 12), fontColor: .fsMutedForeground, iconSize: 12)
             }
             
-            if let reps = routine.intReps {
+            if let reps = routine.repetition {
                 IconLabelView(fsMetric: .WorkoutRep, value: reps, typography: .custom(size: 12), fontColor: .fsMutedForeground, iconSize: 12)
             }
             
-            if let duration = routine.intDuration {
+            if let duration = routine.duration {
                 IconLabelView(fsMetric: .WorkoutTime, value: duration, typography: .custom(size: 12), fontColor: .fsMutedForeground, iconSize: 12)
             }
         }

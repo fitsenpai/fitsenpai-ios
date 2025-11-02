@@ -25,7 +25,7 @@ struct SettingsMainView: View {
     private let supportEmail = "support@fitsenpai.com"
     private let termsURL = "https://www.fitsenpai.com/terms"
     private let privacyURL = "https://www.fitsenpai.com/privacy-policy"
-    private let showDebugMenu = false
+    private let showDebugMenu = true
     
     init() { }
     
@@ -507,20 +507,6 @@ struct SettingsMainView: View {
                         .font(.caption)
                         .foregroundColor(.secondary)
                     Text("|")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-               
-                Menu {
-                    Button(role: .destructive, action: clearAllData) {
-                        Label("Clear All Data", systemImage: "trash")
-                    }
-                    
-                    Button(action: clearCache) {
-                        Label("Clear Cache", systemImage: "arrow.triangle.2.circlepath")
-                    }
-                } label: {
-                    Text("Debug Menu")
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }

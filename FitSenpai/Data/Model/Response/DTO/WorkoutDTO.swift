@@ -37,8 +37,8 @@ struct WorkoutDayDTO: Decodable {
     let day: String
     let date: String
     let title: String
-    let totalTime: String
-    let totalRoutines: String
+    let totalTime: Int
+    let totalRoutines: Int
     let routines: [RoutineDTO]
     let pendingGeneration: Bool
     
@@ -54,15 +54,24 @@ struct WorkoutDayDTO: Decodable {
     }
     
     init(from decoder: any Decoder) throws {
+        func decodeIntOrString(forKey key: CodingKeys) throws -> Int? {
+            if let intValue = try? container.decodeIfPresent(Int.self, forKey: key) {
+                return intValue
+            } else if let stringValue = try? container.decodeIfPresent(String.self, forKey: key) {
+                return Int(stringValue)
+            }
+            return nil
+        }
+        
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decodeIfPresent(String.self, forKey: .id) ?? UUID().uuidString
         self.day = try container.decodeIfPresent(String.self, forKey: .day) ?? ""
         self.date = try container.decodeIfPresent(String.self, forKey: .date) ?? ""
         self.title = try container.decodeIfPresent(String.self, forKey: .title) ?? ""
-        self.totalTime = try container.decodeIfPresent(String.self, forKey: .totalTime) ?? ""
-        self.totalRoutines = try container.decodeIfPresent(String.self, forKey: .totalRoutines) ?? ""
         self.routines = try container.decodeIfPresent([RoutineDTO].self, forKey: .routines) ?? []
         self.pendingGeneration = try container.decodeIfPresent(Bool.self, forKey: .pendingGeneration) ?? false
+        self.totalTime = try decodeIntOrString(forKey: .totalTime) ?? 0
+        self.totalRoutines = try decodeIntOrString(forKey: .totalRoutines) ?? 0
     }
     
     func toDomain() -> WorkoutDay {

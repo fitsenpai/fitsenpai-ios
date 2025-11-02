@@ -2,6 +2,7 @@ import SwiftUI
 import CoreKit
 
 struct DeleteAccountView: View {
+    @EnvironmentObject private var superwall: SuperwallManager
     @Environment(\.dismiss) var dismiss
     @StateObject private var viewModel = AuthViewModel()
     @State private var selectedReason: DeletionReason = .other
@@ -61,6 +62,7 @@ struct DeleteAccountView: View {
                     Task {
                         do {
                             try await viewModel.deleteAccount(feedback: selectedReason.rawValue)
+                            superwall.resetUser()
                             NetworkSession.shared.clearTokens()
                             navigateToSuccess = true
                         } catch {

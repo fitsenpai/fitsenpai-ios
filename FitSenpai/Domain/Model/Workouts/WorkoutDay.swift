@@ -11,14 +11,14 @@ import Foundation
 class WorkoutDay: DomainProtocol {
     var id: String
     var routines: [WorkoutRoutine]
-    var totalTime: String
+    var totalTime: Int
     var day: String
     var date: String
-    var totalRoutines: String
+    var totalRoutines: Int
     var title: String
     var pendingGeneration: Bool
     
-    init(id: String, routines: [WorkoutRoutine], totalTime: String, day: String, date: String, totalRoutines: String, title: String, pendingGeneration: Bool) {
+    init(id: String, routines: [WorkoutRoutine], totalTime: Int, day: String, date: String, totalRoutines: Int, title: String, pendingGeneration: Bool) {
         self.id = id
         self.routines = routines
         self.totalTime = totalTime
